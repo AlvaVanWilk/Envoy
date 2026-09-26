@@ -31,7 +31,7 @@ export function renderTrader(game) {
               h('span', { class: 'item-name' }, thing.name),
               h('span', { class: 'item-sub' }, thingSubtitle({ kind: offer.kind }, thing)),
               offer.kind === 'item' ? reqChips(thing, stats) : null,
-              price(offer.price, world.purse.aether));
+              price(offer.price, world.purse.splitter));
           }))),
       h('section', { class: 'panel trader-sell' },
         sectionTitle('Verkaufen'),
@@ -40,12 +40,12 @@ export function renderTrader(game) {
           : h('div', { class: 'item-list' }, owned.map(({ entry, thing }) => h('div', { class: 'item-row' },
             h('span', { class: 'item-frame' }, itemIcon(thing)),
             h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, thing.name), h('span', { class: 'item-sub' }, thingSubtitle(entry, thing))),
-            h('button', { class: 'btn ghost small', onclick: () => confirmSell(entry, thing, game) }, resource('aether', sellPrice(entry, game.catalog)))))))));
+            h('button', { class: 'btn ghost small', onclick: () => confirmSell(entry, thing, game) }, resource('splitter', sellPrice(entry, game.catalog)))))))));
 }
 
 function openOffer(offer, thing, game) {
   const { world, stats } = game.state;
-  const affordable = world.purse.aether >= offer.price;
+  const affordable = world.purse.splitter >= offer.price;
   openSheet({
     title: thing.name,
     eyebrow: thingSubtitle({ kind: offer.kind }, thing),
@@ -56,9 +56,9 @@ function openOffer(offer, thing, game) {
       thing.faehigkeit || thing.text ? h('p', { class: 'item-ability' }, thing.faehigkeit || thing.text) : null,
       effectList(thing.effekt),
       h('div', { class: 'sheet-actions' },
-        price(offer.price, world.purse.aether),
+        price(offer.price, world.purse.splitter),
         h('button', { class: 'btn primary', disabled: !affordable, onclick: () => { game.buy(offer); closeSheet(); } },
-          affordable ? 'Kaufen' : 'Nicht genug Äther')),
+          affordable ? 'Kaufen' : 'Nicht genug Traumsplitter')),
     ],
   });
 }
@@ -68,7 +68,7 @@ function confirmSell(entry, thing, game) {
   openSheet({
     title: `${thing.name} verkaufen`,
     content: [
-      h('p', {}, `Für ${amount} Äther.`),
+      h('p', {}, `Für ${amount} Traumsplitter.`),
       h('div', { class: 'sheet-actions' },
         h('button', { class: 'btn ghost', onclick: closeSheet }, 'Behalten'),
         h('button', { class: 'btn primary', onclick: () => { game.sell(entry.inst); closeSheet(); } }, 'Verkaufen')),

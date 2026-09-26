@@ -25,9 +25,10 @@ können. Die Spielwelt muss groß und umfangreich genug sein, um nicht als Beloh
 sondern als Kernelement verstanden zu werden. Die Verbesserung des Envoy durch
 eigene echte Übungen aber alternativlos.
 
-Look eines modernen, professionellen RPGs mit Held (Envoy) im Mittelpunkt. Warm und
-matt, eher Stein als Metall: Stein, Erde, Kupfer, altes Papier. Symbole sind Embleme wie
-in Stein gehauen, keine flachen App-Symbole. Das einzige kühle Leuchten gehört dem Äther.
+Look eines modernen, professionellen RPGs mit Held (Envoy) im Mittelpunkt. Matt, eher
+Stein als Metall: kühler grauer Stein mit Körnung, Kupfer als warmer Gegenpol (es stammt
+aus den Riesenpilzen), dazu Patinagrün und das blasse Leuchten der Traumsplitter. Kein
+Braun, kein Sepia. Symbole sind Embleme wie in Stein gehauen, keine flachen App-Symbole.
 
 ## Die vier Stats
 
@@ -208,7 +209,7 @@ Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 | beruhigen | Chance, einen Geist zu beruhigen |
 | reise | weniger Ausdauer je Weg (mindestens 1) und etwas schneller unterwegs |
 | erholung | Ausdauerleiste füllt sich schneller |
-| glueck | mehr Äther und öfter ein Fundstück |
+| glueck | mehr Traumsplitter und öfter ein Fundstück |
 
 **Sechs Slots:** Kopf, Torso, Handwickel, Umhang, Beinkleidung, Schuhe. Kein
 Waffen-Slot, kein Gürtel, keine Schulterstücke. Die **Handwickel** sind das Gegenstück
@@ -271,7 +272,7 @@ Quests stehen an festen Orten. Arten:
 | Art | Was geschieht | Was die Stats bewirken |
 | --- | --- | --- |
 | Sammeln | Pilzholz oder Stein | +1 Stück je 3 Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
-| Erkunden | feste Belohnung, oft Äther | +5 % Äther je Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
+| Erkunden | feste Belohnung, oft Traumsplitter | +5 % Traumsplitter je Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
 | Bauen | verbraucht Pilzholz und Stein, schaltet frei | kürzer mit den Tempo-Stats |
 | Kampf | ein Geist | siehe Kampf |
 | Höhle | mehrere Geister nacheinander | so viele, wie die Kraft des Envoy reicht |
@@ -302,8 +303,8 @@ Drei Ausgänge, keiner davon ist eine Niederlage:
 
 | Ausgang | Beute |
 | --- | --- |
-| besiegt | Äther und Material, Chance auf ein Fundstück |
-| beruhigt | 1,5-mal so viel Äther, Chance auf ein Fundstück |
+| besiegt | Traumsplitter und Material, Chance auf ein Fundstück |
+| beruhigt | 1,5-mal so viele Traumsplitter, Chance auf ein Fundstück |
 | vertrieben (der Geist war zu stark, der Envoy zieht sich zurück) | die Hälfte, kein Fundstück |
 
 **Höhlen:** Die Geister kommen nacheinander, das Leben des Envoy bleibt dabei, wie es
@@ -318,20 +319,22 @@ ist weniger Beute.
 
 ### Beute und Währung
 
-- **Äther**: was zurückbleibt, wenn sich ein Geist auflöst. Einzige Währung.
-- **Pilzholz**: die Stiele der Riesenpilze, die zwischen den Trümmern wachsen. Leicht und
-  zäh, lässt sich sägen und schnitzen wie Holz; für Balken, Dächer, Brücken, Möbel.
+- **Traumsplitter**: was zurückbleibt, wenn sich ein Geist auflöst, Splitter des Traums,
+  aus dem er kam. Blass leuchtend. Einzige Währung.
+- **Pilzholz**: die Stiele der Riesenpilze, die zwischen den Trümmern wachsen, mit
+  kupferfarbenen Hüten. Leicht und zäh, lässt sich sägen und schnitzen wie Holz; für
+  Balken, Dächer, Brücken, Möbel.
 - **Stein**: Blöcke aus den alten Ruinen, für Mauern.
 - Ausrüstung und Einrichtung: feste Quest-Belohnungen oder mit einer Chance je Geist.
   Beute-Ausrüstung liegt in der Nähe der Stärke des Helden (±3 Level).
-- Glück erhöht Äther und die Chance auf Fundstücke.
+- Glück erhöht Traumsplitter und die Chance auf Fundstücke.
 
 ### Händler
 
 Wird durch die Quest „Der Händler im Nebel“ freigeschaltet (den Händler retten).
 Bietet jeden Tag 5 Dinge an, darunter 1 bis 2 Einrichtungsgegenstände. Die
 Ausrüstung ist zufällig, aber immer im Bereich der Stärke des Helden (Voraussetzung
-höchstens 3 Level darunter oder darüber). Preis in Äther = 12 + 4 × n + n² + 8 × Stufe
+höchstens 3 Level darunter oder darüber). Preis in Traumsplittern = 12 + 4 × n + n² + 8 × Stufe
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
 alles für ein Drittel des Preises zurück.
 
@@ -347,7 +350,7 @@ Neueste sortieren.
 
 Wird durch die Quest „Ein Platz zum Bleiben“ freigeschaltet (6 Pilzholz und 6 Stein im
 Lager). Stufen: Zelt → Steinhütte → Baracke → Steinhaus → Turmhaus, jeweils mit Pilzholz,
-Stein und Äther ausgebaut. Jede Stufe gibt Erholung (+5 % bis +30 %), Plätze für
+Stein und Traumsplittern ausgebaut. Jede Stufe gibt Erholung (+5 % bis +30 %), Plätze für
 Einrichtung und Schrankfächer. Einrichtung (vom Händler, als Beute oder aus Quests)
 gibt Erholung oder Glück.
 
@@ -448,9 +451,9 @@ Zweig `main` per SFTP auf den IONOS-Webspace.
 | Bodensatz | Level mit Nachkommastelle |
 | Tagesgrenze | 3:00 Uhr |
 | Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot |
-| Währung | Äther; dazu Pilzholz und Stein |
+| Währung | Traumsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
-| Optik | warm: Stein, Erde, Kupfer; Menü aus runden Schilden |
+| Optik | kühler grauer Stein, Kupfer als Kontrast, Patinagrün; Menü aus runden Schilden |
 | Scheitern | gibt es nicht; Stats bestimmen Zugang, Dauer und Ertrag |
 | Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit |
 | Kampfergebnis | beim Aufbruch berechnet und gespeichert, zählt bei der Rückkehr |

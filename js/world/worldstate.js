@@ -5,7 +5,7 @@
 // world = {
 //   expedition  the running expedition or null: { id, q, place, title, start, out, act, back, end, outcome }
 //   stamina     { value, at }: bar value at time `at`, refills from there
-//   purse       { aether, pilzholz, stein }
+//   purse       { splitter, pilzholz, stein }
 //   items       owned things, see inventory.js
 //   equipped    { slot: inst }
 //   placed      furniture set up at home (inst list)
@@ -25,9 +25,9 @@ import { stow, removeEntry, hasSpace } from './inventory.js';
 import { unmetRequirements } from './items.js';
 import { totalMinutes } from './expedition.js';
 
-const MATERIAL_KEYS = ['aether', 'pilzholz', 'stein'];
+const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 // Materials in events written under an older name.
-const OLD_NAMES = { quarz: 'pilzholz' };
+const OLD_NAMES = { quarz: 'pilzholz', aether: 'splitter' };
 export const materialKey = (key) => OLD_NAMES[key] || key;
 const KEEP_REPORTS = 30;
 
@@ -35,7 +35,7 @@ export function initialWorld(catalog, startTime, stats) {
   const world = {
     expedition: null,
     stamina: { value: maxStamina(stats), at: startTime },
-    purse: { aether: 0, pilzholz: 0, stein: 0 },
+    purse: { splitter: 0, pilzholz: 0, stein: 0 },
     items: {},
     equipped: {},
     placed: [],
@@ -160,8 +160,8 @@ export function applyWorldEvent(world, e, ctx) {
       if (e.outcome) startExpedition(world, e, ctx);
       break;
     case 'buy':
-      if (!world.bought[e.offer] && world.purse.aether >= e.price) {
-        world.purse.aether -= e.price;
+      if (!world.bought[e.offer] && world.purse.splitter >= e.price) {
+        world.purse.splitter -= e.price;
         world.bought[e.offer] = true;
         stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t });
       }
@@ -169,7 +169,7 @@ export function applyWorldEvent(world, e, ctx) {
     case 'sell':
       if (entry && (entry.where === 'rucksack' || entry.where === 'schrank')) {
         removeEntry(world, e.inst);
-        world.purse.aether += e.price;
+        world.purse.splitter += e.price;
       }
       break;
     case 'drop':

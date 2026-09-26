@@ -200,7 +200,7 @@ export const game = {
   },
 
   buy(offer) {
-    if (!this.unlocked('haendler') || this.state.world.purse.aether < offer.price) return;
+    if (!this.unlocked('haendler') || this.state.world.purse.splitter < offer.price) return;
     this.add([this.event('buy', { offer: offer.offer, kind: offer.kind, thing: offer.id, price: offer.price })]);
   },
 

@@ -6,7 +6,7 @@ import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
 
-export const MATERIAL_KEYS = ['aether', 'pilzholz', 'stein'];
+export const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 
 export function viewHead(eyebrow, title, ...actions) {
   return h('header', { class: 'view-head' },
@@ -41,7 +41,7 @@ export function supplies(purse) {
 }
 
 export function price(amount, have) {
-  return h('span', { class: `price ${have < amount ? 'lacking' : ''}` }, resourceIcon('aether'), String(amount));
+  return h('span', { class: `price ${have < amount ? 'lacking' : ''}` }, resourceIcon('splitter'), String(amount));
 }
 
 export function formatMinutes(minutes) {

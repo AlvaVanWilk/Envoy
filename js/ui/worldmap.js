@@ -210,7 +210,7 @@ function questCard(quest, game, c) {
     if (monsters.length > 0) facts.push(fact('Im Kampf', h('span', { class: 'muted' }, 'Kraft trifft härter, Ausdauer hält länger, Beweglichkeit weicht aus, Gelassenheit beruhigt.')));
     const reward = rewardText(quest, c);
     if (reward.length > 0) facts.push(fact(quest.kind === 'hoehle' ? 'Alle überwunden' : 'Ertrag', h('span', { class: 'res-list' }, reward)));
-    if (monsters.length > 0) facts.push(fact('Beute', h('span', { class: 'muted' }, 'Äther von jedem Geist, manchmal ein Fundstück.')));
+    if (monsters.length > 0) facts.push(fact('Beute', h('span', { class: 'muted' }, 'Traumsplitter von jedem Geist, manchmal ein Fundstück.')));
   }
 
   return h('article', { class: `quest-card ${state.status}` },

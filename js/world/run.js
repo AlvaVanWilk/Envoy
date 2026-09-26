@@ -1,7 +1,7 @@
 // What happens on site. Nothing fails: the stats decide whether a quest can
 // be started at all, how long the work takes and how much it yields.
 //   sammeln   material, more with the `ertrag` stats
-//   erkunden  a fixed reward, a little more Äther with the `ertrag` stats
+//   erkunden  a fixed reward, a few more Traumsplitter with the `ertrag` stats
 //   bauen     uses material, gives the reward
 //   kampf     one spirit: calmed, defeated or, if it is too strong, driven off
 //   hoehle    several spirits one after the other, as far as the Envoy's life reaches
@@ -47,7 +47,7 @@ function lootThing(ctx, rng) {
 function monsterLoot(monster, result, ctx, rng, into) {
   const luck = 1 + ctx.fx.glueck / 100;
   const share = result === 'calmed' ? 1.5 : result === 'driven' ? DRIVEN_LOOT_SHARE : 1;
-  into.aether += Math.round(roll(rng, monster.loot.aether) * share * luck);
+  into.splitter += Math.round(roll(rng, monster.loot.splitter) * share * luck);
   into.pilzholz += Math.round(roll(rng, monster.loot.pilzholz) * (result === 'driven' ? DRIVEN_LOOT_SHARE : 1));
   into.stein += Math.round(roll(rng, monster.loot.stein) * (result === 'driven' ? DRIVEN_LOOT_SHARE : 1));
   if (result !== 'driven' && rng() * 100 < monster.loot.itemChance * luck) {
@@ -57,12 +57,12 @@ function monsterLoot(monster, result, ctx, rng, into) {
 }
 
 // How much the `ertrag` stats add: gathering brings one piece more for
-// every three levels, exploring a little more Äther per level.
+// every three levels, exploring a few more Traumsplitter per level.
 export function yieldBonus(quest, ctx) {
   const level = average(ctx.stats, quest.yieldStats || []);
   return {
     pieces: quest.kind === 'sammeln' ? Math.floor(level / 3) : 0,
-    aether: (quest.kind === 'erkunden' ? 1 + YIELD_PER_LEVEL * (level - 1) : 1) * (1 + ctx.fx.glueck / 100),
+    splitter: (quest.kind === 'erkunden' ? 1 + YIELD_PER_LEVEL * (level - 1) : 1) * (1 + ctx.fx.glueck / 100),
   };
 }
 
@@ -73,7 +73,7 @@ export function rewardRange(quest, ctx) {
   const bonus = yieldBonus(quest, ctx);
   const piece = (range) => (range[1] > 0 ? [range[0] + bonus.pieces, range[1] + bonus.pieces] : [0, 0]);
   return {
-    aether: r.aether.map((v) => Math.round(v * bonus.aether)),
+    splitter: r.splitter.map((v) => Math.round(v * bonus.splitter)),
     pilzholz: piece(r.pilzholz),
     stein: piece(r.stein),
   };
@@ -83,7 +83,7 @@ function fixedReward(quest, ctx, rng, into) {
   const r = quest.reward;
   if (!r) return;
   const bonus = yieldBonus(quest, ctx);
-  into.aether += Math.round(roll(rng, r.aether) * bonus.aether);
+  into.splitter += Math.round(roll(rng, r.splitter) * bonus.splitter);
   into.pilzholz += roll(rng, r.pilzholz, r.pilzholz[1] > 0 ? bonus.pieces : 0);
   into.stein += roll(rng, r.stein, r.stein[1] > 0 ? bonus.pieces : 0);
   for (const id of r.items) into.things.push({ kind: 'item', id });
@@ -94,7 +94,7 @@ function fixedReward(quest, ctx, rng, into) {
 
 export function runQuest(quest, ctx, seed) {
   const rng = seededRandom(seed);
-  const reward = { aether: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false };
+  const reward = { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false };
   const fights = [];
   let minutes = quest.minutes;
   let cleared = true;

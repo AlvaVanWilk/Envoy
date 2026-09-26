@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T18:45:02Z",
+ "generated": "2026-09-26T19:03:37Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -235,7 +235,7 @@
    "gewandtheit": 1,
    "calmable": true,
    "loot": {
-    "aether": [
+    "splitter": [
      2,
      4
     ],
@@ -261,7 +261,7 @@
    "gewandtheit": 3,
    "calmable": false,
    "loot": {
-    "aether": [
+    "splitter": [
      3,
      6
     ],
@@ -287,7 +287,7 @@
    "gewandtheit": 2,
    "calmable": true,
    "loot": {
-    "aether": [
+    "splitter": [
      3,
      5
     ],
@@ -313,7 +313,7 @@
    "gewandtheit": 5,
    "calmable": false,
    "loot": {
-    "aether": [
+    "splitter": [
      4,
      7
     ],
@@ -339,7 +339,7 @@
    "gewandtheit": 3,
    "calmable": false,
    "loot": {
-    "aether": [
+    "splitter": [
      6,
      10
     ],
@@ -365,7 +365,7 @@
    "gewandtheit": 4,
    "calmable": true,
    "loot": {
-    "aether": [
+    "splitter": [
      5,
      9
     ],
@@ -391,7 +391,7 @@
    "gewandtheit": 3,
    "calmable": true,
    "loot": {
-    "aether": [
+    "splitter": [
      6,
      11
     ],
@@ -417,7 +417,7 @@
    "gewandtheit": 7,
    "calmable": true,
    "loot": {
-    "aether": [
+    "splitter": [
      8,
      13
     ],
@@ -443,7 +443,7 @@
    "gewandtheit": 5,
    "calmable": false,
    "loot": {
-    "aether": [
+    "splitter": [
      9,
      15
     ],
@@ -469,7 +469,7 @@
    "gewandtheit": 7,
    "calmable": false,
    "loot": {
-    "aether": [
+    "splitter": [
      11,
      18
     ],
@@ -495,7 +495,7 @@
    "gewandtheit": 7,
    "calmable": false,
    "loot": {
-    "aether": [
+    "splitter": [
      20,
      30
     ],
@@ -521,7 +521,7 @@
    "gewandtheit": 9,
    "calmable": true,
    "loot": {
-    "aether": [
+    "splitter": [
      30,
      45
     ],
@@ -559,7 +559,7 @@
    "consumes": {},
    "cost": 2,
    "reward": {
-    "aether": [
+    "splitter": [
      0,
      0
     ],
@@ -597,7 +597,7 @@
    "consumes": {},
    "cost": 2,
    "reward": {
-    "aether": [
+    "splitter": [
      0,
      0
     ],
@@ -636,7 +636,7 @@
    },
    "cost": 2,
    "reward": {
-    "aether": [
+    "splitter": [
      10,
      10
     ],
@@ -682,7 +682,7 @@
    "consumes": {},
    "cost": 2,
    "reward": {
-    "aether": [
+    "splitter": [
      4,
      4
     ],
@@ -729,7 +729,7 @@
    "consumes": {},
    "cost": 3,
    "reward": {
-    "aether": [
+    "splitter": [
      25,
      25
     ],
@@ -777,7 +777,7 @@
    "consumes": {},
    "cost": 3,
    "reward": {
-    "aether": [
+    "splitter": [
      30,
      30
     ],
@@ -823,7 +823,7 @@
    "consumes": {},
    "cost": 2,
    "reward": {
-    "aether": [
+    "splitter": [
      15,
      15
     ],
@@ -869,7 +869,7 @@
    "consumes": {},
    "cost": 1,
    "reward": {
-    "aether": [
+    "splitter": [
      8,
      8
     ],
@@ -918,7 +918,7 @@
    "consumes": {},
    "cost": 3,
    "reward": {
-    "aether": [
+    "splitter": [
      20,
      20
     ],
@@ -971,7 +971,7 @@
    },
    "cost": 4,
    "reward": {
-    "aether": [
+    "splitter": [
      30,
      30
     ],
@@ -1013,7 +1013,7 @@
    "consumes": {},
    "cost": 3,
    "reward": {
-    "aether": [
+    "splitter": [
      35,
      35
     ],
@@ -1059,7 +1059,7 @@
    "consumes": {},
    "cost": 4,
    "reward": {
-    "aether": [
+    "splitter": [
      60,
      60
     ],
@@ -1105,7 +1105,7 @@
    "consumes": {},
    "cost": 4,
    "reward": {
-    "aether": [
+    "splitter": [
      40,
      40
     ],
@@ -1150,7 +1150,7 @@
    "consumes": {},
    "cost": 5,
    "reward": {
-    "aether": [
+    "splitter": [
      120,
      120
     ],
@@ -1163,10 +1163,10 @@
      0
     ],
     "items": [
-     "handschuhe_aetherwickel_4"
+     "handschuhe_nebelwickel_4"
     ],
     "furniture": [
-     "aetherschale"
+     "splitterschale"
     ],
     "unlocks": [],
     "rest": false
@@ -1196,7 +1196,7 @@
    "consumes": {},
    "cost": 5,
    "reward": {
-    "aether": [
+    "splitter": [
      200,
      200
     ],
@@ -1224,7 +1224,7 @@
    "cost": {
     "pilzholz": 0,
     "stein": 0,
-    "aether": 0
+    "splitter": 0
    },
    "erholung": 5,
    "plaetze": 2,
@@ -1238,7 +1238,7 @@
    "cost": {
     "pilzholz": 8,
     "stein": 20,
-    "aether": 40
+    "splitter": 40
    },
    "erholung": 10,
    "plaetze": 3,
@@ -1252,7 +1252,7 @@
    "cost": {
     "pilzholz": 15,
     "stein": 35,
-    "aether": 100
+    "splitter": 100
    },
    "erholung": 15,
    "plaetze": 5,
@@ -1266,7 +1266,7 @@
    "cost": {
     "pilzholz": 30,
     "stein": 50,
-    "aether": 250
+    "splitter": 250
    },
    "erholung": 22,
    "plaetze": 6,
@@ -1280,7 +1280,7 @@
    "cost": {
     "pilzholz": 50,
     "stein": 80,
-    "aether": 500
+    "splitter": 500
    },
    "erholung": 30,
    "plaetze": 8,
@@ -1435,8 +1435,8 @@
    "icon": "assets/icons/icon_einrichtung_kamin.png"
   },
   {
-   "id": "aetherschale",
-   "name": "Ätherschale",
+   "id": "splitterschale",
+   "name": "Splitterschale",
    "effekt": {
     "glueck": 8
    },
@@ -1445,8 +1445,8 @@
    ],
    "preis": 0,
    "abStufe": 3,
-   "text": "Eine Schale voller Licht, das nicht ausgeht.",
-   "icon": "assets/icons/icon_einrichtung_aetherschale.png"
+   "text": "Eine Schale voller Traumsplitter, die nie ganz erlöschen.",
+   "icon": "assets/icons/icon_einrichtung_splitterschale.png"
   }
  ]
 }
