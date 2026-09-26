@@ -57,14 +57,15 @@ function refillText(hours) {
   return `voll in ${formatMinutes(Math.ceil(hours * 60))}`;
 }
 
-// The stamina bar with one notch per point.
+// The stamina bar with a notch every 5 points (10 or 20 on a long bar).
 export function staminaBar(st) {
   const value = Math.floor(st.value);
+  const step = st.max <= 60 ? 5 : st.max <= 120 ? 10 : 20;
   return h('div', { class: 'stamina', 'aria-label': `Ausdauerleiste ${value} von ${st.max}` },
     h('div', { class: 'stamina-top' },
       h('span', { class: 'stamina-label' }, 'Ausdauerleiste'),
       h('span', { class: 'stamina-value' }, h('strong', {}, `${value}`), ` / ${st.max}`)),
-    h('div', { class: 'stamina-bar', style: { '--notches': String(st.max) } },
+    h('div', { class: 'stamina-bar', style: { '--notches': String(st.max / step) } },
       h('span', { class: 'stamina-fill', style: { width: `${(100 * st.value) / st.max}%` } })),
     h('p', { class: 'stamina-note' }, refillText(st.hoursToFull)));
 }

@@ -25,8 +25,9 @@ const clockTime = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-di
 function phaseLine(exp, p) {
   if (p.phase === 'done') return 'Zurück im Lager';
   const name = PHASES.find((x) => x.id === p.phase).name;
-  const minutes = Math.ceil(p.remaining);
-  return `${name} · noch ${minutes <= 1 ? 'eine Minute' : formatMinutes(minutes)}`;
+  // the last minute in seconds, so a short trip visibly moves
+  const seconds = Math.ceil(p.remaining * 60);
+  return `${name} · noch ${seconds < 60 ? `${seconds} Sek.` : formatMinutes(Math.ceil(p.remaining))}`;
 }
 
 // The bar in three parts, as wide as their share of the time.

@@ -208,7 +208,7 @@ Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 | treffer | Trefferchance in Prozentpunkten |
 | ausweichen | Ausweichchance in Prozentpunkten |
 | beruhigen | Chance, einen Geist zu beruhigen |
-| reise | weniger Ausdauer je Weg (mindestens 1) und etwas schneller unterwegs |
+| reise | weniger Ausdauer je Weg (mindestens 1), damit auch kürzer unterwegs |
 | erholung | Ausdauerleiste füllt sich schneller |
 | glueck | mehr Bannsplitter und öfter ein Fundstück |
 
@@ -239,29 +239,37 @@ Rückweg. Alle drei Teile dauern echte Minuten; eine dreiteilige Leiste zeigt, w
 Envoy gerade ist und wann er zurück ist. Auf der Karte wandert seine Marke den Weg
 entlang. Es läuft immer nur eine Expedition.
 
-- **Weg** (je Richtung) = Entfernung × 0,25 Minuten, mindestens 2. Mit jedem Level
-  Ausdauer 3 % schneller, höchstens doppelt so schnell. Die Karte ist 1,5-mal so breit
-  wie hoch, das fließt in die Entfernung ein.
-- **Ausdauer** = 2 × Weg + Kosten der Quest. Ein Weg kostet Entfernung ÷ 20, gerundet,
-  mindestens 1. Stiefel und Umhänge können ihn billiger machen, ein überfüllter
-  Rucksack verteuert jeden Weg um 1.
-- **Vor Ort**: die Dauer aus der Tabelle. Bei Sammeln, Erkunden und Bauen verkürzt jedes
-  Level der unter „Tempo“ genannten Stats die Zeit um 4 %, höchstens auf die Hälfte.
-  Bei Kämpfen kommen je Kampf 2 Minuten plus 1,2 Minuten je Runde dazu.
+**Zeit folgt Ausdauer: Jeder Punkt Ausdauer ist eine Minute unterwegs.** Was lange
+dauert, kostet entsprechend viel Ausdauer; was wenig kostet, geht schnell. Die Spanne
+reicht von drei Minuten (etwas auflesen gleich neben dem Lager) bis weit über eine
+Stunde (eine Nacht am Mondsee, bis zum Horizont). Lange Quests brauchen eine lange
+Leiste und damit den Wert Ausdauer. Die Leiste begrenzt, wie viel an einem Stück geht;
+ist sie leer, ist Pause.
+
+- **Weg** (je Richtung) = Entfernung ÷ 20 Ausdauer, gerundet, mindestens 1. Mit jedem
+  Level Ausdauer 3 % kürzer, höchstens auf die Hälfte. Stiefel und Umhänge können ihn
+  billiger machen, ein überfüllter Rucksack verteuert jeden Weg um 1. Die Karte ist
+  1,5-mal so breit wie hoch, das fließt in die Entfernung ein.
+- **Vor Ort** = die Kosten aus der Tabelle. Bei Sammeln, Erkunden und Bauen macht jedes
+  Level der unter „Tempo“ genannten Stats die Arbeit 4 % kürzer und damit billiger,
+  höchstens auf die Hälfte. Kämpfe dauern so lange, wie die Tabelle sagt, gleich wie
+  viele Runden sie gehen.
+- **Ausdauer** der Expedition = 2 × Weg + vor Ort, **Dauer** = ebenso viele Minuten.
 - Das Ergebnis wird beim Aufbruch berechnet und als Ereignis gespeichert, zählt aber
   erst, wenn der Envoy zurück ist. Material zum Bauen wird gleich mitgenommen.
 - Zurück im Lager erscheint einmal ein Bericht: Kämpfe, Mitgebrachtes, Neues im
   Kompendium.
 
 Vor dem Aufbruch zeigt jede Quest: Voraussetzung (erfüllt oder nicht), Dauer mit
-Hinweg, vor Ort und Rückweg, Ausdauer, welche Stats sie schneller machen, welche den
+Hinweg, vor Ort und Rückweg, Ausdauer, welche Stats sie kürzer machen, welche den
 Ertrag erhöhen, und den möglichen Ertrag. Reicht die Ausdauer gerade nicht, steht dort,
 wann sie reicht. Ist die Leiste insgesamt zu kurz, steht dort, dass sie mit Ausdauer
 wächst.
 
 ### Ausdauerleiste
 
-- Größe = 10 + 2 × Ausdauer.
+- Größe = 20 + 4 × Ausdauer (24 bei Level 1, 60 bei Level 10). Eine Kerbe je 5 Punkte,
+  auf einer langen Leiste je 10 oder 20.
 - Sie füllt sich in etwa 8 Stunden, schneller mit Gelassenheit (+3 % je Level) und
   Erholung aus Zuhause, Einrichtung und Ausrüstung.
 - Die erledigte Gelassenheits-Aufgabe ist eine echte Rast: +50 % der Leiste.
@@ -272,7 +280,7 @@ Quests stehen an festen Orten. Arten:
 
 | Art | Was geschieht | Was die Stats bewirken |
 | --- | --- | --- |
-| Sammeln | Pilzholz oder Stein | +1 Stück je 3 Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
+| Sammeln | Pilzholz oder Stein | +5 % Stücke je Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
 | Erkunden | feste Belohnung, oft Bannsplitter | +5 % Bannsplitter je Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
 | Bauen | verbraucht Pilzholz und Stein, schaltet frei | kürzer mit den Tempo-Stats |
 | Kampf | ein Geist | siehe Kampf |
@@ -282,11 +290,27 @@ Voraussetzungen: Mindestwerte in Stats, erledigte Quests oder reale Leistung (Su
 echter Kilometer oder Stockwerke aus den Tagesaufgaben). Manche Quests sind
 wiederholbar, mit Abklingzeit in Tagen.
 
+Ein Bonus wird bei kleinen Mengen zufällig auf- oder abgerundet: 1 Stück mit +30 %
+ergibt in drei von zehn Fällen 2. So lohnt er sich auch bei kurzen Quests.
+
+**Sammeln in drei Größen.** Am Pilzhain und im Steinbruch gibt es je eine kurze Quest
+(1 Ausdauer vor Ort, 1 Stück), eine mittlere (6, 2 bis 3 Stücke) und eine lange
+(20, 7 bis 9 Stücke, mit Kraft-Voraussetzung). Kurze Quests sind zum Spielen zwischendurch,
+lange lohnen sich etwas mehr, weil der Weg nur einmal anfällt. Bannsplitter lassen sich
+im Uferkies am Stillen Ufer sammeln (1 Stück). Wiederholbare lange Quests (Wache an der
+Furt, Eine Nacht am Mondsee, Bis zum Horizont) bringen mehr Bannsplitter, dauern aber
+40 bis 90 Minuten vor Ort und haben eine Abklingzeit.
+
+**Tempo der Wirtschaft.** Die Erträge sind bewusst klein, damit schnelle Quests nicht
+alles in wenigen Tagen öffnen. Wer täglich alle vier Aufgaben macht und dreimal am Tag
+die ganze Leiste verbraucht, hat die Steinhütte nach etwa 5 Tagen, das Turmhaus nach
+etwa vier Wochen. Die Quests der Welt bleiben an die Werte und an echte Kilometer und
+Stockwerke gebunden.
+
 **Begegnungen:** Jeden Tag erscheinen an wilden Orten Geister (je Ort 55 % Chance,
 mindestens eine an einem von Anfang an offenen Ort). Welcher Geist kommt, richtet sich
 nach der Stärke des Helden (Durchschnitt der Stats zu Tagesbeginn): meist gleich stark,
-manchmal eine Stufe darüber. Eine Begegnung kostet 2 Ausdauer plus Wege und dauert vor
-Ort 5 Minuten plus den Kampf. Die Übersicht listet die Geister des Tages.
+manchmal eine Stufe darüber. Eine Begegnung kostet 3 Ausdauer vor Ort plus Wege. Die Übersicht listet die Geister des Tages.
 
 ### Kampf
 
@@ -354,6 +378,16 @@ Lager). Stufen: Zelt → Steinhütte → Baracke → Steinhaus → Turmhaus, jew
 Stein und Bannsplittern ausgebaut. Jede Stufe gibt Erholung (+5 % bis +30 %), Plätze für
 Einrichtung und Schrankfächer. Einrichtung (vom Händler, als Beute oder aus Quests)
 gibt Erholung oder Glück.
+
+| Stufe | Pilzholz | Stein | Bannsplitter |
+| --- | --- | --- | --- |
+| Steinhütte | 20 | 40 | 60 |
+| Baracke | 50 | 100 | 200 |
+| Steinhaus | 100 | 180 | 450 |
+| Turmhaus | 180 | 300 | 900 |
+
+Ein Ausbau zählt immer mit dem Preis, den er beim Bauen hatte; spätere Änderungen an
+der Tabelle nehmen kein gebautes Zuhause wieder weg.
 
 ### Kompendium
 
@@ -430,8 +464,8 @@ Blatt „Erklärung“ mit allen Spalten.
   datei_figur, datei_icon, notiz
 - `data/welt.xlsx`: Blätter Orte, Monster, Quests, Zuhause, Einrichtung. Das Blatt
   Quests hat: id, name, ort, art (sammeln, erkunden, bauen, kampf, hoehle), text,
-  monster, voraussetzung, dauer (Minuten vor Ort), tempo, ertrag, verbrauch, kosten,
-  belohnung, wiederholbar, abklingzeit
+  monster, voraussetzung, tempo, ertrag, verbrauch, kosten (Ausdauer vor Ort, zugleich
+  Minuten), belohnung, wiederholbar, abklingzeit
 
 ## Speicherung, Abgleich, Veröffentlichung
 

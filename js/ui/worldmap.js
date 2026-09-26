@@ -146,12 +146,12 @@ function fact(label, ...value) {
   return h('div', { class: 'fact' }, h('dt', {}, label), h('dd', {}, ...value));
 }
 
-function durationText(plan, fights) {
+function durationText(plan) {
   const total = plan.out + plan.act + plan.back;
   const parts = plan.out > 0
     ? `${plan.out} hin · ${plan.act} vor Ort · ${plan.back} zurück`
     : `${plan.act} vor Ort`;
-  return [h('strong', {}, `${fights ? 'etwa ' : ''}${formatMinutes(total)}`), h('span', { class: 'muted' }, ` · ${parts}`)];
+  return [h('strong', {}, formatMinutes(total)), h('span', { class: 'muted' }, ` · ${parts}`)];
 }
 
 function startButton(quest, plan, game, state) {
@@ -204,9 +204,9 @@ function questCard(quest, game, c) {
       const reach = plan.outcome.fights.filter((f) => f.result !== 'driven').length;
       facts.push(fact('Geister', h('span', {}, `${monsters.length} nacheinander. Mit den jetzigen Werten schafft der Envoy etwa ${reach} davon.`)));
     }
-    facts.push(fact('Dauer', ...durationText(plan, monsters.length > 0)));
+    facts.push(fact('Dauer', ...durationText(plan)));
     facts.push(fact('Ausdauer', h('strong', {}, String(plan.cost))));
-    if (monsters.length === 0 && quest.speedStats.length > 0) facts.push(fact('Schneller mit', statList(quest.speedStats)));
+    if (monsters.length === 0 && quest.speedStats.length > 0) facts.push(fact('Kürzer mit', statList(quest.speedStats)));
     if (quest.yieldStats.length > 0) facts.push(fact('Mehr Ertrag mit', statList(quest.yieldStats)));
     if (monsters.length > 0) facts.push(fact('Im Kampf', h('span', { class: 'muted' }, 'Kraft trifft härter, Ausdauer hält länger, Beweglichkeit weicht aus, Gelassenheit beruhigt.')));
     const reward = rewardText(quest, c);

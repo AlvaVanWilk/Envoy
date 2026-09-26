@@ -4,7 +4,7 @@
 //   encounters: every day a few spirits appear at wild places, chosen to
 //   fit the hero's current strength (average of the stats at the start of the day)
 
-import { ENCOUNTER_COST, ENCOUNTER_CHANCE, ENCOUNTER_MINUTES, STATS, MATERIALS } from '../config.js';
+import { ENCOUNTER_COST, ENCOUNTER_CHANCE, STATS, MATERIALS } from '../config.js';
 import { seededRandom } from './rng.js';
 import { heroPower } from './hero.js';
 import { addDays } from '../days.js';
@@ -73,7 +73,6 @@ export function encountersFor(day, ctx) {
         text: monster.text,
         monsters: [monster.id],
         conditions: [],
-        minutes: ENCOUNTER_MINUTES,
         speedStats: [],
         yieldStats: [],
         consumes: {},

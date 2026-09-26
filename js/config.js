@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '3.4.0';
+export const APP_VERSION = '3.5.0';
 
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
@@ -95,28 +95,29 @@ export const MATERIALS = {
 
 // Ausdauerleiste: size from the Ausdauer stat, refills in about 8 hours,
 // faster with Gelassenheit and a comfortable home.
-export const STAMINA_BASE = 10;
-export const STAMINA_PER_AUSDAUER = 2;
+export const STAMINA_BASE = 20;
+export const STAMINA_PER_AUSDAUER = 4;
 export const STAMINA_REFILL_HOURS = 8;
 export const STAMINA_BONUS_PER_GELASSENHEIT = 0.03;   // +3 % speed per level
 export const STAMINA_REST_TASK_SHARE = 0.5;           // Gelassenheit task: half a bar
 
+// Time follows stamina: every point of stamina an expedition costs is one
+// minute away from the camp. Short trips are quick; a long one costs as
+// much stamina as it takes time.
+export const MINUTES_PER_STAMINA = 1;
+
 // Expeditions start and end at the camp. Map coordinates are percent;
 // x counts 1.5 because the map is wider than high.
 export const MAP_ASPECT = 1.5;
-export const TRAVEL_UNITS_PER_STAMINA = 20;           // stamina per way
-export const TRAVEL_MINUTES_PER_UNIT = 0.25;          // real minutes per way
-export const TRAVEL_MIN_MINUTES = 2;
-export const TRAVEL_SPEEDUP_PER_AUSDAUER = 0.03;      // faster walking with Ausdauer
+export const TRAVEL_UNITS_PER_STAMINA = 20;           // map distance per stamina of a way
+export const TRAVEL_SPEEDUP_PER_AUSDAUER = 0.03;      // shorter ways with Ausdauer
 export const OVERLOAD_TRAVEL_EXTRA = 1;               // over-full backpack: +1 per way
 
-// Time on site: every level of the stats named under `tempo` shortens it,
-// at most to half.
+// Work on site: every level of the stats named under `tempo` makes it
+// shorter and so cheaper, at most by half.
 export const SPEEDUP_PER_LEVEL = 0.04;
 export const FASTEST_SHARE = 0.5;
-export const FIGHT_MINUTES = 2;                       // per fight
-export const FIGHT_MINUTES_PER_ROUND = 1.2;
-export const YIELD_PER_LEVEL = 0.05;                  // more Bannsplitter from exploring
+export const YIELD_PER_LEVEL = 0.05;                  // +5 % yield per level of the `ertrag` stats
 
 // Nobody fails. A spirit that is too strong is driven off (less loot);
 // in a cave the Envoy goes on while enough life is left.
@@ -125,7 +126,6 @@ export const CAVE_RETREAT_SHARE = 0.35;
 
 export const BACKPACK_SIZE = 8;
 export const ENCOUNTER_CHANCE = 0.55;                  // per wild place and day
-export const ENCOUNTER_COST = 2;
-export const ENCOUNTER_MINUTES = 5;
+export const ENCOUNTER_COST = 3;                        // stamina on site
 export const TRADER_OFFERS = 5;
 export const SELL_SHARE = 1 / 3;

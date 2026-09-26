@@ -208,8 +208,9 @@ export function applyWorldEvent(world, e, ctx) {
       break;
     case 'build': {
       const next = ctx.catalog.home[world.home];
-      if (world.home > 0 && next && MATERIAL_KEYS.every((k) => world.purse[k] >= next.cost[k])) {
-        for (const k of MATERIAL_KEYS) world.purse[k] -= next.cost[k];
+      const cost = next && priceAtTheTime(e.cost, next.cost);
+      if (world.home > 0 && next && MATERIAL_KEYS.every((k) => world.purse[k] >= cost[k])) {
+        for (const k of MATERIAL_KEYS) world.purse[k] -= cost[k];
         world.home += 1;
       }
       break;
@@ -217,6 +218,17 @@ export function applyWorldEvent(world, e, ctx) {
     default:
       break;
   }
+}
+
+// A build counts with the price it had when it was built, so a later change
+// in data/welt.xlsx never takes away a home that already stands.
+function priceAtTheTime(stored, current) {
+  if (!stored) return current;
+  const price = { splitter: 0, pilzholz: 0, stein: 0 };
+  for (const [key, amount] of Object.entries(stored)) {
+    if (materialKey(key) in price) price[materialKey(key)] = amount || 0;
+  }
+  return price;
 }
 
 // Finishing the Gelassenheit task is a real rest: half a bar back.

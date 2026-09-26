@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T19:23:54Z",
+ "generated": "2026-09-26T23:24:45Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -541,6 +541,41 @@
  ],
  "quests": [
   {
+   "id": "q-pilzholz-klein",
+   "name": "Pilzholz auflesen",
+   "place": "pilzhain",
+   "kind": "sammeln",
+   "text": "Was der Wind von den Hüten gebrochen hat, liegt leicht im Moos.",
+   "monsters": [],
+   "conditions": [],
+   "speedStats": [],
+   "yieldStats": [
+    "kraft"
+   ],
+   "consumes": {},
+   "cost": 1,
+   "reward": {
+    "splitter": [
+     0,
+     0
+    ],
+    "pilzholz": [
+     1,
+     1
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 0
+  },
+  {
    "id": "q-pilzholz",
    "name": "Pilzholz schlagen",
    "place": "pilzhain",
@@ -548,7 +583,6 @@
    "text": "Einen Stiel fällen und in leichte, handliche Stücke teilen.",
    "monsters": [],
    "conditions": [],
-   "minutes": 15.0,
    "speedStats": [
     "kraft",
     "ausdauer"
@@ -557,7 +591,7 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 2,
+   "cost": 6,
    "reward": {
     "splitter": [
      0,
@@ -565,11 +599,90 @@
     ],
     "pilzholz": [
      2,
-     4
+     3
     ],
     "stein": [
      0,
      0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 0
+  },
+  {
+   "id": "q-pilzholz-gross",
+   "name": "Einen Riesenpilz fällen",
+   "place": "pilzhain",
+   "kind": "sammeln",
+   "text": "Ein ganzer Stamm, so hoch wie eine Säule. Das Holz reicht für eine Wand.",
+   "monsters": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "kraft",
+     "min": 4
+    }
+   ],
+   "speedStats": [
+    "kraft",
+    "ausdauer"
+   ],
+   "yieldStats": [
+    "kraft"
+   ],
+   "consumes": {},
+   "cost": 20,
+   "reward": {
+    "splitter": [
+     0,
+     0
+    ],
+    "pilzholz": [
+     7,
+     9
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 0
+  },
+  {
+   "id": "q-stein-klein",
+   "name": "Lose Steine auflesen",
+   "place": "steinbruch",
+   "kind": "sammeln",
+   "text": "Am Rand des Bruchs liegt, was von allein herabgefallen ist.",
+   "monsters": [],
+   "conditions": [],
+   "speedStats": [],
+   "yieldStats": [
+    "kraft"
+   ],
+   "consumes": {},
+   "cost": 1,
+   "reward": {
+    "splitter": [
+     0,
+     0
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     1,
+     1
     ],
     "items": [],
     "furniture": [],
@@ -587,7 +700,6 @@
    "text": "Lose Blöcke lösen und handlich schlagen.",
    "monsters": [],
    "conditions": [],
-   "minutes": 15.0,
    "speedStats": [
     "kraft"
    ],
@@ -595,7 +707,7 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 2,
+   "cost": 6,
    "reward": {
     "splitter": [
      0,
@@ -607,7 +719,50 @@
     ],
     "stein": [
      2,
-     4
+     3
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 0
+  },
+  {
+   "id": "q-stein-gross",
+   "name": "Einen Block lösen",
+   "place": "steinbruch",
+   "kind": "sammeln",
+   "text": "Ein Block aus der Wand, sauber gespalten. Schwer, aber er trägt ein Haus.",
+   "monsters": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "kraft",
+     "min": 5
+    }
+   ],
+   "speedStats": [
+    "kraft"
+   ],
+   "yieldStats": [
+    "kraft"
+   ],
+   "consumes": {},
+   "cost": 20,
+   "reward": {
+    "splitter": [
+     0,
+     0
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     7,
+     9
     ],
     "items": [],
     "furniture": [],
@@ -625,7 +780,6 @@
    "text": "Zwischen den Säulen ist Platz für ein Zelt. Es fehlt nur das Material.",
    "monsters": [],
    "conditions": [],
-   "minutes": 30.0,
    "speedStats": [
     "kraft"
    ],
@@ -634,7 +788,7 @@
     "pilzholz": 6,
     "stein": 6
    },
-   "cost": 2,
+   "cost": 10,
    "reward": {
     "splitter": [
      10,
@@ -659,6 +813,41 @@
    "cooldown": 0
   },
   {
+   "id": "q-uferkies",
+   "name": "Splitter im Uferkies",
+   "place": "stillesufer",
+   "kind": "erkunden",
+   "text": "Wo früher Geister gebannt wurden, glimmen noch Splitter zwischen den Kieseln.",
+   "monsters": [],
+   "conditions": [],
+   "speedStats": [],
+   "yieldStats": [
+    "gelassenheit"
+   ],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "splitter": [
+     1,
+     1
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 0
+  },
+  {
    "id": "q-saeule",
    "name": "Die umgestürzte Säule",
    "place": "stillesufer",
@@ -672,7 +861,6 @@
      "min": 3
     }
    ],
-   "minutes": 20.0,
    "speedStats": [
     "kraft"
    ],
@@ -680,7 +868,7 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 2,
+   "cost": 8,
    "reward": {
     "splitter": [
      4,
@@ -723,11 +911,10 @@
      "min": 3
     }
    ],
-   "minutes": 10.0,
    "speedStats": [],
    "yieldStats": [],
    "consumes": {},
-   "cost": 3,
+   "cost": 6,
    "reward": {
     "splitter": [
      25,
@@ -752,6 +939,49 @@
    "cooldown": 0
   },
   {
+   "id": "q-furtwache",
+   "name": "Wache an der Furt",
+   "place": "nebelfurt",
+   "kind": "erkunden",
+   "text": "Lange am Wasser sitzen, bis der Nebel zeigt, was er mit sich trägt.",
+   "monsters": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "gelassenheit",
+     "min": 5
+    }
+   ],
+   "speedStats": [
+    "gelassenheit"
+   ],
+   "yieldStats": [
+    "gelassenheit"
+   ],
+   "consumes": {},
+   "cost": 40,
+   "reward": {
+    "splitter": [
+     9,
+     12
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 1
+  },
+  {
    "id": "q-echohoehle",
    "name": "Die Echohöhle",
    "place": "echohoehle",
@@ -771,11 +1001,10 @@
      "min": 2
     }
    ],
-   "minutes": 5.0,
    "speedStats": [],
    "yieldStats": [],
    "consumes": {},
-   "cost": 3,
+   "cost": 12,
    "reward": {
     "splitter": [
      30,
@@ -813,7 +1042,6 @@
      "min": 4
     }
    ],
-   "minutes": 20.0,
    "speedStats": [
     "beweglichkeit"
    ],
@@ -821,7 +1049,7 @@
     "beweglichkeit"
    ],
    "consumes": {},
-   "cost": 2,
+   "cost": 12,
    "reward": {
     "splitter": [
      15,
@@ -859,7 +1087,6 @@
      "min": 3
     }
    ],
-   "minutes": 25.0,
    "speedStats": [
     "gelassenheit"
    ],
@@ -867,7 +1094,7 @@
     "gelassenheit"
    ],
    "consumes": {},
-   "cost": 1,
+   "cost": 10,
    "reward": {
     "splitter": [
      8,
@@ -908,7 +1135,6 @@
      "min": 4
     }
    ],
-   "minutes": 30.0,
    "speedStats": [
     "beweglichkeit"
    ],
@@ -916,7 +1142,7 @@
     "gelassenheit"
    ],
    "consumes": {},
-   "cost": 3,
+   "cost": 15,
    "reward": {
     "splitter": [
      20,
@@ -959,7 +1185,6 @@
      "min": 4
     }
    ],
-   "minutes": 45.0,
    "speedStats": [
     "kraft",
     "ausdauer"
@@ -969,7 +1194,7 @@
     "pilzholz": 10,
     "stein": 12
    },
-   "cost": 4,
+   "cost": 25,
    "reward": {
     "splitter": [
      30,
@@ -1007,11 +1232,10 @@
      "min": 6
     }
    ],
-   "minutes": 10.0,
    "speedStats": [],
    "yieldStats": [],
    "consumes": {},
-   "cost": 3,
+   "cost": 6,
    "reward": {
     "splitter": [
      35,
@@ -1036,6 +1260,48 @@
    "cooldown": 0
   },
   {
+   "id": "q-mondnacht",
+   "name": "Eine Nacht am Mondsee",
+   "place": "mondsee",
+   "kind": "erkunden",
+   "text": "Bis der Mond über das Wasser gewandert ist. Was dann im Uferschlamm liegt, hat lange gewartet.",
+   "monsters": [],
+   "conditions": [
+    {
+     "type": "quest",
+     "id": "q-mondsee"
+    }
+   ],
+   "speedStats": [
+    "gelassenheit"
+   ],
+   "yieldStats": [
+    "gelassenheit"
+   ],
+   "consumes": {},
+   "cost": 60,
+   "reward": {
+    "splitter": [
+     15,
+     19
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 2
+  },
+  {
    "id": "q-turm",
    "name": "Der Turm der Stufen",
    "place": "turm",
@@ -1049,7 +1315,6 @@
      "min": 100
     }
    ],
-   "minutes": 40.0,
    "speedStats": [
     "ausdauer"
    ],
@@ -1057,7 +1322,7 @@
     "ausdauer"
    ],
    "consumes": {},
-   "cost": 4,
+   "cost": 45,
    "reward": {
     "splitter": [
      60,
@@ -1095,7 +1360,6 @@
      "min": 30
     }
    ],
-   "minutes": 40.0,
    "speedStats": [
     "ausdauer"
    ],
@@ -1103,7 +1367,7 @@
     "ausdauer"
    ],
    "consumes": {},
-   "cost": 4,
+   "cost": 40,
    "reward": {
     "splitter": [
      40,
@@ -1126,6 +1390,48 @@
    "cooldown": 0
   },
   {
+   "id": "q-horizont",
+   "name": "Bis zum Horizont",
+   "place": "langestrasse",
+   "kind": "erkunden",
+   "text": "Hinter dem Ende der Straße geht es weiter. Wer bis zum Abend läuft, kommt mit vollen Taschen zurück.",
+   "monsters": [],
+   "conditions": [
+    {
+     "type": "quest",
+     "id": "q-langestrasse"
+    }
+   ],
+   "speedStats": [
+    "ausdauer"
+   ],
+   "yieldStats": [
+    "ausdauer"
+   ],
+   "consumes": {},
+   "cost": 90,
+   "reward": {
+    "splitter": [
+     24,
+     30
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 3
+  },
+  {
    "id": "q-aschenthron",
    "name": "Der Aschenthron",
    "place": "aschenhang",
@@ -1144,11 +1450,10 @@
      "min": 8
     }
    ],
-   "minutes": 5.0,
    "speedStats": [],
    "yieldStats": [],
    "consumes": {},
-   "cost": 5,
+   "cost": 25,
    "reward": {
     "splitter": [
      120,
@@ -1190,11 +1495,10 @@
      "min": 10
     }
    ],
-   "minutes": 15.0,
    "speedStats": [],
    "yieldStats": [],
    "consumes": {},
-   "cost": 5,
+   "cost": 20,
    "reward": {
     "splitter": [
      200,
@@ -1236,9 +1540,9 @@
    "stufe": 2,
    "name": "Steinhütte",
    "cost": {
-    "pilzholz": 8,
-    "stein": 20,
-    "splitter": 40
+    "pilzholz": 20,
+    "stein": 40,
+    "splitter": 60
    },
    "erholung": 10,
    "plaetze": 3,
@@ -1250,9 +1554,9 @@
    "stufe": 3,
    "name": "Baracke",
    "cost": {
-    "pilzholz": 15,
-    "stein": 35,
-    "splitter": 100
+    "pilzholz": 50,
+    "stein": 100,
+    "splitter": 200
    },
    "erholung": 15,
    "plaetze": 5,
@@ -1264,9 +1568,9 @@
    "stufe": 4,
    "name": "Steinhaus",
    "cost": {
-    "pilzholz": 30,
-    "stein": 50,
-    "splitter": 250
+    "pilzholz": 100,
+    "stein": 180,
+    "splitter": 450
    },
    "erholung": 22,
    "plaetze": 6,
@@ -1278,9 +1582,9 @@
    "stufe": 5,
    "name": "Turmhaus",
    "cost": {
-    "pilzholz": 50,
-    "stein": 80,
-    "splitter": 500
+    "pilzholz": 180,
+    "stein": 300,
+    "splitter": 900
    },
    "erholung": 30,
    "plaetze": 8,

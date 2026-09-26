@@ -516,26 +516,26 @@ def convert_world(path, item_ids):
         qid = unique_id(report, row, r.get("id", ""), quest_seen)
         if qid is None:
             continue
+        # kosten: stamina for the work on site. It is also its minutes, so an
+        # old column "dauer" is no longer read.
         cost = whole_number(r.get("kosten", ""))
         cooldown = whole_number(r.get("abklingzeit", "")) or 0
-        minutes = number(r.get("dauer", ""))
         kind = text(r.get("art", "")).lower()
         if kind not in QUEST_KINDS:
             report.error(row, f"art '{kind}' unbekannt (möglich: {', '.join(QUEST_KINDS)})")
-        if minutes is None or minutes == "invalid" or minutes <= 0:
-            report.error(row, "dauer muss eine Zahl größer 0 sein (Minuten)")
-            minutes = 10
+        if not isinstance(cost, int) or cost <= 0:
+            report.error(row, "kosten muss eine ganze Zahl größer 0 sein (Ausdauer vor Ort, zugleich Minuten)")
+            cost = 5
         quest = {
             "id": qid, "name": text(r.get("name", "")), "place": text(r.get("ort", "")),
             "kind": kind,
             "text": text(r.get("text", "")),
             "monsters": split_list(r.get("monster", "")),
             "conditions": parse_conditions(report, row, r.get("voraussetzung", "") or r.get("bedingung", "")),
-            "minutes": minutes,
             "speedStats": parse_stats(report, row, r.get("tempo", ""), "tempo"),
             "yieldStats": parse_stats(report, row, r.get("ertrag", ""), "ertrag"),
             "consumes": parse_materials(report, row, r.get("verbrauch", ""), "verbrauch"),
-            "cost": cost if isinstance(cost, int) and cost >= 0 else 2,
+            "cost": cost,
             "reward": parse_rewards(report, row, r.get("belohnung", "")),
             "repeatable": is_yes(r.get("wiederholbar", "")),
             "cooldown": cooldown if isinstance(cooldown, int) else 0,

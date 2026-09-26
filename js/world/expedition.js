@@ -1,8 +1,10 @@
 // An expedition: from the camp to a place, the work there, and back.
-// All three parts take real time. The hero can be on one expedition at a
-// time; the result is known from the start but only counts once back.
+// All three parts take real time: as many minutes as they cost stamina.
+// The hero can be on one expedition at a time; the result is known from
+// the start but only counts once back.
 
-import { camp, wayMinutes, wayStamina, distance } from './map.js';
+import { MINUTES_PER_STAMINA } from '../config.js';
+import { camp, wayStamina, distance } from './map.js';
 import { runQuest } from './run.js';
 import { overloaded } from './inventory.js';
 
@@ -10,10 +12,15 @@ import { overloaded } from './inventory.js';
 export function planExpedition(quest, ctx, seed) {
   const home = camp(ctx.catalog);
   const place = ctx.catalog.placeById.get(quest.place);
-  const way = wayMinutes(home, place, ctx.stats, ctx.fx);
+  const way = wayStamina(home, place, ctx.stats, ctx.fx, overloaded(ctx.world));
   const outcome = runQuest(quest, ctx, seed);
-  const stamina = 2 * wayStamina(home, place, ctx.fx, overloaded(ctx.world)) + quest.cost;
-  return { out: way, act: outcome.minutes, back: way, cost: stamina, outcome };
+  return {
+    out: way * MINUTES_PER_STAMINA,
+    act: outcome.minutes,
+    back: way * MINUTES_PER_STAMINA,
+    cost: 2 * way + outcome.stamina,
+    outcome,
+  };
 }
 
 export function totalMinutes(exp) {
