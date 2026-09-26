@@ -79,7 +79,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
 | Zuhause | `assets/zuhause/stufe_<n>.png` | 1200 × 800, transparent |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
-| App-Symbol | `assets/app/` | 180, 192, 512 |
+| App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
 
 Alle mitgelieferten Bilder sind Platzhalter. Neue Bilder mit gleichem Namen ersetzen
 sie einfach. Die Umwandlung meldet fehlende Bilder und falsche Maße. Bei einer neuen
