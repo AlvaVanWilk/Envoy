@@ -1,0 +1,6 @@
+# Daten des Geräteabgleichs, liegen nur auf dem Server
+sync-daten/
+
+.DS_Store
+node_modules/
+__pycache__/

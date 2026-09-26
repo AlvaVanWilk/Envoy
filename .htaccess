@@ -1,0 +1,33 @@
+# Envoy – Einstellungen für den Webserver (Apache, z. B. IONOS)
+
+# Dateitypen
+AddType application/manifest+json .webmanifest
+AddType text/javascript .js
+AddType font/woff2 .woff2
+
+# App-Dateien bei jedem Start frisch prüfen, damit Änderungen sofort ankommen.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|css|json|webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(png|webp|woff2)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "same-origin"
+</IfModule>
+
+# Nicht öffentlich: Tabellen, Werkzeuge, Tests, Dokumentation, Sync-Daten.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule (^|/)(tools|tests|docs|sync-daten|\.git|\.github)(/|$) - [F,L]
+  RewriteRule \.(xlsx|py|md|mjs)$ - [F,L]
+  RewriteRule (^|/)package\.json$ - [F,L]
+</IfModule>
+<IfModule mod_authz_core.c>
+  <FilesMatch "\.(xlsx|py|md|mjs)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+
+Options -Indexes

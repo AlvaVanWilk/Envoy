@@ -1,0 +1,196 @@
+{
+ "generated": "2026-09-26T10:42:30Z",
+ "source": "ausruestung.xlsx",
+ "equipment": [
+  {
+   "id": "torso_leinenhemd_1",
+   "slot": "torso",
+   "name": "Leinenhemd",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "figur": "assets/figur/torso_leinenhemd_1.png",
+   "icon": "assets/icons/icon_torso_leinenhemd_1.png"
+  },
+  {
+   "id": "beine_leinenhose_1",
+   "slot": "beine",
+   "name": "Leinenhose",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "figur": "assets/figur/beine_leinenhose_1.png",
+   "icon": "assets/icons/icon_beine_leinenhose_1.png"
+  },
+  {
+   "id": "schuhe_bastsandalen_1",
+   "slot": "schuhe",
+   "name": "Bastsandalen",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "figur": "assets/figur/schuhe_bastsandalen_1.png",
+   "icon": "assets/icons/icon_schuhe_bastsandalen_1.png"
+  },
+  {
+   "id": "guertel_stoffguertel_1",
+   "slot": "guertel",
+   "name": "Stoffgürtel",
+   "stufe": 1,
+   "req": {
+    "gelassenheit": 2
+   },
+   "faehigkeit": null,
+   "figur": "assets/figur/guertel_stoffguertel_1.png",
+   "icon": "assets/icons/icon_guertel_stoffguertel_1.png"
+  },
+  {
+   "id": "handschuhe_handwickel_1",
+   "slot": "handschuhe",
+   "name": "Handwickel",
+   "stufe": 1,
+   "req": {
+    "kraft": 2
+   },
+   "faehigkeit": "Etwas mehr Schaden mit bloßen Fäusten",
+   "figur": "assets/figur/handschuhe_handwickel_1.png",
+   "icon": "assets/icons/icon_handschuhe_handwickel_1.png"
+  },
+  {
+   "id": "kopf_stirnband_1",
+   "slot": "kopf",
+   "name": "Stirnband",
+   "stufe": 1,
+   "req": {
+    "beweglichkeit": 2
+   },
+   "faehigkeit": null,
+   "figur": "assets/figur/kopf_stirnband_1.png",
+   "icon": "assets/icons/icon_kopf_stirnband_1.png"
+  },
+  {
+   "id": "umhang_reiseumhang_1",
+   "slot": "umhang",
+   "name": "Reiseumhang",
+   "stufe": 1,
+   "req": {
+    "ausdauer": 3
+   },
+   "faehigkeit": "Kürzere Ruhezeit nach Erkundungen",
+   "figur": "assets/figur/umhang_reiseumhang_1.png",
+   "icon": "assets/icons/icon_umhang_reiseumhang_1.png"
+  },
+  {
+   "id": "schultern_schulterwickel_1",
+   "slot": "schultern",
+   "name": "Schulterwickel",
+   "stufe": 1,
+   "req": {
+    "kraft": 3,
+    "beweglichkeit": 2
+   },
+   "faehigkeit": null,
+   "figur": "assets/figur/schultern_schulterwickel_1.png",
+   "icon": "assets/icons/icon_schultern_schulterwickel_1.png"
+  },
+  {
+   "id": "torso_wickeljacke_2",
+   "slot": "torso",
+   "name": "Wickeljacke",
+   "stufe": 2,
+   "req": {
+    "kraft": 4,
+    "ausdauer": 4
+   },
+   "faehigkeit": null,
+   "figur": "assets/figur/torso_wickeljacke_2.png",
+   "icon": "assets/icons/icon_torso_wickeljacke_2.png"
+  },
+  {
+   "id": "beine_kampfhose_2",
+   "slot": "beine",
+   "name": "Weite Kampfhose",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 5
+   },
+   "faehigkeit": "Ausweichrolle",
+   "figur": "assets/figur/beine_kampfhose_2.png",
+   "icon": "assets/icons/icon_beine_kampfhose_2.png"
+  },
+  {
+   "id": "schuhe_wanderstiefel_2",
+   "slot": "schuhe",
+   "name": "Wanderstiefel",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 5
+   },
+   "faehigkeit": "Weniger Ausdauerverbrauch auf langen Wegen",
+   "figur": "assets/figur/schuhe_wanderstiefel_2.png",
+   "icon": "assets/icons/icon_schuhe_wanderstiefel_2.png"
+  },
+  {
+   "id": "guertel_schaerpe_2",
+   "slot": "guertel",
+   "name": "Schärpe",
+   "stufe": 2,
+   "req": {
+    "kraft": 5,
+    "gelassenheit": 8
+   },
+   "faehigkeit": "Kürzere Ruhezeit",
+   "figur": "assets/figur/guertel_schaerpe_2.png",
+   "icon": "assets/icons/icon_guertel_schaerpe_2.png"
+  },
+  {
+   "id": "handschuhe_lederwickel_2",
+   "slot": "handschuhe",
+   "name": "Lederwickel",
+   "stufe": 2,
+   "req": {
+    "kraft": 6
+   },
+   "faehigkeit": "Zusätzlicher Schaden mit bloßen Fäusten",
+   "figur": "assets/figur/handschuhe_lederwickel_2.png",
+   "icon": "assets/icons/icon_handschuhe_lederwickel_2.png"
+  },
+  {
+   "id": "kopf_kapuze_2",
+   "slot": "kopf",
+   "name": "Kapuze",
+   "stufe": 2,
+   "req": {
+    "gelassenheit": 4
+   },
+   "faehigkeit": null,
+   "figur": "assets/figur/kopf_kapuze_2.png",
+   "icon": "assets/icons/icon_kopf_kapuze_2.png"
+  },
+  {
+   "id": "umhang_nebelumhang_2",
+   "slot": "umhang",
+   "name": "Nebelumhang",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 4,
+    "gelassenheit": 6
+   },
+   "faehigkeit": "Ausweichrolle",
+   "figur": "assets/figur/umhang_nebelumhang_2.png",
+   "icon": "assets/icons/icon_umhang_nebelumhang_2.png"
+  },
+  {
+   "id": "schultern_lederschulter_2",
+   "slot": "schultern",
+   "name": "Lederschulter",
+   "stufe": 2,
+   "req": {
+    "kraft": 8
+   },
+   "faehigkeit": null,
+   "figur": "assets/figur/schultern_lederschulter_2.png",
+   "icon": "assets/icons/icon_schultern_lederschulter_2.png"
+  }
+ ]
+}

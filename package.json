@@ -1,0 +1,9 @@
+{
+  "name": "envoy",
+  "private": true,
+  "type": "module",
+  "description": "Nur für die Tests. Die App selbst braucht kein npm und keinen Build-Schritt.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}

@@ -1,0 +1,1040 @@
+{
+ "generated": "2026-09-26T10:42:30Z",
+ "source": "uebungen.xlsx",
+ "exercises": [
+  {
+   "id": "kr-beckenboden-sitzen",
+   "stat": "kraft",
+   "stufe": 1,
+   "name": "Beckenboden im Sitzen",
+   "xp": 14,
+   "steps": [
+    "Aufrecht auf einen Stuhl setzen, Füße hüftbreit.",
+    "Beckenboden sanft nach innen und oben ziehen, dabei weiter atmen.",
+    "5 Sekunden halten, 5 Sekunden ganz lösen.",
+    "8 Mal."
+   ],
+   "muskelgruppe": "beckenboden",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-bauchatmung",
+   "stat": "kraft",
+   "stufe": 1,
+   "name": "Bauchatmung mit Spannung",
+   "xp": 14,
+   "steps": [
+    "Auf den Rücken legen, Beine aufstellen.",
+    "Beim Ausatmen den Bauchnabel sanft Richtung Wirbelsäule ziehen.",
+    "Beim Einatmen wieder lösen.",
+    "10 Atemzüge."
+   ],
+   "muskelgruppe": "bauch",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-becken-kippen",
+   "stat": "kraft",
+   "stufe": 1,
+   "name": "Becken kippen im Liegen",
+   "xp": 14,
+   "steps": [
+    "Rückenlage, Beine aufgestellt.",
+    "Den unteren Rücken sanft in den Boden drücken, dann wieder lösen.",
+    "Langsam, im Rhythmus des Atems.",
+    "12 Mal."
+   ],
+   "muskelgruppe": "ruecken",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-beckenboden-stehen",
+   "stat": "kraft",
+   "stufe": 2,
+   "name": "Beckenboden im Stehen",
+   "xp": 17,
+   "steps": [
+    "Hüftbreit stehen, Knie locker.",
+    "Beckenboden anspannen und 6 Sekunden halten, weiter atmen.",
+    "6 Sekunden lösen.",
+    "10 Mal."
+   ],
+   "muskelgruppe": "beckenboden",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-kleine-bruecke",
+   "stat": "kraft",
+   "stufe": 2,
+   "name": "Kleine Brücke",
+   "xp": 17,
+   "steps": [
+    "Rückenlage, Füße hüftbreit aufgestellt.",
+    "Becken langsam anheben, bis Oberschenkel und Oberkörper eine Linie bilden.",
+    "Kurz halten, langsam ablegen.",
+    "10 Mal."
+   ],
+   "muskelgruppe": "gesaess",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-vierfuessler-arm",
+   "stat": "kraft",
+   "stufe": 2,
+   "name": "Vierfüßler, Arm strecken",
+   "xp": 17,
+   "steps": [
+    "Auf Hände und Knie gehen, Rücken gerade.",
+    "Einen Arm nach vorn strecken, 3 Sekunden halten, zurück.",
+    "Seiten abwechseln, 8 Mal je Seite."
+   ],
+   "muskelgruppe": "ruecken",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-beckenboden-paeckchen",
+   "stat": "kraft",
+   "stufe": 3,
+   "name": "Beckenboden-Päckchen",
+   "xp": 20,
+   "steps": [
+    "10 kurze, schnelle Anspannungen im Sitzen.",
+    "8 Mal 8 Sekunden halten, dazwischen 8 Sekunden lösen.",
+    "Zum Schluss 5 Mal beim Aufstehen anspannen."
+   ],
+   "muskelgruppe": "beckenboden",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-vierfuessler-diagonal",
+   "stat": "kraft",
+   "stufe": 3,
+   "name": "Vierfüßler diagonal",
+   "xp": 20,
+   "steps": [
+    "Auf Hände und Knie gehen, Rücken gerade.",
+    "Einen Arm und das gegenüberliegende Bein lang strecken.",
+    "3 Sekunden halten, zurück, Seite wechseln.",
+    "8 Mal je Seite."
+   ],
+   "muskelgruppe": "rumpf",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-bruecke-halten",
+   "stat": "kraft",
+   "stufe": 3,
+   "name": "Brücke mit Halten",
+   "xp": 20,
+   "steps": [
+    "Rückenlage, Füße aufgestellt.",
+    "Becken anheben und 10 Sekunden halten.",
+    "Langsam Wirbel für Wirbel ablegen.",
+    "8 Mal."
+   ],
+   "muskelgruppe": "gesaess",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-unterarmstuetz-knie",
+   "stat": "kraft",
+   "stufe": 4,
+   "name": "Unterarmstütz auf den Knien",
+   "xp": 24,
+   "steps": [
+    "Unterarme auf den Boden, Ellbogen unter den Schultern, Knie am Boden.",
+    "Körper von Kopf bis Knie in eine Linie bringen, ruhig weiteratmen.",
+    "20 Sekunden halten, 20 Sekunden Pause.",
+    "4 Mal."
+   ],
+   "muskelgruppe": "bauch",
+   "messung": [
+    "haltezeit_s"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-seitlage-bein",
+   "stat": "kraft",
+   "stufe": 4,
+   "name": "Beinheben in Seitlage",
+   "xp": 24,
+   "steps": [
+    "Auf die Seite legen, Kopf auf dem unteren Arm.",
+    "Oberes Bein gestreckt langsam anheben und wieder senken.",
+    "12 Mal je Seite."
+   ],
+   "muskelgruppe": "gesaess",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-rumpf-paeckchen",
+   "stat": "kraft",
+   "stufe": 4,
+   "name": "Rumpf-Päckchen",
+   "xp": 24,
+   "steps": [
+    "8 Mal Vierfüßler diagonal je Seite.",
+    "10 Mal Brücke.",
+    "8 Mal Beckenboden 6 Sekunden halten."
+   ],
+   "muskelgruppe": "rumpf",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-unterarmstuetz",
+   "stat": "kraft",
+   "stufe": 5,
+   "name": "Unterarmstütz",
+   "xp": 28,
+   "steps": [
+    "Unterarme und Fußspitzen auf dem Boden, Ellbogen unter den Schultern.",
+    "Körper in eine Linie bringen, ruhig weiteratmen.",
+    "30 Sekunden halten, 30 Sekunden Pause.",
+    "3 Mal."
+   ],
+   "muskelgruppe": "bauch",
+   "messung": [
+    "haltezeit_s"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-seitstuetz-knie",
+   "stat": "kraft",
+   "stufe": 5,
+   "name": "Seitstütz auf den Knien",
+   "xp": 28,
+   "steps": [
+    "Seitlich auf einen Unterarm stützen, Knie gebeugt am Boden.",
+    "Becken anheben, bis Kopf, Becken und Knie eine Linie bilden.",
+    "20 Sekunden halten, Seite wechseln.",
+    "3 Mal je Seite."
+   ],
+   "muskelgruppe": "rumpf",
+   "messung": [
+    "haltezeit_s"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-bruecke-fusswechsel",
+   "stat": "kraft",
+   "stufe": 5,
+   "name": "Brücke mit Fußwechsel",
+   "xp": 28,
+   "steps": [
+    "Rückenlage, Füße aufgestellt, Becken anheben.",
+    "Oben bleiben und abwechselnd einen Fuß kurz vom Boden lösen.",
+    "10 Mal je Seite, dann langsam ablegen."
+   ],
+   "muskelgruppe": "gesaess",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "kr-beckenboden-lang",
+   "stat": "kraft",
+   "stufe": 5,
+   "name": "Beckenboden, lang gehalten",
+   "xp": 28,
+   "steps": [
+    "Aufrecht sitzen oder stehen.",
+    "Beckenboden anspannen und 10 Sekunden halten, weiter atmen.",
+    "10 Sekunden lösen.",
+    "12 Mal, danach 10 kurze, schnelle Anspannungen."
+   ],
+   "muskelgruppe": "beckenboden",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-strecken",
+   "stat": "beweglichkeit",
+   "stufe": 1,
+   "name": "Strecken",
+   "xp": 14,
+   "steps": [
+    "Aufrecht stehen, beide Arme über den Kopf strecken.",
+    "Lang machen, als würde jemand sanft an den Fingerspitzen ziehen.",
+    "5 Atemzüge halten, lösen.",
+    "3 Mal."
+   ],
+   "muskelgruppe": "ganzkoerper",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-fuss-aufs-knie",
+   "stat": "beweglichkeit",
+   "stufe": 1,
+   "name": "Fuß aufs Knie",
+   "xp": 14,
+   "steps": [
+    "Aufrecht auf einen Stuhl setzen.",
+    "Rechten Fuß aufs linke Knie legen, Rücken lang.",
+    "30 Sekunden bleiben, Seite wechseln.",
+    "2 Mal je Seite."
+   ],
+   "muskelgruppe": "huefte",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-schultern-nacken",
+   "stat": "beweglichkeit",
+   "stufe": 1,
+   "name": "Schultern und Nacken lösen",
+   "xp": 14,
+   "steps": [
+    "Aufrecht sitzen, Arme hängen locker.",
+    "Schultern in großen, langsamen Kreisen bewegen, 10 Mal nach hinten, 10 Mal nach vorn.",
+    "Kopf zur rechten Schulter neigen, 3 Atemzüge, dann zur linken."
+   ],
+   "muskelgruppe": "schultern",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-katze-kuh",
+   "stat": "beweglichkeit",
+   "stufe": 2,
+   "name": "Katze und Kuh",
+   "xp": 17,
+   "steps": [
+    "Auf Hände und Knie gehen.",
+    "Beim Ausatmen den Rücken rund machen, Kinn zur Brust.",
+    "Beim Einatmen den Rücken sanft durchhängen lassen, Blick nach vorn.",
+    "10 Mal, langsam."
+   ],
+   "muskelgruppe": "ruecken",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-seitbeuge",
+   "stat": "beweglichkeit",
+   "stufe": 2,
+   "name": "Seitbeuge im Stehen",
+   "xp": 17,
+   "steps": [
+    "Hüftbreit stehen, rechten Arm über den Kopf nehmen.",
+    "Sanft nach links neigen, 5 Atemzüge.",
+    "Seite wechseln.",
+    "3 Mal je Seite."
+   ],
+   "muskelgruppe": "flanken",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-nacken",
+   "stat": "beweglichkeit",
+   "stufe": 2,
+   "name": "Nacken lösen",
+   "xp": 17,
+   "steps": [
+    "Aufrecht sitzen, Schultern locker.",
+    "Kopf langsam zur rechten Schulter neigen, 5 Atemzüge.",
+    "Über die Mitte zur anderen Seite, 5 Atemzüge.",
+    "Kinn sanft zur Brust, 5 Atemzüge.",
+    "2 Durchgänge."
+   ],
+   "muskelgruppe": "nacken",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-hueftbeuger",
+   "stat": "beweglichkeit",
+   "stufe": 3,
+   "name": "Hüftbeuger im Halbknien",
+   "xp": 20,
+   "steps": [
+    "Ein Knie auf eine weiche Unterlage, den anderen Fuß vorn aufstellen.",
+    "Becken langsam nach vorn schieben, Oberkörper aufrecht.",
+    "40 Sekunden halten, Seite wechseln.",
+    "2 Mal je Seite."
+   ],
+   "muskelgruppe": "huefte",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-tuerrahmen",
+   "stat": "beweglichkeit",
+   "stufe": 3,
+   "name": "Brustöffner im Türrahmen",
+   "xp": 20,
+   "steps": [
+    "Unterarm senkrecht an den Türrahmen legen, Ellbogen auf Schulterhöhe.",
+    "Einen kleinen Schritt nach vorn, bis sich die Brust öffnet.",
+    "30 Sekunden je Seite.",
+    "2 Mal je Seite."
+   ],
+   "muskelgruppe": "schultern",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-mobility-kurz",
+   "stat": "beweglichkeit",
+   "stufe": 3,
+   "name": "Kurze Mobility-Runde",
+   "xp": 20,
+   "steps": [
+    "10 Mal Schulterkreisen nach hinten.",
+    "8 Mal Katze und Kuh.",
+    "30 Sekunden Fuß aufs Knie je Seite.",
+    "3 Mal Strecken mit 5 Atemzügen."
+   ],
+   "muskelgruppe": "ganzkoerper",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-beinrueckseite",
+   "stat": "beweglichkeit",
+   "stufe": 4,
+   "name": "Beinrückseite mit Handtuch",
+   "xp": 24,
+   "steps": [
+    "Rückenlage, ein Handtuch um den rechten Fuß legen.",
+    "Das Bein gestreckt anheben, bis ein leichtes Ziehen kommt.",
+    "45 Sekunden halten, Seite wechseln.",
+    "2 Mal je Seite."
+   ],
+   "muskelgruppe": "beine",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-drehung-liegen",
+   "stat": "beweglichkeit",
+   "stufe": 4,
+   "name": "Drehung im Liegen",
+   "xp": 24,
+   "steps": [
+    "Rückenlage, Arme seitlich ausgebreitet.",
+    "Beide Knie angewinkelt langsam nach rechts sinken lassen, Blick nach links.",
+    "45 Sekunden bleiben, Seite wechseln.",
+    "2 Mal je Seite."
+   ],
+   "muskelgruppe": "ruecken",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-mobility-mittel",
+   "stat": "beweglichkeit",
+   "stufe": 4,
+   "name": "Mobility-Runde",
+   "xp": 24,
+   "steps": [
+    "10 Mal Katze und Kuh.",
+    "40 Sekunden Hüftbeuger je Seite.",
+    "30 Sekunden Brustöffner je Seite.",
+    "45 Sekunden Drehung im Liegen je Seite."
+   ],
+   "muskelgruppe": "ganzkoerper",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-hocke",
+   "stat": "beweglichkeit",
+   "stufe": 5,
+   "name": "Tiefe Hocke mit Halt",
+   "xp": 28,
+   "steps": [
+    "Mit beiden Händen an einem Türrahmen oder Tisch festhalten.",
+    "Langsam so tief in die Hocke gehen, wie es angenehm ist.",
+    "30 Sekunden bleiben, die Fersen dürfen sich heben.",
+    "4 Mal, dazwischen aufstehen."
+   ],
+   "muskelgruppe": "huefte",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-vorbeuge-sitzen",
+   "stat": "beweglichkeit",
+   "stufe": 5,
+   "name": "Vorbeuge im Sitzen",
+   "xp": 28,
+   "steps": [
+    "Mit gestreckten Beinen auf den Boden setzen.",
+    "Mit langem Rücken nach vorn neigen, die Hände ruhen auf den Beinen.",
+    "60 Sekunden bleiben, ruhig atmen.",
+    "3 Mal."
+   ],
+   "muskelgruppe": "beine",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "be-mobility-lang",
+   "stat": "beweglichkeit",
+   "stufe": 5,
+   "name": "Große Mobility-Runde",
+   "xp": 28,
+   "steps": [
+    "10 Mal Schulterkreisen in jede Richtung.",
+    "10 Mal Katze und Kuh.",
+    "45 Sekunden Hüftbeuger je Seite.",
+    "45 Sekunden Beinrückseite je Seite.",
+    "60 Sekunden Drehung im Liegen je Seite."
+   ],
+   "muskelgruppe": "ganzkoerper",
+   "messung": [],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-spazieren-10",
+   "stat": "ausdauer",
+   "stufe": 1,
+   "name": "10 Minuten spazieren",
+   "xp": 14,
+   "steps": [
+    "10 Minuten in ruhigem Tempo gehen, draußen oder drinnen."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-treppe-2",
+   "stat": "ausdauer",
+   "stufe": 1,
+   "name": "Treppe, 2 Durchgänge",
+   "xp": 14,
+   "steps": [
+    "Zwei Stockwerke hinauf und wieder hinunter gehen.",
+    "Das Geländer darf helfen.",
+    "2 Durchgänge."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "stockwerke"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-spazieren-15",
+   "stat": "ausdauer",
+   "stufe": 2,
+   "name": "15 Minuten spazieren",
+   "xp": 17,
+   "steps": [
+    "15 Minuten in ruhigem Tempo gehen."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-treppe-3",
+   "stat": "ausdauer",
+   "stufe": 2,
+   "name": "Treppe, 3 Durchgänge",
+   "xp": 17,
+   "steps": [
+    "Zwei Stockwerke hinauf und wieder hinunter gehen.",
+    "3 Durchgänge, dazwischen so lange Pause wie nötig."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "stockwerke"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-rad-15",
+   "stat": "ausdauer",
+   "stufe": 2,
+   "name": "15 Minuten Rad fahren",
+   "xp": 17,
+   "steps": [
+    "15 Minuten in gemütlichem Tempo fahren, draußen oder auf dem Heimtrainer."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-spazieren-20",
+   "stat": "ausdauer",
+   "stufe": 3,
+   "name": "20 Minuten spazieren",
+   "xp": 20,
+   "steps": [
+    "20 Minuten gehen, gern eine Runde mit etwas Steigung."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-treppe-4",
+   "stat": "ausdauer",
+   "stufe": 3,
+   "name": "Treppe, 4 Durchgänge",
+   "xp": 20,
+   "steps": [
+    "Zwei Stockwerke hinauf und wieder hinunter gehen.",
+    "4 Durchgänge, dazwischen so lange Pause wie nötig."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "stockwerke"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-rad-20",
+   "stat": "ausdauer",
+   "stufe": 3,
+   "name": "20 Minuten Rad fahren",
+   "xp": 20,
+   "steps": [
+    "20 Minuten in gemütlichem Tempo fahren."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-spazieren-25",
+   "stat": "ausdauer",
+   "stufe": 4,
+   "name": "25 Minuten spazieren",
+   "xp": 24,
+   "steps": [
+    "25 Minuten gehen, das Tempo darf zwischendurch etwas zügiger sein."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km",
+    "tempo_kmh"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-rad-25",
+   "stat": "ausdauer",
+   "stufe": 4,
+   "name": "25 Minuten Rad fahren",
+   "xp": 24,
+   "steps": [
+    "25 Minuten fahren, gleichmäßiges Tempo."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km",
+    "tempo_kmh"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-treppe-5",
+   "stat": "ausdauer",
+   "stufe": 4,
+   "name": "Treppe, 5 Durchgänge",
+   "xp": 24,
+   "steps": [
+    "Zwei Stockwerke hinauf und wieder hinunter gehen.",
+    "5 Durchgänge, dazwischen so lange Pause wie nötig."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "stockwerke"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-spazieren-30",
+   "stat": "ausdauer",
+   "stufe": 5,
+   "name": "30 Minuten spazieren",
+   "xp": 28,
+   "steps": [
+    "30 Minuten gehen, das Tempo darf zwischendurch etwas zügiger sein."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km",
+    "tempo_kmh"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-rad-30",
+   "stat": "ausdauer",
+   "stufe": 5,
+   "name": "30 Minuten Rad fahren",
+   "xp": 28,
+   "steps": [
+    "30 Minuten fahren, gleichmäßiges Tempo."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km",
+    "tempo_kmh"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "au-spaziergang-treppe",
+   "stat": "ausdauer",
+   "stufe": 5,
+   "name": "Spaziergang mit Treppe",
+   "xp": 28,
+   "steps": [
+    "20 Minuten gehen.",
+    "Unterwegs oder danach 3 Durchgänge Treppe, je zwei Stockwerke."
+   ],
+   "muskelgruppe": null,
+   "messung": [
+    "dauer_min",
+    "strecke_km",
+    "stockwerke"
+   ],
+   "timer_min": null,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-atem-3",
+   "stat": "gelassenheit",
+   "stufe": 1,
+   "name": "3 Minuten Atemübung",
+   "xp": 14,
+   "steps": [
+    "Bequem sitzen oder liegen.",
+    "4 Sekunden durch die Nase einatmen, 6 Sekunden ausatmen.",
+    "Der Kreis gibt den Takt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 3.0,
+   "atemtakt": [
+    4,
+    6
+   ]
+  },
+  {
+   "id": "ge-augen-zu",
+   "stat": "gelassenheit",
+   "stufe": 1,
+   "name": "Augen schließen",
+   "xp": 14,
+   "steps": [
+    "Bequem hinsetzen und die Augen schließen.",
+    "3 Minuten nur wahrnehmen, was zu hören ist.",
+    "Nichts davon bewerten."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 3.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-schultern-sinken",
+   "stat": "gelassenheit",
+   "stufe": 1,
+   "name": "Schultern sinken lassen",
+   "xp": 14,
+   "steps": [
+    "Bequem sitzen, Augen zu.",
+    "Beim Einatmen die Schultern zu den Ohren ziehen, beim Ausatmen fallen lassen.",
+    "5 Mal, danach ruhig sitzen bleiben, bis der Timer endet."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 3.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-atem-5",
+   "stat": "gelassenheit",
+   "stufe": 2,
+   "name": "5 Minuten Atemübung",
+   "xp": 17,
+   "steps": [
+    "Bequem sitzen oder liegen.",
+    "4 Sekunden einatmen, 6 Sekunden ausatmen.",
+    "Der Kreis gibt den Takt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 5.0,
+   "atemtakt": [
+    4,
+    6
+   ]
+  },
+  {
+   "id": "ge-koerper-kurz",
+   "stat": "gelassenheit",
+   "stufe": 2,
+   "name": "Kurzer Körperdurchgang",
+   "xp": 17,
+   "steps": [
+    "Hinlegen oder bequem sitzen, Augen zu.",
+    "Mit der Aufmerksamkeit langsam von den Füßen bis zum Kopf wandern.",
+    "An jeder Stelle kurz bemerken, wie sie sich anfühlt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 5.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-summen",
+   "stat": "gelassenheit",
+   "stufe": 2,
+   "name": "Summen beim Ausatmen",
+   "xp": 17,
+   "steps": [
+    "Aufrecht sitzen, Augen zu.",
+    "Einatmen, beim Ausatmen mit geschlossenem Mund leise summen.",
+    "Das Summen so lang werden lassen, wie es von allein geht."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 4.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-box-atmung",
+   "stat": "gelassenheit",
+   "stufe": 3,
+   "name": "Box-Atmung",
+   "xp": 20,
+   "steps": [
+    "Bequem sitzen.",
+    "4 Sekunden ein, 4 halten, 4 aus, 4 halten.",
+    "Der Kreis gibt den Takt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 6.0,
+   "atemtakt": [
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "id": "ge-an-entspannen-kurz",
+   "stat": "gelassenheit",
+   "stufe": 3,
+   "name": "An- und Entspannen",
+   "xp": 20,
+   "steps": [
+    "Hinlegen, Augen zu.",
+    "Nacheinander Hände, Arme, Schultern, Gesicht, Bauch, Beine und Füße anspannen.",
+    "Jeweils 5 Sekunden halten, dann lösen und 10 Sekunden nachspüren."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 8.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-atem-7",
+   "stat": "gelassenheit",
+   "stufe": 3,
+   "name": "7 Minuten Atemübung",
+   "xp": 20,
+   "steps": [
+    "Bequem sitzen oder liegen.",
+    "4 Sekunden einatmen, 6 Sekunden ausatmen.",
+    "Der Kreis gibt den Takt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 7.0,
+   "atemtakt": [
+    4,
+    6
+   ]
+  },
+  {
+   "id": "ge-koerperdurchgang",
+   "stat": "gelassenheit",
+   "stufe": 4,
+   "name": "Körperdurchgang",
+   "xp": 24,
+   "steps": [
+    "Hinlegen, Augen zu.",
+    "Mit der Aufmerksamkeit langsam von den Zehen bis zum Scheitel wandern.",
+    "An jeder Stelle verweilen, bis sie sich weich anfühlt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 12.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-atem-10",
+   "stat": "gelassenheit",
+   "stufe": 4,
+   "name": "10 Minuten Atemübung",
+   "xp": 24,
+   "steps": [
+    "Bequem sitzen oder liegen.",
+    "4 Sekunden einatmen, 6 Sekunden ausatmen.",
+    "Der Kreis gibt den Takt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 10.0,
+   "atemtakt": [
+    4,
+    6
+   ]
+  },
+  {
+   "id": "ge-stille-10",
+   "stat": "gelassenheit",
+   "stufe": 4,
+   "name": "10 Minuten Stille",
+   "xp": 24,
+   "steps": [
+    "Bequem sitzen, Augen zu oder Blick auf den Boden.",
+    "Den Atem kommen und gehen lassen, ohne ihn zu lenken.",
+    "Wenn Gedanken kommen, sie ziehen lassen und zum Atem zurückkehren."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 10.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-an-entspannen-lang",
+   "stat": "gelassenheit",
+   "stufe": 5,
+   "name": "An- und Entspannen, ausführlich",
+   "xp": 28,
+   "steps": [
+    "Hinlegen, Augen zu.",
+    "Jede Körperregion einzeln anspannen, von den Füßen bis zur Stirn.",
+    "Jeweils 7 Sekunden halten, dann lösen und 20 Sekunden nachspüren."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 15.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-stille-15",
+   "stat": "gelassenheit",
+   "stufe": 5,
+   "name": "15 Minuten Stille",
+   "xp": 28,
+   "steps": [
+    "Bequem sitzen, Augen zu oder Blick auf den Boden.",
+    "Den Atem kommen und gehen lassen, ohne ihn zu lenken.",
+    "Wenn Gedanken kommen, sie ziehen lassen und zum Atem zurückkehren."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 15.0,
+   "atemtakt": null
+  },
+  {
+   "id": "ge-atem-15",
+   "stat": "gelassenheit",
+   "stufe": 5,
+   "name": "15 Minuten Atemübung",
+   "xp": 28,
+   "steps": [
+    "Bequem sitzen oder liegen.",
+    "4 Sekunden einatmen, 6 Sekunden ausatmen.",
+    "Der Kreis gibt den Takt."
+   ],
+   "muskelgruppe": null,
+   "messung": [],
+   "timer_min": 15.0,
+   "atemtakt": [
+    4,
+    6
+   ]
+  }
+ ]
+}
