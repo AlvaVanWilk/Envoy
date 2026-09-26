@@ -1,13 +1,22 @@
 // The running game: holds the events, recalculates the state and offers
-// the few actions the person can take. Views subscribe to changes.
+// the actions the person can take. Views subscribe to changes.
+// Every action only writes an event; the state follows from replay.js.
 
 import { createEvent, mergeEvents, newDeviceId, isValidEvent } from './events.js';
 import { replay, unmetRequirements } from './replay.js';
-import { missingPlans } from './planner.js';
+import { missingPlans, replans } from './planner.js';
 import { dayKey } from './days.js';
 import { store } from './store.js';
+import { effects, staminaAt, hoursUntilFull, maxStamina } from './world/hero.js';
+import { travelCost } from './world/map.js';
+import { overloaded, hasSpace } from './world/inventory.js';
+import { questById, questState, placeUnlocked } from './world/quests.js';
+import { runQuest } from './world/run.js';
+import { offersFor } from './world/trader.js';
+import { sellPrice } from './world/items.js';
 
 const listeners = new Set();
+const addListeners = new Set();
 
 export const game = {
   catalog: null,
@@ -26,17 +35,21 @@ export const game = {
     this.refresh();
   },
 
-  // Recalculate, add missing plans for today, notify views.
+  // Recalculate, plan today's open tasks, notify views.
   refresh() {
-    this.state = replay(this.events, this.catalog, dayKey());
-    const plans = missingPlans(this.state, this.catalog);
+    this.state = replay(this.events, this.catalog, dayKey(), Date.now());
+    const plans = { ...missingPlans(this.state, this.catalog), ...replans(this.state, this.catalog) };
     const newEvents = Object.entries(plans).map(([stat, exercise]) =>
-      createEvent('plan', { stat, ex: exercise.id }, this.deviceId));
+      this.event('plan', { stat, ex: exercise.id, ...(this.state.sick ? { sick: true } : {}) }));
     if (newEvents.length > 0) {
       this.add(newEvents);
       return;
     }
     for (const fn of listeners) fn(this.state);
+  },
+
+  event(type, fields) {
+    return createEvent(type, fields, this.deviceId);
   },
 
   add(newEvents) {
@@ -63,7 +76,12 @@ export const game = {
     return () => listeners.delete(fn);
   },
 
-  // --- what the person can do -------------------------------------------
+  // Called regularly: after 03:00 a new day begins.
+  checkDayChange() {
+    if (this.state && dayKey() !== this.state.today) this.refresh();
+  },
+
+  // --- daily tasks --------------------------------------------------------
 
   todayExercise(stat) {
     const plan = this.state.todayPlan[stat];
@@ -72,43 +90,154 @@ export const game = {
     return id ? this.catalog.exerciseById.get(id) || null : null;
   },
 
-  complete(stat, feedback, measurements) {
+  // Feedback is only asked when there is no measured value, and only for an
+  // exercise done for the first time or right after the intensity changed.
+  needsFeedback(stat) {
+    const exercise = this.todayExercise(stat);
+    if (!exercise || exercise.messung || this.state.sick) return false;
+    return !(this.state.doneCount[exercise.id] > 0) || this.state.intensity[stat].fresh;
+  },
+
+  complete(stat, { value = null, feedback = null } = {}) {
     const exercise = this.todayExercise(stat);
     if (!exercise || this.state.todayDone[stat]) return;
-    this.add([createEvent('done', {
-      stat, ex: exercise.id, xp: exercise.xp, fb: feedback, m: measurements,
-    }, this.deviceId)]);
+    const fields = { stat, ex: exercise.id, xp: exercise.xp };
+    if (exercise.messung) {
+      if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return;
+      Object.assign(fields, { mk: exercise.messung, z: exercise.ziel, m: { [exercise.messung]: value } });
+    }
+    if (feedback) fields.fb = feedback;
+    if (this.state.sick) fields.sick = true;
+    this.add([this.event('done', fields)]);
   },
 
   undo(stat) {
     const done = this.state.todayDone[stat];
     if (!done) return;
-    this.add([createEvent('undo', { ref: done.id }, this.deviceId)]);
+    this.add([this.event('undo', { ref: done.id })]);
+  },
+
+  setSick(on) {
+    if (Boolean(on) === this.state.sick) return;
+    this.add([this.event('mode', { sick: Boolean(on) })]);
+  },
+
+  // --- world: what is true right now ---------------------------------------
+
+  ctx() {
+    const s = this.state;
+    return {
+      catalog: this.catalog,
+      world: s.world,
+      stats: s.stats,
+      statsAtDayStart: s.statsAtDayStart,
+      fx: effects(s.world, this.catalog),
+      totals: s.totals,
+      day: s.today,
+    };
+  },
+
+  stamina() {
+    const c = this.ctx();
+    const now = Date.now();
+    return {
+      value: staminaAt(c.world, now, c.stats, c.fx),
+      max: maxStamina(c.stats),
+      hoursToFull: hoursUntilFull(c.world, now, c.stats, c.fx),
+    };
+  },
+
+  here() {
+    return this.catalog.placeById.get(this.state.world.position);
+  },
+
+  costTo(placeId) {
+    const c = this.ctx();
+    return travelCost(this.here(), this.catalog.placeById.get(placeId), c.fx, overloaded(c.world));
+  },
+
+  unlocked(feature) {
+    return this.state.world.unlocked.includes(feature);
+  },
+
+  // --- world: actions ------------------------------------------------------
+
+  travel(placeId) {
+    const place = this.catalog.placeById.get(placeId);
+    if (!place || !placeUnlocked(place, this.ctx())) return false;
+    const cost = this.costTo(placeId);
+    if (cost > this.stamina().value) return false;
+    this.add([this.event('travel', { to: placeId, cost })]);
+    return true;
+  },
+
+  // Plays a quest and stores its result. Returns the outcome for the display.
+  startQuest(questId) {
+    const c = this.ctx();
+    const quest = questById(questId, c);
+    if (!quest || quest.place !== c.world.position) return null;
+    if (questState(quest, c).status !== 'open') return null;
+    if (quest.cost > this.stamina().value) return null;
+    const event = this.event('quest', { q: quest.id, place: quest.place, cost: quest.cost });
+    event.outcome = runQuest(quest, c, event.id);
+    this.add([event]);
+    return { quest, outcome: event.outcome };
+  },
+
+  offers() {
+    return offersFor(this.state.today, this.ctx()).filter((o) => !this.state.world.bought[o.offer]);
+  },
+
+  buy(offer) {
+    if (!this.unlocked('haendler') || this.state.world.purse.glimmer < offer.price) return;
+    this.add([this.event('buy', { offer: offer.offer, kind: offer.kind, thing: offer.id, price: offer.price })]);
+  },
+
+  sell(inst) {
+    const entry = this.state.world.items[inst];
+    if (!entry || !this.unlocked('haendler')) return;
+    this.add([this.event('sell', { inst, price: sellPrice(entry, this.catalog) })]);
+  },
+
+  drop(inst) {
+    if (this.state.world.items[inst]) this.add([this.event('drop', { inst })]);
+  },
+
+  move(inst, to) {
+    if (hasSpace(this.state.world, this.catalog, to)) this.add([this.event('move', { inst, to })]);
   },
 
   canEquip(item) {
     return unmetRequirements(item, this.state.stats).length === 0;
   },
 
-  equip(slot, itemId) {
-    const item = this.catalog.itemById.get(itemId);
+  equip(slot, inst) {
+    const entry = this.state.world.items[inst];
+    const item = entry && this.catalog.itemById.get(entry.id);
     if (!item || item.slot !== slot || !this.canEquip(item)) return;
-    this.add([createEvent('equip', { slot, item: itemId }, this.deviceId)]);
+    this.add([this.event('equip', { slot, inst })]);
   },
 
   unequip(slot) {
-    if (!this.state.equipped[slot]) return;
-    this.add([createEvent('unequip', { slot }, this.deviceId)]);
+    if (this.state.world.equipped[slot]) this.add([this.event('unequip', { slot })]);
   },
 
-  // Called regularly: after 03:00 a new day begins.
-  checkDayChange() {
-    if (this.state && dayKey() !== this.state.today) this.refresh();
+  place(inst) {
+    this.add([this.event('place', { inst })]);
+  },
+
+  unplace(inst) {
+    this.add([this.event('unplace', { inst })]);
+  },
+
+  build() {
+    const next = this.catalog.home[this.state.world.home];
+    if (!next) return;
+    this.add([this.event('build', { tier: next.stufe, cost: next.cost })]);
   },
 };
 
 // Sync listens here for new local events.
-const addListeners = new Set();
 export function onLocalEvents(fn) {
   addListeners.add(fn);
 }

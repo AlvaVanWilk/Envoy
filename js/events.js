@@ -3,12 +3,26 @@
 // (see replay.js). That makes syncing between devices simple: two
 // devices only need to exchange the events the other one is missing.
 //
-// Event types:
-//   plan    { stat, ex }                     the app assigned exercise `ex` for the day
-//   done    { stat, ex, xp, fb, m }          task finished, with feedback and measurements
-//   undo    { ref }                          takes back the `done` event with id `ref`
-//   equip   { slot, item }                   item put into a slot
-//   unequip { slot }                         slot emptied by hand
+// Event types of the daily tasks:
+//   plan     { stat, ex, sick? }              exercise `ex` assigned for the day (the latest one counts)
+//   done     { stat, ex, xp, mk?, z?, m?, fb?, sick? }
+//                                             task finished: measured value m[mk] against target z,
+//                                             or feedback fb; sick = done in Krankheitsmodus
+//   undo     { ref }                          takes back the `done` event with id `ref`
+//   mode     { sick }                         Krankheitsmodus on or off
+//
+// Event types of the world (see world/worldstate.js):
+//   travel   { to, cost }                     walk to a place on the map
+//   quest    { q, place, cost, outcome }      a quest or encounter, with its full result
+//   buy      { offer, kind, thing, price }    bought at the trader (thing = item or furniture id)
+//   sell     { inst, price }                  sold to the trader
+//   drop     { inst }                         left behind
+//   move     { inst, to }                     between backpack and wardrobe
+//   equip    { slot, inst }                   item put on
+//   unequip  { slot }                         slot emptied by hand
+//   place    { inst }                         furniture set up at home
+//   unplace  { inst }                         furniture taken down
+//   build    { tier, cost }                   home extended
 //
 // Common fields: id, t (timestamp in ms), d (day key), dev (device id).
 
@@ -54,7 +68,10 @@ export function mergeEvents(listA, listB) {
   return [...byId.values()].sort(compareEvents);
 }
 
-const KNOWN_TYPES = new Set(['plan', 'done', 'undo', 'equip', 'unequip']);
+export const KNOWN_TYPES = new Set([
+  'plan', 'done', 'undo', 'mode',
+  'travel', 'quest', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
+]);
 
 // Minimal shape check for events coming from outside (sync, backup file).
 export function isValidEvent(e) {

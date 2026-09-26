@@ -52,6 +52,11 @@ export function pickExercise({ stat, exercises, intensityLevel, yesterdayExercis
   return sorted[0];
 }
 
+// The level an area is planned at today. In Krankheitsmodus always the lowest.
+export function planLevel(state, stat) {
+  return state.sick ? 1 : state.intensityAtDayStart[stat].level;
+}
+
 // For every area without a plan for today, pick an exercise.
 // Returns { stat: exercise } for the areas that still need a plan event.
 export function missingPlans(state, catalog) {
@@ -61,7 +66,27 @@ export function missingPlans(state, catalog) {
     const exercise = pickExercise({
       stat,
       exercises: catalog.exercises,
-      intensityLevel: state.intensityAtDayStart[stat].level,
+      intensityLevel: planLevel(state, stat),
+      yesterdayExerciseId: state.yesterdayExercise[stat],
+      lastUsed: state.lastUsed,
+      day: state.today,
+    });
+    if (exercise) result[stat] = exercise;
+  }
+  return result;
+}
+
+// Open tasks whose plan does not match the current mode (after switching
+// Krankheitsmodus on or off). Returns { stat: exercise } to plan anew.
+export function replans(state, catalog) {
+  const result = {};
+  for (const stat of STAT_IDS) {
+    const plan = state.todayPlan[stat];
+    if (!plan || state.todayDone[stat] || Boolean(plan.sick) === state.sick) continue;
+    const exercise = pickExercise({
+      stat,
+      exercises: catalog.exercises,
+      intensityLevel: planLevel(state, stat),
       yesterdayExerciseId: state.yesterdayExercise[stat],
       lastUsed: state.lastUsed,
       day: state.today,

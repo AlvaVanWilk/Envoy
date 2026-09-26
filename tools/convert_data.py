@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Converts the two spreadsheets in data/ into the JSON files the app reads.
+"""Converts the spreadsheets in data/ into the JSON files the app reads.
 
     python3 tools/convert_data.py
 
 Reads   data/uebungen.xlsx     -> writes data/uebungen.json
         data/ausruestung.xlsx  -> writes data/ausruestung.json
+        data/welt.xlsx         -> writes data/welt.json
 
 The spreadsheets are only read, never changed. Needs nothing but Python 3.
 If a row has an error, nothing is written and the old JSON stays in place,
@@ -15,15 +16,13 @@ import json
 import re
 import struct
 import sys
-import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
-from xml.etree import ElementTree
+
+from xlsx_reader import records
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
-FIGURE_DIR = "assets/figur"
-ICON_DIR = "assets/icons"
 
 STATS = ["kraft", "ausdauer", "beweglichkeit", "gelassenheit"]
 AREA_NAMES = {
@@ -32,88 +31,23 @@ AREA_NAMES = {
     "beweglichkeit": "beweglichkeit", "stretching": "beweglichkeit", "mobility": "beweglichkeit",
     "gelassenheit": "gelassenheit", "entspannung": "gelassenheit", "konzentration": "gelassenheit",
 }
-SLOTS = ["umhang", "beine", "schuhe", "torso", "guertel", "handschuhe", "schultern", "kopf"]
-MEASUREMENTS = ["dauer_min", "strecke_km", "tempo_kmh", "stockwerke", "haltezeit_s", "wiederholungen"]
+SLOTS = ["umhang", "beine", "schuhe", "torso", "handschuhe", "kopf"]
+MEASUREMENTS = ["strecke_km", "stockwerke", "haltezeit_s", "wiederholungen", "dauer_min"]
+EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
+FURNITURE_EFFECTS = ["erholung", "glueck"]
+ORIGINS = ["start", "haendler", "beute", "quest"]
+PLACE_TYPES = ["lager", "wild", "sammeln", "ort"]
+FEATURES = ["zuhause", "haendler"]
+MATERIALS = ["holz", "stein", "glimmer"]
+TOTALS = {"summe_km": "km", "summe_stockwerke": "stockwerke"}
 XP_MIN, XP_MAX = 14, 28
-FIGURE_SIZE = (1024, 1536)
-ICON_SIZE = (256, 256)
 
-NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
-REL_NS = "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id"
-
-
-# --- reading xlsx without extra libraries ---------------------------------
-
-def _text(node):
-    return "".join(t.text or "" for t in node.iter(f"{{{NS['m']}}}t"))
-
-
-def _column_index(ref):
-    letters = re.match(r"[A-Z]+", ref).group(0)
-    index = 0
-    for ch in letters:
-        index = index * 26 + (ord(ch) - 64)
-    return index - 1
-
-
-def read_first_table(path):
-    """Returns the rows of the first sheet as lists of strings/numbers."""
-    with zipfile.ZipFile(path) as z:
-        shared = []
-        if "xl/sharedStrings.xml" in z.namelist():
-            root = ElementTree.fromstring(z.read("xl/sharedStrings.xml"))
-            shared = [_text(si) for si in root.findall("m:si", NS)]
-
-        workbook = ElementTree.fromstring(z.read("xl/workbook.xml"))
-        first_sheet = workbook.find("m:sheets/m:sheet", NS)
-        rels = ElementTree.fromstring(z.read("xl/_rels/workbook.xml.rels"))
-        target = None
-        for rel in rels:
-            if rel.get("Id") == first_sheet.get(REL_NS):
-                target = rel.get("Target")
-        target = target.lstrip("/")
-        if not target.startswith("xl/"):
-            target = "xl/" + target
-        sheet = ElementTree.fromstring(z.read(target))
-
-    rows = []
-    for row in sheet.iter(f"{{{NS['m']}}}row"):
-        values = {}
-        for c in row.findall("m:c", NS):
-            kind = c.get("t")
-            v = c.find("m:v", NS)
-            if kind == "s" and v is not None:
-                value = shared[int(v.text)]
-            elif kind == "inlineStr":
-                value = _text(c)
-            elif kind in ("str", "b", "e") and v is not None:
-                value = v.text or ""
-            elif v is not None:
-                number = float(v.text)
-                value = int(number) if number.is_integer() else number
-            else:
-                continue
-            values[_column_index(c.get("r"))] = value
-        if values:
-            rows.append([values.get(i, "") for i in range(max(values) + 1)])
-    return rows
-
-
-def records(path):
-    """Rows as dictionaries, keyed by the header row (the first row with 'id')."""
-    rows = read_first_table(path)
-    for start, row in enumerate(rows):
-        header = [str(h).strip().lower() for h in row]
-        if "id" in header:
-            break
-    else:
-        raise SystemExit(f"{path.name}: keine Kopfzeile mit der Spalte 'id' gefunden.")
-    result = []
-    for number, row in enumerate(rows[start + 1:], start=start + 2):
-        record = {header[i]: row[i] for i in range(min(len(header), len(row))) if header[i]}
-        if any(str(v).strip() for v in record.values()):
-            result.append((number, record))
-    return result
+PICTURES = {
+    "figur": ("assets/figur", (1024, 1536)),
+    "icon": ("assets/icons", (256, 256)),
+    "monster": ("assets/monster", (512, 512)),
+    "zuhause": ("assets/zuhause", (1200, 800)),
+}
 
 
 # --- helpers ----------------------------------------------------------------
@@ -137,15 +71,22 @@ def text(value):
     return str(value).strip()
 
 
-def whole_number(value):
+def number(value):
+    """A number from a cell, or None if empty, or 'invalid'."""
     value = text(value)
     if value == "":
         return None
     try:
-        number = float(value.replace(",", "."))
+        return float(value.replace(",", "."))
     except ValueError:
         return "invalid"
-    return int(number) if number.is_integer() else "invalid"
+
+
+def whole_number(value):
+    n = number(value)
+    if n is None or n == "invalid":
+        return n
+    return int(n) if n.is_integer() else "invalid"
 
 
 def slug(value):
@@ -153,6 +94,17 @@ def slug(value):
     for a, b in (("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")):
         value = value.replace(a, b)
     return re.sub(r"[^a-z0-9]+", "", value)
+
+
+def split_list(value):
+    return [p.strip() for p in re.split(r"[,;\n]", text(value)) if p.strip()]
+
+
+def is_yes(value, default=False):
+    v = text(value).lower()
+    if v == "":
+        return default
+    return v in ("ja", "yes", "1", "true", "wahr", "x")
 
 
 def png_size(path):
@@ -163,7 +115,8 @@ def png_size(path):
     return struct.unpack(">II", head[16:24])
 
 
-def check_picture(report, row, folder, filename, size):
+def check_picture(report, row, kind, filename):
+    folder, size = PICTURES[kind]
     path = ROOT / folder / filename
     if not path.exists():
         report.warn(row, f"Bild fehlt: {folder}/{filename}")
@@ -174,6 +127,148 @@ def check_picture(report, row, folder, filename, size):
             report.warn(row, f"{filename} ist {actual[0]} × {actual[1]}, erwartet {size[0]} × {size[1]}")
 
 
+# --- small languages used in cells -----------------------------------------
+# All of them are comma separated lists like "holz:2-4, glimmer:10".
+
+def parse_pairs(report, row, value, column):
+    """'a:1, b:2-4' -> [('a', '1'), ('b', '2-4')]"""
+    pairs = []
+    for part in split_list(value):
+        if ":" not in part:
+            report.error(row, f"{column}: '{part}' – erwartet name:wert")
+            continue
+        key, val = part.split(":", 1)
+        pairs.append((key.strip().lower(), val.strip()))
+    return pairs
+
+
+def parse_range(report, row, value, column):
+    m = re.fullmatch(r"(\d+)\s*(?:-\s*(\d+))?", value)
+    if not m:
+        report.error(row, f"{column}: '{value}' ist keine Zahl oder Spanne wie 2-4")
+        return [0, 0]
+    low = int(m.group(1))
+    high = int(m.group(2)) if m.group(2) else low
+    return [min(low, high), max(low, high)]
+
+
+def parse_effects(report, row, value, allowed):
+    effects = {}
+    for key, val in parse_pairs(report, row, value, "effekt"):
+        if key not in allowed:
+            report.error(row, f"effekt: unbekannt '{key}' (möglich: {', '.join(allowed)})")
+            continue
+        try:
+            effects[key] = int(val.replace("+", ""))
+        except ValueError:
+            report.error(row, f"effekt: '{val}' ist keine ganze Zahl")
+    return effects
+
+
+def parse_conditions(report, row, value):
+    conditions = []
+    for part in split_list(value):
+        m = re.fullmatch(r"([a-z_]+)\s*>=\s*(\d+)", part)
+        if m:
+            key, amount = m.group(1), int(m.group(2))
+            if key in STATS:
+                conditions.append({"type": "stat", "stat": key, "min": amount})
+            elif key in TOTALS:
+                conditions.append({"type": "total", "key": TOTALS[key], "min": amount})
+            elif key in MATERIALS:
+                conditions.append({"type": "material", "key": key, "min": amount})
+            else:
+                report.error(row, f"bedingung: unbekannt '{key}'")
+            continue
+        m = re.fullmatch(r"quest:([a-z0-9_-]+)", part)
+        if m:
+            conditions.append({"type": "quest", "id": m.group(1)})
+            continue
+        report.error(row, f"bedingung: '{part}' nicht verstanden (z. B. kraft>=3, quest:q-spalt, summe_km>=30)")
+    return conditions
+
+
+def parse_checks(report, row, value):
+    checks = []
+    for key, val in parse_pairs(report, row, value, "pruefungen"):
+        if key not in STATS:
+            report.error(row, f"pruefungen: '{key}' ist kein Stat")
+            continue
+        try:
+            checks.append({"stat": key, "difficulty": int(val)})
+        except ValueError:
+            report.error(row, f"pruefungen: '{val}' ist keine ganze Zahl")
+    return checks
+
+
+def parse_materials(report, row, value, column):
+    cost = {}
+    for key, val in parse_pairs(report, row, value, column):
+        if key not in MATERIALS:
+            report.error(row, f"{column}: unbekannt '{key}'")
+            continue
+        cost[key] = parse_range(report, row, val, column)[0]
+    return cost
+
+
+def parse_rewards(report, row, value):
+    reward = {"glimmer": [0, 0], "holz": [0, 0], "stein": [0, 0],
+              "items": [], "furniture": [], "unlocks": [], "rest": False}
+    for key, val in parse_pairs(report, row, value, "belohnung"):
+        if key in MATERIALS:
+            reward[key] = parse_range(report, row, val, "belohnung")
+        elif key == "item":
+            reward["items"].append(val)
+        elif key == "einrichtung":
+            reward["furniture"].append(val)
+        elif key == "freischaltung":
+            if val not in FEATURES:
+                report.error(row, f"belohnung: freischaltung '{val}' unbekannt (möglich: {', '.join(FEATURES)})")
+            reward["unlocks"].append(val)
+        elif key == "rast":
+            reward["rest"] = True
+        else:
+            report.error(row, f"belohnung: unbekannt '{key}'")
+    return reward
+
+
+def parse_loot(report, row, value):
+    loot = {"glimmer": [0, 0], "holz": [0, 0], "stein": [0, 0], "itemChance": 0}
+    for key, val in parse_pairs(report, row, value, "beute"):
+        if key in MATERIALS:
+            loot[key] = parse_range(report, row, val, "beute")
+        elif key == "item":
+            loot["itemChance"] = parse_range(report, row, val, "beute")[0]
+        else:
+            report.error(row, f"beute: unbekannt '{key}'")
+    return loot
+
+
+def parse_origin(report, row, value):
+    origin = [o.lower() for o in split_list(value)]
+    for o in origin:
+        if o not in ORIGINS:
+            report.error(row, f"herkunft: unbekannt '{o}' (möglich: {', '.join(ORIGINS)})")
+    return origin
+
+
+def check_ids(report, row, ids, known, what):
+    for i in ids:
+        if i not in known:
+            report.error(row, f"{what} '{i}' gibt es nicht")
+
+
+def unique_id(report, row, value, seen):
+    item_id = text(value)
+    if not item_id:
+        report.error(row, "id fehlt")
+        return None
+    if item_id in seen:
+        report.error(row, f"id '{item_id}' kommt doppelt vor")
+    seen.add(item_id)
+    return item_id
+
+
 # --- exercises --------------------------------------------------------------
 
 def convert_exercises(path):
@@ -181,17 +276,12 @@ def convert_exercises(path):
     exercises = []
     seen = set()
     for row, r in records(path):
-        ex_id = text(r.get("id", ""))
-        if not ex_id:
-            report.error(row, "id fehlt")
+        ex_id = unique_id(report, row, r.get("id", ""), seen)
+        if ex_id is None:
             continue
-        if ex_id in seen:
-            report.error(row, f"id '{ex_id}' kommt doppelt vor")
-        seen.add(ex_id)
         if not re.fullmatch(r"[a-z0-9_-]+", ex_id):
             report.warn(row, f"id '{ex_id}' enthält Zeichen außer a–z, 0–9, - und _")
-
-        if text(r.get("aktiv", "")).lower() in ("nein", "no", "0", "false", "falsch"):
+        if not is_yes(r.get("aktiv", ""), default=True):
             continue
 
         stat = AREA_NAMES.get(text(r.get("bereich", "")).lower())
@@ -212,20 +302,19 @@ def convert_exercises(path):
 
         steps = [s.strip() for s in re.split(r"\r?\n|\|", text(r.get("anleitung", ""))) if s.strip()]
 
-        measurements = [m.strip() for m in text(r.get("messung", "")).split(",") if m.strip()]
-        for m in measurements:
-            if m not in MEASUREMENTS:
-                report.error(row, f"unbekannte Messung '{m}' (möglich: {', '.join(MEASUREMENTS)})")
+        measurement = text(r.get("messung", "")).lower() or None
+        target = number(r.get("ziel", ""))
+        if measurement and measurement not in MEASUREMENTS:
+            report.error(row, f"unbekannte Messung '{measurement}' (möglich: {', '.join(MEASUREMENTS)})")
+        if measurement and (target is None or target == "invalid" or target <= 0):
+            report.error(row, "ziel fehlt: bei einer Messung braucht es ein Ziel größer 0")
+        if not measurement:
+            target = None
 
-        timer = text(r.get("timer_min", ""))
-        timer_min = None
-        if timer:
-            try:
-                timer_min = float(timer.replace(",", "."))
-                if timer_min <= 0:
-                    raise ValueError
-            except ValueError:
-                report.error(row, "timer_min muss eine Zahl größer 0 sein")
+        timer_min = number(r.get("timer_min", ""))
+        if timer_min == "invalid" or (timer_min is not None and timer_min <= 0):
+            report.error(row, "timer_min muss eine Zahl größer 0 sein")
+            timer_min = None
 
         rhythm = text(r.get("atemtakt", ""))
         breath = None
@@ -243,7 +332,8 @@ def convert_exercises(path):
             "xp": xp,
             "steps": steps,
             "muskelgruppe": slug(r.get("muskelgruppe", "")) or None,
-            "messung": measurements,
+            "messung": measurement,
+            "ziel": target,
             "timer_min": timer_min,
             "atemtakt": breath,
         })
@@ -269,13 +359,9 @@ def convert_equipment(path):
     items = []
     seen = set()
     for row, r in records(path):
-        item_id = text(r.get("id", ""))
-        if not item_id:
-            report.error(row, "id fehlt")
+        item_id = unique_id(report, row, r.get("id", ""), seen)
+        if item_id is None:
             continue
-        if item_id in seen:
-            report.error(row, f"id '{item_id}' kommt doppelt vor")
-        seen.add(item_id)
 
         slot = slug(r.get("slot", ""))
         if slot == "waffe":
@@ -307,10 +393,15 @@ def convert_equipment(path):
             if value > 0:
                 req[stat] = value
 
+        price = whole_number(r.get("preis", ""))
+        if price == "invalid" or (price is not None and price < 0):
+            report.error(row, "preis muss eine ganze Zahl sein")
+            price = None
+
         figure = text(r.get("datei_figur", "")) or f"{slot}_{slug(name)}_{level}.png"
         icon = text(r.get("datei_icon", "")) or f"icon_{figure}"
-        check_picture(report, row, FIGURE_DIR, figure, FIGURE_SIZE)
-        check_picture(report, row, ICON_DIR, icon, ICON_SIZE)
+        check_picture(report, row, "figur", figure)
+        check_picture(report, row, "icon", icon)
 
         items.append({
             "id": item_id,
@@ -319,49 +410,138 @@ def convert_equipment(path):
             "stufe": level,
             "req": req,
             "faehigkeit": text(r.get("faehigkeit", "")) or None,
-            "figur": f"{FIGURE_DIR}/{figure}",
-            "icon": f"{ICON_DIR}/{icon}",
+            "effekt": parse_effects(report, row, r.get("effekt", ""), EFFECTS),
+            "herkunft": parse_origin(report, row, r.get("herkunft", "")),
+            "preis": price,
+            "figur": f"{PICTURES['figur'][0]}/{figure}",
+            "icon": f"{PICTURES['icon'][0]}/{icon}",
         })
     return {"equipment": items}, report
 
 
+# --- world ------------------------------------------------------------------
+
+def convert_world(path, item_ids):
+    report = Report(path.name)
+    place_seen, monster_seen, quest_seen, furniture_seen = set(), set(), set(), set()
+
+    places = []
+    for row, r in records(path, "Orte"):
+        pid = unique_id(report, row, r.get("id", ""), place_seen)
+        if pid is None:
+            continue
+        x, y = number(r.get("x", "")), number(r.get("y", ""))
+        if not all(isinstance(v, float) and 0 <= v <= 100 for v in (x, y)):
+            report.error(row, "x und y müssen zwischen 0 und 100 liegen")
+        kind = text(r.get("typ", "")).lower()
+        if kind not in PLACE_TYPES:
+            report.error(row, f"typ '{kind}' unbekannt (möglich: {', '.join(PLACE_TYPES)})")
+        places.append({
+            "id": pid, "name": text(r.get("name", "")), "region": text(r.get("region", "")),
+            "x": x, "y": y, "typ": kind,
+            "encounters": is_yes(r.get("begegnungen", "")),
+            "monsters": split_list(r.get("monster", "")),
+            "unlock": parse_conditions(report, row, r.get("freischaltung", "")),
+            "text": text(r.get("beschreibung", "")),
+            "_row": row,
+        })
+    if sum(1 for p in places if p["typ"] == "lager") != 1:
+        report.error("-", "es muss genau einen Ort vom typ lager geben")
+
+    monsters = []
+    for row, r in records(path, "Monster"):
+        mid = unique_id(report, row, r.get("id", ""), monster_seen)
+        if mid is None:
+            continue
+        values = {k: whole_number(r.get(k, "")) for k in ("stufe", "leben", "kraft", "gewandtheit")}
+        for k, v in values.items():
+            if not isinstance(v, int) or v < 0:
+                report.error(row, f"{k} muss eine ganze Zahl sein")
+        picture = text(r.get("datei_bild", "")) or f"{mid}.png"
+        check_picture(report, row, "monster", picture)
+        monsters.append({
+            "id": mid, "name": text(r.get("name", "")),
+            "stufe": values["stufe"], "leben": values["leben"],
+            "kraft": values["kraft"], "gewandtheit": values["gewandtheit"],
+            "calmable": is_yes(r.get("beruhigbar", "")),
+            "loot": parse_loot(report, row, r.get("beute", "")),
+            "text": text(r.get("beschreibung", "")),
+            "bild": f"{PICTURES['monster'][0]}/{picture}",
+        })
+
+    furniture = []
+    for row, r in records(path, "Einrichtung"):
+        fid = unique_id(report, row, r.get("id", ""), furniture_seen)
+        if fid is None:
+            continue
+        icon = text(r.get("datei_icon", "")) or f"icon_einrichtung_{fid}.png"
+        check_picture(report, row, "icon", icon)
+        min_tier = whole_number(r.get("ab_stufe", "")) or 1
+        furniture.append({
+            "id": fid, "name": text(r.get("name", "")),
+            "effekt": parse_effects(report, row, r.get("effekt", ""), FURNITURE_EFFECTS),
+            "herkunft": parse_origin(report, row, r.get("herkunft", "")),
+            "preis": whole_number(r.get("preis", "")) or 0,
+            "abStufe": min_tier if isinstance(min_tier, int) else 1,
+            "text": text(r.get("beschreibung", "")),
+            "icon": f"{PICTURES['icon'][0]}/{icon}",
+        })
+
+    home = []
+    for row, r in records(path, "Zuhause"):
+        tier = whole_number(r.get("stufe", ""))
+        if not isinstance(tier, int) or tier != len(home) + 1:
+            report.error(row, "stufe muss bei 1 beginnen und lückenlos steigen")
+        picture = text(r.get("datei_bild", "")) or f"stufe_{tier}.png"
+        check_picture(report, row, "zuhause", picture)
+        home.append({
+            "stufe": tier, "name": text(r.get("name", "")),
+            "cost": {k: whole_number(r.get(k, "")) or 0 for k in ("holz", "stein", "glimmer")},
+            "erholung": whole_number(r.get("erholung", "")) or 0,
+            "plaetze": whole_number(r.get("plaetze", "")) or 0,
+            "schrank": whole_number(r.get("schrank", "")) or 0,
+            "text": text(r.get("beschreibung", "")),
+            "bild": f"{PICTURES['zuhause'][0]}/{picture}",
+        })
+
+    quests = []
+    quest_rows = records(path, "Quests")
+    all_quest_ids = {text(r.get("id", "")) for _, r in quest_rows}
+    for row, r in quest_rows:
+        qid = unique_id(report, row, r.get("id", ""), quest_seen)
+        if qid is None:
+            continue
+        cost = whole_number(r.get("kosten", ""))
+        cooldown = whole_number(r.get("abklingzeit", "")) or 0
+        quest = {
+            "id": qid, "name": text(r.get("name", "")), "place": text(r.get("ort", "")),
+            "text": text(r.get("text", "")),
+            "monsters": split_list(r.get("monster", "")),
+            "checks": parse_checks(report, row, r.get("pruefungen", "")),
+            "conditions": parse_conditions(report, row, r.get("bedingung", "")),
+            "consumes": parse_materials(report, row, r.get("verbrauch", ""), "verbrauch"),
+            "cost": cost if isinstance(cost, int) and cost >= 0 else 2,
+            "reward": parse_rewards(report, row, r.get("belohnung", "")),
+            "repeatable": is_yes(r.get("wiederholbar", "")),
+            "cooldown": cooldown if isinstance(cooldown, int) else 0,
+        }
+        check_ids(report, row, [quest["place"]], place_seen, "Ort")
+        check_ids(report, row, quest["monsters"], monster_seen, "Monster")
+        check_ids(report, row, quest["reward"]["items"], item_ids, "Ausrüstung")
+        check_ids(report, row, quest["reward"]["furniture"], furniture_seen, "Einrichtung")
+        check_ids(report, row, [c["id"] for c in quest["conditions"] if c["type"] == "quest"], all_quest_ids, "Quest")
+        quests.append(quest)
+
+    for p in places:
+        check_ids(report, p["_row"], p["monsters"], monster_seen, "Monster")
+        check_ids(report, p["_row"], [c["id"] for c in p["unlock"] if c["type"] == "quest"], quest_seen, "Quest")
+        del p["_row"]
+
+    return {"places": places, "monsters": monsters, "quests": quests,
+            "home": home, "furniture": furniture}, report
+
+
 # --- main -------------------------------------------------------------------
-
-def main():
-    jobs = [
-        (DATA / "uebungen.xlsx", DATA / "uebungen.json", convert_exercises),
-        (DATA / "ausruestung.xlsx", DATA / "ausruestung.json", convert_equipment),
-    ]
-    results = []
-    failed = False
-    for source, target, convert in jobs:
-        if not source.exists():
-            print(f"Fehlt: {source.relative_to(ROOT)}")
-            failed = True
-            continue
-        data, report = convert(source)
-        for w in report.warnings:
-            print("Hinweis:", w)
-        for e in report.errors:
-            print("Fehler: ", e)
-        failed = failed or bool(report.errors)
-        results.append((source, target, data))
-
-    if failed:
-        print("Nichts geschrieben. Die bisherigen JSON-Dateien bleiben unverändert.")
-        return 1
-
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    for source, target, data in results:
-        count = len(next(iter(data.values())))
-        if unchanged(target, source.name, data):
-            print(f"{target.relative_to(ROOT)}: {count} Einträge, unverändert")
-            continue
-        output = {"generated": stamp, "source": source.name, **data}
-        target.write_text(json.dumps(output, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-        print(f"{target.relative_to(ROOT)}: {count} Einträge")
-    return 0
-
 
 def unchanged(target, source_name, data):
     """True if the existing JSON already holds exactly this data."""
@@ -371,6 +551,53 @@ def unchanged(target, source_name, data):
         return False
     old.pop("generated", None)
     return old == {"source": source_name, **data}
+
+
+def main():
+    sources = {
+        "uebungen": DATA / "uebungen.xlsx",
+        "ausruestung": DATA / "ausruestung.xlsx",
+        "welt": DATA / "welt.xlsx",
+    }
+    missing = [p for p in sources.values() if not p.exists()]
+    for p in missing:
+        print(f"Fehlt: {p.relative_to(ROOT)}")
+    if missing:
+        return 1
+
+    results = []
+    reports = []
+    data, report = convert_exercises(sources["uebungen"])
+    results.append(("uebungen", data)); reports.append(report)
+    data, report = convert_equipment(sources["ausruestung"])
+    results.append(("ausruestung", data)); reports.append(report)
+    item_ids = {i["id"] for i in data["equipment"]}
+    data, report = convert_world(sources["welt"], item_ids)
+    results.append(("welt", data)); reports.append(report)
+
+    failed = False
+    for report in reports:
+        for w in report.warnings:
+            print("Hinweis:", w)
+        for e in report.errors:
+            print("Fehler: ", e)
+        failed = failed or bool(report.errors)
+    if failed:
+        print("Nichts geschrieben. Die bisherigen JSON-Dateien bleiben unverändert.")
+        return 1
+
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    for name, data in results:
+        source = sources[name]
+        target = DATA / f"{name}.json"
+        count = sum(len(v) for v in data.values())
+        if unchanged(target, source.name, data):
+            print(f"{target.relative_to(ROOT)}: {count} Einträge, unverändert")
+            continue
+        output = {"generated": stamp, "source": source.name, **data}
+        target.write_text(json.dumps(output, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        print(f"{target.relative_to(ROOT)}: {count} Einträge")
+    return 0
 
 
 if __name__ == "__main__":

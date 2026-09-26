@@ -19,8 +19,8 @@ const catalog = buildCatalog({
   ],
 }, {
   equipment: [
-    { id: 'hemd', slot: 'torso', name: 'Hemd', req: {} },
-    { id: 'wickel', slot: 'handschuhe', name: 'Wickel', req: { kraft: 2 } },
+    { id: 'hemd', slot: 'torso', name: 'Hemd', req: {}, herkunft: ['start'], effekt: {} },
+    { id: 'wickel', slot: 'handschuhe', name: 'Wickel', req: { kraft: 2 }, herkunft: ['start'], effekt: {} },
   ],
 });
 
@@ -126,18 +126,20 @@ test('equipment needs its requirements and falls off when they are no longer met
 
   const events2 = [
     done(START, 'kraft', 45),
-    ev(START, 'equip', { slot: 'handschuhe', item: 'wickel' }),
-    ev(START, 'equip', { slot: 'torso', item: 'hemd' }),
+    ev(START, 'equip', { slot: 'handschuhe', inst: 'start:wickel' }),
+    ev(START, 'equip', { slot: 'torso', inst: 'start:hemd' }),
   ];
   const s = replay(events2, catalog, START);
-  assert.equal(s.equipped.handschuhe, 'wickel');
-  assert.equal(s.equipped.torso, 'hemd');
+  assert.equal(s.equipped.handschuhe, 'start:wickel');
+  assert.equal(s.equipped.torso, 'start:hemd');
+  assert.equal(s.world.items['start:wickel'].where, 'body');
 
   // Long break: kraft falls from 2 back to 1 (floor 1.2) -> wickel is taken off.
   const later = replay(events2, catalog, addDays(START, 20));
   assert.equal(later.stats.kraft.level, 1);
   assert.equal(later.equipped.handschuhe, undefined);
-  assert.equal(later.equipped.torso, 'hemd');
+  assert.equal(later.world.items['start:wickel'].where, 'rucksack');
+  assert.equal(later.equipped.torso, 'start:hemd');
   assert.equal(later.dropped.length, 1);
   assert.equal(later.dropped[0].item, 'wickel');
 });
@@ -162,10 +164,10 @@ test('planner: existing plan is kept', () => {
   assert.equal(missingPlans(s, catalog).kraft, undefined);
 });
 
-test('merging keeps each event once and in order', () => {
+test('merging keeps each event once; the latest plan counts', () => {
   const a = [ev(START, 'plan', { stat: 'kraft', ex: 'k1a' })];
   const b = [a[0], ev(START, 'plan', { stat: 'kraft', ex: 'k1b' })];
   const merged = mergeEvents(b, a);
   assert.equal(merged.length, 2);
-  assert.equal(replay(merged, catalog, START).todayPlan.kraft.ex, 'k1a');
+  assert.equal(replay(merged, catalog, START).todayPlan.kraft.ex, 'k1b');
 });

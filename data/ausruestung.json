@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T10:42:30Z",
+ "generated": "2026-09-26T13:24:16Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -9,6 +9,12 @@
    "stufe": 1,
    "req": {},
    "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "start",
+    "haendler"
+   ],
+   "preis": null,
    "figur": "assets/figur/torso_leinenhemd_1.png",
    "icon": "assets/icons/icon_torso_leinenhemd_1.png"
   },
@@ -19,6 +25,12 @@
    "stufe": 1,
    "req": {},
    "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "start",
+    "haendler"
+   ],
+   "preis": null,
    "figur": "assets/figur/beine_leinenhose_1.png",
    "icon": "assets/icons/icon_beine_leinenhose_1.png"
   },
@@ -29,30 +41,30 @@
    "stufe": 1,
    "req": {},
    "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "start",
+    "haendler"
+   ],
+   "preis": null,
    "figur": "assets/figur/schuhe_bastsandalen_1.png",
    "icon": "assets/icons/icon_schuhe_bastsandalen_1.png"
-  },
-  {
-   "id": "guertel_stoffguertel_1",
-   "slot": "guertel",
-   "name": "Stoffgürtel",
-   "stufe": 1,
-   "req": {
-    "gelassenheit": 2
-   },
-   "faehigkeit": null,
-   "figur": "assets/figur/guertel_stoffguertel_1.png",
-   "icon": "assets/icons/icon_guertel_stoffguertel_1.png"
   },
   {
    "id": "handschuhe_handwickel_1",
    "slot": "handschuhe",
    "name": "Handwickel",
    "stufe": 1,
-   "req": {
-    "kraft": 2
+   "req": {},
+   "faehigkeit": "Die Fäuste treffen etwas härter.",
+   "effekt": {
+    "schaden": 1
    },
-   "faehigkeit": "Etwas mehr Schaden mit bloßen Fäusten",
+   "herkunft": [
+    "start",
+    "haendler"
+   ],
+   "preis": null,
    "figur": "assets/figur/handschuhe_handwickel_1.png",
    "icon": "assets/icons/icon_handschuhe_handwickel_1.png"
   },
@@ -64,7 +76,15 @@
    "req": {
     "beweglichkeit": 2
    },
-   "faehigkeit": null,
+   "faehigkeit": "Der Blick bleibt klar.",
+   "effekt": {
+    "treffer": 5
+   },
+   "herkunft": [
+    "beute",
+    "quest"
+   ],
+   "preis": null,
    "figur": "assets/figur/kopf_stirnband_1.png",
    "icon": "assets/icons/icon_kopf_stirnband_1.png"
   },
@@ -76,22 +96,17 @@
    "req": {
     "ausdauer": 3
    },
-   "faehigkeit": "Kürzere Ruhezeit nach Erkundungen",
+   "faehigkeit": "Lange Wege kosten weniger Kraft.",
+   "effekt": {
+    "reise": -1
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
    "figur": "assets/figur/umhang_reiseumhang_1.png",
    "icon": "assets/icons/icon_umhang_reiseumhang_1.png"
-  },
-  {
-   "id": "schultern_schulterwickel_1",
-   "slot": "schultern",
-   "name": "Schulterwickel",
-   "stufe": 1,
-   "req": {
-    "kraft": 3,
-    "beweglichkeit": 2
-   },
-   "faehigkeit": null,
-   "figur": "assets/figur/schultern_schulterwickel_1.png",
-   "icon": "assets/icons/icon_schultern_schulterwickel_1.png"
   },
   {
    "id": "torso_wickeljacke_2",
@@ -102,7 +117,15 @@
     "kraft": 4,
     "ausdauer": 4
    },
-   "faehigkeit": null,
+   "faehigkeit": "Fängt Stöße ab.",
+   "effekt": {
+    "ausweichen": 5
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
    "figur": "assets/figur/torso_wickeljacke_2.png",
    "icon": "assets/icons/icon_torso_wickeljacke_2.png"
   },
@@ -114,7 +137,15 @@
    "req": {
     "beweglichkeit": 5
    },
-   "faehigkeit": "Ausweichrolle",
+   "faehigkeit": "Lässt jede Drehung zu.",
+   "effekt": {
+    "ausweichen": 8
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
    "figur": "assets/figur/beine_kampfhose_2.png",
    "icon": "assets/icons/icon_beine_kampfhose_2.png"
   },
@@ -126,22 +157,16 @@
    "req": {
     "ausdauer": 5
    },
-   "faehigkeit": "Weniger Ausdauerverbrauch auf langen Wegen",
+   "faehigkeit": "Trittsicher auf langen Wegen.",
+   "effekt": {
+    "reise": -1
+   },
+   "herkunft": [
+    "haendler"
+   ],
+   "preis": null,
    "figur": "assets/figur/schuhe_wanderstiefel_2.png",
    "icon": "assets/icons/icon_schuhe_wanderstiefel_2.png"
-  },
-  {
-   "id": "guertel_schaerpe_2",
-   "slot": "guertel",
-   "name": "Schärpe",
-   "stufe": 2,
-   "req": {
-    "kraft": 5,
-    "gelassenheit": 8
-   },
-   "faehigkeit": "Kürzere Ruhezeit",
-   "figur": "assets/figur/guertel_schaerpe_2.png",
-   "icon": "assets/icons/icon_guertel_schaerpe_2.png"
   },
   {
    "id": "handschuhe_lederwickel_2",
@@ -149,9 +174,18 @@
    "name": "Lederwickel",
    "stufe": 2,
    "req": {
-    "kraft": 6
+    "kraft": 5
    },
-   "faehigkeit": "Zusätzlicher Schaden mit bloßen Fäusten",
+   "faehigkeit": "Schwerere Schläge, sicherer Griff.",
+   "effekt": {
+    "schaden": 2,
+    "treffer": 5
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
    "figur": "assets/figur/handschuhe_lederwickel_2.png",
    "icon": "assets/icons/icon_handschuhe_lederwickel_2.png"
   },
@@ -163,7 +197,15 @@
    "req": {
     "gelassenheit": 4
    },
-   "faehigkeit": null,
+   "faehigkeit": "Dämpft das Flüstern der Geister.",
+   "effekt": {
+    "beruhigen": 8
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
    "figur": "assets/figur/kopf_kapuze_2.png",
    "icon": "assets/icons/icon_kopf_kapuze_2.png"
   },
@@ -176,21 +218,162 @@
     "beweglichkeit": 4,
     "gelassenheit": 6
    },
-   "faehigkeit": "Ausweichrolle",
+   "faehigkeit": "Verschwimmt im Nebel.",
+   "effekt": {
+    "ausweichen": 10
+   },
+   "herkunft": [
+    "beute"
+   ],
+   "preis": null,
    "figur": "assets/figur/umhang_nebelumhang_2.png",
    "icon": "assets/icons/icon_umhang_nebelumhang_2.png"
   },
   {
-   "id": "schultern_lederschulter_2",
-   "slot": "schultern",
-   "name": "Lederschulter",
-   "stufe": 2,
+   "id": "torso_kampfjacke_3",
+   "slot": "torso",
+   "name": "Gesteppte Kampfjacke",
+   "stufe": 3,
    "req": {
-    "kraft": 8
+    "kraft": 7,
+    "ausdauer": 6
    },
-   "faehigkeit": null,
-   "figur": "assets/figur/schultern_lederschulter_2.png",
-   "icon": "assets/icons/icon_schultern_lederschulter_2.png"
+   "faehigkeit": "Hält auch schweren Treffern stand.",
+   "effekt": {
+    "ausweichen": 8,
+    "erholung": 5
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_kampfjacke_3.png",
+   "icon": "assets/icons/icon_torso_kampfjacke_3.png"
+  },
+  {
+   "id": "beine_wickelhose_3",
+   "slot": "beine",
+   "name": "Wickelhose",
+   "stufe": 3,
+   "req": {
+    "beweglichkeit": 8
+   },
+   "faehigkeit": "Gebunden für schnelle Tritte.",
+   "effekt": {
+    "treffer": 8,
+    "ausweichen": 6
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_wickelhose_3.png",
+   "icon": "assets/icons/icon_beine_wickelhose_3.png"
+  },
+  {
+   "id": "schuhe_leichtestiefel_3",
+   "slot": "schuhe",
+   "name": "Leichte Stiefel",
+   "stufe": 3,
+   "req": {
+    "ausdauer": 8,
+    "beweglichkeit": 5
+   },
+   "faehigkeit": "Kaum zu hören, kaum zu spüren.",
+   "effekt": {
+    "reise": -2
+   },
+   "herkunft": [
+    "quest"
+   ],
+   "preis": null,
+   "figur": "assets/figur/schuhe_leichtestiefel_3.png",
+   "icon": "assets/icons/icon_schuhe_leichtestiefel_3.png"
+  },
+  {
+   "id": "handschuhe_eisenwickel_3",
+   "slot": "handschuhe",
+   "name": "Eisenbeschlagene Wickel",
+   "stufe": 3,
+   "req": {
+    "kraft": 9
+   },
+   "faehigkeit": "Jeder Schlag sitzt.",
+   "effekt": {
+    "schaden": 3,
+    "treffer": 5
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
+   "figur": "assets/figur/handschuhe_eisenwickel_3.png",
+   "icon": "assets/icons/icon_handschuhe_eisenwickel_3.png"
+  },
+  {
+   "id": "kopf_stillemaske_3",
+   "slot": "kopf",
+   "name": "Stille Maske",
+   "stufe": 3,
+   "req": {
+    "gelassenheit": 8
+   },
+   "faehigkeit": "Wer sie trägt, wird selbst still.",
+   "effekt": {
+    "beruhigen": 15
+   },
+   "herkunft": [
+    "quest"
+   ],
+   "preis": null,
+   "figur": "assets/figur/kopf_stillemaske_3.png",
+   "icon": "assets/icons/icon_kopf_stillemaske_3.png"
+  },
+  {
+   "id": "umhang_sturmmantel_3",
+   "slot": "umhang",
+   "name": "Sturmmantel",
+   "stufe": 3,
+   "req": {
+    "ausdauer": 7,
+    "gelassenheit": 5
+   },
+   "faehigkeit": "Trotzt jedem Wetter.",
+   "effekt": {
+    "ausweichen": 6,
+    "erholung": 8
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": null,
+   "figur": "assets/figur/umhang_sturmmantel_3.png",
+   "icon": "assets/icons/icon_umhang_sturmmantel_3.png"
+  },
+  {
+   "id": "handschuhe_glimmerwickel_4",
+   "slot": "handschuhe",
+   "name": "Glimmerwickel",
+   "stufe": 4,
+   "req": {
+    "kraft": 12,
+    "gelassenheit": 6
+   },
+   "faehigkeit": "Leuchten schwach, wenn ein Geist nahe ist.",
+   "effekt": {
+    "schaden": 4,
+    "beruhigen": 10
+   },
+   "herkunft": [
+    "quest"
+   ],
+   "preis": null,
+   "figur": "assets/figur/handschuhe_glimmerwickel_4.png",
+   "icon": "assets/icons/icon_handschuhe_glimmerwickel_4.png"
   }
  ]
 }

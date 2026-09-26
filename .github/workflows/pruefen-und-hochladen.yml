@@ -1,0 +1,81 @@
+# Läuft bei jeder Änderung im Repository:
+#   1. Tabellen aus data/ umwandeln und die JSON-Dateien mit ablegen
+#   2. Spielregeln testen
+#   3. auf dem Hauptzweig (main): alles per SFTP auf den IONOS-Webspace laden
+#
+# Für Schritt 3 braucht es einmalig vier Geheimnisse unter
+# Settings → Secrets and variables → Actions (siehe README):
+#   IONOS_SFTP_HOST, IONOS_SFTP_USER, IONOS_SFTP_PASSWORD, IONOS_SFTP_PATH
+# Fehlen sie, wird Schritt 3 einfach übersprungen.
+
+name: Prüfen und hochladen
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: envoy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pruefen-und-hochladen:
+    runs-on: ubuntu-latest
+    env:
+      IONOS_SFTP_HOST: ${{ secrets.IONOS_SFTP_HOST }}
+      IONOS_SFTP_USER: ${{ secrets.IONOS_SFTP_USER }}
+      IONOS_SFTP_PATH: ${{ secrets.IONOS_SFTP_PATH }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Tabellen umwandeln
+        run: python3 tools/convert_data.py
+
+      - name: Spielregeln testen
+        run: npm test
+
+      - name: Umgewandelte Daten übernehmen
+        if: github.event_name == 'push'
+        run: |
+          if git diff --quiet -- data/*.json; then
+            echo "Daten unverändert."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/*.json
+          git commit -m "Daten aus den Tabellen umgewandelt"
+          git push
+
+      - name: Auf den Webspace laden
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.IONOS_SFTP_HOST != ''
+        env:
+          LFTP_PASSWORD: ${{ secrets.IONOS_SFTP_PASSWORD }}
+        run: |
+          sudo apt-get install -y -qq lftp > /dev/null
+          lftp -c "
+            set sftp:auto-confirm yes;
+            set net:max-retries 3;
+            open --env-password -u \"$IONOS_SFTP_USER\" sftp://$IONOS_SFTP_HOST;
+            mkdir -p -f \"$IONOS_SFTP_PATH\";
+            mirror --reverse --verbose --parallel=4 \
+              --exclude-glob .git* \
+              --exclude-glob .github/ \
+              --exclude-glob tools/ \
+              --exclude-glob tests/ \
+              --exclude-glob docs/ \
+              --exclude-glob node_modules/ \
+              --exclude-glob sync-daten/ \
+              --exclude-glob '*.md' \
+              --exclude-glob '*.xlsx' \
+              --exclude-glob package.json \
+              ./ \"$IONOS_SFTP_PATH\"
+          "

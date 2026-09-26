@@ -32,7 +32,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   externen Abhängigkeiten zur Laufzeit.
 - Läuft auf dem IONOS-Webspace der Nutzerin, aufs iPad als Homescreen-Icon.
 - Speicherung lokal im Browser plus Abgleich über einen eigenen `sync.php`-Endpunkt.
-  Aufbau analog zum Vorgängerprojekt Marble.
+  Gespeichert wird eine Ereignisliste, der Spielstand wird daraus berechnet.
+- Veröffentlichung: Ein GitHub-Ablauf testet, wandelt die Tabellen um und lädt den
+  Zweig `main` per SFTP auf den IONOS-Webspace.
 - **Kein Zugriff auf Apple Health oder die Apple Watch.** Eine Webapp kann das nicht.
   Gemessene Werte (Strecke, Tempo, Haltezeit) werden von Hand eingetragen.
 - UI-Texte auf Deutsch. Bezeichner und Kommentare im Code auf Englisch.
@@ -40,19 +42,25 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 
 ## Was in Phase 1 gebaut wird
 
-- Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung
+- Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
 - Charakterfenster mit Paperdoll-Darstellung und Ausrüstungsslots
 - Speicherung und Geräteabgleich
+- Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
+  gewürfelte Kämpfe und Proben, Beute, Währung Glimmer, Holz und Stein
+- Rucksack (von Anfang an), Schrank (mit dem Zuhause), Händler, Zuhause mit Ausbau
+  und Einrichtung, Kompendium der getroffenen Geister
+
+Freischaltung: Karte und Quests von Anfang an. Zuhause und Händler über Quests.
+Skilltree bei allen vier Stats auf 10 (Inhalt folgt).
 
 ## Was in Phase 1 NICHT gebaut wird
 
 - Skilltree: existiert nur als ausgegrautes Symbol im Menü, ohne Funktion dahinter
-- Kämpfe, Quests, Erkundung, Karte, Gegner
 - Arena, Mehrspieler, Freunde
 - Ernährungsmodul
 
-Nicht vorgreifen. Keine Platzhalter-Implementierungen für Phase-2-Funktionen bauen,
+Nicht vorgreifen. Keine Platzhalter-Implementierungen für diese Funktionen bauen,
 solange nicht ausdrücklich danach gefragt wird.
 
 ## Die vier Stats
@@ -96,12 +104,19 @@ dort rückwärts weiter.
 **Bodensatz:** 60 % des jemals höchsten erreichten Levels. Untergrenze Level 1, 0 XP.
 
 **Steigerung der Übungsintensität:** hoch nach drei erfolgreichen Durchgängen in Folge,
-runter schon nach zwei zu schweren. Langsam hoch, schnell runter.
+runter schon nach zwei zu schweren. Langsam hoch, schnell runter. Ob ein Durchgang
+erfolgreich war, ergibt sich wo möglich aus dem Pflicht-Messwert (ab 90 % des Ziels gut,
+unter 70 % zu schwer). Ohne Messwert wird nur bei neuen Übungen und nach einem
+Stufenwechsel gefragt. Nach 7 ausgelassenen Tagen in Folge eine Stufe runter.
+
+**Krankheitsmodus:** Tagesaufgaben auf der niedrigsten Stufe, XP entsprechend dem
+kleineren Umfang, zählt nicht für die Intensität. Keine Pausenregel für den Malus.
 
 ## Daten
 
 - `data/uebungen.xlsx` — Übungskatalog, von der Nutzerin gepflegt
-- `data/ausruestung.xlsx` — Ausrüstung mit Voraussetzungen und Dateinamen
+- `data/ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Effekten und Dateinamen
+- `data/welt.xlsx` — Orte, Monster, Quests, Zuhause-Stufen, Einrichtung
 
 Beide Dateien sind Quelle, nicht Ziel. Nie hineinschreiben. Beim Bauen in ein Format
 einlesen, das die App zur Laufzeit nutzt, und die Konvertierung wiederholbar halten.
@@ -116,11 +131,10 @@ nie zugeschnitten. Reihenfolge hinten nach vorn:
 3. Beinkleidung
 4. Schuhe
 5. Torso
-6. Gürtel
-7. Handschuhe
-8. Schulterstücke
-9. Frisur / Kopfbedeckung
-10. *(kein Waffen-Slot — der Envoy kämpft waffenlos)*
+6. Handwickel (das Gegenstück zur Waffe in der waffenlosen Kampfkunst)
+7. Frisur / Kopfbedeckung
+
+Kein Waffen-Slot, kein Gürtel, keine Schulterstücke.
 
 Icons sind eigenständige Grafiken, 256 × 256, nicht aus der Figurenebene geschnitten.
 
@@ -128,6 +142,10 @@ Wird die Voraussetzung eines getragenen Teils unterschritten, fliegt es aus dem 
 und wird **nicht mehr gerendert** — die Figur sieht dort aus, als trüge sie nichts.
 
 Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.
+
+Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Zuhause
+`assets/zuhause/stufe_<n>.png` (1200 × 800), Einrichtung
+`assets/icons/icon_einrichtung_<id>.png` (256 × 256), Karte `assets/welt/karte.jpg` (3:2).
 
 ## Arbeitsweise
 

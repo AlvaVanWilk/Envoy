@@ -1,0 +1,1316 @@
+{
+ "generated": "2026-09-26T13:24:16Z",
+ "source": "welt.xlsx",
+ "places": [
+  {
+   "id": "lager",
+   "name": "Lagerplatz",
+   "region": "Weidenland",
+   "x": 22.0,
+   "y": 58.0,
+   "typ": "lager",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Eine Feuerstelle unter alten Weiden. Hier beginnt jeder Weg."
+  },
+  {
+   "id": "birkenhain",
+   "name": "Birkenhain",
+   "region": "Weidenland",
+   "x": 11.0,
+   "y": 36.0,
+   "typ": "sammeln",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Helle Stämme, trockenes Holz am Boden."
+  },
+  {
+   "id": "steinbruch",
+   "name": "Alter Steinbruch",
+   "region": "Weidenland",
+   "x": 30.0,
+   "y": 82.0,
+   "typ": "sammeln",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Lose Blöcke, von niemandem vermisst."
+  },
+  {
+   "id": "weidenufer",
+   "name": "Weidenufer",
+   "region": "Weidenland",
+   "x": 32.0,
+   "y": 40.0,
+   "typ": "wild",
+   "encounters": true,
+   "monsters": [
+    "zauderling",
+    "gruebelkraehe"
+   ],
+   "unlock": [],
+   "text": "Das Wasser steht still, als warte es."
+  },
+  {
+   "id": "nebelfurt",
+   "name": "Nebelfurt",
+   "region": "Nebelmark",
+   "x": 46.0,
+   "y": 54.0,
+   "typ": "wild",
+   "encounters": true,
+   "monsters": [
+    "nebelwicht",
+    "zauderling",
+    "hastwind"
+   ],
+   "unlock": [],
+   "text": "Wer hier übersetzt, sieht die eigene Hand nicht mehr."
+  },
+  {
+   "id": "spalt",
+   "name": "Der Spalt",
+   "region": "Nebelmark",
+   "x": 50.0,
+   "y": 26.0,
+   "typ": "ort",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Zwei Felswände, kaum eine Schulter breit auseinander."
+  },
+  {
+   "id": "stillequelle",
+   "name": "Stille Quelle",
+   "region": "Nebelmark",
+   "x": 36.0,
+   "y": 14.0,
+   "typ": "ort",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Ein Becken ohne Wellen. Man hört den eigenen Atem."
+  },
+  {
+   "id": "dornenhecke",
+   "name": "Dornenhecke",
+   "region": "Nebelmark",
+   "x": 58.0,
+   "y": 72.0,
+   "typ": "wild",
+   "encounters": true,
+   "monsters": [
+    "dornenfluesterer",
+    "hastwind",
+    "gruebelkraehe"
+   ],
+   "unlock": [],
+   "text": "Ein Pfad, der sich jeden Tag ein wenig schließt."
+  },
+  {
+   "id": "mondsee",
+   "name": "Mondsee",
+   "region": "Nebelmark",
+   "x": 50.0,
+   "y": 88.0,
+   "typ": "wild",
+   "encounters": true,
+   "monsters": [
+    "echo",
+    "nebelwicht",
+    "schwerer-schatten"
+   ],
+   "unlock": [],
+   "text": "Nachts spiegelt er Dinge, die nicht da sind."
+  },
+  {
+   "id": "schlucht",
+   "name": "Die Schlucht",
+   "region": "Grenzland",
+   "x": 66.0,
+   "y": 46.0,
+   "typ": "ort",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Unten rauscht etwas. Die alte Brücke hängt in Fetzen."
+  },
+  {
+   "id": "aschenhang",
+   "name": "Aschenhang",
+   "region": "Aschenland",
+   "x": 80.0,
+   "y": 34.0,
+   "typ": "wild",
+   "encounters": true,
+   "monsters": [
+    "schwerer-schatten",
+    "glutfresser",
+    "echo"
+   ],
+   "unlock": [
+    {
+     "type": "quest",
+     "id": "q-bruecke"
+    }
+   ],
+   "text": "Grauer Staub, warm unter den Füßen."
+  },
+  {
+   "id": "turm",
+   "name": "Turm der Stufen",
+   "region": "Aschenland",
+   "x": 88.0,
+   "y": 64.0,
+   "typ": "ort",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [
+    {
+     "type": "quest",
+     "id": "q-bruecke"
+    }
+   ],
+   "text": "Niemand weiß, wie viele Stufen es sind. Man zählt beim Gehen."
+  },
+  {
+   "id": "langestrasse",
+   "name": "Die lange Straße",
+   "region": "Grenzland",
+   "x": 72.0,
+   "y": 14.0,
+   "typ": "ort",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [
+    {
+     "type": "quest",
+     "id": "q-bruecke"
+    }
+   ],
+   "text": "Gerade, gepflastert, ohne sichtbares Ende."
+  },
+  {
+   "id": "weisstal",
+   "name": "Weißes Tal",
+   "region": "Nordland",
+   "x": 92.0,
+   "y": 8.0,
+   "typ": "wild",
+   "encounters": true,
+   "monsters": [
+    "nachtmahr",
+    "die-leere"
+   ],
+   "unlock": [
+    {
+     "type": "quest",
+     "id": "q-langestrasse"
+    }
+   ],
+   "text": "Schnee, der nicht knirscht."
+  }
+ ],
+ "monsters": [
+  {
+   "id": "zauderling",
+   "name": "Zauderling",
+   "stufe": 1,
+   "leben": 10,
+   "kraft": 1,
+   "gewandtheit": 1,
+   "calmable": true,
+   "loot": {
+    "glimmer": [
+     2,
+     4
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 4
+   },
+   "text": "Hockt am Wegrand und sagt leise: morgen. Er wird kleiner, wenn man einfach weitergeht.",
+   "bild": "assets/monster/zauderling.png"
+  },
+  {
+   "id": "gruebelkraehe",
+   "name": "Grübelkrähe",
+   "stufe": 2,
+   "leben": 14,
+   "kraft": 2,
+   "gewandtheit": 3,
+   "calmable": false,
+   "loot": {
+    "glimmer": [
+     3,
+     6
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 5
+   },
+   "text": "Kreist über demselben Gedanken, Runde um Runde.",
+   "bild": "assets/monster/gruebelkraehe.png"
+  },
+  {
+   "id": "nebelwicht",
+   "name": "Nebelwicht",
+   "stufe": 2,
+   "leben": 13,
+   "kraft": 2,
+   "gewandtheit": 2,
+   "calmable": true,
+   "loot": {
+    "glimmer": [
+     3,
+     5
+    ],
+    "holz": [
+     0,
+     1
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 5
+   },
+   "text": "Macht jede Entfernung größer, als sie ist.",
+   "bild": "assets/monster/nebelwicht.png"
+  },
+  {
+   "id": "hastwind",
+   "name": "Hastwind",
+   "stufe": 3,
+   "leben": 16,
+   "kraft": 3,
+   "gewandtheit": 5,
+   "calmable": false,
+   "loot": {
+    "glimmer": [
+     4,
+     7
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 6
+   },
+   "text": "Treibt vor sich her, ohne je anzukommen.",
+   "bild": "assets/monster/hastwind.png"
+  },
+  {
+   "id": "nebelwaechter",
+   "name": "Nebelwächter",
+   "stufe": 4,
+   "leben": 24,
+   "kraft": 3,
+   "gewandtheit": 3,
+   "calmable": false,
+   "loot": {
+    "glimmer": [
+     6,
+     10
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 10
+   },
+   "text": "Hält die Furt besetzt und alles, was darin feststeckt.",
+   "bild": "assets/monster/nebelwaechter.png"
+  },
+  {
+   "id": "dornenfluesterer",
+   "name": "Dornenflüsterer",
+   "stufe": 4,
+   "leben": 20,
+   "kraft": 4,
+   "gewandtheit": 4,
+   "calmable": true,
+   "loot": {
+    "glimmer": [
+     5,
+     9
+    ],
+    "holz": [
+     0,
+     2
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 8
+   },
+   "text": "Seine Worte haken sich fest, lange nachdem er schweigt.",
+   "bild": "assets/monster/dornenfluesterer.png"
+  },
+  {
+   "id": "schwerer-schatten",
+   "name": "Schwerer Schatten",
+   "stufe": 5,
+   "leben": 28,
+   "kraft": 4,
+   "gewandtheit": 3,
+   "calmable": true,
+   "loot": {
+    "glimmer": [
+     6,
+     11
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     2
+    ],
+    "itemChance": 8
+   },
+   "text": "Legt sich auf die Schultern und wird mit jedem Schritt schwerer.",
+   "bild": "assets/monster/schwerer-schatten.png"
+  },
+  {
+   "id": "echo",
+   "name": "Echo",
+   "stufe": 6,
+   "leben": 26,
+   "kraft": 5,
+   "gewandtheit": 7,
+   "calmable": true,
+   "loot": {
+    "glimmer": [
+     8,
+     13
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 9
+   },
+   "text": "Wiederholt alte Sätze in fremden Stimmen.",
+   "bild": "assets/monster/echo.png"
+  },
+  {
+   "id": "glutfresser",
+   "name": "Glutfresser",
+   "stufe": 7,
+   "leben": 34,
+   "kraft": 6,
+   "gewandtheit": 5,
+   "calmable": false,
+   "loot": {
+    "glimmer": [
+     9,
+     15
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     1,
+     2
+    ],
+    "itemChance": 10
+   },
+   "text": "Nährt sich von jeder kleinen Wärme, die übrig ist.",
+   "bild": "assets/monster/glutfresser.png"
+  },
+  {
+   "id": "nachtmahr",
+   "name": "Nachtmahr",
+   "stufe": 8,
+   "leben": 38,
+   "kraft": 7,
+   "gewandtheit": 7,
+   "calmable": false,
+   "loot": {
+    "glimmer": [
+     11,
+     18
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 12
+   },
+   "text": "Kommt, wenn es still wird, und bleibt bis zum Morgen.",
+   "bild": "assets/monster/nachtmahr.png"
+  },
+  {
+   "id": "aschenkoenigin",
+   "name": "Aschenkönigin",
+   "stufe": 10,
+   "leben": 52,
+   "kraft": 8,
+   "gewandtheit": 7,
+   "calmable": false,
+   "loot": {
+    "glimmer": [
+     20,
+     30
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 25
+   },
+   "text": "Herrscht über alles, was verbrannt ist, und nennt es Ordnung.",
+   "bild": "assets/monster/aschenkoenigin.png"
+  },
+  {
+   "id": "die-leere",
+   "name": "Die Leere",
+   "stufe": 12,
+   "leben": 60,
+   "kraft": 9,
+   "gewandtheit": 9,
+   "calmable": true,
+   "loot": {
+    "glimmer": [
+     30,
+     45
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "itemChance": 30
+   },
+   "text": "Hat kein Gesicht. Wer lange hinsieht, erkennt das eigene.",
+   "bild": "assets/monster/die-leere.png"
+  }
+ ],
+ "quests": [
+  {
+   "id": "q-holz",
+   "name": "Holz sammeln",
+   "place": "birkenhain",
+   "text": "Trockene Äste aufsammeln und zum Bündel schnüren. Mehr Kraft, mehr Holz.",
+   "monsters": [],
+   "checks": [],
+   "conditions": [],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "glimmer": [
+     0,
+     0
+    ],
+    "holz": [
+     2,
+     4
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 0
+  },
+  {
+   "id": "q-stein",
+   "name": "Steine brechen",
+   "place": "steinbruch",
+   "text": "Lose Blöcke lösen und handlich schlagen. Mehr Kraft, mehr Stein.",
+   "monsters": [],
+   "checks": [],
+   "conditions": [],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "glimmer": [
+     0,
+     0
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     1,
+     3
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 0
+  },
+  {
+   "id": "q-zuhause",
+   "name": "Ein Platz zum Bleiben",
+   "place": "lager",
+   "text": "Unter den Weiden ist Platz für ein Zelt. Es fehlt nur das Material.",
+   "monsters": [],
+   "checks": [],
+   "conditions": [],
+   "consumes": {
+    "holz": 6,
+    "stein": 3
+   },
+   "cost": 2,
+   "reward": {
+    "glimmer": [
+     10,
+     10
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [
+     "zuhause"
+    ],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-baum",
+   "name": "Der umgestürzte Baum",
+   "place": "weidenufer",
+   "text": "Ein Stamm liegt quer über dem Pfad. Wer ihn bewegt, hat Brennholz für Tage.",
+   "monsters": [],
+   "checks": [
+    {
+     "stat": "kraft",
+     "difficulty": 3
+    }
+   ],
+   "conditions": [],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "glimmer": [
+     4,
+     4
+    ],
+    "holz": [
+     5,
+     7
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 3
+  },
+  {
+   "id": "q-haendler",
+   "name": "Der Händler im Nebel",
+   "place": "nebelfurt",
+   "text": "In der Furt ruft jemand um Hilfe. Ein Wagen steckt fest, und davor steht etwas Großes.",
+   "monsters": [
+    "nebelwaechter"
+   ],
+   "checks": [
+    {
+     "stat": "gelassenheit",
+     "difficulty": 3
+    }
+   ],
+   "conditions": [],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "glimmer": [
+     25,
+     25
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [
+     "haendler"
+    ],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-spalt",
+   "name": "Durch den Spalt",
+   "place": "spalt",
+   "text": "Dahinter soll ein Versteck liegen. Hindurch passt nur, wer sich drehen und strecken kann.",
+   "monsters": [],
+   "checks": [
+    {
+     "stat": "beweglichkeit",
+     "difficulty": 4
+    }
+   ],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "beweglichkeit",
+     "min": 3
+    }
+   ],
+   "consumes": {},
+   "cost": 2,
+   "reward": {
+    "glimmer": [
+     15,
+     15
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [
+     "kopf_stirnband_1"
+    ],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-quelle",
+   "name": "Die stille Quelle",
+   "place": "stillequelle",
+   "text": "Wer am Rand sitzen bleibt, bis das Wasser ganz ruhig ist, steht erholt wieder auf.",
+   "monsters": [],
+   "checks": [
+    {
+     "stat": "gelassenheit",
+     "difficulty": 3
+    },
+    {
+     "stat": "gelassenheit",
+     "difficulty": 5
+    }
+   ],
+   "conditions": [],
+   "consumes": {},
+   "cost": 2,
+   "reward": {
+    "glimmer": [
+     8,
+     8
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": true
+   },
+   "repeatable": true,
+   "cooldown": 3
+  },
+  {
+   "id": "q-dornen",
+   "name": "Der Weg durch die Dornen",
+   "place": "dornenhecke",
+   "text": "Die Hecke flüstert. Ein Weg führt hindurch, wenn man sich weder hetzen noch festhalten lässt.",
+   "monsters": [],
+   "checks": [
+    {
+     "stat": "beweglichkeit",
+     "difficulty": 5
+    },
+    {
+     "stat": "gelassenheit",
+     "difficulty": 4
+    }
+   ],
+   "conditions": [],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "glimmer": [
+     20,
+     20
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [
+     "windspiel"
+    ],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-bruecke",
+   "name": "Die Brücke über die Schlucht",
+   "place": "schlucht",
+   "text": "Mit Holz, Stein und einem langen Atem lässt sich die Brücke flicken.",
+   "monsters": [],
+   "checks": [
+    {
+     "stat": "ausdauer",
+     "difficulty": 5
+    },
+    {
+     "stat": "kraft",
+     "difficulty": 4
+    }
+   ],
+   "conditions": [],
+   "consumes": {
+    "holz": 10,
+    "stein": 4
+   },
+   "cost": 4,
+   "reward": {
+    "glimmer": [
+     30,
+     30
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-mondsee",
+   "name": "Spiegel im Mondsee",
+   "place": "mondsee",
+   "text": "Im Wasser steht jemand, der nur wiederholt, was man selbst einmal gesagt hat.",
+   "monsters": [
+    "echo"
+   ],
+   "checks": [
+    {
+     "stat": "gelassenheit",
+     "difficulty": 6
+    }
+   ],
+   "conditions": [],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "glimmer": [
+     35,
+     35
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [
+     "kopf_stillemaske_3"
+    ],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-turm",
+   "name": "Der Turm der Stufen",
+   "place": "turm",
+   "text": "Oben soll man weit sehen. Wer im echten Leben genug Stufen gegangen ist, kennt den Rhythmus.",
+   "monsters": [],
+   "checks": [
+    {
+     "stat": "ausdauer",
+     "difficulty": 7
+    }
+   ],
+   "conditions": [
+    {
+     "type": "total",
+     "key": "stockwerke",
+     "min": 100
+    }
+   ],
+   "consumes": {},
+   "cost": 4,
+   "reward": {
+    "glimmer": [
+     60,
+     60
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [
+     "schuhe_leichtestiefel_3"
+    ],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-langestrasse",
+   "name": "Die lange Straße",
+   "place": "langestrasse",
+   "text": "Die Straße endet nur für die, die schon viele Kilometer in den Beinen haben.",
+   "monsters": [],
+   "checks": [
+    {
+     "stat": "ausdauer",
+     "difficulty": 6
+    }
+   ],
+   "conditions": [
+    {
+     "type": "total",
+     "key": "km",
+     "min": 30
+    }
+   ],
+   "consumes": {},
+   "cost": 4,
+   "reward": {
+    "glimmer": [
+     40,
+     40
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-koenigin",
+   "name": "Die Königin in der Asche",
+   "place": "aschenhang",
+   "text": "Im Zentrum des Hangs sitzt sie auf einem Thron aus kalter Glut.",
+   "monsters": [
+    "glutfresser",
+    "aschenkoenigin"
+   ],
+   "checks": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "kraft",
+     "min": 8
+    }
+   ],
+   "consumes": {},
+   "cost": 5,
+   "reward": {
+    "glimmer": [
+     120,
+     120
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [
+     "handschuhe_glimmerwickel_4"
+    ],
+    "furniture": [
+     "glimmerschale"
+    ],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  },
+  {
+   "id": "q-leere",
+   "name": "Das weiße Schweigen",
+   "place": "weisstal",
+   "text": "Im Tal wartet etwas, das man nicht besiegen muss.",
+   "monsters": [
+    "die-leere"
+   ],
+   "checks": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "gelassenheit",
+     "min": 10
+    }
+   ],
+   "consumes": {},
+   "cost": 5,
+   "reward": {
+    "glimmer": [
+     200,
+     200
+    ],
+    "holz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0
+  }
+ ],
+ "home": [
+  {
+   "stufe": 1,
+   "name": "Zelt",
+   "cost": {
+    "holz": 0,
+    "stein": 0,
+    "glimmer": 0
+   },
+   "erholung": 5,
+   "plaetze": 2,
+   "schrank": 12,
+   "text": "Zwei Stangen, eine Plane, ein trockener Boden.",
+   "bild": "assets/zuhause/stufe_1.png"
+  },
+  {
+   "stufe": 2,
+   "name": "Hütte",
+   "cost": {
+    "holz": 15,
+    "stein": 5,
+    "glimmer": 40
+   },
+   "erholung": 10,
+   "plaetze": 3,
+   "schrank": 20,
+   "text": "Vier Wände aus Holz und eine Tür, die schließt.",
+   "bild": "assets/zuhause/stufe_2.png"
+  },
+  {
+   "stufe": 3,
+   "name": "Baracke",
+   "cost": {
+    "holz": 30,
+    "stein": 15,
+    "glimmer": 100
+   },
+   "erholung": 15,
+   "plaetze": 5,
+   "schrank": 30,
+   "text": "Lang, niedrig, warm. Platz für mehr als nur Schlaf.",
+   "bild": "assets/zuhause/stufe_3.png"
+  },
+  {
+   "stufe": 4,
+   "name": "Steinhaus",
+   "cost": {
+    "holz": 30,
+    "stein": 45,
+    "glimmer": 250
+   },
+   "erholung": 22,
+   "plaetze": 6,
+   "schrank": 40,
+   "text": "Mauern, die den Wind nicht hereinlassen.",
+   "bild": "assets/zuhause/stufe_4.png"
+  },
+  {
+   "stufe": 5,
+   "name": "Turmhaus",
+   "cost": {
+    "holz": 50,
+    "stein": 80,
+    "glimmer": 500
+   },
+   "erholung": 30,
+   "plaetze": 8,
+   "schrank": 60,
+   "text": "Ein Zimmer über dem anderen, oben ein Fenster in alle Richtungen.",
+   "bild": "assets/zuhause/stufe_5.png"
+  }
+ ],
+ "furniture": [
+  {
+   "id": "schlafmatte",
+   "name": "Schlafmatte",
+   "effekt": {
+    "erholung": 8
+   },
+   "herkunft": [
+    "haendler"
+   ],
+   "preis": 25,
+   "abStufe": 1,
+   "text": "Dick genug, um den Boden zu vergessen.",
+   "icon": "assets/icons/icon_einrichtung_schlafmatte.png"
+  },
+  {
+   "id": "wasserkrug",
+   "name": "Wasserkrug",
+   "effekt": {
+    "erholung": 4
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": 15,
+   "abStufe": 1,
+   "text": "Immer kühl, immer gefüllt.",
+   "icon": "assets/icons/icon_einrichtung_wasserkrug.png"
+  },
+  {
+   "id": "kraeuterbund",
+   "name": "Kräuterbund",
+   "effekt": {
+    "erholung": 5
+   },
+   "herkunft": [
+    "haendler",
+    "beute"
+   ],
+   "preis": 20,
+   "abStufe": 1,
+   "text": "Riecht nach Sommer.",
+   "icon": "assets/icons/icon_einrichtung_kraeuterbund.png"
+  },
+  {
+   "id": "laterne",
+   "name": "Laterne",
+   "effekt": {
+    "glueck": 3
+   },
+   "herkunft": [
+    "haendler"
+   ],
+   "preis": 30,
+   "abStufe": 1,
+   "text": "Wirft ein ruhiges Licht.",
+   "icon": "assets/icons/icon_einrichtung_laterne.png"
+  },
+  {
+   "id": "windspiel",
+   "name": "Windspiel",
+   "effekt": {
+    "glueck": 5
+   },
+   "herkunft": [
+    "beute",
+    "quest"
+   ],
+   "preis": 0,
+   "abStufe": 1,
+   "text": "Klingt, bevor sich das Wetter ändert.",
+   "icon": "assets/icons/icon_einrichtung_windspiel.png"
+  },
+  {
+   "id": "wolldecke",
+   "name": "Wolldecke",
+   "effekt": {
+    "erholung": 5
+   },
+   "herkunft": [
+    "beute"
+   ],
+   "preis": 0,
+   "abStufe": 1,
+   "text": "Schwer und warm.",
+   "icon": "assets/icons/icon_einrichtung_wolldecke.png"
+  },
+  {
+   "id": "haengematte",
+   "name": "Hängematte",
+   "effekt": {
+    "erholung": 10
+   },
+   "herkunft": [
+    "haendler"
+   ],
+   "preis": 90,
+   "abStufe": 2,
+   "text": "Schaukelt noch, wenn man längst schläft.",
+   "icon": "assets/icons/icon_einrichtung_haengematte.png"
+  },
+  {
+   "id": "teppich",
+   "name": "Teppich",
+   "effekt": {
+    "erholung": 6,
+    "glueck": 2
+   },
+   "herkunft": [
+    "haendler"
+   ],
+   "preis": 60,
+   "abStufe": 2,
+   "text": "Muster, in denen man sich verlieren kann.",
+   "icon": "assets/icons/icon_einrichtung_teppich.png"
+  },
+  {
+   "id": "regal",
+   "name": "Regal",
+   "effekt": {
+    "glueck": 4
+   },
+   "herkunft": [
+    "haendler"
+   ],
+   "preis": 50,
+   "abStufe": 2,
+   "text": "Für alles, was man unterwegs findet.",
+   "icon": "assets/icons/icon_einrichtung_regal.png"
+  },
+  {
+   "id": "kamin",
+   "name": "Kamin",
+   "effekt": {
+    "erholung": 15
+   },
+   "herkunft": [
+    "haendler"
+   ],
+   "preis": 150,
+   "abStufe": 3,
+   "text": "Das Feuer zieht, der Rauch geht hinaus.",
+   "icon": "assets/icons/icon_einrichtung_kamin.png"
+  },
+  {
+   "id": "glimmerschale",
+   "name": "Glimmerschale",
+   "effekt": {
+    "glueck": 8
+   },
+   "herkunft": [
+    "quest"
+   ],
+   "preis": 0,
+   "abStufe": 3,
+   "text": "Eine Schale voller Licht, das nicht ausgeht.",
+   "icon": "assets/icons/icon_einrichtung_glimmerschale.png"
+  }
+ ]
+}

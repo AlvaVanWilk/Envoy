@@ -22,8 +22,11 @@ const DATA_DIR = __DIR__ . '/sync-daten';
 const MAX_PROFILES = 3;
 
 const MAX_BODY_BYTES = 2000000;
-const MAX_EVENT_BYTES = 4000;
-const EVENT_TYPES = ['plan', 'done', 'undo', 'equip', 'unequip'];
+const MAX_EVENT_BYTES = 16000;
+const EVENT_TYPES = [
+    'plan', 'done', 'undo', 'mode',
+    'travel', 'quest', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
+];
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');

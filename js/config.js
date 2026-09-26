@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '2.0.0';
 
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
@@ -29,6 +29,12 @@ export const FLOOR_SHARE = 0.6;
 // Exercise intensity: up after three good runs in a row, down after two too hard.
 export const INTENSITY_UP_AFTER = 3;
 export const INTENSITY_DOWN_AFTER = 2;
+// With a measured value: from 90 % of the target a run counts as good,
+// below 70 % as too hard, in between as neither.
+export const RATIO_GOOD = 0.9;
+export const RATIO_HARD = 0.7;
+// After every 7 missed days in a row the intensity goes down one level.
+export const INTENSITY_DOWN_AFTER_MISSED_DAYS = 7;
 
 // A day starts at 03:00 local time, so a late evening session still
 // counts for the day it belongs to.
@@ -36,16 +42,15 @@ export const DAY_START_HOUR = 3;
 
 // Equipment slots. `layer` is the drawing order on the paperdoll,
 // back to front. The base figure sits between cloak and legs.
-// There is no weapon slot: the Envoy fights unarmed.
+// There is no weapon slot: the Envoy fights unarmed, the hand wraps
+// take that role.
 export const SLOTS = [
-  { id: 'umhang',     name: 'Umhang',         layer: 1 },
-  { id: 'beine',      name: 'Beinkleidung',   layer: 3 },
-  { id: 'schuhe',     name: 'Schuhe',         layer: 4 },
-  { id: 'torso',      name: 'Torso',          layer: 5 },
-  { id: 'guertel',    name: 'Gürtel',         layer: 6 },
-  { id: 'handschuhe', name: 'Handschuhe',     layer: 7 },
-  { id: 'schultern',  name: 'Schulterstücke', layer: 8 },
-  { id: 'kopf',       name: 'Kopf',           layer: 9 },
+  { id: 'umhang',     name: 'Umhang',       short: 'Umhang', layer: 1 },
+  { id: 'beine',      name: 'Beinkleidung', short: 'Beine',  layer: 3 },
+  { id: 'schuhe',     name: 'Schuhe',       short: 'Schuhe', layer: 4 },
+  { id: 'torso',      name: 'Torso',        short: 'Torso',  layer: 5 },
+  { id: 'handschuhe', name: 'Handwickel',   short: 'Hände',  layer: 6 },
+  { id: 'kopf',       name: 'Kopf',         short: 'Kopf',   layer: 7 },
 ];
 
 export const BASE_FIGURE_LAYER = 2;
@@ -53,26 +58,50 @@ export const BASE_FIGURE_FILE = 'assets/figur/basisfigur.png';
 
 export const SLOT_IDS = SLOTS.map((s) => s.id);
 
-// Feedback after an exercise. `hard` lowers the intensity.
+// Feedback after an exercise without a measured value. It is only asked
+// the first time an exercise is done and after the intensity changed.
 export const FEEDBACK = [
   { id: 'leicht',  label: 'Leicht',  hard: false },
   { id: 'passend', label: 'Passend', hard: false },
   { id: 'zuviel',  label: 'Zu viel', hard: true },
 ];
 
-// Values that can be entered by hand after an exercise.
+// Values that must be entered after an exercise that has one.
 export const MEASUREMENTS = {
-  dauer_min:      { label: 'Dauer',          unit: 'Min.',  step: 1 },
-  strecke_km:     { label: 'Strecke',        unit: 'km',    step: 0.1 },
-  tempo_kmh:      { label: 'Tempo',          unit: 'km/h',  step: 0.1 },
-  stockwerke:     { label: 'Stockwerke',     unit: '',      step: 1 },
-  haltezeit_s:    { label: 'Haltezeit',      unit: 'Sek.',  step: 1 },
-  wiederholungen: { label: 'Wiederholungen', unit: '',      step: 1 },
+  strecke_km:     { question: 'Welche Strecke?',         unit: 'km',   decimals: true },
+  stockwerke:     { question: 'Wie viele Stockwerke hinauf?', unit: 'Stockwerke', decimals: false },
+  haltezeit_s:    { question: 'Längste Haltezeit?',      unit: 'Sek.', decimals: false },
+  wiederholungen: { question: 'Wie viele Wiederholungen?', unit: '',   decimals: false },
+  dauer_min:      { question: 'Wie lange?',              unit: 'Min.', decimals: false },
 };
 
 export const DATA_FILES = {
   exercises: 'data/uebungen.json',
   equipment: 'data/ausruestung.json',
+  world: 'data/welt.json',
 };
 
 export const SYNC_ENDPOINT = 'sync.php';
+
+// --- world ---------------------------------------------------------------
+
+export const CURRENCY = 'Glimmer';
+
+// Ausdauerleiste: size from the Ausdauer stat, refills in about 8 hours,
+// faster with Gelassenheit and a comfortable home.
+export const STAMINA_BASE = 10;
+export const STAMINA_PER_AUSDAUER = 2;
+export const STAMINA_REFILL_HOURS = 8;
+export const STAMINA_BONUS_PER_GELASSENHEIT = 0.03;   // +3 % speed per level
+export const STAMINA_REST_TASK_SHARE = 0.5;           // Gelassenheit task: half a bar
+
+// Travel: map coordinates are percent; x counts 1.5 because the map is wider than high.
+export const MAP_ASPECT = 1.5;
+export const TRAVEL_UNITS_PER_STAMINA = 14;
+export const OVERLOAD_TRAVEL_EXTRA = 1;               // over-full backpack: +1 per trip
+
+export const BACKPACK_SIZE = 8;
+export const ENCOUNTER_CHANCE = 0.55;                  // per wild place and day
+export const ENCOUNTER_COST = 2;
+export const TRADER_OFFERS = 5;
+export const SELL_SHARE = 1 / 3;

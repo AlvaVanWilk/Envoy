@@ -1,0 +1,81 @@
+// The Envoy's home: grows from a tent to a tower house with wood, stone
+// and Glimmer; furniture set up here speeds recovery or brings luck.
+
+import { h, icon } from './dom.js';
+import { NAV_ICONS, SLOT_ICONS } from './icons.js';
+import { viewHead, purse, resource, effectList, itemIcon, lockedView, unlockHint } from './parts.js';
+import { openSheet, closeSheet } from './sheet.js';
+import { openEntry } from './itemsheet.js';
+import { effects } from '../world/hero.js';
+import { countIn, capacity } from '../world/inventory.js';
+
+export function renderHome(game) {
+  const { world } = game.state;
+  if (world.home === 0) return lockedView(NAV_ICONS.zuhause, 'Zuhause', unlockHint('zuhause', game.catalog));
+
+  const tier = game.catalog.home[world.home - 1];
+  const next = game.catalog.home[world.home];
+  const fx = effects(world, game.catalog);
+
+  const slots = [];
+  for (let i = 0; i < tier.plaetze; i += 1) {
+    const inst = world.placed[i];
+    const entry = inst && world.items[inst];
+    const piece = entry && game.catalog.furnitureById.get(entry.id);
+    slots.push(piece
+      ? h('button', { class: 'furniture-slot filled', onclick: () => openEntry(inst, game) },
+        h('span', { class: 'item-frame' }, itemIcon(piece)), piece.name)
+      : h('button', { class: 'furniture-slot', onclick: () => chooseFurniture(game) },
+        h('span', { class: 'item-frame' }, icon(SLOT_ICONS.einrichtung, 'slot-glyph')), 'Frei'));
+  }
+
+  let build = null;
+  if (next) {
+    const lacking = (k) => world.purse[k] < next.cost[k];
+    const affordable = ['holz', 'stein', 'glimmer'].every((k) => !lacking(k));
+    build = h('section', { class: 'panel' },
+      h('h2', { class: 'section-title' }, `Ausbau zu: ${next.name}`),
+      h('p', { class: 'quest-text' }, next.text),
+      h('div', { class: 'cost-list', style: { margin: '12px 0' } },
+        ['holz', 'stein', 'glimmer'].filter((k) => next.cost[k] > 0).map((k) => resource(k, `${world.purse[k]}/${next.cost[k]}`, { lacking: lacking(k) }))),
+      h('p', { class: 'muted', style: { 'margin-bottom': '12px' } },
+        `Erholung ${next.erholung} %, ${next.plaetze} Plätze, Schrank für ${next.schrank}`),
+      h('button', { class: 'btn primary', disabled: !affordable, onclick: () => game.build() }, 'Ausbauen'));
+  }
+
+  return h('section', { class: 'view home' },
+    viewHead('Zuhause', tier.name),
+    h('div', { class: 'home-grid' },
+      h('div', { class: 'panel home-picture-panel' }, h('img', { class: 'home-picture', src: tier.bild, alt: tier.name })),
+      h('div', { class: 'char-side' },
+        h('section', { class: 'panel' },
+          h('p', { class: 'quest-text', style: { 'margin-bottom': '12px' } }, tier.text),
+          h('div', { class: 'bonus-row' }, effectList({ erholung: fx.erholung, glueck: fx.glueck })),
+          h('p', { class: 'muted', style: { 'margin-top': '10px' } }, `Schrank ${countIn(world, 'schrank')}/${capacity(world, game.catalog, 'schrank')}`)),
+        h('section', { class: 'panel' },
+          h('h2', { class: 'section-title' }, `Einrichtung · ${world.placed.length}/${tier.plaetze}`),
+          h('div', { class: 'furniture-slots' }, slots)),
+        build,
+        h('section', { class: 'panel' }, h('h2', { class: 'section-title' }, 'Vorrat'), purse(world.purse)))));
+}
+
+function chooseFurniture(game) {
+  const { world } = game.state;
+  const pieces = Object.values(world.items)
+    .filter((e) => e.kind === 'furniture' && (e.where === 'rucksack' || e.where === 'schrank'))
+    .map((e) => ({ entry: e, piece: game.catalog.furnitureById.get(e.id) }))
+    .filter((x) => x.piece);
+  openSheet({
+    title: 'Einrichtung aufstellen',
+    content: pieces.length === 0
+      ? h('p', { class: 'muted' }, 'Keine Einrichtung im Rucksack oder Schrank. Der Händler hat manchmal welche, Geister lassen sie liegen.')
+      : h('div', { class: 'item-list' }, pieces.map(({ entry, piece }) => {
+        const fits = piece.abStufe <= world.home;
+        return h('div', { class: `item-row ${fits ? '' : 'locked'}` },
+          h('span', { class: 'item-frame' }, itemIcon(piece)),
+          h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, piece.name), effectList(piece.effekt)),
+          h('button', { class: 'btn primary small', disabled: !fits, onclick: () => { game.place(entry.inst); closeSheet(); } },
+            fits ? 'Aufstellen' : `Ab Stufe ${piece.abStufe}`));
+      })),
+  });
+}

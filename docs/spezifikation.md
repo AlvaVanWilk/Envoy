@@ -1,11 +1,10 @@
-# Envoy – Spezifikation Kernmechanik
+# Envoy – Spezifikation
 
 Stand 26.09.2026 · Sandra
 
-Übernommen aus dem Dokument „Envoy – Spezifikation Kernmechanik“ vom 19.09.2026.
-Stellen, die beim Bau von Phase 1 präzisiert oder angeglichen wurden, sind mit
-**[Phase 1]** markiert und im Abschnitt [Entscheidungen beim Bau von Phase 1](#entscheidungen-beim-bau-von-phase-1)
-begründet.
+Grundlage ist das Dokument „Envoy – Spezifikation Kernmechanik“ vom 19.09.2026,
+ergänzt um die Entscheidungen vom 26.09.2026. Diese Datei ist die maßgebliche Fassung.
+Alle Zahlen stehen im Code an einer Stelle: `js/config.js`.
 
 ## Zweck und Grundidee
 
@@ -25,68 +24,84 @@ können. Die Spielwelt muss groß und umfangreich genug sein, um nicht als Beloh
 sondern als Kernelement verstanden zu werden. Die Verbesserung des Envoy durch
 eigene echte Übungen aber alternativlos.
 
-**Reihenfolge des Baus.** Die Gesundheits-Seite ist der wahre, wenn auch weniger
-betonte Kern und wird zuerst vollständig umgesetzt. Die RPG-Seite ist die Hülle und
-folgt darauf. Der Skilltree existiert in Phase 1 nur als ausgegrautes Symbol ohne
-Funktion dahinter.
-
-Look eines modernen, professionellen RPGs mit Held (Envoy) im Mittelpunkt.
+Look eines modernen, professionellen RPGs mit Held (Envoy) im Mittelpunkt. Matt und
+kühl: Eisen, Stein, Stahl. Keine Leuchteffekte.
 
 ## Die vier Stats
 
 Alle vier starten bei 1, Obergrenze 100. Der Held sammelt keine allgemeine
 Erfahrung: es gibt kein Helden-XP und kein Heldenlevel. XP existiert nur pro Stat.
 
-| Stat | Reale Entsprechung | Kampfrolle |
+| Stat | Reale Entsprechung | Rolle in der Welt |
 | --- | --- | --- |
-| Kraft | Kraftübungen, Tiefenmuskulatur | Schadenshöhe |
-| Ausdauer | Gehen, Radfahren, Grundausdauer | maximales Leben, Ausdauerleiste |
-| Gelassenheit | Meditation, Atemübungen, Ruhe | Regenerationstempo |
-| Beweglichkeit | Dehnen, Mobility, Yoga | Treffer- und Ausweichchance |
+| Kraft | Tiefenmuskulatur, Rumpf | Schaden je Treffer, Ertrag beim Sammeln, Proben |
+| Ausdauer | Spazieren, Treppe, Rad | Leben im Kampf, Größe der Ausdauerleiste, Proben |
+| Beweglichkeit | Dehnen, Mobility | Treffer- und Ausweichchance, Proben |
+| Gelassenheit | Atemübungen, Entspannung | Füllgeschwindigkeit der Ausdauerleiste, Geister beruhigen, Proben |
 
 ## Tagesaufgaben
 
 Jeden Tag gibt die App genau vier Aufgaben(päckchen) vor, eine je Bereich. Sie sind
-**nicht auswählbar**. Welche konkrete Übung zugeteilt wird, berechnet die App anhand
-von Übungsergebnissen der letzten Tage und nach Bedarf Feedback.
+**nicht auswählbar**.
 
-| Bereich | Stat | Beispiele in Phase 1 |
+| Bereich | Stat | Beispiele |
 | --- | --- | --- |
 | Tiefenmuskulatur | Kraft | Beckenboden, Rumpfstabilität |
 | Stretching / Mobility | Beweglichkeit | Strecken, Fuß im Sitzen aufs Knie |
-| Ausdauer | Ausdauer | 10 / 20 / 30 Minuten spazieren, Treppensteigen |
-| Entspannung | Gelassenheit | 3 Minuten Atemübung, Augen schließen. Entspannungsübungen |
+| Ausdauer | Ausdauer | 10 / 20 / 30 Minuten spazieren, Treppe, Rad |
+| Entspannung | Gelassenheit | 3 Minuten Atemübung, Augen schließen |
 
-### Auswahl der Übung [Phase 1]
+### Auswahl der Übung
 
-Reihenfolge der Regeln, mit der die App je Bereich die Übung des Tages bestimmt:
-
-1. Übungen der aktuellen Intensitätsstufe des Bereichs (siehe unten). Gibt es auf
-   dieser Stufe keine, gilt die nächstniedrigere vorhandene.
+1. Übungen der aktuellen Intensitätsstufe des Bereichs. Gibt es dort keine, gilt die
+   nächstniedrigere vorhandene.
 2. Nicht dieselbe Übung wie gestern, sofern es eine andere gibt.
-3. Nicht dieselbe Muskelgruppe wie gestern, sofern es eine andere gibt.
+3. Nicht dieselbe Muskelgruppe (bei Beweglichkeit: Körperregion) wie gestern, sofern
+   es eine andere gibt.
 4. Von den übrigen die, die am längsten nicht dran war.
 5. Gleichstand entscheidet eine aus dem Datum abgeleitete Zahl, damit alle Geräte
    dieselbe Übung zeigen.
 
-Einmal zugeteilt, bleibt die Übung für den Tag bestehen.
+Einmal zugeteilt, bleibt die Übung für den Tag. Nur der Krankheitsmodus teilt offene
+Aufgaben neu zu.
 
-**Steigerung der Übungsintensität:** hoch nach drei erfolgreichen Durchgängen in
-Folge, runter schon nach zwei zu schweren. Langsam hoch, schnell runter.
+### Messwerte und Rückfrage
 
-Nach jeder Übung fragt die App „Wie war es?“ mit **Leicht**, **Passend** oder
-**Zu viel**. Leicht und Passend zählen als erfolgreicher Durchgang, Zu viel als zu
-schwer. Die neue Stufe gilt ab dem nächsten Tag. **[Phase 1]**
+Werte werden nicht freiwillig erfasst. Entweder eine Übung hat einen Messwert, dann ist
+er Pflicht, oder sie hat keinen.
 
-Gemessene Werte (Dauer, Strecke, Tempo, Stockwerke, Haltezeit, Wiederholungen)
-können nach der Übung von Hand eingetragen werden, immer freiwillig. Welche Felder
-erscheinen, steht im Übungskatalog. **[Phase 1]**
+- **Mit Messwert** (z. B. „15 Minuten spazieren“ → Strecke, „7 Minuten Treppe“ →
+  Stockwerke, „Unterarmstütz so lange es angenehm geht“ → längste Haltezeit): Nach
+  „Erledigt“ wird genau dieser Wert eingetragen. Er wird mit einem Ziel verglichen,
+  das nie angezeigt wird. Ab 90 % des Ziels zählt der Durchgang als erfolgreich,
+  unter 70 % als zu schwer, dazwischen als keins von beiden.
+- **Ohne Messwert:** Ein Tippen genügt. „Wie war es?“ (Leicht / Passend / Zu viel)
+  wird nur gefragt, wenn die Übung zum ersten Mal dran ist oder sich die
+  Intensitätsstufe des Bereichs gerade geändert hat.
 
-### Muskelgruppen und Regenerationslogik
+Die Ziele sind großzügig gesetzt (Spazieren: 3,5 km/h, Rad: 12 km/h, Treppe: ein
+Stockwerk pro Minute), damit ruhiges Gehen als erfolgreich zählt.
 
-In Phase 1: Jede Übung kann eine Muskelgruppe (bei Beweglichkeit: Körperregion)
-tragen. Die App vermeidet dieselbe Gruppe an zwei Tagen hintereinander, solange eine
-Alternative auf derselben Stufe existiert. **[Phase 1]**
+Gesammelte Strecken und Stockwerke fließen zusätzlich in die Welt ein
+(„kumulierte reale Leistung“, siehe Quests).
+
+### Steigerung der Übungsintensität
+
+- Hoch nach drei erfolgreichen Durchgängen in Folge, runter schon nach zwei zu
+  schweren. Langsam hoch, schnell runter. Ein Durchgang „keins von beiden“ beginnt die
+  Zählung neu.
+- Nach 7 ausgelassenen Tagen in Folge geht die Intensität eine Stufe runter (nach 14
+  Tagen noch eine usw.), damit der Wiedereinstieg leicht ist.
+- Die neue Stufe gilt ab dem nächsten Tag. Sie wird nirgends als Zahl angezeigt.
+
+### Krankheitsmodus
+
+Es gibt keine Pausenregel für den Malus: Die Grundaufgaben sind absichtlich so
+niedrigschwellig, dass sie auch bei kleiner Krankheit machbar sind. Der
+Krankheitsmodus (Schalter auf „Heute“) verlegt die Aufgaben auf die niedrigste
+Stufe. Die XP sinken dabei von selbst, weil die Übungen kleiner sind (14 statt bis zu
+28). Durchgänge im Krankheitsmodus zählen nicht für die Intensität. Der Modus bleibt
+an, bis er ausgeschaltet wird.
 
 ## XP und Levelkurve
 
@@ -95,53 +110,39 @@ sobald die XP-Leiste voll ist.
 
 **XP pro Übung: 14 bis 28, Schnitt 20.** Die Höhe hängt am Umfang der konkreten
 Übung, nicht am Bereich. 10 Minuten spazieren = 14, 20 Minuten = 20, 30 Minuten = 28.
-Gleiches Prinzip in allen vier Bereichen. Dass die Stats unterschiedlich schnell
-steigen, ergibt sich allein daraus, welche Übungen zugeteilt werden.
-
-Die XP-Höhe steht bei jeder Übung sichtbar dabei.
-
-### Formel
 
 ```latex
 \text{XP}(n \rightarrow n+1) = 45 \cdot n^{0{,}45} \cdot \left(1 + \left(\frac{\max(0,\; n-9)}{6}\right)^{2}\right)
 ```
 
-Das Ergebnis wird auf ganze XP gerundet. **[Phase 1]**
-
-Bis Level 10 wirkt nur der erste Teil, die Kurve läuft flach. Ab Level 10 greift der
-zweite Faktor und die Kurve zieht an. Der Knick liegt genau auf der
-Skilltree-Freischaltung, also dort, wo höherwertige Übungen dazukommen.
+Auf ganze XP gerundet. Bis Level 10 wirkt nur der erste Teil, die Kurve läuft flach.
+Ab Level 10 zieht sie an.
 
 | Level | XP bis zum nächsten |
 | --- | --- |
 | 1 → 2 | 45 |
 | 2 → 3 | 61 |
-| 3 → 4 | 74 |
 | 5 → 6 | 93 |
 | 9 → 10 | 121 |
 | 10 → 11 | 130 |
-| 15 → 16 | 304 **[Phase 1]** |
-| 20 → 21 | 756 **[Phase 1]** |
-| 30 → 31 | 2755 **[Phase 1]** |
+| 15 → 16 | 304 |
+| 20 → 21 | 756 |
+| 25 → 26 | 1554 |
+| 30 → 31 | 2755 |
 
 Summe bis Level 10: 802 XP.
 
-### Gegenprobe
+### Plateau
 
-- **Erstes Levelup:** Zwei starke Tage (2 × 28 = 56) reichen für die 45 — frühestens
-  Tag 2. Vier schwache Tage (4 × 14 = 56) reichen ebenfalls — spätestens Tag 4. Im
-  Schnitt fällt es auf Tag 3.
-- **Level 10, schnellster Fall:** 802 ÷ 28 = 29 Tage, gut 4 Wochen.
-- **Level 10, langsamster Fall:** 802 ÷ 14 = 57 Tage, 8,2 Wochen — unter der Grenze
-  von 9 Wochen.
-- **Normalfall:** erster Stat auf 10 nach etwa 5,5 Wochen, letzter nach 7 bis 8 Wochen.
+Die Kurve erzeugt das Plateau von selbst: Mit den Grundübungen (höchstens 28 XP am
+Tag) ist Level 10 nach 4 bis 6 Wochen erreicht, Level 15 nach gut 2 Monaten, Level 20
+nach 5 Monaten; danach dauert jedes Level rund 2 Monate. Wer weiter will, braucht die
+höherwertigen Übungen des Skilltrees. Gelegentliche Fehltage mit Malus halten den
+Wert zusätzlich in einem Gleichgewicht.
 
 ### Anzeige
 
-Im Charakterfenster steht unter jedem Stat der Fortschritt als Zahl (z. B. 4/45).
-Eine spätere Umstellung auf einen Balken ist rein visuell.
-
-In Phase 1 stehen Zahl und Balken zusammen. **[Phase 1]**
+Unter jedem Stat steht der Fortschritt als Zahl (z. B. 4/45), darüber ein Balken.
 
 ## Malus bei Nichterledigung
 
@@ -155,275 +156,241 @@ erledigt noch (ab Phase 2) durch eine Skillübung desselben Bereichs ersetzt wur
 | ab Tag 8 | Malus = 1,0 × durchschnittlicher Tagesgewinn |
 
 **Bezugsgröße.** Der durchschnittliche XP-Gewinn dieses Stats über die letzten
-sieben aktiven Tage. Nicht die Leistung eines einzelnen Tages, sonst bestraft ein
-Ausfall nach einem starken Tag härter als nach einem schwachen.
+sieben aktiven Tage (Tage, an denen die Aufgabe erledigt wurde). Gibt es noch keine
+sieben, zählen die vorhandenen; gibt es keinen, ist der Malus 0. Auf ganze XP gerundet.
 
-„Aktiver Tag“ heißt: ein Tag, an dem die Aufgabe dieses Stats erledigt wurde. Gibt
-es noch keine sieben, zählen die vorhandenen; gibt es keinen, ist der Malus 0. Der
-Malus wird auf ganze XP gerundet. **[Phase 1]**
-
-**Einheitlicher Faktor für alle vier Stats.** Physiologisch zerfällt Kraft langsamer
-und Ausdauer schneller, aber der Unterschied ist über wenige Fehltage marginal, und
-ein einheitlicher Wert bezieht den Gewohnheitsanteil mit ein.
+**Einheitlicher Faktor für alle vier Stats.**
 
 **Der Stat kann sinken.** Läuft die XP-Leiste leer, fällt der Stat eine Stufe und die
 Leiste läuft dort weiter rückwärts.
 
-**Bodensatz: 60 % des jemals höchsten erreichten Levels.** Wer nie über 3 kam, fällt
-auf 1 bis 2 zurück. Wer 30 erreicht hat, fällt nie unter 18. Das bildet
-Muskelgedächtnis ab und trifft die Forschungslage: kürzlich erworbene Zugewinne gehen
-vollständig verloren, während Trainierte nie auf das Ausgangsniveau zurückfallen.
+**Bodensatz: 60 % des jemals höchsten erreichten Levels**, als Level mit
+Nachkommastelle: 60 % von 3 = 1,8, also Level 1 mit zu 80 % gefüllter Leiste. Wer 30
+erreicht hat, fällt nie unter 18. **Untergrenze:** Level 1, 0 XP.
 
-Der Bodensatz wird als Level mit Nachkommastelle gelesen: 60 % von 3 = 1,8, also
-Level 1 mit zu 80 % gefüllter Leiste. **[Phase 1]**
+Die Anzeige nennt ausgelassene Tage „Pause“, mit dem Abzug in XP.
 
-**Untergrenze:** Level 1, 0 XP.
+### Tagesgrenze
 
-### Einordnung
-
-Der Malus ab Tag 2 ist Spielmechanik, keine Physiologie — messbarer Abbau setzt je
-nach Bereich erst nach 10 bis 21 Tagen ein. Die Staffelung bildet das ab: klein
-während der Schonfrist, voll danach.
-
-### Tagesgrenze [Phase 1]
-
-Ein Tag beginnt um 3:00 Uhr Ortszeit, nicht um Mitternacht. Eine Atemübung um
-0:30 Uhr zählt damit noch für den Tag, zu dem sie gehört. Ein Tag gilt als
-abgeschlossen, sobald der nächste beginnt; erst dann greift der Malus.
+Ein Tag beginnt um 3:00 Uhr Ortszeit. Ein Tag gilt als abgeschlossen, sobald der
+nächste beginnt; erst dann greift der Malus.
 
 ## Skilltree (Phase 2)
 
-In Phase 1 nur als ausgegrautes Symbol im Menü vorhanden, ohne Funktion dahinter.
+Im Menü als ausgegrautes Symbol, ohne Funktion dahinter. **Freischaltung: alle vier
+Stats auf Level 10.** Fällt ein Stat wieder unter 10, schließt sich der Baum.
 
-**Freischaltung: alle vier Stats auf Level 10.** Fällt ein Stat wieder unter 10,
-schließt sich der Baum. Es gibt keinen separaten Fortschrittsbalken — die Stats sind
-das einzige Fortschrittssystem.
-
-### Aufbau
-
-Je ein Baum pro Stat, kuratiert statt vollständig. Nur Übungen mit echter
-Progression erscheinen; Spazieren und Treppensteigen sind immer verfügbar und stehen
-in keinem Baum.
-
-Die Form folgt dem Wesen des Bereichs:
+Der Aufbau (Netz aus Knoten, Stufen innerhalb eines Knotens, Plateau je Stufe,
+Durchlässigkeit ab 3/5, Meisterung, Ersetzen der Tagesaufgabe) bleibt wie im
+Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 
 | Stat | Form | Begründung |
 | --- | --- | --- |
 | Kraft | verzweigt | Bewegungsmuster bauen aufeinander auf |
-| Ausdauer | parallele Wege | Modalitäten sind austauschbar (Schwimmen, Radfahren, Joggen, Skateboard, Ropeskipping, Zumba) |
-| Beweglichkeit | verzweigt nach Körperregion | Spezialisierungsäste weiter oben: Yoga, Animal-like, Mobility |
-| Gelassenheit **[Phase 1: vorher „Konzentration“]** | schmal und tief | Meditation wird länger und tiefer, nicht breiter |
+| Ausdauer | parallele Wege | Modalitäten sind austauschbar |
+| Beweglichkeit | verzweigt nach Körperregion | Spezialisierungsäste: Yoga, Animal-like, Mobility |
+| Gelassenheit | schmal und tief | Meditation wird länger und tiefer, nicht breiter |
 
-### Zwei Ebenen
+## Ausrüstung
 
-**Zwischen Übungen ein Netz, innerhalb einer Übung eine Leiter.**
+**Ausrüstung erhöht nie Stats.** Sie stellt Voraussetzungen und gibt Fähigkeiten:
 
-- **Knoten** = eine Übung mit eigener Position im Netz. Trägt Voraussetzungen,
-  Muskelgruppen, Cooldown-Klasse, bediente Stats, Widerstands-Basiswert.
-- **Stufe** = schwerere Version derselben Bewegung, ohne eigene Netzposition. Trägt
-  Zielvorgabe, Plateau je Stat, Dauer, Zubehör, Widerstands-Versatz,
-  Meisterungskriterium, Bild.
+| Effekt | Wirkung |
+| --- | --- |
+| schaden | mehr Schaden je Treffer |
+| treffer | Trefferchance in Prozentpunkten |
+| ausweichen | Ausweichchance in Prozentpunkten |
+| beruhigen | Chance, einen Geist zu beruhigen |
+| reise | weniger Ausdauer je Reise (mindestens 1) |
+| erholung | Ausdauerleiste füllt sich schneller |
+| glueck | mehr Beute, leicht bessere Proben |
 
-Abgrenzungsregel: gleiche Bewegung, gleiche Muskeln, gleiches Zubehör → Stufe. Andere
-Bewegung oder andere Voraussetzungen → eigener Knoten. Handstand an der Wand und
-freier Handstand sind Stufen. Kniebeuge und Ausfallschritt sind Knoten.
+**Sechs Slots:** Kopf, Torso, Handwickel, Umhang, Beinkleidung, Schuhe. Kein
+Waffen-Slot, kein Gürtel, keine Schulterstücke. Die **Handwickel** sind das Gegenstück
+zur Waffe: Wickelbandagen der Kampfkunst, sie tragen den Schadensbonus.
 
-Stufen erscheinen nicht auf der Karte, sondern stecken im Knoten.
+**Voraussetzung.** Jedes Teil verlangt Mindestwerte in einem oder mehreren Stats.
+**Bei Unterschreitung** fliegt das Teil nach Tagesende aus dem Slot, liegt danach im
+Rucksack und wird nicht mehr gezeichnet. Das Charakterfenster zeigt, was abgelegt wurde
+und warum.
 
-### Durchlässigkeit
+## Spielwelt
 
-- **Ab 3/5 öffnen sich die darüberliegenden Knoten, bei 5/5 gibt es die
-  Auszeichnung.** Wer eine Endstufe nie schafft, hängt nicht fest.
-- Eine nicht schaffbare Stufe blockiert die Übung nicht, sie deckelt sie nur auf dem
-  Plateau der letzten erreichbaren Stufe.
-- Voraussetzungen sind ODER-fähig („X oder Y gemeistert“).
-- **Jede Muskelgruppe und jede Beweglichkeitsregion muss über mindestens zwei bis drei
-  unabhängige Übungen erreichbar sein.** Redundanz der Wege ist die eigentliche
-  Lösung, nicht die Form des Netzes.
+### Karte und Ausdauerleiste
 
-### Plateau
+Die Karte zeigt Orte in Regionen (Weidenland, Nebelmark, Grenzland, Aschenland,
+Nordland). Der Envoy steht immer an einem Ort. Jede Reise kostet Ausdauer aus der
+**Ausdauerleiste**, je weiter, desto mehr:
 
-Jede Stufe hat ein Plateau je Stat. Der Statwert nähert sich ihm asymptotisch:
-schnell am Anfang, immer langsamer. Wer mehr macht, kommt schneller ans Plateau, nie
-darüber. Weiterkommen erfordert Progression, nicht Volumen.
+- Reisekosten = Entfernung ÷ 14, gerundet, mindestens 1 (die Karte ist 1,5-mal so
+  breit wie hoch, das fließt in die Entfernung ein). Stiefel und Umhänge können eine
+  Reise billiger machen, ein überfüllter Rucksack verteuert jede Reise um 1.
+- Größe der Leiste = 10 + 2 × Ausdauer.
+- Sie füllt sich in etwa 8 Stunden, schneller mit Gelassenheit (+3 % je Level) und
+  Erholung aus Zuhause, Einrichtung und Ausrüstung.
+- Die erledigte Gelassenheits-Aufgabe ist eine echte Rast: +50 % der Leiste.
 
-Damit ist Farmen kein Problem: Meditation und Yoga dürfen unbegrenzt gemacht und voll
-belohnt werden. Mobility bleibt begrenzt, weil grenzenloses Dehnen ungesund ist.
+Einige Orte sind zuerst verschlossen (hinter der Schlucht erst nach der Brücke, das
+Weiße Tal erst nach der langen Straße).
 
-Mehrfachwirkung ist erlaubt und erwünscht: Yoga zahlt anteilig in Beweglichkeit und
-Gelassenheit ein, mit je eigener Rate und eigenem Plateau. Yoga trägt in Gelassenheit
-weniger weit als Meditation und in Beweglichkeit weniger weit als eine reine
-Mobility-Übung.
+### Quests
 
-### Verhältnis zu den Tagesaufgaben
+Quests stehen an festen Orten. Arten, wie die Stats unterschiedlich einfließen:
 
-- Die vier Tagesaufgaben bleiben bestehen und geben weiter Stat-XP.
-- Eine Skillübung des passenden Bereichs kann die Tagesaufgabe **ersetzen**. Dann
-  greift kein Malus. Es zählt nur die XP der Skillübung, was unproblematisch ist, weil
-  sie höher liegt.
-- Die ersetzte Tagesaufgabe wird **grün gefärbt, aber nicht abgehakt** und kann
-  zusätzlich erledigt werden.
-- Fehlt beides, greift der Malus wie beschrieben.
-- Auf die Skills selbst gibt es keinen Malus. Der Rückschritt ergibt sich von selbst,
-  weil nach langer Pause die nötigen Wiederholungen schwerer fallen.
+| Art | Was zählt |
+| --- | --- |
+| Sammeln | Holz oder Stein, mehr Ertrag mit Kraft (+1 je 3 Level) |
+| Prüfung | eine oder mehrere Würfelproben auf bestimmte Stats |
+| Kampf | gewürfelte Kämpfe gegen Geister |
+| Bauen | verbraucht Holz und Stein |
+| Schwelle | Mindestwert in einem Stat, um überhaupt zu beginnen |
+| Reale Leistung | Summe echter Kilometer oder Stockwerke aus den Tagesaufgaben |
 
-### Meisterung einer Stufe
+Eine Quest kostet Ausdauer. Manche sind wiederholbar, mit Abklingzeit in Tagen.
 
-Beide Bedingungen müssen erfüllt sein: die objektive Zielvorgabe erreicht
-(Wiederholungen, Zeit, Sätze) **und** die Anstrengungsrückmeldung unter der Schwelle,
-dreimal hintereinander.
+**Begegnungen:** Jeden Tag erscheinen an wilden Orten Geister (je Ort 55 % Chance,
+mindestens eine an einem von Anfang an offenen Ort). Welcher Geist kommt, richtet sich
+nach der Stärke des Helden (Durchschnitt der Stats zu Tagesbeginn): meist gleich stark,
+manchmal eine Stufe darüber. Eine Begegnung kostet 2 Ausdauer.
 
-## Ausrüstung und Kampf
+**Proben:** Chance = 60 % + 8 % je Level über der Schwierigkeit (5 % bis 95 %).
 
-**Ausrüstung erhöht nie Stats.** Sie stellt Voraussetzungen und gibt besondere
-Fähigkeiten (zusätzlicher Schaden, Ausweichrolle, verkürzte Ruhezeit).
+**Kampf** (bis zu 12 Runden):
 
-**Voraussetzung.** Jedes Teil verlangt Mindestwerte in einem oder mehreren Stats. Wer
-sie nicht erfüllt, kann es nicht tragen.
+- Leben des Helden = 8 + 3 × Ausdauer
+- Schaden je Treffer = 1 + 0,6 × Kraft (gerundet) + 0 bis 2 + Handwickel
+- Trefferchance = 65 % + 4 % je Level Beweglichkeit über der Gewandtheit des Geistes
+- Ausweichen = 8 % + 3 % je Level Beweglichkeit über der Gewandtheit des Geistes
+- Beruhigen (nur manche Geister) = 4 % + 4 % je Level Gelassenheit über der Stufe des
+  Geistes, jede Runde zuerst geprüft; ein beruhigter Geist löst sich auf und hinterlässt
+  mehr Glimmer
+- Der Geist trifft in 75 % der Runden, Schaden = seine Kraft + 0 bis 1
 
-**Bei Unterschreitung** fliegt das Teil automatisch aus dem Slot, bleibt aber im
-Inventar / Schrank. Die Figur sieht dort aus, als trüge sie nichts. Die App zeigt
-im Charakterfenster, was abgelegt wurde und warum. **[Phase 1]**
+Ein gleich starker Geist wird meist besiegt (50 bis 90 %), ein deutlich stärkerer
+selten. Die App zeigt vorher eine Einschätzung: leicht, machbar, fordernd, gefährlich.
 
-**Schrank in Phase 1.** Solange es keine Welt gibt, in der Kleidung gefunden wird,
-stehen alle Teile aus der Ausrüstungstabelle im Schrank. Anlegen lässt sich ein Teil,
-sobald die Voraussetzungen erfüllt sind. **[Phase 1, offene Frage]**
+**Niederlage:** Die Ausdauerleiste ist leer; der Envoy muss rasten. Das kostet Zeit
+im Spiel, nie zusätzliche reale Aufgaben.
 
-### Zugang zu Inhalten
+**Ergebnis:** Jede Quest wird beim Start ausgewürfelt und als Ereignis gespeichert.
+Das Ergebnis ändert sich später nie, auch wenn Regeln angepasst werden.
 
-Es gibt kein Heldenlevel. Inhalte werden über vier Bedingungstypen freigeschaltet,
-beliebig kombinierbar:
+### Beute und Währung
 
-1. **Statschwelle** — „Beweglichkeit ≥ 14, um durch den Spalt zu passen“
-2. **Übungslevel** (Skilltree) — „Liegestütz-Progression Stufe 4“, etwa wenn man
-   jemandem etwas beweisen muss
-3. **Kumulierte reale Leistung** — „200 Treppenstufen insgesamt“, um einen Turm zu
-   erreichen
-4. **Besitz** — ein bestimmtes Item oder eine abgeschlossene Quest
+- **Glimmer**: Lichtsplitter, die ein aufgelöster Geist zurücklässt. Einzige Währung.
+- **Holz** und **Stein**: aus Sammeln und manchmal von Geistern, für das Zuhause.
+- Ausrüstung und Einrichtung: feste Quest-Belohnungen oder mit einer Chance je Geist.
+  Beute-Ausrüstung liegt in der Nähe der Stärke des Helden (±3 Level).
+- Glück erhöht Glimmer und die Chance auf Gegenstände.
 
-### Kampf
+### Händler
 
-Kämpfe werden gewürfelt. Stats und Ausrüstung beeinflussen den Wurf über die Rollen
-aus dem Stat-Abschnitt.
+Wird durch die Quest „Der Händler im Nebel“ freigeschaltet (den Händler retten).
+Bietet jeden Tag 5 Dinge an, darunter 1 bis 2 Einrichtungsgegenstände. Die
+Ausrüstung ist zufällig, aber immer im Bereich der Stärke des Helden (Voraussetzung
+höchstens 3 Level darunter oder darüber). Preis = 12 + 4 × n + n² + 8 × Stufe (n = höchste
+Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft alles für ein
+Drittel des Preises zurück.
 
-Erkundungen verbrauchen Ausdauer aus der Leiste. Ist sie leer, braucht der Held
-Regeneration. Ruhezeiten lassen sich durch hohe Gelassenheit, reale regenerative
-Übungen und Item-Boni verkürzen.
+### Rucksack und Schrank
 
-Eine Niederlage kostet nie zusätzliche reale Aufgaben.
+Der Rucksack hat von Anfang an 8 Plätze. Getragenes zählt nicht mit. Der Schrank kommt
+mit dem Zuhause (12 bis 60 Fächer je nach Stufe). Neues landet im Rucksack, ist der voll
+im Schrank, ist auch der voll, wird der Rucksack überfüllt (nichts geht verloren, aber
+jede Reise kostet 1 mehr). Suchen, nach Slot filtern, nach Slot, Stufe, Name oder
+Neueste sortieren.
+
+### Zuhause
+
+Wird durch die Quest „Ein Platz zum Bleiben“ freigeschaltet (6 Holz und 3 Stein am
+Lagerplatz). Stufen: Zelt → Hütte → Baracke → Steinhaus → Turmhaus, jeweils mit Holz,
+Stein und Glimmer ausgebaut. Jede Stufe gibt Erholung (+5 % bis +30 %), Plätze für
+Einrichtung und Schrankfächer. Einrichtung (vom Händler, als Beute oder aus Quests)
+gibt Erholung oder Glück.
+
+### Kompendium
+
+Listet jeden Geist, dem der Envoy begegnet ist, mit Bild, Beschreibung, Werten, Orten
+und Zählern (Begegnungen, besiegt, beruhigt, Rückzüge, zuerst gesehen).
+
+### Freischaltungen
+
+| Was | Wann |
+| --- | --- |
+| Karte, Quests, Begegnungen, Rucksack, Kompendium | von Anfang an |
+| Zuhause, Schrank | Quest „Ein Platz zum Bleiben“ |
+| Händler | Quest „Der Händler im Nebel“ |
+| Aschenland, Turm, lange Straße | Quest „Die Brücke über die Schlucht“ |
+| Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
+| Skilltree | alle vier Stats auf 10 (Inhalt Phase 2) |
+
+## Menü
+
+Unten am Rand, runde Symbole wie Münzen aus Eisen: Heute, Envoy, Inventar, Karte,
+Zuhause, Händler, Kompendium, Skilltree. Noch verschlossene Bereiche liegen als Stein
+mit Schloss da, der Skilltree ausgegraut. Die Einstellungen sitzen als Zahnrad oben
+rechts.
 
 ## Charakterfenster und Paperdoll
 
 Die Figur wird aus übereinandergelegten transparenten Ebenen in identischem
-Bildausschnitt zusammengesetzt. Es wird nie eine Kombination gezeichnet, nur
-Einzelteile, die immer an derselben Stelle sitzen. Kombinatorische Explosion gibt es
-dadurch nicht.
-
-### Technische Vorgaben
+Bildausschnitt zusammengesetzt.
 
 | Eigenschaft | Vorgabe |
 | --- | --- |
 | Format | PNG-24 mit Alphakanal |
 | Hintergrund | vollständig transparent, auch bei der Basisfigur |
 | Leinwand | 1024 × 1536 px, für jede Ebene identisch |
-| Auflösung | 72 dpi (nur die Pixelmaße zählen) |
-| Dateigröße | Master beliebig, Auslieferung später als WebP |
 | Beschnitt | nie zuschneiden — jede Ebene behält die volle Leinwand |
 
-Der letzte Punkt ist der wichtigste: Ein Brustpanzer wird als 1024 × 1536 großes, zu
-90 % leeres Bild gespeichert. Zuschneiden zerstört die Positionsinformation.
+Ebenenreihenfolge (hinten nach vorn): 1 Umhang hinten, 2 Basisfigur (Körper, Kopf,
+Grundkleidung), 3 Beinkleidung, 4 Schuhe, 5 Torso, 6 Handwickel, 7 Frisur /
+Kopfbedeckung.
 
-### Ebenenreihenfolge (hinten nach vorn) [Phase 1]
+Icons sind eigenständige, stilisierte Ansichten, 256 × 256 px, transparent. Weitere
+Bilder: Monster 512 × 512, Zuhause-Stufen 1200 × 800, Karte im Seitenverhältnis 3:2
+(`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
+Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 
-1. Umhang hinten
-2. Basisfigur (Körper, Kopf, Grundkleidung)
-3. Beinkleidung
-4. Schuhe
-5. Torso
-6. Gürtel
-7. Handschuhe / Unterarme
-8. Schulterstücke
-9. Frisur / Kopfbedeckung
+## Tabellen
 
-Es gibt keinen Waffen-Slot — der Envoy kämpft waffenlos.
+Alle drei Tabellen sind Quelle, nie Ziel. `tools/convert_data.py` liest sie und
+schreibt `data/*.json`. Bei einem Fehler wird nichts geschrieben. Jede Tabelle hat ein
+Blatt „Erklärung“ mit allen Spalten.
 
-### Icons
+- `data/uebungen.xlsx`: id, bereich, stufe, name, xp, anleitung, muskelgruppe,
+  messung, ziel, timer_min, atemtakt, aktiv, notiz
+- `data/ausruestung.xlsx`: id, slot, name, stufe, req_kraft, req_ausdauer,
+  req_gelassenheit, req_beweglichkeit, faehigkeit, effekt, herkunft, preis,
+  datei_figur, datei_icon, notiz
+- `data/welt.xlsx`: Blätter Orte, Monster, Quests, Zuhause, Einrichtung
 
-Icons werden **nicht** aus der getragenen Grafik ausgeschnitten. Sie sind
-eigenständige, stilisierte, neutrale Ansichten des Gegenstands.
+## Speicherung, Abgleich, Veröffentlichung
 
-- 256 × 256 px, transparent, PNG-24
+Gespeichert wird eine Liste von Ereignissen, nie ein fertiger Spielstand. Der Stand
+wird bei jedem Start aus dieser Liste neu berechnet, Tag für Tag, inklusive Malus,
+Bodensatz, Ausdauerleiste und Welt.
 
-### Ausrüstungstabelle
+`sync.php` gleicht die Liste zwischen Geräten ab: Jedes Gerät schickt, was der Server
+noch nicht kennt, und bekommt, was es selbst noch nicht hat. Es wird nie etwas
+überschrieben. Ein Schlüssel verbindet die Geräte.
 
-Wird als Tabellendatei gepflegt (Numbers oder Excel), nicht von Hand als CSV
-geschrieben: `data/ausruestung.xlsx`. Spalten:
+Ein GitHub-Ablauf testet bei jeder Änderung, wandelt die Tabellen um und lädt den
+Zweig `main` per SFTP auf den IONOS-Webspace.
 
-`id`, `slot`, `name`, `stufe`, `req_kraft`, `req_ausdauer`, `req_gelassenheit`,
-`req_beweglichkeit`, `faehigkeit`, `datei_figur`, `datei_icon`, `notiz`
+## Entscheidungen
 
-`req_gelassenheit` hieß vorher `req_konzentration`; der alte Name wird weiter
-gelesen. **[Phase 1]**
-
-Slots: torso, beine, schuhe, guertel, handschuhe, schultern, kopf, umhang.
-**[Phase 1: kein Slot „waffe“]**
-
-`faehigkeit` gibt nie Stats. Leer bedeutet keine Fähigkeit. Eine `req_`-Spalte mit 0
-bedeutet keine Voraussetzung.
-
-Dateinamen: `slot_name_stufe.png` in `assets/figur/`, Icons mit Präfix `icon_` in
-`assets/icons/`. Bleiben `datei_figur` oder `datei_icon` leer, setzt die Umwandlung
-diese Namen ein. **[Phase 1]**
-
-### Übungstabelle [Phase 1]
-
-`data/uebungen.xlsx`, eine Zeile je Übung:
-
-| Spalte | Bedeutung |
+| Punkt | Entscheidung |
 | --- | --- |
-| `id` | eindeutiger Name, nach der ersten Nutzung nicht mehr ändern |
-| `bereich` | Kraft, Ausdauer, Beweglichkeit oder Gelassenheit |
-| `stufe` | Intensität innerhalb des Bereichs, 1 = leichteste |
-| `name` | Titel in der App |
-| `xp` | 14 bis 28, nach Umfang |
-| `anleitung` | ein Schritt pro Zeile |
-| `muskelgruppe` | optional, für die Regenerationslogik |
-| `messung` | optional: dauer_min, strecke_km, tempo_kmh, stockwerke, haltezeit_s, wiederholungen |
-| `timer_min` | optional, zeigt einen Timer |
-| `atemtakt` | optional, z. B. 4-6 oder 4-4-4-4 (Sekunden je Atemphase) |
-| `aktiv` | nein = wird nicht mehr zugeteilt |
-| `notiz` | nur für die Pflege, erscheint nicht in der App |
-
-Beide Tabellen sind Quelle, nicht Ziel. `tools/convert_data.py` liest sie und
-schreibt `data/uebungen.json` und `data/ausruestung.json`. Bei einem Fehler in einer
-Zeile wird nichts geschrieben.
-
-## Speicherung und Geräteabgleich [Phase 1]
-
-Gespeichert wird eine Liste von Ereignissen (Übung zugeteilt, erledigt, rückgängig,
-angelegt, abgelegt), nie ein fertiger Spielstand. Der Spielstand wird bei jedem Start
-aus dieser Liste neu berechnet, Tag für Tag, inklusive Malus und Bodensatz.
-
-Die Liste liegt im Browser. `sync.php` auf dem eigenen Webspace gleicht sie zwischen
-Geräten ab: Jedes Gerät schickt, was der Server noch nicht kennt, und bekommt, was es
-selbst noch nicht hat. Es wird nie etwas überschrieben, darum gibt es keine
-Konflikte. Zugeteilt ist bei zwei Geräten am selben Tag die zuerst zugeteilte Übung.
-
-Ein Schlüssel verbindet die Geräte. Er wird in den Einstellungen erzeugt und auf dem
-zweiten Gerät eingegeben.
-
-## Entscheidungen beim Bau von Phase 1
-
-| Punkt | Entscheidung | Grund |
-| --- | --- | --- |
-| Tabellenwerte der Levelkurve | 15 → 16 = 304, 20 → 21 = 756, 30 → 31 = 2755 | So rechnet die Formel; vorher standen 305, 754, 2756. Formel unverändert. |
-| Rundung | XP-Schwellen und Malus auf ganze XP gerundet | Die Anzeige „4/45“ braucht ganze Zahlen; Summe bis Level 10 bleibt 802. |
-| Bodensatz | als Level mit Nachkommastelle | trifft „fällt auf 1 bis 2 zurück“ genau |
-| Aktiver Tag | Tag, an dem die Aufgabe des Stats erledigt wurde | Bezugsgröße des Malus |
-| Tagesgrenze | 3:00 Uhr | späte Übungen zählen für ihren Tag |
-| Stat-Name | Gelassenheit statt Konzentration, auch in `req_` | einheitlich mit dem Rest der Spezifikation |
-| Slots | 8 Slots, kein Waffen-Slot, Ebenenreihenfolge mit 9 Ebenen | Arbeitsanweisung, waffenlose Kampfkunst |
-| Rückmeldung | Leicht / Passend / Zu viel nach jeder Übung | Grundlage für „drei erfolgreich, zwei zu schwer“ |
-| Intensitätsstufe | wird nirgends als Zahl angezeigt | keine Leistungsdarstellung der Grundübungen |
-| Schrank | alle Teile sichtbar, anlegbar ab erfüllter Voraussetzung | es gibt in Phase 1 keine Welt zum Finden |
-| Rückgängig | nur am selben Tag | Tippfehler korrigieren, Vergangenheit bleibt fest |
+| Messwerte | Pflicht, wenn die Übung einen hat; sonst keine Eingabe |
+| Rückfrage | nur bei neuer Übung oder nach Stufenwechsel |
+| Lange Pause | nach je 7 Fehltagen eine Intensitätsstufe runter |
+| Krankheitsmodus | niedrigste Stufe, zählt nicht für die Intensität, kein Malus-Erlass |
+| Plateau | ergibt sich aus der Levelkurve, Formel unverändert |
+| Tabellenwerte der Levelkurve | so, wie die Formel rechnet (304, 756, 2755) |
+| Bodensatz | Level mit Nachkommastelle |
+| Tagesgrenze | 3:00 Uhr |
+| Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot |
+| Währung | Glimmer; dazu Holz und Stein |
+| Kampfergebnis | beim Start ausgewürfelt und gespeichert |
+| Rückgängig | nur für Tagesaufgaben am selben Tag |

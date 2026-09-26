@@ -1,49 +1,72 @@
 # Envoy
 
 Webapp, die eine gesunde Alltagsroutine als Rollenspiel belohnt. Jeden Tag teilt die
-App vier reale Übungen zu, eine je Bereich. Nur davon steigen die Werte des Envoy.
+App vier reale Übungen zu, eine je Bereich. Nur davon steigen die Werte des Envoy. Mit
+diesen Werten zieht er durch eine Welt aus Orten, Quests und Geistern.
 
 Regeln und Formeln: [`docs/spezifikation.md`](docs/spezifikation.md).
 Arbeitsanweisung für die Weiterentwicklung: [`CLAUDE.md`](CLAUDE.md).
 
-## Auf den Webspace bringen
+## Automatisch auf IONOS hochladen (einmal einrichten)
 
-1. Den ganzen Ordner per FTP/SFTP in ein Verzeichnis auf dem IONOS-Webspace laden,
-   z. B. `envoy/`. Die `.htaccess` sperrt Tabellen, Werkzeuge, Tests und Doku gegen
-   Aufruf von außen.
-2. PHP muss aktiv sein (bei IONOS Standard). `sync.php` legt beim ersten Abgleich
-   den Ordner `sync-daten/` an. Dafür braucht das Verzeichnis Schreibrechte.
-3. Adresse in Safari öffnen, Teilen-Symbol → **Zum Home-Bildschirm**.
+Nach der Einrichtung landet jede Änderung am Zweig `main` von selbst auf dem Webspace.
 
-Die App läuft danach auch ohne Verbindung. Einträge werden nachgeholt, sobald das
-Gerät wieder online ist.
+**1. SFTP-Zugang bei IONOS anlegen**
+
+IONOS-Konto → Hosting → dein Webspace → **SFTP & SSH** → Zugang anlegen. Notieren:
+Server (z. B. `access-5012345678.webspace-host.com`), Benutzername, Passwort.
+Im IONOS-Explorer den Ordner anlegen, in dem Envoy liegen soll, z. B. `envoy`.
+
+**2. Die Daten bei GitHub hinterlegen**
+
+Repository auf github.com → **Settings → Secrets and variables → Actions → New
+repository secret**. Vier Einträge:
+
+| Name | Wert |
+| --- | --- |
+| `IONOS_SFTP_HOST` | der Server aus Schritt 1 |
+| `IONOS_SFTP_USER` | der Benutzername |
+| `IONOS_SFTP_PASSWORD` | das Passwort |
+| `IONOS_SFTP_PATH` | der Ordner, z. B. `/envoy` |
+
+GitHub zeigt die Werte danach nie wieder an, auch nicht in Protokollen.
+
+**3. Fertig**
+
+Unter **Actions** siehst du jeden Lauf. Ein grüner Haken heißt: getestet, umgewandelt,
+hochgeladen. Tabellen, Werkzeuge, Tests und Doku werden nicht hochgeladen. Der Ordner
+`sync-daten/` auf dem Server wird nie angefasst.
+
+Ohne diese Einrichtung geht es weiter wie bisher von Hand: alle Dateien außer `tools/`,
+`tests/`, `docs/` und den `.xlsx`-Tabellen mit dem IONOS-Explorer hochladen. Die
+`.htaccess` muss mit, sie sperrt alles, was nicht öffentlich sein soll.
+
+## Auf das iPad
+
+Adresse in Safari öffnen, Teilen-Symbol → **Zum Home-Bildschirm**. Die App startet dann
+im Vollbild und läuft auch ohne Verbindung; Einträge werden nachgeholt.
 
 ## Geräte verbinden
 
-1. Auf dem ersten Gerät: **Einstellungen → Neuen Schlüssel erzeugen**.
-2. Schlüssel kopieren und auf dem zweiten Gerät unter **Einstellungen** eingeben,
-   **Verbinden**.
+1. Auf dem ersten Gerät: Zahnrad oben rechts → **Neuen Schlüssel erzeugen**.
+2. Schlüssel kopieren und auf dem zweiten Gerät eingeben, **Verbinden**.
 
-Beide Geräte zeigen danach denselben Stand. Der Server nimmt höchstens drei
-verschiedene Schlüssel an (einstellbar oben in `sync.php`).
+Der Server nimmt höchstens drei verschiedene Schlüssel an (oben in `sync.php`).
 
-## Übungen und Ausrüstung pflegen
+## Übungen, Ausrüstung und Welt pflegen
 
-Die Quellen sind die beiden Tabellen:
+Die Quellen sind drei Tabellen in `data/`, jede mit einem Blatt **Erklärung**:
 
-- `data/uebungen.xlsx` — Übungskatalog
-- `data/ausruestung.xlsx` — Ausrüstung mit Voraussetzungen und Dateinamen
+- `uebungen.xlsx` — Übungskatalog mit Stufen, XP, Messwert und Ziel
+- `ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Fähigkeiten, Herkunft, Preis
+- `welt.xlsx` — Orte der Karte, Monster, Quests, Zuhause-Stufen, Einrichtung
 
-Jede Tabelle hat ein Blatt **Erklärung** mit allen Spalten. Nach einer Änderung
-müssen die Tabellen in das Format umgewandelt werden, das die App liest:
+Nach einer Änderung die Tabelle auf github.com hochladen (im Ordner `data` → **Add
+file → Upload files**). Der Ablauf wandelt sie um. Findet er einen Fehler, bleibt der
+Haken rot und das Protokoll nennt Tabelle und Zeile; die App arbeitet dann mit dem
+alten Stand weiter.
 
-- **Auf dem Mac:** im Terminal im Projektordner `python3 tools/convert_data.py`.
-  Braucht nur Python 3, sonst nichts.
-- **Über GitHub:** die geänderte Tabelle ins Repository hochladen. Der Ablauf
-  „Prüfen und Daten umwandeln“ wandelt sie um und legt die JSON-Dateien dazu.
-
-Danach `data/uebungen.json` und `data/ausruestung.json` auf den Webspace laden.
-Findet die Umwandlung einen Fehler, schreibt sie nichts und nennt Tabelle und Zeile.
+Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py`.
 
 ## Bilder
 
@@ -52,20 +75,28 @@ Findet die Umwandlung einen Fehler, schreibt sie nichts und nennt Tabelle und Ze
 | Basisfigur | `assets/figur/basisfigur.png` | 1024 × 1536, transparent |
 | Ausrüstung auf der Figur | `assets/figur/slot_name_stufe.png` | 1024 × 1536, transparent, nie zuschneiden |
 | Icons | `assets/icons/icon_slot_name_stufe.png` | 256 × 256, transparent |
+| Einrichtung | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent |
+| Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
+| Zuhause | `assets/zuhause/stufe_<n>.png` | 1200 × 800, transparent |
+| Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512 |
 
-Die mitgelieferten Bilder sind Platzhalter. Neue Bilder mit gleichem Namen
-ersetzen sie einfach. Die Umwandlung meldet fehlende Bilder und falsche Maße.
+Alle mitgelieferten Bilder sind Platzhalter. Neue Bilder mit gleichem Namen ersetzen
+sie einfach. Die Umwandlung meldet fehlende Bilder und falsche Maße. Bei einer neuen
+Karte die Positionen der Orte (x, y in Prozent) in `welt.xlsx` anpassen.
 
 ## Aufbau
 
-| Ordner | Inhalt |
+| Ort | Inhalt |
 | --- | --- |
 | `index.html`, `css/`, `js/` | die App, ohne Framework und ohne Build-Schritt |
+| `js/config.js` | alle Zahlen der Regeln an einer Stelle |
 | `js/formulas.js` | Levelkurve, Malus, Bodensatz |
 | `js/replay.js` | berechnet den Spielstand aus allen Einträgen |
 | `js/planner.js` | wählt die Übungen des Tages |
+| `js/world/` | Karte, Ausdauerleiste, Kampf, Quests, Händler, Inventar, Zuhause |
+| `js/ui/` | die Ansichten |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
-| `tools/convert_data.py` | Umwandlung der Tabellen |
+| `tools/` | Umwandlung der Tabellen |
 | `tests/` | Prüfungen der Spielregeln, `npm test` mit Node.js |

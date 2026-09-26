@@ -158,7 +158,6 @@ function resetPanel() {
 export function renderSettings() {
   return h('section', { class: 'view settings' },
     h('header', { class: 'view-head' },
-      h('p', { class: 'eyebrow' }, 'Envoy'),
-      h('h1', {}, 'Einstellungen')),
+      h('div', {}, h('p', { class: 'eyebrow' }, 'Envoy'), h('h1', {}, 'Einstellungen'))),
     h('div', { class: 'settings-grid' }, syncPanel(), backupPanel(), aboutPanel(), resetPanel()));
 }
