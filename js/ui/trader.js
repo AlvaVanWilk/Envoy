@@ -7,6 +7,7 @@ import { viewHead, sectionTitle, supplies, price, resource, itemIcon, reqChips, 
 import { openSheet, closeSheet } from './sheet.js';
 import { thingSubtitle } from './itemsheet.js';
 import { sellPrice, lookup } from '../world/items.js';
+import { CURRENCY } from '../config.js';
 
 export function renderTrader(game) {
   const { world, stats } = game.state;
@@ -58,7 +59,7 @@ function openOffer(offer, thing, game) {
       h('div', { class: 'sheet-actions' },
         price(offer.price, world.purse.splitter),
         h('button', { class: 'btn primary', disabled: !affordable, onclick: () => { game.buy(offer); closeSheet(); } },
-          affordable ? 'Kaufen' : 'Nicht genug Traumsplitter')),
+          affordable ? 'Kaufen' : `Nicht genug ${CURRENCY}`)),
     ],
   });
 }
@@ -68,7 +69,7 @@ function confirmSell(entry, thing, game) {
   openSheet({
     title: `${thing.name} verkaufen`,
     content: [
-      h('p', {}, `Für ${amount} Traumsplitter.`),
+      h('p', {}, `Für ${amount} ${CURRENCY}.`),
       h('div', { class: 'sheet-actions' },
         h('button', { class: 'btn ghost', onclick: closeSheet }, 'Behalten'),
         h('button', { class: 'btn primary', onclick: () => { game.sell(entry.inst); closeSheet(); } }, 'Verkaufen')),

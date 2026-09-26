@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T19:03:37Z",
+ "generated": "2026-09-26T19:23:54Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1445,7 +1445,7 @@
    ],
    "preis": 0,
    "abStufe": 3,
-   "text": "Eine Schale voller Traumsplitter, die nie ganz erlöschen.",
+   "text": "Eine Schale voller Bannsplitter, die nie ganz erlöschen.",
    "icon": "assets/icons/icon_einrichtung_splitterschale.png"
   }
  ]

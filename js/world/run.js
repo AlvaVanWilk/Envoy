@@ -1,7 +1,7 @@
 // What happens on site. Nothing fails: the stats decide whether a quest can
 // be started at all, how long the work takes and how much it yields.
 //   sammeln   material, more with the `ertrag` stats
-//   erkunden  a fixed reward, a few more Traumsplitter with the `ertrag` stats
+//   erkunden  a fixed reward, a few more Bannsplitter with the `ertrag` stats
 //   bauen     uses material, gives the reward
 //   kampf     one spirit: calmed, defeated or, if it is too strong, driven off
 //   hoehle    several spirits one after the other, as far as the Envoy's life reaches
@@ -57,7 +57,7 @@ function monsterLoot(monster, result, ctx, rng, into) {
 }
 
 // How much the `ertrag` stats add: gathering brings one piece more for
-// every three levels, exploring a few more Traumsplitter per level.
+// every three levels, exploring a few more Bannsplitter per level.
 export function yieldBonus(quest, ctx) {
   const level = average(ctx.stats, quest.yieldStats || []);
   return {

@@ -40,9 +40,9 @@ PLACE_TYPES = ["lager", "wild", "sammeln", "ort", "hoehle"]
 QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
 FEATURES = ["zuhause", "haendler"]
 MATERIALS = ["pilzholz", "stein", "splitter"]
-# older names still read: Holz and Quarz became Pilzholz; Glimmer and Äther became Traumsplitter
+# older names still read: Holz and Quarz became Pilzholz; Glimmer and Äther became Bannsplitter
 MATERIAL_ALIASES = {"holz": "pilzholz", "quarz": "pilzholz", "glimmer": "splitter", "aether": "splitter",
-                    "äther": "splitter", "traumsplitter": "splitter"}
+                    "äther": "splitter", "traumsplitter": "splitter", "bannsplitter": "splitter"}
 TOTALS = {"summe_km": "km", "summe_stockwerke": "stockwerke"}
 XP_MIN, XP_MAX = 14, 28
 

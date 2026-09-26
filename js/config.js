@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '3.2.0';
+export const APP_VERSION = '3.3.0';
 
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
@@ -86,9 +86,9 @@ export const SYNC_ENDPOINT = 'sync.php';
 // --- world ---------------------------------------------------------------
 
 // Currency and materials. The world is stony, broken and ethereal.
-export const CURRENCY = 'Traumsplitter';
+export const CURRENCY = 'Bannsplitter';
 export const MATERIALS = {
-  splitter: 'Traumsplitter', // what remains when a spirit dissolves: a shard of the dream it came from
+  splitter: 'Bannsplitter', // what remains when a spirit is banished: defeated, calmed or driven off
   pilzholz: 'Pilzholz', // stems of the giant fungi in the rubble: light, cut like wood
   stein: 'Stein',    // blocks from old ruins, for walls
 };
@@ -116,7 +116,7 @@ export const SPEEDUP_PER_LEVEL = 0.04;
 export const FASTEST_SHARE = 0.5;
 export const FIGHT_MINUTES = 2;                       // per fight
 export const FIGHT_MINUTES_PER_ROUND = 1.2;
-export const YIELD_PER_LEVEL = 0.05;                  // more Traumsplitter from exploring
+export const YIELD_PER_LEVEL = 0.05;                  // more Bannsplitter from exploring
 
 // Nobody fails. A spirit that is too strong is driven off (less loot);
 // in a cave the Envoy goes on while enough life is left.

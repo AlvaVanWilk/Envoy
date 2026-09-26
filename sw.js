@@ -2,7 +2,7 @@
 // Network first, so a new version on the server is used right away;
 // if the network does not answer in time, the stored copy is used.
 
-const CACHE = 'envoy-v5';
+const CACHE = 'envoy-v6';
 const NETWORK_TIMEOUT_MS = 3500;
 
 self.addEventListener('install', () => self.skipWaiting());

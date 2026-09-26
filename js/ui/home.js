@@ -1,5 +1,5 @@
 // The Envoy's home: grows from a tent to a tower house with quartz, stone
-// and Traumsplitter; furniture set up here speeds recovery or brings luck.
+// and Bannsplitter; furniture set up here speeds recovery or brings luck.
 
 import { h, icon } from './dom.js';
 import { NAV_ICONS, SLOT_ICONS } from './icons.js';

@@ -152,7 +152,7 @@ test('building takes the material along and unlocks the home on return', () => {
   assert.equal(questState(catalog.questById.get('q-zuhause'), ctxOf(done)).status, 'done');
 });
 
-test('quartz and Äther from older expeditions count as Pilzholz and Traumsplitter', () => {
+test('quartz and Äther from older expeditions count as Pilzholz and Bannsplitter', () => {
   const old = ev('expedition', { q: 'q-pilzholz', place: 'pilzhain', title: 'x', out: 1, act: 1, back: 1, cost: 0,
     outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
       reward: { aether: 5, quarz: 7, stein: 7, things: [], unlocks: [], rest: false } } }, 0);
@@ -191,7 +191,7 @@ test('encounters: same list all day, fitting the hero', () => {
   }
 });
 
-test('trader offers lie around the hero\'s strength; buying needs enough Traumsplitter', () => {
+test('trader offers lie around the hero\'s strength; buying needs enough Bannsplitter', () => {
   const s = replay([], catalog, DAY, T0);
   const offers = offersFor(DAY, ctxOf(s));
   assert.equal(offers.length, 5);

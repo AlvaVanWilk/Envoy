@@ -49,7 +49,7 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Speicherung und Geräteabgleich
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
   Expeditionen in echter Zeit (Hinweg, vor Ort, Rückweg), Kämpfe und Höhlen ohne
-  Scheitern, Beute, Währung Traumsplitter, dazu Pilzholz und Stein
+  Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein
 - Rucksack (von Anfang an), Schrank (mit dem Zuhause), Händler, Zuhause mit Ausbau
   und Einrichtung, Kompendium der getroffenen Geister
 
