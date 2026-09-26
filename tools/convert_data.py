@@ -39,9 +39,9 @@ ORIGINS = ["start", "haendler", "beute", "quest"]
 PLACE_TYPES = ["lager", "wild", "sammeln", "ort", "hoehle"]
 QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
 FEATURES = ["zuhause", "haendler"]
-MATERIALS = ["quarz", "stein", "aether"]
-# older names still read: Holz became Quarz, Glimmer became Äther
-MATERIAL_ALIASES = {"holz": "quarz", "glimmer": "aether", "äther": "aether"}
+MATERIALS = ["pilzholz", "stein", "aether"]
+# older names still read: Holz and Quarz became Pilzholz, Glimmer became Äther
+MATERIAL_ALIASES = {"holz": "pilzholz", "quarz": "pilzholz", "glimmer": "aether", "äther": "aether"}
 TOTALS = {"summe_km": "km", "summe_stockwerke": "stockwerke"}
 XP_MIN, XP_MAX = 14, 28
 
@@ -214,7 +214,7 @@ def parse_materials(report, row, value, column):
 
 
 def parse_rewards(report, row, value):
-    reward = {"aether": [0, 0], "quarz": [0, 0], "stein": [0, 0],
+    reward = {"aether": [0, 0], "pilzholz": [0, 0], "stein": [0, 0],
               "items": [], "furniture": [], "unlocks": [], "rest": False}
     for key, val in parse_pairs(report, row, value, "belohnung"):
         if key in MATERIALS:
@@ -235,7 +235,7 @@ def parse_rewards(report, row, value):
 
 
 def parse_loot(report, row, value):
-    loot = {"aether": [0, 0], "quarz": [0, 0], "stein": [0, 0], "itemChance": 0}
+    loot = {"aether": [0, 0], "pilzholz": [0, 0], "stein": [0, 0], "itemChance": 0}
     for key, val in parse_pairs(report, row, value, "beute"):
         if key in MATERIALS:
             loot[key] = parse_range(report, row, val, "beute")
@@ -498,8 +498,9 @@ def convert_world(path, item_ids):
         check_picture(report, row, "zuhause", picture)
         home.append({
             "stufe": tier, "name": text(r.get("name", "")),
-            "cost": {k: whole_number(r.get(k, "") or r.get(old, "")) or 0
-                     for k, old in (("quarz", "holz"), ("stein", "stein"), ("aether", "glimmer"))},
+            "cost": {k: whole_number(r.get(k, "") or r.get(old, "") or r.get(older, "")) or 0
+                     for k, old, older in (("pilzholz", "quarz", "holz"), ("stein", "stein", "stein"),
+                                           ("aether", "glimmer", "glimmer"))},
             "erholung": whole_number(r.get("erholung", "")) or 0,
             "plaetze": whole_number(r.get("plaetze", "")) or 0,
             "schrank": whole_number(r.get("schrank", "")) or 0,

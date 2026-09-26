@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '3.0.0';
+export const APP_VERSION = '3.1.0';
 
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
@@ -89,7 +89,7 @@ export const SYNC_ENDPOINT = 'sync.php';
 export const CURRENCY = 'Äther';
 export const MATERIALS = {
   aether: 'Äther',   // what remains when a spirit dissolves
-  quarz: 'Quarz',    // clear crystal from the rubble, for light and structure
+  pilzholz: 'Pilzholz', // stems of the giant fungi in the rubble: light, cut like wood
   stein: 'Stein',    // blocks from old ruins, for walls
 };
 

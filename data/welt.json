@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T14:37:37Z",
+ "generated": "2026-09-26T18:45:02Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -15,8 +15,8 @@
    "text": "Eine Feuerstelle zwischen umgestürzten Säulen. Hier beginnt jeder Weg."
   },
   {
-   "id": "quarzhang",
-   "name": "Quarzhang",
+   "id": "pilzhain",
+   "name": "Pilzhain",
    "region": "Trümmerebene",
    "x": 11.0,
    "y": 36.0,
@@ -24,7 +24,7 @@
    "encounters": false,
    "monsters": [],
    "unlock": [],
-   "text": "Helle Kristalle wachsen aus dem Geröll, kalt und klar."
+   "text": "Zwischen den Trümmern stehen Pilze, hoch wie Säulen. Ihre Stiele sind leicht und zäh."
   },
   {
    "id": "steinbruch",
@@ -239,7 +239,7 @@
      2,
      4
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -265,7 +265,7 @@
      3,
      6
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -291,7 +291,7 @@
      3,
      5
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      1
     ],
@@ -317,7 +317,7 @@
      4,
      7
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -343,7 +343,7 @@
      6,
      10
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -369,7 +369,7 @@
      5,
      9
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      2
     ],
@@ -395,7 +395,7 @@
      6,
      11
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -421,7 +421,7 @@
      8,
      13
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -447,7 +447,7 @@
      9,
      15
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -473,7 +473,7 @@
      11,
      18
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -499,7 +499,7 @@
      20,
      30
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -525,7 +525,7 @@
      30,
      45
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -541,11 +541,11 @@
  ],
  "quests": [
   {
-   "id": "q-quarz",
-   "name": "Quarz brechen",
-   "place": "quarzhang",
+   "id": "q-pilzholz",
+   "name": "Pilzholz schlagen",
+   "place": "pilzhain",
    "kind": "sammeln",
-   "text": "Klare Kristalle aus dem Geröll lösen.",
+   "text": "Einen Stiel fällen und in leichte, handliche Stücke teilen.",
    "monsters": [],
    "conditions": [],
    "minutes": 15.0,
@@ -563,7 +563,7 @@
      0,
      0
     ],
-    "quarz": [
+    "pilzholz": [
      2,
      4
     ],
@@ -601,7 +601,7 @@
      0,
      0
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -631,7 +631,7 @@
    ],
    "yieldStats": [],
    "consumes": {
-    "quarz": 6,
+    "pilzholz": 6,
     "stein": 6
    },
    "cost": 2,
@@ -640,7 +640,7 @@
      10,
      10
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -686,7 +686,7 @@
      4,
      4
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -733,7 +733,7 @@
      25,
      25
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -781,7 +781,7 @@
      30,
      30
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -827,7 +827,7 @@
      15,
      15
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -873,7 +873,7 @@
      8,
      8
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -922,7 +922,7 @@
      20,
      20
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -945,7 +945,7 @@
    "name": "Die Brücke über die Schlucht",
    "place": "schlucht",
    "kind": "bauen",
-   "text": "Mit Stein, Quarz und einem langen Atem lässt sich die Brücke neu legen.",
+   "text": "Mit Pilzholz, Stein und einem langen Atem lässt sich die Brücke neu legen.",
    "monsters": [],
    "conditions": [
     {
@@ -966,7 +966,7 @@
    ],
    "yieldStats": [],
    "consumes": {
-    "quarz": 10,
+    "pilzholz": 10,
     "stein": 12
    },
    "cost": 4,
@@ -975,7 +975,7 @@
      30,
      30
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -1017,7 +1017,7 @@
      35,
      35
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -1063,7 +1063,7 @@
      60,
      60
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -1109,7 +1109,7 @@
      40,
      40
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -1154,7 +1154,7 @@
      120,
      120
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -1200,7 +1200,7 @@
      200,
      200
     ],
-    "quarz": [
+    "pilzholz": [
      0,
      0
     ],
@@ -1222,7 +1222,7 @@
    "stufe": 1,
    "name": "Zelt",
    "cost": {
-    "quarz": 0,
+    "pilzholz": 0,
     "stein": 0,
     "aether": 0
    },
@@ -1236,7 +1236,7 @@
    "stufe": 2,
    "name": "Steinhütte",
    "cost": {
-    "quarz": 8,
+    "pilzholz": 8,
     "stein": 20,
     "aether": 40
    },
@@ -1250,7 +1250,7 @@
    "stufe": 3,
    "name": "Baracke",
    "cost": {
-    "quarz": 15,
+    "pilzholz": 15,
     "stein": 35,
     "aether": 100
    },
@@ -1264,21 +1264,21 @@
    "stufe": 4,
    "name": "Steinhaus",
    "cost": {
-    "quarz": 30,
+    "pilzholz": 30,
     "stein": 50,
     "aether": 250
    },
    "erholung": 22,
    "plaetze": 6,
    "schrank": 40,
-   "text": "Feste Mauern, Fenster aus Quarz, die das Licht weich machen.",
+   "text": "Feste Mauern, Balken aus Pilzholz, ein Dach, das hält.",
    "bild": "assets/zuhause/stufe_4.png"
   },
   {
    "stufe": 5,
    "name": "Turmhaus",
    "cost": {
-    "quarz": 50,
+    "pilzholz": 50,
     "stein": 80,
     "aether": 500
    },

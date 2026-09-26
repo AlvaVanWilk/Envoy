@@ -6,18 +6,13 @@ import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
 
-export const MATERIAL_KEYS = ['aether', 'quarz', 'stein'];
-
-// Round metal button with an icon, used for the settings in the corner.
-export function coin(markup, extra = null) {
-  return h('span', { class: 'coin' }, icon(markup), extra);
-}
+export const MATERIAL_KEYS = ['aether', 'pilzholz', 'stein'];
 
 export function viewHead(eyebrow, title, ...actions) {
   return h('header', { class: 'view-head' },
     h('div', {}, h('p', { class: 'eyebrow' }, eyebrow), h('h1', {}, title)),
     h('div', { class: 'head-actions' }, ...actions,
-      h('a', { class: 'gear', href: '#einstellungen', 'aria-label': 'Einstellungen' }, coin(NAV_ICONS.einstellungen))));
+      h('a', { class: 'gear', href: '#einstellungen', 'aria-label': 'Einstellungen' }, shield(NAV_ICONS.einstellungen))));
 }
 
 // A heading inside a panel, with an ornament line.

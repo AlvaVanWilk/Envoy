@@ -76,7 +76,7 @@ function syncTone() {
 function renderNav() {
   replaceChildren(navRoot, h('div', { class: 'dock-row' }, DOCK.map(dockItem)));
   const tone = syncTone();
-  const gear = viewRoot.querySelector('.gear .coin');
+  const gear = viewRoot.querySelector('.gear .shield');
   if (gear && tone && !gear.querySelector('.coin-dot')) gear.append(h('span', { class: `coin-dot ${tone}` }));
 }
 

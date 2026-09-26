@@ -49,7 +49,7 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Speicherung und Geräteabgleich
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
   Expeditionen in echter Zeit (Hinweg, vor Ort, Rückweg), Kämpfe und Höhlen ohne
-  Scheitern, Beute, Währung Äther, dazu Quarz und Stein
+  Scheitern, Beute, Währung Äther, dazu Pilzholz und Stein
 - Rucksack (von Anfang an), Schrank (mit dem Zuhause), Händler, Zuhause mit Ausbau
   und Einrichtung, Kompendium der getroffenen Geister
 
@@ -58,7 +58,7 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 
 ## Was in Phase 1 NICHT gebaut wird
 
-- Talentbaum: existiert nur als Schild mit Schloss im Menü; Antippen zeigt den Abstand
+- Talentbaum: existiert nur als Rundschild mit Schloss im Menü; Antippen zeigt den Abstand
   der vier Werte zu Level 10, sonst keine Funktion dahinter
 - Arena, Mehrspieler, Freunde
 - Ernährungsmodul

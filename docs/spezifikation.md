@@ -25,9 +25,9 @@ können. Die Spielwelt muss groß und umfangreich genug sein, um nicht als Beloh
 sondern als Kernelement verstanden zu werden. Die Verbesserung des Envoy durch
 eigene echte Übungen aber alternativlos.
 
-Look eines modernen, professionellen RPGs mit Held (Envoy) im Mittelpunkt. Matt und
-kühl: Eisen, Stein, Stahl, altes Papier. Symbole sind Embleme wie in Metall geschlagen,
-keine flachen App-Symbole. Das einzige Leuchten gehört dem Äther.
+Look eines modernen, professionellen RPGs mit Held (Envoy) im Mittelpunkt. Warm und
+matt, eher Stein als Metall: Stein, Erde, Kupfer, altes Papier. Symbole sind Embleme wie
+in Stein gehauen, keine flachen App-Symbole. Das einzige kühle Leuchten gehört dem Äther.
 
 ## Die vier Stats
 
@@ -222,7 +222,7 @@ und warum.
 ## Spielwelt
 
 Die Zwischenwelt ist steinig, trümmerhaft und ätherisch: Geröll, umgestürzte Säulen,
-Quarz, Nebel. Regionen: Trümmerebene, Nebelmark, Grenzland, Aschenland, Nordland.
+Riesenpilze, Nebel. Regionen: Trümmerebene, Nebelmark, Grenzland, Aschenland, Nordland.
 
 ### Grundsatz: nichts scheitert
 
@@ -270,9 +270,9 @@ Quests stehen an festen Orten. Arten:
 
 | Art | Was geschieht | Was die Stats bewirken |
 | --- | --- | --- |
-| Sammeln | Quarz oder Stein | +1 Stück je 3 Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
+| Sammeln | Pilzholz oder Stein | +1 Stück je 3 Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
 | Erkunden | feste Belohnung, oft Äther | +5 % Äther je Level der Ertrag-Stats, kürzer mit den Tempo-Stats |
-| Bauen | verbraucht Quarz und Stein, schaltet frei | kürzer mit den Tempo-Stats |
+| Bauen | verbraucht Pilzholz und Stein, schaltet frei | kürzer mit den Tempo-Stats |
 | Kampf | ein Geist | siehe Kampf |
 | Höhle | mehrere Geister nacheinander | so viele, wie die Kraft des Envoy reicht |
 
@@ -319,7 +319,8 @@ ist weniger Beute.
 ### Beute und Währung
 
 - **Äther**: was zurückbleibt, wenn sich ein Geist auflöst. Einzige Währung.
-- **Quarz**: klare Kristalle aus dem Geröll, für Fenster, Licht und Gefüge.
+- **Pilzholz**: die Stiele der Riesenpilze, die zwischen den Trümmern wachsen. Leicht und
+  zäh, lässt sich sägen und schnitzen wie Holz; für Balken, Dächer, Brücken, Möbel.
 - **Stein**: Blöcke aus den alten Ruinen, für Mauern.
 - Ausrüstung und Einrichtung: feste Quest-Belohnungen oder mit einer Chance je Geist.
   Beute-Ausrüstung liegt in der Nähe der Stärke des Helden (±3 Level).
@@ -344,8 +345,8 @@ Neueste sortieren.
 
 ### Zuhause
 
-Wird durch die Quest „Ein Platz zum Bleiben“ freigeschaltet (6 Quarz und 6 Stein im
-Lager). Stufen: Zelt → Steinhütte → Baracke → Steinhaus → Turmhaus, jeweils mit Quarz,
+Wird durch die Quest „Ein Platz zum Bleiben“ freigeschaltet (6 Pilzholz und 6 Stein im
+Lager). Stufen: Zelt → Steinhütte → Baracke → Steinhaus → Turmhaus, jeweils mit Pilzholz,
 Stein und Äther ausgebaut. Jede Stufe gibt Erholung (+5 % bis +30 %), Plätze für
 Einrichtung und Schrankfächer. Einrichtung (vom Händler, als Beute oder aus Quests)
 gibt Erholung oder Glück.
@@ -369,11 +370,12 @@ vertrieben, zuerst gesehen).
 
 ## Menü und Ansichten
 
-Unten eine Leiste aus Eisen; die Menüpunkte sind Schilde, die zur Hälfte über die
-Leiste ragen. Links das Eigene (Heute, Envoy, Inventar, Talente), in der Mitte größer
-die Übersicht, rechts die Welt (Karte, Zuhause, Händler, Kompendium). Noch
-verschlossene Bereiche tragen ein Schloss auf dem Schild. Die Einstellungen sitzen als
-Zahnrad oben rechts.
+Unten ein Sims aus Stein mit einer Kupferleiste; die Menüpunkte sind runde Schilde
+(Kupferrand, Fläche aus Stein, das Emblem eingehauen), die zur Hälfte über den Sims
+ragen. Links das Eigene (Heute, Envoy, Inventar, Talente), in der Mitte größer die
+Übersicht, rechts die Welt (Karte, Zuhause, Händler, Kompendium). Noch verschlossene
+Bereiche tragen ein kupfernes Schloss auf dem Schild. Die Einstellungen sitzen als
+kleiner Rundschild mit Zahnrad oben rechts.
 
 - **Übersicht** (Startansicht): Tageswerk auf einen Blick, laufende Expedition oder
   Bericht, Vorrat mit Ausdauerleiste, Werte, heute gesichtete Geister, Hinweise.
@@ -446,7 +448,9 @@ Zweig `main` per SFTP auf den IONOS-Webspace.
 | Bodensatz | Level mit Nachkommastelle |
 | Tagesgrenze | 3:00 Uhr |
 | Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot |
-| Währung | Äther; dazu Quarz und Stein |
+| Währung | Äther; dazu Pilzholz und Stein |
+| Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
+| Optik | warm: Stein, Erde, Kupfer; Menü aus runden Schilden |
 | Scheitern | gibt es nicht; Stats bestimmen Zugang, Dauer und Ertrag |
 | Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit |
 | Kampfergebnis | beim Aufbruch berechnet und gespeichert, zählt bei der Rückkehr |

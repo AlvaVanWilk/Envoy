@@ -5,7 +5,7 @@
 // world = {
 //   expedition  the running expedition or null: { id, q, place, title, start, out, act, back, end, outcome }
 //   stamina     { value, at }: bar value at time `at`, refills from there
-//   purse       { aether, quarz, stein }
+//   purse       { aether, pilzholz, stein }
 //   items       owned things, see inventory.js
 //   equipped    { slot: inst }
 //   placed      furniture set up at home (inst list)
@@ -25,14 +25,17 @@ import { stow, removeEntry, hasSpace } from './inventory.js';
 import { unmetRequirements } from './items.js';
 import { totalMinutes } from './expedition.js';
 
-const MATERIAL_KEYS = ['aether', 'quarz', 'stein'];
+const MATERIAL_KEYS = ['aether', 'pilzholz', 'stein'];
+// Materials in events written under an older name.
+const OLD_NAMES = { quarz: 'pilzholz' };
+export const materialKey = (key) => OLD_NAMES[key] || key;
 const KEEP_REPORTS = 30;
 
 export function initialWorld(catalog, startTime, stats) {
   const world = {
     expedition: null,
     stamina: { value: maxStamina(stats), at: startTime },
-    purse: { aether: 0, quarz: 0, stein: 0 },
+    purse: { aether: 0, pilzholz: 0, stein: 0 },
     items: {},
     equipped: {},
     placed: [],
@@ -89,7 +92,9 @@ function finishExpedition(world, ctx) {
   settle(world, exp.end, ctx);
   const outcome = exp.outcome;
   const r = outcome.reward;
-  for (const key of MATERIAL_KEYS) world.purse[key] += r[key] || 0;
+  for (const [key, amount] of Object.entries(r)) {
+    if (MATERIAL_KEYS.includes(materialKey(key))) world.purse[materialKey(key)] += amount || 0;
+  }
   r.things.forEach((thing, n) => {
     stow(world, ctx.catalog, { inst: `${exp.id}:${n}`, kind: thing.kind, id: thing.id, got: exp.end });
   });
@@ -118,10 +123,10 @@ export function advance(world, t, ctx) {
 
 function startExpedition(world, e, ctx) {
   if (world.expedition) return; // one at a time
-  const consumed = e.outcome.consumed || {};
-  if (Object.entries(consumed).some(([k, v]) => world.purse[k] < v)) return;
+  const consumed = Object.entries(e.outcome.consumed || {}).map(([k, v]) => [materialKey(k), v]);
+  if (consumed.some(([k, v]) => (world.purse[k] || 0) < v)) return;
   // Material for building is taken along right away.
-  for (const [k, v] of Object.entries(consumed)) world.purse[k] -= v;
+  for (const [k, v] of consumed) world.purse[k] -= v;
   spend(world, e.cost);
   world.expedition = {
     id: e.id, q: e.q, place: e.place, title: e.title, day: e.d,

@@ -7,6 +7,7 @@ import { MATERIALS } from '../config.js';
 import { openSheet, closeSheet, isSheetOpen } from './sheet.js';
 import { resource, itemIcon, formatMinutes, MATERIAL_KEYS } from './parts.js';
 import { progressAt, heroPosition } from '../world/expedition.js';
+import { materialKey } from '../world/worldstate.js';
 
 const PHASES = [
   { id: 'out', name: 'Hinweg' },
@@ -103,13 +104,17 @@ function newInCompendium(report, game) {
 export function openReport(report, game) {
   const o = report.outcome;
   const r = o.reward;
+  const gained = {};
+  for (const [key, amount] of Object.entries(r)) {
+    if (MATERIAL_KEYS.includes(materialKey(key)) && amount) gained[materialKey(key)] = (gained[materialKey(key)] || 0) + amount;
+  }
   const loot = [];
-  for (const key of MATERIAL_KEYS) if (r[key]) loot.push(resource(key, r[key], { sign: '+' }));
+  for (const key of MATERIAL_KEYS) if (gained[key]) loot.push(resource(key, gained[key], { sign: '+' }));
   for (const thing of r.things) {
     const t = thing.kind === 'furniture' ? game.catalog.furnitureById.get(thing.id) : game.catalog.itemById.get(thing.id);
     if (t) loot.push(h('span', { class: 'loot-thing' }, itemIcon(t, 'loot-icon'), t.name));
   }
-  const consumed = Object.entries(o.consumed || {}).filter(([, v]) => v > 0);
+  const consumed = Object.entries(o.consumed || {}).filter(([, v]) => v > 0).map(([k, v]) => [materialKey(k), v]);
   const fresh = newInCompendium(report, game);
 
   let summary = null;

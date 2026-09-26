@@ -48,12 +48,12 @@ test('start: at the camp, full bar, start items in the backpack', () => {
   assert.equal(s.world.expedition, null);
   assert.equal(s.world.stamina.value, maxStamina(s.stats));
   assert.equal(countIn(s.world, 'rucksack'), 4);
-  assert.deepEqual(s.world.purse, { aether: 0, quarz: 0, stein: 0 });
+  assert.deepEqual(s.world.purse, { aether: 0, pilzholz: 0, stein: 0 });
 });
 
 test('ways: further costs more time and stamina, Ausdauer makes walking faster', () => {
   const home = camp(catalog);
-  const near = catalog.placeById.get('quarzhang');
+  const near = catalog.placeById.get('pilzhain');
   const far = catalog.placeById.get('weisstal');
   const fx = effects(replay([], catalog, DAY, T0).world, catalog);
   assert.ok(wayMinutes(home, far, statsAt(1), fx) > wayMinutes(home, near, statsAt(1), fx));
@@ -63,24 +63,24 @@ test('ways: further costs more time and stamina, Ausdauer makes walking faster',
 });
 
 test('an expedition takes real time and pays out only when back', () => {
-  const e = expeditionEvent([], 'q-quarz', 0.1);
+  const e = expeditionEvent([], 'q-pilzholz', 0.1);
   assert.ok(e.out >= 2 && e.back === e.out && e.act > 0);
   const during = replay([e], catalog, DAY, e.t + (e.out + 1) * 60000);
-  assert.equal(during.world.purse.quarz, 0);
+  assert.equal(during.world.purse.pilzholz, 0);
   assert.equal(progressAt(during.world.expedition, e.t + (e.out + 1) * 60000).phase, 'act');
   assert.equal(during.world.stamina.value < maxStamina(during.stats), true);
 
   const after = replay([e], catalog, DAY, e.t + total(e) * 60000 + 1000);
   assert.equal(after.world.expedition, null);
-  assert.ok(after.world.purse.quarz >= 2, `quarz ${after.world.purse.quarz}`);
+  assert.ok(after.world.purse.pilzholz >= 2, `pilzholz ${after.world.purse.pilzholz}`);
   assert.equal(after.world.reports.length, 1);
 });
 
 test('only one expedition at a time', () => {
-  const a = expeditionEvent([], 'q-quarz', 0.1);
+  const a = expeditionEvent([], 'q-pilzholz', 0.1);
   const b = expeditionEvent([], 'q-stein', 0.2);
   const s = replay([a, b], catalog, DAY, T0 + 0.3 * H);
-  assert.equal(s.world.expedition.q, 'q-quarz');
+  assert.equal(s.world.expedition.q, 'q-pilzholz');
 });
 
 test('the hero moves along the way', () => {
@@ -137,19 +137,33 @@ test('a cave: the stronger the Envoy, the deeper he gets; the cave reward only f
 });
 
 test('building takes the material along and unlocks the home on return', () => {
-  const gift = ev('expedition', { q: 'q-quarz', place: 'quarzhang', title: 'x', out: 1, act: 1, back: 1, cost: 0,
+  const gift = ev('expedition', { q: 'q-pilzholz', place: 'pilzhain', title: 'x', out: 1, act: 1, back: 1, cost: 0,
     outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
-      reward: { aether: 0, quarz: 8, stein: 8, things: [], unlocks: [], rest: false } } }, 0);
+      reward: { aether: 0, pilzholz: 8, stein: 8, things: [], unlocks: [], rest: false } } }, 0);
   const s1 = replay([gift], catalog, DAY, T0 + H);
   assert.equal(questState(catalog.questById.get('q-zuhause'), ctxOf(s1)).status, 'open');
   const build = expeditionEvent([gift], 'q-zuhause', 1);
   const during = replay([gift, build], catalog, DAY, build.t + 60000);
-  assert.equal(during.world.purse.quarz, 2);
+  assert.equal(during.world.purse.pilzholz, 2);
   assert.equal(questState(catalog.questById.get('q-zuhause'), ctxOf(during)).status, 'running');
   const done = replay([gift, build], catalog, DAY, build.t + total(build) * 60000 + 1000);
   assert.ok(done.world.unlocked.includes('zuhause'));
   assert.equal(done.world.home, 1);
   assert.equal(questState(catalog.questById.get('q-zuhause'), ctxOf(done)).status, 'done');
+});
+
+test('quartz from older expeditions counts as Pilzholz', () => {
+  const old = ev('expedition', { q: 'q-pilzholz', place: 'pilzhain', title: 'x', out: 1, act: 1, back: 1, cost: 0,
+    outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { aether: 0, quarz: 7, stein: 7, things: [], unlocks: [], rest: false } } }, 0);
+  const s1 = replay([old], catalog, DAY, T0 + H);
+  assert.equal(s1.world.purse.pilzholz, 7);
+  const build = ev('expedition', { q: 'q-zuhause', place: 'lager', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'bauen', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: { quarz: 6, stein: 6 },
+      reward: { aether: 10, pilzholz: 0, stein: 0, things: [], unlocks: ['zuhause'], rest: false } } }, 0.2);
+  const s2 = replay([old, build], catalog, DAY, T0 + H);
+  assert.equal(s2.world.purse.pilzholz, 1);
+  assert.equal(s2.world.home, 1);
 });
 
 test('stat requirements decide access', () => {
@@ -160,7 +174,7 @@ test('stat requirements decide access', () => {
 });
 
 test('the bar refills over time', () => {
-  const e = expeditionEvent([], 'q-quarz', 0);
+  const e = expeditionEvent([], 'q-pilzholz', 0);
   const s = replay([e], catalog, DAY, T0 + 10 * H);
   assert.equal(staminaAt(s.world, T0 + 10 * H, s.stats, effects(s.world, catalog)), maxStamina(s.stats));
 });
@@ -184,9 +198,9 @@ test('trader offers lie around the hero\'s strength; buying needs enough Äther'
 
   const buy = ev('buy', { offer: `${DAY}:0`, kind: 'item', thing: 'kopf_kapuze_2', price: 50 }, 3);
   assert.equal(replay([buy], catalog, DAY, T0 + 4 * H).world.items[buy.id], undefined);
-  const gift = ev('expedition', { q: 'q-quarz', place: 'quarzhang', title: 'x', out: 1, act: 1, back: 1, cost: 0,
+  const gift = ev('expedition', { q: 'q-pilzholz', place: 'pilzhain', title: 'x', out: 1, act: 1, back: 1, cost: 0,
     outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
-      reward: { aether: 60, quarz: 0, stein: 0, things: [], unlocks: ['haendler'], rest: false } } }, 0);
+      reward: { aether: 60, pilzholz: 0, stein: 0, things: [], unlocks: ['haendler'], rest: false } } }, 0);
   const s2 = replay([gift, buy], catalog, DAY, T0 + 4 * H);
   assert.equal(s2.world.items[buy.id].id, 'kopf_kapuze_2');
   assert.equal(s2.world.purse.aether, 10);
@@ -195,12 +209,12 @@ test('trader offers lie around the hero\'s strength; buying needs enough Äther'
 test('home: build needs material, furniture adds recovery', () => {
   const gift = ev('expedition', { q: 'q-zuhause', place: 'lager', title: 'x', out: 0, act: 1, back: 0, cost: 0,
     outcome: { kind: 'bauen', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
-      reward: { aether: 200, quarz: 20, stein: 40, things: [{ kind: 'furniture', id: 'schlafmatte' }], unlocks: ['zuhause'], rest: false } } }, 0);
+      reward: { aether: 200, pilzholz: 20, stein: 40, things: [{ kind: 'furniture', id: 'schlafmatte' }], unlocks: ['zuhause'], rest: false } } }, 0);
   const build = ev('build', { tier: 2 }, 1);
   const place = ev('place', { inst: `${gift.id}:0` }, 1.5);
   const s = replay([gift, build, place], catalog, DAY, T0 + 2 * H);
   assert.equal(s.world.home, 2);
-  assert.deepEqual(s.world.purse, { aether: 160, quarz: 12, stein: 20 });
+  assert.deepEqual(s.world.purse, { aether: 160, pilzholz: 12, stein: 20 });
   assert.equal(effects(s.world, catalog).erholung, 10 + 8);
 });
 

@@ -100,7 +100,8 @@ export const SLOT_ICONS = {
 // Map places, drawn light on a dark ink seal.
 export const PLACE_ICONS = {
   lager: emblem('<path fill-rule="evenodd" d="M12 2.6c1 3.5 4.6 5 4.6 9.6c0 3-2 5-4.6 5s-4.6-2-4.6-4.8c0-2.3 1.5-3.3 2-5.3c1 1.5 1.5 2 2 2.5c0-2.5 0-5 .6-7ZM12 11c1 1.5 2 2.3 2 3.8c0 1.2-.9 2-2 2s-2-.8-2-1.9c0-1.3 1.4-2.1 2-3.9Z"/><ellipse cx="5.4" cy="20" rx="2.3" ry="1.6"/><ellipse cx="9.6" cy="21" rx="2.3" ry="1.4"/><ellipse cx="14.4" cy="21" rx="2.3" ry="1.4"/><ellipse cx="18.6" cy="20" rx="2.3" ry="1.6"/>'),
-  sammeln: emblem(`<path d="M12 1.8l2.8 4v11.4L12 21.4l-2.8-4.2V5.8Z"/><path d="M6.2 7.6l2 2.6v7.6l-2 3l-2-3v-7.6Z" transform="rotate(-16 6.2 14)"/><path d="M17.8 7.6l2 2.6v7.6l-2 3l-2-3v-7.6Z" transform="rotate(16 17.8 14)"/>${eng('M12 2v19.2', 0.9)}<rect x="3" y="21" width="18" height="1.6" rx="0.8" opacity="0.7"/>`),
+  // a basket: here something is gathered
+  sammeln: emblem(`<path d="M7 10c0-5.4 10-5.4 10 0h-1.8c0-3.2-6.4-3.2-6.4 0Z"/><path d="M3.4 10h17.2l-1.9 10.2a1.6 1.6 0 0 1-1.6 1.3H6.9a1.6 1.6 0 0 1-1.6-1.3Z"/>${eng('M3.8 12.2h16.4M5 15.4h14M5.7 18.6h12.6', 0.9)}${eng('M8.6 12.4v8.8M12 12.4v9M15.4 12.4v8.8', 0.8)}`),
   wild: emblem('<path fill-rule="evenodd" d="M12 2.4c4.5 0 7 3.6 7 8.1v10.1l-2.3-1.7l-2.3 2.2L12 19l-2.4 2.1l-2.3-2.2L5 20.6V10.5c0-4.5 2.5-8.1 7-8.1ZM9.6 8.6c-.7 0-1.3.8-1.3 1.9s.6 1.9 1.3 1.9s1.3-.8 1.3-1.9s-.6-1.9-1.3-1.9ZM14.4 8.6c-.7 0-1.3.8-1.3 1.9s.6 1.9 1.3 1.9s1.3-.8 1.3-1.9s-.6-1.9-1.3-1.9Z"/>'),
   ort: emblem(`<path d="M9 20.4V6.2l1.5-2.6L12 5l1.5-2.6L15 5.4v15Z"/><path d="M6.8 20h10.4v2.3H6.8Z"/>${eng('M10.9 7.4v12M13.1 7.4v12', 0.8)}`),
   hoehle: emblem('<path fill-rule="evenodd" d="M1.8 21.6C2.8 14 6 8.2 12 6.6c6 1.6 9.2 7.4 10.2 15ZM8 21.6c0-5 1.8-8 4-8s4 3 4 8Z"/><path d="M10.4 3.8l1.6-1.6l1.6 1.6l-1.6 1.6Z" opacity="0.7"/>'),
@@ -110,10 +111,10 @@ export const PLACE_ICONS = {
 export const RESOURCE_ICONS = {
   // Äther: what remains when a spirit dissolves, a cold flame
   aether: '<svg viewBox="0 0 24 24"><path d="M12 1.6c1.2 3.8 6.2 6.2 6.2 12a6.2 6.2 0 0 1-12.4 0c0-3.2 2-4.6 2.8-7.2c1.2 1.8 1.8 2.6 2.4 3c-.3-3.2.2-5.6 1-7.8Z" fill="url(#g-aether)" stroke="#1d2b2e" stroke-width="0.8"/><path d="M12.2 10.4c1 1.8 2.8 3 2.8 5.2a3 3 0 0 1-6 0c0-1.6 1.2-2.6 1.8-4c.5.8.9 1.2 1.2 1.4c0-1 0-1.8.2-2.6Z" fill="#effafa" opacity="0.85"/><circle cx="18.6" cy="5" r="0.9" fill="#d8f0f0"/><circle cx="5.2" cy="8.2" r="0.6" fill="#d8f0f0" opacity="0.8"/></svg>',
-  // Quarz: clear crystal from the rubble
-  quarz: '<svg viewBox="0 0 24 24" stroke="#1c2328" stroke-width="0.8" stroke-linejoin="round"><path d="M6.4 9.4l2.2 2.4v7.6l-2.2 2.8l-2.2-2.8v-7.6Z" fill="#9fb0ba" transform="rotate(-18 6.4 16)"/><path d="M17.6 8.4l2.2 2.4v8.6l-2.2 2.8l-2.2-2.8v-8.6Z" fill="#9fb0ba" transform="rotate(16 17.6 16)"/><path d="M12 1.8l3 4.2v12.6l-3 3.8l-3-3.8V6Z" fill="url(#g-quarz)"/><path d="M12 1.8l3 4.2v12.6l-3 3.8Z" fill="#8497a3" opacity="0.55" stroke="none"/><path d="M10.2 7.4v8.4" stroke="#fff" stroke-width="0.9" opacity="0.7"/></svg>',
+  // Pilzholz: the stem of a giant fungus, light and cut like wood
+  pilzholz: '<svg viewBox="0 0 24 24" stroke="#2a180d" stroke-width="0.8" stroke-linejoin="round"><path d="M9.3 11.2c-.2 4-.6 6.8-1.2 9.8h5.8c-.6-3-1-5.8-1.2-9.8Z" fill="url(#g-pilz-stem)"/><path d="M10.5 12.6v7.6M11.7 12.6v7.8" stroke="#a88f68" stroke-width="0.6"/><path d="M2.6 11.4C2.6 6.4 6.4 3.2 11 3.2s8.4 3.2 8.4 8.2c-3 1.2-13.8 1.2-16.8 0Z" fill="url(#g-pilz-cap)"/><path d="M4.4 11.8c3.8.8 9.4.8 13.2 0" fill="none" stroke="#3a2113" stroke-width="0.6"/><circle cx="7.4" cy="7.4" r="1" fill="#f0dcb8" stroke="none" opacity="0.85"/><circle cx="12.6" cy="5.8" r="0.8" fill="#f0dcb8" stroke="none" opacity="0.85"/><circle cx="15.6" cy="8.6" r="0.7" fill="#f0dcb8" stroke="none" opacity="0.85"/><path d="M15.2 17.4h5.2a1.9 2.3 0 0 1 0 4.6h-5.2Z" fill="url(#g-pilz-stem)"/><ellipse cx="15.2" cy="19.7" rx="1.9" ry="2.3" fill="#f6ecd8"/><ellipse cx="15.2" cy="19.7" rx="0.9" ry="1.1" fill="none" stroke="#b39a72" stroke-width="0.6"/></svg>',
   // Stein: a hewn block from the old ruins
-  stein: '<svg viewBox="0 0 24 24" stroke="#16191c" stroke-width="0.8" stroke-linejoin="round"><path d="M3 9.2l8.4-3.6l9.6 2.6l-8.2 3.8Z" fill="#aab0b5"/><path d="M3 9.2l9.8 2.8v9.4L3 18.4Z" fill="#7a8187"/><path d="M12.8 12l8.2-3.8v9.2l-8.2 4Z" fill="#5b6167"/><path d="M6 13.2l1.6 1.4l-.6 2M16.2 13.6l1.2 2.2l1.6.4" fill="none" stroke="#2a2e32" stroke-width="0.9"/></svg>',
+  stein: '<svg viewBox="0 0 24 24" stroke="#1c1611" stroke-width="0.8" stroke-linejoin="round"><path d="M3 9.2l8.4-3.6l9.6 2.6l-8.2 3.8Z" fill="#b8ac99"/><path d="M3 9.2l9.8 2.8v9.4L3 18.4Z" fill="#877b69"/><path d="M12.8 12l8.2-3.8v9.2l-8.2 4Z" fill="#655a4b"/><path d="M6 13.2l1.6 1.4l-.6 2M16.2 13.6l1.2 2.2l1.6.4" fill="none" stroke="#342a20" stroke-width="0.9"/></svg>',
 };
 
 export const UI_ICONS = {
@@ -130,6 +131,6 @@ export const UI_ICONS = {
   // an hourglass for the exercise timer
   timer: emblem(`<path d="M5.5 2h13v2.2h-1.2c0 3.6-2.4 5.4-3.8 7.8c1.4 2.4 3.8 4.2 3.8 7.8h1.2V22h-13v-2.2h1.2c0-3.6 2.4-5.4 3.8-7.8C9.1 9.6 6.7 7.8 6.7 4.2H5.5Z"/>${engFill('M9 5h6c-.4 2-1.8 3.4-3 5c-1.2-1.6-2.6-3-3-5Z')}${engFill('M8.8 19.6c.4-2 1.8-3.6 3.2-4.8c1.4 1.2 2.8 2.8 3.2 4.8Z')}`),
   lock: emblem('<path fill-rule="evenodd" d="M7.2 10V7.6a4.8 4.8 0 0 1 9.6 0V10h-2.4V7.6a2.4 2.4 0 0 0-4.8 0V10Z"/><path fill-rule="evenodd" d="M5 10h14v10.6a1.4 1.4 0 0 1-1.4 1.4H6.4A1.4 1.4 0 0 1 5 20.6ZM12 13.2a1.5 1.5 0 0 0-.8 2.8v2.4h1.6V16a1.5 1.5 0 0 0-.8-2.8Z"/>'),
-  // an ink mark for the hero on the map
-  hero: emblem(`<path d="M12 1.5c3 1.2 6.3 1.6 9 1.4v8.6c0 5.6-3.8 9.6-9 11.4C6.8 21.1 3 17.1 3 11.5V2.9c2.7.2 6-.2 9-1.4Z"/>${engFill('M8.6 6.6h6.8v1.8h-4.8v2.3h4v1.8h-4v2.4h4.8v1.8H8.6Z')}`),
+  // the hero's mark on the map: a small round shield with an E
+  hero: emblem(`<circle cx="12" cy="12" r="10.5"/>${eng('M12 3.4a8.6 8.6 0 1 1 0 17.2a8.6 8.6 0 1 1 0-17.2', 0.9)}${engFill('M8.6 6.9h6.8v1.8h-4.8v2.4h4v1.8h-4v2.4h4.8v1.8H8.6Z')}`),
 };

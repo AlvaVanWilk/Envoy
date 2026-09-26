@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0e1013">
+  <meta name="theme-color" content="#15120f">
   <meta name="color-scheme" content="dark">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -18,31 +18,42 @@
   <title>Envoy</title>
 </head>
 <body>
-  <!-- Colours shared by the shields in the menu and the resource pictures. -->
+  <!-- Colours shared by the round shields of the menu and the resource pictures. -->
   <svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
-      <linearGradient id="sh-rim" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#eef2f5"/><stop offset="0.28" stop-color="#9ea7af"/>
-        <stop offset="0.62" stop-color="#555d66"/><stop offset="1" stop-color="#23272c"/>
+      <linearGradient id="sh-rim" x1="0.15" y1="0" x2="0.85" y2="1">
+        <stop offset="0" stop-color="#f0c093"/><stop offset="0.3" stop-color="#c7804f"/>
+        <stop offset="0.65" stop-color="#8e4f2b"/><stop offset="1" stop-color="#4f2814"/>
       </linearGradient>
-      <linearGradient id="sh-face" x1="0.15" y1="0" x2="0.85" y2="1">
-        <stop offset="0" stop-color="#58616a"/><stop offset="0.5" stop-color="#323940"/><stop offset="1" stop-color="#191c20"/>
+      <linearGradient id="sh-rim-dull" x1="0.15" y1="0" x2="0.85" y2="1">
+        <stop offset="0" stop-color="#9c8672"/><stop offset="0.4" stop-color="#6d5a49"/><stop offset="1" stop-color="#352a21"/>
       </linearGradient>
-      <linearGradient id="sh-face-active" x1="0.15" y1="0" x2="0.85" y2="1">
-        <stop offset="0" stop-color="#f0f3f5"/><stop offset="0.5" stop-color="#aeb8c1"/><stop offset="1" stop-color="#6b757f"/>
-      </linearGradient>
-      <linearGradient id="sh-face-locked" x1="0.15" y1="0" x2="0.85" y2="1">
-        <stop offset="0" stop-color="#3b3d40"/><stop offset="0.6" stop-color="#28292c"/><stop offset="1" stop-color="#1b1c1e"/>
-      </linearGradient>
-      <linearGradient id="sh-sheen" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0.28" stop-color="#fff" stop-opacity="0"/><stop offset="0.42" stop-color="#fff" stop-opacity="0.2"/>
-        <stop offset="0.54" stop-color="#fff" stop-opacity="0"/>
-      </linearGradient>
+      <radialGradient id="sh-rivet" cx="0.35" cy="0.3" r="0.8">
+        <stop offset="0" stop-color="#ffe2c2"/><stop offset="0.5" stop-color="#c98553"/><stop offset="1" stop-color="#5e3119"/>
+      </radialGradient>
+      <radialGradient id="sh-face" cx="0.4" cy="0.32" r="0.8">
+        <stop offset="0" stop-color="#6f6356"/><stop offset="0.55" stop-color="#4b4138"/><stop offset="1" stop-color="#2b241e"/>
+      </radialGradient>
+      <radialGradient id="sh-face-active" cx="0.4" cy="0.32" r="0.8">
+        <stop offset="0" stop-color="#f3e3c6"/><stop offset="0.55" stop-color="#cfb088"/><stop offset="1" stop-color="#94734f"/>
+      </radialGradient>
+      <radialGradient id="sh-face-locked" cx="0.4" cy="0.32" r="0.8">
+        <stop offset="0" stop-color="#46403a"/><stop offset="0.6" stop-color="#2f2a25"/><stop offset="1" stop-color="#1e1a16"/>
+      </radialGradient>
+      <radialGradient id="sh-grain" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0.7" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.45"/>
+      </radialGradient>
+      <radialGradient id="sh-sheen" cx="0.36" cy="0.26" r="0.55">
+        <stop offset="0" stop-color="#fff3e0" stop-opacity="0.22"/><stop offset="1" stop-color="#fff3e0" stop-opacity="0"/>
+      </radialGradient>
       <radialGradient id="g-aether" cx="0.5" cy="0.7" r="0.62">
         <stop offset="0" stop-color="#f3fdfd"/><stop offset="0.45" stop-color="#a6d2d5"/><stop offset="1" stop-color="#4f7f86"/>
       </radialGradient>
-      <linearGradient id="g-quarz" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#f4f8f9"/><stop offset="0.55" stop-color="#cdd7dc"/><stop offset="1" stop-color="#9aabb5"/>
+      <linearGradient id="g-pilz-cap" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#c47a4c"/><stop offset="0.6" stop-color="#8f4c2c"/><stop offset="1" stop-color="#5f2f1a"/>
+      </linearGradient>
+      <linearGradient id="g-pilz-stem" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#f4ead6"/><stop offset="0.6" stop-color="#dac7a3"/><stop offset="1" stop-color="#a88f68"/>
       </linearGradient>
     </defs>
   </svg>

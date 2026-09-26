@@ -48,7 +48,7 @@ function monsterLoot(monster, result, ctx, rng, into) {
   const luck = 1 + ctx.fx.glueck / 100;
   const share = result === 'calmed' ? 1.5 : result === 'driven' ? DRIVEN_LOOT_SHARE : 1;
   into.aether += Math.round(roll(rng, monster.loot.aether) * share * luck);
-  into.quarz += Math.round(roll(rng, monster.loot.quarz) * (result === 'driven' ? DRIVEN_LOOT_SHARE : 1));
+  into.pilzholz += Math.round(roll(rng, monster.loot.pilzholz) * (result === 'driven' ? DRIVEN_LOOT_SHARE : 1));
   into.stein += Math.round(roll(rng, monster.loot.stein) * (result === 'driven' ? DRIVEN_LOOT_SHARE : 1));
   if (result !== 'driven' && rng() * 100 < monster.loot.itemChance * luck) {
     const thing = lootThing(ctx, rng);
@@ -74,7 +74,7 @@ export function rewardRange(quest, ctx) {
   const piece = (range) => (range[1] > 0 ? [range[0] + bonus.pieces, range[1] + bonus.pieces] : [0, 0]);
   return {
     aether: r.aether.map((v) => Math.round(v * bonus.aether)),
-    quarz: piece(r.quarz),
+    pilzholz: piece(r.pilzholz),
     stein: piece(r.stein),
   };
 }
@@ -84,7 +84,7 @@ function fixedReward(quest, ctx, rng, into) {
   if (!r) return;
   const bonus = yieldBonus(quest, ctx);
   into.aether += Math.round(roll(rng, r.aether) * bonus.aether);
-  into.quarz += roll(rng, r.quarz, r.quarz[1] > 0 ? bonus.pieces : 0);
+  into.pilzholz += roll(rng, r.pilzholz, r.pilzholz[1] > 0 ? bonus.pieces : 0);
   into.stein += roll(rng, r.stein, r.stein[1] > 0 ? bonus.pieces : 0);
   for (const id of r.items) into.things.push({ kind: 'item', id });
   for (const id of r.furniture) into.things.push({ kind: 'furniture', id });
@@ -94,7 +94,7 @@ function fixedReward(quest, ctx, rng, into) {
 
 export function runQuest(quest, ctx, seed) {
   const rng = seededRandom(seed);
-  const reward = { aether: 0, quarz: 0, stein: 0, things: [], unlocks: [], rest: false };
+  const reward = { aether: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false };
   const fights = [];
   let minutes = quest.minutes;
   let cleared = true;
