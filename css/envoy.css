@@ -813,6 +813,7 @@ button.task-check:hover { color: var(--stat); }
 .timer-overlay.paused .timer-time { opacity: 0.5; }
 .timer-overlay.finished .timer-time { font-size: 30px; color: var(--ivory-bright); }
 .timer-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.timer-actions .btn.is-off { color: var(--text-2); opacity: 0.75; }
 
 /* 10. character, items --------------------------------------------------- */
 

@@ -387,6 +387,12 @@ kleiner Rundschild mit Zahnrad oben rechts.
 - **Heute**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+14 Kraft“) und
   einem Haken zum Erledigen. Antippen klappt eine Aufgabe auf (Timer, Erledigt); die
   Anleitung erscheint nur auf Wunsch. Kein Charakterbild.
+- **Timer**: Ring mit Restzeit, bei Übungen mit Atemtakt ein Kreis, der wächst und
+  schrumpft. Solange die Zeit läuft, spielt ein ruhiger Klang: leises Rauschen wie
+  Wellen, ein tiefer Akkord, ab und zu eine Klangschale. Mit Atemtakt kommen und gehen
+  die Wellen mit dem Atem. Am Ende verklingt der Hintergrund und ein Ton sagt, dass die
+  Zeit um ist. Der Klang lässt sich im Timer abschalten; die Wahl bleibt gespeichert.
+  Alles wird im Browser erzeugt, es gibt keine Tondateien.
 - **Karte**: gezeichnete Landkarte mit Tintensiegeln für die Orte, Legende, Vorrat und
   Expedition. Keine unerklärten Zahlen auf der Karte.
 
