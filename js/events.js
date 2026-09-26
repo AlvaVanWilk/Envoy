@@ -12,8 +12,9 @@
 //   mode     { sick }                         Krankheitsmodus on or off
 //
 // Event types of the world (see world/worldstate.js):
-//   travel   { to, cost }                     walk to a place on the map
-//   quest    { q, place, cost, outcome }      a quest or encounter, with its full result
+//   expedition { q, place, title, out, act, back, cost, outcome }
+//                                             from the camp to a place and back; minutes for each
+//                                             part and the full result, known from the start
 //   buy      { offer, kind, thing, price }    bought at the trader (thing = item or furniture id)
 //   sell     { inst, price }                  sold to the trader
 //   drop     { inst }                         left behind
@@ -23,6 +24,7 @@
 //   place    { inst }                         furniture set up at home
 //   unplace  { inst }                         furniture taken down
 //   build    { tier, cost }                   home extended
+// (travel and quest from version 2 are still accepted and ignored)
 //
 // Common fields: id, t (timestamp in ms), d (day key), dev (device id).
 
@@ -70,7 +72,8 @@ export function mergeEvents(listA, listB) {
 
 export const KNOWN_TYPES = new Set([
   'plan', 'done', 'undo', 'mode',
-  'travel', 'quest', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
+  'expedition', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
+  'travel', 'quest',
 ]);
 
 // Minimal shape check for events coming from outside (sync, backup file).

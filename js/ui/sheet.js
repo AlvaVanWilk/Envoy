@@ -33,6 +33,10 @@ export function openSheet({ title, eyebrow = null, content, className = '', onCl
   return { close, panel };
 }
 
+export function isSheetOpen() {
+  return current !== null;
+}
+
 export function closeSheet() {
   if (!current) return;
   const { layer, onKey, onClose, previousFocus } = current;

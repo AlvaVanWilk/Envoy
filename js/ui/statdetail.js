@@ -17,10 +17,10 @@ export function openStatDetail(stat, game) {
     let text;
     let tone;
     if (e.kind === 'gain') {
-      text = `+${e.xp} XP`;
+      text = `+${e.xp} ${info.name}`;
       tone = 'gain';
     } else if (e.xp < 0) {
-      text = `Pause · −${Math.abs(e.xp)} XP`;
+      text = `Pause · −${Math.abs(e.xp)} ${info.name}`;
       tone = 'loss';
     } else {
       text = 'Pause';

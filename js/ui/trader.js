@@ -3,7 +3,7 @@
 
 import { h } from './dom.js';
 import { NAV_ICONS } from './icons.js';
-import { viewHead, purse, price, itemIcon, reqChips, effectList, lockedView, unlockHint } from './parts.js';
+import { viewHead, sectionTitle, supplies, price, resource, itemIcon, reqChips, effectList, lockedView, unlockHint } from './parts.js';
 import { openSheet, closeSheet } from './sheet.js';
 import { thingSubtitle } from './itemsheet.js';
 import { sellPrice, lookup } from '../world/items.js';
@@ -17,10 +17,11 @@ export function renderTrader(game) {
     .map((entry) => ({ entry, thing: lookup(entry, game.catalog) })).filter((x) => x.thing);
 
   return h('section', { class: 'view trader' },
-    viewHead('Händler', 'Heute im Angebot'),
+    viewHead('Händler', 'Der Händler'),
     h('div', { class: 'trader-grid' },
-      h('section', { class: 'panel' }, purse(world.purse)),
-      h('section', { class: 'panel' },
+      h('section', { class: 'panel trader-purse' }, sectionTitle('Vorrat'), supplies(world.purse)),
+      h('section', { class: 'panel trader-offers' },
+        sectionTitle('Heute im Angebot'),
         offers.length === 0
           ? h('p', { class: 'empty-state' }, 'Alles verkauft. Morgen gibt es Neues.')
           : h('div', { class: 'offer-grid' }, offers.map((offer) => {
@@ -30,21 +31,21 @@ export function renderTrader(game) {
               h('span', { class: 'item-name' }, thing.name),
               h('span', { class: 'item-sub' }, thingSubtitle({ kind: offer.kind }, thing)),
               offer.kind === 'item' ? reqChips(thing, stats) : null,
-              price(offer.price, world.purse.glimmer));
+              price(offer.price, world.purse.aether));
           }))),
-      h('section', { class: 'panel' },
-        h('h2', { class: 'section-title' }, 'Verkaufen'),
+      h('section', { class: 'panel trader-sell' },
+        sectionTitle('Verkaufen'),
         owned.length === 0
           ? h('p', { class: 'muted' }, 'Nichts im Rucksack oder Schrank.')
           : h('div', { class: 'item-list' }, owned.map(({ entry, thing }) => h('div', { class: 'item-row' },
             h('span', { class: 'item-frame' }, itemIcon(thing)),
             h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, thing.name), h('span', { class: 'item-sub' }, thingSubtitle(entry, thing))),
-            h('button', { class: 'btn ghost small', onclick: () => confirmSell(entry, thing, game) }, `${sellPrice(entry, game.catalog)} Glimmer`)))))));
+            h('button', { class: 'btn ghost small', onclick: () => confirmSell(entry, thing, game) }, resource('aether', sellPrice(entry, game.catalog)))))))));
 }
 
 function openOffer(offer, thing, game) {
   const { world, stats } = game.state;
-  const affordable = world.purse.glimmer >= offer.price;
+  const affordable = world.purse.aether >= offer.price;
   openSheet({
     title: thing.name,
     eyebrow: thingSubtitle({ kind: offer.kind }, thing),
@@ -55,9 +56,9 @@ function openOffer(offer, thing, game) {
       thing.faehigkeit || thing.text ? h('p', { class: 'item-ability' }, thing.faehigkeit || thing.text) : null,
       effectList(thing.effekt),
       h('div', { class: 'sheet-actions' },
-        price(offer.price, world.purse.glimmer),
+        price(offer.price, world.purse.aether),
         h('button', { class: 'btn primary', disabled: !affordable, onclick: () => { game.buy(offer); closeSheet(); } },
-          affordable ? 'Kaufen' : 'Nicht genug Glimmer')),
+          affordable ? 'Kaufen' : 'Nicht genug Äther')),
     ],
   });
 }
@@ -67,7 +68,7 @@ function confirmSell(entry, thing, game) {
   openSheet({
     title: `${thing.name} verkaufen`,
     content: [
-      h('p', {}, `Für ${amount} Glimmer.`),
+      h('p', {}, `Für ${amount} Äther.`),
       h('div', { class: 'sheet-actions' },
         h('button', { class: 'btn ghost', onclick: closeSheet }, 'Behalten'),
         h('button', { class: 'btn primary', onclick: () => { game.sell(entry.inst); closeSheet(); } }, 'Verkaufen')),

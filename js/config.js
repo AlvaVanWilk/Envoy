@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '2.0.0';
+export const APP_VERSION = '3.0.0';
 
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
@@ -85,7 +85,13 @@ export const SYNC_ENDPOINT = 'sync.php';
 
 // --- world ---------------------------------------------------------------
 
-export const CURRENCY = 'Glimmer';
+// Currency and materials. The world is stony, broken and ethereal.
+export const CURRENCY = 'Äther';
+export const MATERIALS = {
+  aether: 'Äther',   // what remains when a spirit dissolves
+  quarz: 'Quarz',    // clear crystal from the rubble, for light and structure
+  stein: 'Stein',    // blocks from old ruins, for walls
+};
 
 // Ausdauerleiste: size from the Ausdauer stat, refills in about 8 hours,
 // faster with Gelassenheit and a comfortable home.
@@ -95,13 +101,31 @@ export const STAMINA_REFILL_HOURS = 8;
 export const STAMINA_BONUS_PER_GELASSENHEIT = 0.03;   // +3 % speed per level
 export const STAMINA_REST_TASK_SHARE = 0.5;           // Gelassenheit task: half a bar
 
-// Travel: map coordinates are percent; x counts 1.5 because the map is wider than high.
+// Expeditions start and end at the camp. Map coordinates are percent;
+// x counts 1.5 because the map is wider than high.
 export const MAP_ASPECT = 1.5;
-export const TRAVEL_UNITS_PER_STAMINA = 14;
-export const OVERLOAD_TRAVEL_EXTRA = 1;               // over-full backpack: +1 per trip
+export const TRAVEL_UNITS_PER_STAMINA = 20;           // stamina per way
+export const TRAVEL_MINUTES_PER_UNIT = 0.25;          // real minutes per way
+export const TRAVEL_MIN_MINUTES = 2;
+export const TRAVEL_SPEEDUP_PER_AUSDAUER = 0.03;      // faster walking with Ausdauer
+export const OVERLOAD_TRAVEL_EXTRA = 1;               // over-full backpack: +1 per way
+
+// Time on site: every level of the stats named under `tempo` shortens it,
+// at most to half.
+export const SPEEDUP_PER_LEVEL = 0.04;
+export const FASTEST_SHARE = 0.5;
+export const FIGHT_MINUTES = 2;                       // per fight
+export const FIGHT_MINUTES_PER_ROUND = 1.2;
+export const YIELD_PER_LEVEL = 0.05;                  // more Äther from exploring
+
+// Nobody fails. A spirit that is too strong is driven off (less loot);
+// in a cave the Envoy goes on while enough life is left.
+export const DRIVEN_LOOT_SHARE = 0.5;
+export const CAVE_RETREAT_SHARE = 0.35;
 
 export const BACKPACK_SIZE = 8;
 export const ENCOUNTER_CHANCE = 0.55;                  // per wild place and day
 export const ENCOUNTER_COST = 2;
+export const ENCOUNTER_MINUTES = 5;
 export const TRADER_OFFERS = 5;
 export const SELL_SHARE = 1 / 3;

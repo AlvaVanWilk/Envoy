@@ -13,7 +13,7 @@ import {
 import { addXp, removeXp, malusFactor, average } from './formulas.js';
 import { dayRange, addDays } from './days.js';
 import { compareEvents } from './events.js';
-import { initialWorld, applyWorldEvent, restFromTask, checkEquipment } from './world/worldstate.js';
+import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance } from './world/worldstate.js';
 
 export { unmetRequirements } from './world/items.js';
 
@@ -174,6 +174,8 @@ export function replay(events, catalog, today, now = Date.now()) {
     }
     checkEquipment(world, ctx, day);
   }
+  // An expedition that is back by now counts.
+  advance(world, now, ctx);
 
   return {
     today,

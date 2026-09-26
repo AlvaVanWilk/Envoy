@@ -1,35 +1,35 @@
 {
- "generated": "2026-09-26T13:24:16Z",
+ "generated": "2026-09-26T14:37:37Z",
  "source": "welt.xlsx",
  "places": [
   {
    "id": "lager",
-   "name": "Lagerplatz",
-   "region": "Weidenland",
+   "name": "Das Lager",
+   "region": "Trümmerebene",
    "x": 22.0,
    "y": 58.0,
    "typ": "lager",
    "encounters": false,
    "monsters": [],
    "unlock": [],
-   "text": "Eine Feuerstelle unter alten Weiden. Hier beginnt jeder Weg."
+   "text": "Eine Feuerstelle zwischen umgestürzten Säulen. Hier beginnt jeder Weg."
   },
   {
-   "id": "birkenhain",
-   "name": "Birkenhain",
-   "region": "Weidenland",
+   "id": "quarzhang",
+   "name": "Quarzhang",
+   "region": "Trümmerebene",
    "x": 11.0,
    "y": 36.0,
    "typ": "sammeln",
    "encounters": false,
    "monsters": [],
    "unlock": [],
-   "text": "Helle Stämme, trockenes Holz am Boden."
+   "text": "Helle Kristalle wachsen aus dem Geröll, kalt und klar."
   },
   {
    "id": "steinbruch",
    "name": "Alter Steinbruch",
-   "region": "Weidenland",
+   "region": "Trümmerebene",
    "x": 30.0,
    "y": 82.0,
    "typ": "sammeln",
@@ -39,9 +39,9 @@
    "text": "Lose Blöcke, von niemandem vermisst."
   },
   {
-   "id": "weidenufer",
-   "name": "Weidenufer",
-   "region": "Weidenland",
+   "id": "stillesufer",
+   "name": "Stilles Ufer",
+   "region": "Trümmerebene",
    "x": 32.0,
    "y": 40.0,
    "typ": "wild",
@@ -70,6 +70,18 @@
    "text": "Wer hier übersetzt, sieht die eigene Hand nicht mehr."
   },
   {
+   "id": "echohoehle",
+   "name": "Echohöhle",
+   "region": "Nebelmark",
+   "x": 38.0,
+   "y": 72.0,
+   "typ": "hoehle",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Jeder Schritt kommt dreimal zurück, jedes Mal etwas fremder."
+  },
+  {
    "id": "spalt",
    "name": "Der Spalt",
    "region": "Nebelmark",
@@ -94,8 +106,8 @@
    "text": "Ein Becken ohne Wellen. Man hört den eigenen Atem."
   },
   {
-   "id": "dornenhecke",
-   "name": "Dornenhecke",
+   "id": "dornengrat",
+   "name": "Dornengrat",
    "region": "Nebelmark",
    "x": 58.0,
    "y": 72.0,
@@ -107,7 +119,7 @@
     "gruebelkraehe"
    ],
    "unlock": [],
-   "text": "Ein Pfad, der sich jeden Tag ein wenig schließt."
+   "text": "Ein Grat aus schwarzen Splittern, der sich jeden Tag ein wenig schließt."
   },
   {
    "id": "mondsee",
@@ -135,7 +147,7 @@
    "encounters": false,
    "monsters": [],
    "unlock": [],
-   "text": "Unten rauscht etwas. Die alte Brücke hängt in Fetzen."
+   "text": "Unten rauscht etwas. Von der alten Brücke hängen nur Ketten."
   },
   {
    "id": "aschenhang",
@@ -156,7 +168,7 @@
      "id": "q-bruecke"
     }
    ],
-   "text": "Grauer Staub, warm unter den Füßen."
+   "text": "Grauer Staub, warm unter den Füßen. Weiter oben ein Thron."
   },
   {
    "id": "turm",
@@ -223,11 +235,11 @@
    "gewandtheit": 1,
    "calmable": true,
    "loot": {
-    "glimmer": [
+    "aether": [
      2,
      4
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -249,11 +261,11 @@
    "gewandtheit": 3,
    "calmable": false,
    "loot": {
-    "glimmer": [
+    "aether": [
      3,
      6
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -275,11 +287,11 @@
    "gewandtheit": 2,
    "calmable": true,
    "loot": {
-    "glimmer": [
+    "aether": [
      3,
      5
     ],
-    "holz": [
+    "quarz": [
      0,
      1
     ],
@@ -301,11 +313,11 @@
    "gewandtheit": 5,
    "calmable": false,
    "loot": {
-    "glimmer": [
+    "aether": [
      4,
      7
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -327,11 +339,11 @@
    "gewandtheit": 3,
    "calmable": false,
    "loot": {
-    "glimmer": [
+    "aether": [
      6,
      10
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -353,11 +365,11 @@
    "gewandtheit": 4,
    "calmable": true,
    "loot": {
-    "glimmer": [
+    "aether": [
      5,
      9
     ],
-    "holz": [
+    "quarz": [
      0,
      2
     ],
@@ -379,11 +391,11 @@
    "gewandtheit": 3,
    "calmable": true,
    "loot": {
-    "glimmer": [
+    "aether": [
      6,
      11
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -405,11 +417,11 @@
    "gewandtheit": 7,
    "calmable": true,
    "loot": {
-    "glimmer": [
+    "aether": [
      8,
      13
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -431,11 +443,11 @@
    "gewandtheit": 5,
    "calmable": false,
    "loot": {
-    "glimmer": [
+    "aether": [
      9,
      15
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -457,11 +469,11 @@
    "gewandtheit": 7,
    "calmable": false,
    "loot": {
-    "glimmer": [
+    "aether": [
      11,
      18
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -483,11 +495,11 @@
    "gewandtheit": 7,
    "calmable": false,
    "loot": {
-    "glimmer": [
+    "aether": [
      20,
      30
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -509,11 +521,11 @@
    "gewandtheit": 9,
    "calmable": true,
    "loot": {
-    "glimmer": [
+    "aether": [
      30,
      45
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -529,21 +541,29 @@
  ],
  "quests": [
   {
-   "id": "q-holz",
-   "name": "Holz sammeln",
-   "place": "birkenhain",
-   "text": "Trockene Äste aufsammeln und zum Bündel schnüren. Mehr Kraft, mehr Holz.",
+   "id": "q-quarz",
+   "name": "Quarz brechen",
+   "place": "quarzhang",
+   "kind": "sammeln",
+   "text": "Klare Kristalle aus dem Geröll lösen.",
    "monsters": [],
-   "checks": [],
    "conditions": [],
+   "minutes": 15.0,
+   "speedStats": [
+    "kraft",
+    "ausdauer"
+   ],
+   "yieldStats": [
+    "kraft"
+   ],
    "consumes": {},
-   "cost": 3,
+   "cost": 2,
    "reward": {
-    "glimmer": [
+    "aether": [
      0,
      0
     ],
-    "holz": [
+    "quarz": [
      2,
      4
     ],
@@ -563,24 +583,31 @@
    "id": "q-stein",
    "name": "Steine brechen",
    "place": "steinbruch",
-   "text": "Lose Blöcke lösen und handlich schlagen. Mehr Kraft, mehr Stein.",
+   "kind": "sammeln",
+   "text": "Lose Blöcke lösen und handlich schlagen.",
    "monsters": [],
-   "checks": [],
    "conditions": [],
+   "minutes": 15.0,
+   "speedStats": [
+    "kraft"
+   ],
+   "yieldStats": [
+    "kraft"
+   ],
    "consumes": {},
-   "cost": 3,
+   "cost": 2,
    "reward": {
-    "glimmer": [
+    "aether": [
      0,
      0
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
     "stein": [
-     1,
-     3
+     2,
+     4
     ],
     "items": [],
     "furniture": [],
@@ -594,21 +621,26 @@
    "id": "q-zuhause",
    "name": "Ein Platz zum Bleiben",
    "place": "lager",
-   "text": "Unter den Weiden ist Platz für ein Zelt. Es fehlt nur das Material.",
+   "kind": "bauen",
+   "text": "Zwischen den Säulen ist Platz für ein Zelt. Es fehlt nur das Material.",
    "monsters": [],
-   "checks": [],
    "conditions": [],
+   "minutes": 30.0,
+   "speedStats": [
+    "kraft"
+   ],
+   "yieldStats": [],
    "consumes": {
-    "holz": 6,
-    "stein": 3
+    "quarz": 6,
+    "stein": 6
    },
    "cost": 2,
    "reward": {
-    "glimmer": [
+    "aether": [
      10,
      10
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -627,32 +659,40 @@
    "cooldown": 0
   },
   {
-   "id": "q-baum",
-   "name": "Der umgestürzte Baum",
-   "place": "weidenufer",
-   "text": "Ein Stamm liegt quer über dem Pfad. Wer ihn bewegt, hat Brennholz für Tage.",
+   "id": "q-saeule",
+   "name": "Die umgestürzte Säule",
+   "place": "stillesufer",
+   "kind": "erkunden",
+   "text": "Eine Säule liegt quer über dem Pfad. Wer sie zerlegt, hat Stein für Tage.",
    "monsters": [],
-   "checks": [
+   "conditions": [
     {
+     "type": "stat",
      "stat": "kraft",
-     "difficulty": 3
+     "min": 3
     }
    ],
-   "conditions": [],
+   "minutes": 20.0,
+   "speedStats": [
+    "kraft"
+   ],
+   "yieldStats": [
+    "kraft"
+   ],
    "consumes": {},
-   "cost": 3,
+   "cost": 2,
    "reward": {
-    "glimmer": [
+    "aether": [
      4,
      4
     ],
-    "holz": [
-     5,
-     7
-    ],
-    "stein": [
+    "quarz": [
      0,
      0
+    ],
+    "stein": [
+     4,
+     6
     ],
     "items": [],
     "furniture": [],
@@ -666,25 +706,34 @@
    "id": "q-haendler",
    "name": "Der Händler im Nebel",
    "place": "nebelfurt",
+   "kind": "kampf",
    "text": "In der Furt ruft jemand um Hilfe. Ein Wagen steckt fest, und davor steht etwas Großes.",
    "monsters": [
     "nebelwaechter"
    ],
-   "checks": [
+   "conditions": [
     {
-     "stat": "gelassenheit",
-     "difficulty": 3
+     "type": "stat",
+     "stat": "kraft",
+     "min": 3
+    },
+    {
+     "type": "stat",
+     "stat": "ausdauer",
+     "min": 3
     }
    ],
-   "conditions": [],
+   "minutes": 10.0,
+   "speedStats": [],
+   "yieldStats": [],
    "consumes": {},
    "cost": 3,
    "reward": {
-    "glimmer": [
+    "aether": [
      25,
      25
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -703,32 +752,82 @@
    "cooldown": 0
   },
   {
-   "id": "q-spalt",
-   "name": "Durch den Spalt",
-   "place": "spalt",
-   "text": "Dahinter soll ein Versteck liegen. Hindurch passt nur, wer sich drehen und strecken kann.",
-   "monsters": [],
-   "checks": [
-    {
-     "stat": "beweglichkeit",
-     "difficulty": 4
-    }
+   "id": "q-echohoehle",
+   "name": "Die Echohöhle",
+   "place": "echohoehle",
+   "kind": "hoehle",
+   "text": "Tief drinnen hausen fünf Geister. Wie weit der Envoy kommt, hängt an seinen Werten.",
+   "monsters": [
+    "zauderling",
+    "nebelwicht",
+    "gruebelkraehe",
+    "hastwind",
+    "dornenfluesterer"
    ],
    "conditions": [
     {
      "type": "stat",
-     "stat": "beweglichkeit",
-     "min": 3
+     "stat": "kraft",
+     "min": 2
     }
+   ],
+   "minutes": 5.0,
+   "speedStats": [],
+   "yieldStats": [],
+   "consumes": {},
+   "cost": 3,
+   "reward": {
+    "aether": [
+     30,
+     30
+    ],
+    "quarz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [
+     "beine_kampfhose_2"
+    ],
+    "furniture": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": true,
+   "cooldown": 2
+  },
+  {
+   "id": "q-spalt",
+   "name": "Durch den Spalt",
+   "place": "spalt",
+   "kind": "erkunden",
+   "text": "Dahinter soll ein Versteck liegen. Hindurch passt nur, wer sich drehen und strecken kann.",
+   "monsters": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "beweglichkeit",
+     "min": 4
+    }
+   ],
+   "minutes": 20.0,
+   "speedStats": [
+    "beweglichkeit"
+   ],
+   "yieldStats": [
+    "beweglichkeit"
    ],
    "consumes": {},
    "cost": 2,
    "reward": {
-    "glimmer": [
+    "aether": [
      15,
      15
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -750,27 +849,31 @@
    "id": "q-quelle",
    "name": "Die stille Quelle",
    "place": "stillequelle",
+   "kind": "erkunden",
    "text": "Wer am Rand sitzen bleibt, bis das Wasser ganz ruhig ist, steht erholt wieder auf.",
    "monsters": [],
-   "checks": [
+   "conditions": [
     {
+     "type": "stat",
      "stat": "gelassenheit",
-     "difficulty": 3
-    },
-    {
-     "stat": "gelassenheit",
-     "difficulty": 5
+     "min": 3
     }
    ],
-   "conditions": [],
+   "minutes": 25.0,
+   "speedStats": [
+    "gelassenheit"
+   ],
+   "yieldStats": [
+    "gelassenheit"
+   ],
    "consumes": {},
-   "cost": 2,
+   "cost": 1,
    "reward": {
-    "glimmer": [
+    "aether": [
      8,
      8
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -788,29 +891,38 @@
   },
   {
    "id": "q-dornen",
-   "name": "Der Weg durch die Dornen",
-   "place": "dornenhecke",
-   "text": "Die Hecke flüstert. Ein Weg führt hindurch, wenn man sich weder hetzen noch festhalten lässt.",
+   "name": "Über den Dornengrat",
+   "place": "dornengrat",
+   "kind": "erkunden",
+   "text": "Der Grat flüstert. Hinüber kommt, wer sich weder hetzen noch festhalten lässt.",
    "monsters": [],
-   "checks": [
+   "conditions": [
     {
+     "type": "stat",
      "stat": "beweglichkeit",
-     "difficulty": 5
+     "min": 5
     },
     {
+     "type": "stat",
      "stat": "gelassenheit",
-     "difficulty": 4
+     "min": 4
     }
    ],
-   "conditions": [],
+   "minutes": 30.0,
+   "speedStats": [
+    "beweglichkeit"
+   ],
+   "yieldStats": [
+    "gelassenheit"
+   ],
    "consumes": {},
    "cost": 3,
    "reward": {
-    "glimmer": [
+    "aether": [
      20,
      20
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -832,30 +944,38 @@
    "id": "q-bruecke",
    "name": "Die Brücke über die Schlucht",
    "place": "schlucht",
-   "text": "Mit Holz, Stein und einem langen Atem lässt sich die Brücke flicken.",
+   "kind": "bauen",
+   "text": "Mit Stein, Quarz und einem langen Atem lässt sich die Brücke neu legen.",
    "monsters": [],
-   "checks": [
+   "conditions": [
     {
+     "type": "stat",
      "stat": "ausdauer",
-     "difficulty": 5
+     "min": 5
     },
     {
+     "type": "stat",
      "stat": "kraft",
-     "difficulty": 4
+     "min": 4
     }
    ],
-   "conditions": [],
+   "minutes": 45.0,
+   "speedStats": [
+    "kraft",
+    "ausdauer"
+   ],
+   "yieldStats": [],
    "consumes": {
-    "holz": 10,
-    "stein": 4
+    "quarz": 10,
+    "stein": 12
    },
    "cost": 4,
    "reward": {
-    "glimmer": [
+    "aether": [
      30,
      30
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -875,25 +995,29 @@
    "id": "q-mondsee",
    "name": "Spiegel im Mondsee",
    "place": "mondsee",
+   "kind": "kampf",
    "text": "Im Wasser steht jemand, der nur wiederholt, was man selbst einmal gesagt hat.",
    "monsters": [
     "echo"
    ],
-   "checks": [
+   "conditions": [
     {
+     "type": "stat",
      "stat": "gelassenheit",
-     "difficulty": 6
+     "min": 6
     }
    ],
-   "conditions": [],
+   "minutes": 10.0,
+   "speedStats": [],
+   "yieldStats": [],
    "consumes": {},
    "cost": 3,
    "reward": {
-    "glimmer": [
+    "aether": [
      35,
      35
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -915,14 +1039,9 @@
    "id": "q-turm",
    "name": "Der Turm der Stufen",
    "place": "turm",
+   "kind": "erkunden",
    "text": "Oben soll man weit sehen. Wer im echten Leben genug Stufen gegangen ist, kennt den Rhythmus.",
    "monsters": [],
-   "checks": [
-    {
-     "stat": "ausdauer",
-     "difficulty": 7
-    }
-   ],
    "conditions": [
     {
      "type": "total",
@@ -930,14 +1049,21 @@
      "min": 100
     }
    ],
+   "minutes": 40.0,
+   "speedStats": [
+    "ausdauer"
+   ],
+   "yieldStats": [
+    "ausdauer"
+   ],
    "consumes": {},
    "cost": 4,
    "reward": {
-    "glimmer": [
+    "aether": [
      60,
      60
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -959,14 +1085,9 @@
    "id": "q-langestrasse",
    "name": "Die lange Straße",
    "place": "langestrasse",
+   "kind": "erkunden",
    "text": "Die Straße endet nur für die, die schon viele Kilometer in den Beinen haben.",
    "monsters": [],
-   "checks": [
-    {
-     "stat": "ausdauer",
-     "difficulty": 6
-    }
-   ],
    "conditions": [
     {
      "type": "total",
@@ -974,14 +1095,21 @@
      "min": 30
     }
    ],
+   "minutes": 40.0,
+   "speedStats": [
+    "ausdauer"
+   ],
+   "yieldStats": [
+    "ausdauer"
+   ],
    "consumes": {},
    "cost": 4,
    "reward": {
-    "glimmer": [
+    "aether": [
      40,
      40
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -998,15 +1126,17 @@
    "cooldown": 0
   },
   {
-   "id": "q-koenigin",
-   "name": "Die Königin in der Asche",
+   "id": "q-aschenthron",
+   "name": "Der Aschenthron",
    "place": "aschenhang",
-   "text": "Im Zentrum des Hangs sitzt sie auf einem Thron aus kalter Glut.",
+   "kind": "hoehle",
+   "text": "Der Weg zum Thron führt an drei Wächtern vorbei. Oben sitzt sie, auf kalter Glut.",
    "monsters": [
+    "schwerer-schatten",
+    "glutfresser",
     "glutfresser",
     "aschenkoenigin"
    ],
-   "checks": [],
    "conditions": [
     {
      "type": "stat",
@@ -1014,14 +1144,17 @@
      "min": 8
     }
    ],
+   "minutes": 5.0,
+   "speedStats": [],
+   "yieldStats": [],
    "consumes": {},
    "cost": 5,
    "reward": {
-    "glimmer": [
+    "aether": [
      120,
      120
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -1030,10 +1163,10 @@
      0
     ],
     "items": [
-     "handschuhe_glimmerwickel_4"
+     "handschuhe_aetherwickel_4"
     ],
     "furniture": [
-     "glimmerschale"
+     "aetherschale"
     ],
     "unlocks": [],
     "rest": false
@@ -1045,11 +1178,11 @@
    "id": "q-leere",
    "name": "Das weiße Schweigen",
    "place": "weisstal",
+   "kind": "kampf",
    "text": "Im Tal wartet etwas, das man nicht besiegen muss.",
    "monsters": [
     "die-leere"
    ],
-   "checks": [],
    "conditions": [
     {
      "type": "stat",
@@ -1057,14 +1190,17 @@
      "min": 10
     }
    ],
+   "minutes": 15.0,
+   "speedStats": [],
+   "yieldStats": [],
    "consumes": {},
    "cost": 5,
    "reward": {
-    "glimmer": [
+    "aether": [
      200,
      200
     ],
-    "holz": [
+    "quarz": [
      0,
      0
     ],
@@ -1086,37 +1222,37 @@
    "stufe": 1,
    "name": "Zelt",
    "cost": {
-    "holz": 0,
+    "quarz": 0,
     "stein": 0,
-    "glimmer": 0
+    "aether": 0
    },
    "erholung": 5,
    "plaetze": 2,
    "schrank": 12,
-   "text": "Zwei Stangen, eine Plane, ein trockener Boden.",
+   "text": "Eine Plane zwischen zwei Säulen, ein trockener Boden.",
    "bild": "assets/zuhause/stufe_1.png"
   },
   {
    "stufe": 2,
-   "name": "Hütte",
+   "name": "Steinhütte",
    "cost": {
-    "holz": 15,
-    "stein": 5,
-    "glimmer": 40
+    "quarz": 8,
+    "stein": 20,
+    "aether": 40
    },
    "erholung": 10,
    "plaetze": 3,
    "schrank": 20,
-   "text": "Vier Wände aus Holz und eine Tür, die schließt.",
+   "text": "Vier Wände aus gestapeltem Stein und eine Tür, die schließt.",
    "bild": "assets/zuhause/stufe_2.png"
   },
   {
    "stufe": 3,
    "name": "Baracke",
    "cost": {
-    "holz": 30,
-    "stein": 15,
-    "glimmer": 100
+    "quarz": 15,
+    "stein": 35,
+    "aether": 100
    },
    "erholung": 15,
    "plaetze": 5,
@@ -1128,23 +1264,23 @@
    "stufe": 4,
    "name": "Steinhaus",
    "cost": {
-    "holz": 30,
-    "stein": 45,
-    "glimmer": 250
+    "quarz": 30,
+    "stein": 50,
+    "aether": 250
    },
    "erholung": 22,
    "plaetze": 6,
    "schrank": 40,
-   "text": "Mauern, die den Wind nicht hereinlassen.",
+   "text": "Feste Mauern, Fenster aus Quarz, die das Licht weich machen.",
    "bild": "assets/zuhause/stufe_4.png"
   },
   {
    "stufe": 5,
    "name": "Turmhaus",
    "cost": {
-    "holz": 50,
+    "quarz": 50,
     "stein": 80,
-    "glimmer": 500
+    "aether": 500
    },
    "erholung": 30,
    "plaetze": 8,
@@ -1195,7 +1331,7 @@
    ],
    "preis": 20,
    "abStufe": 1,
-   "text": "Riecht nach Sommer.",
+   "text": "Riecht nach einem Sommer, den es hier nie gab.",
    "icon": "assets/icons/icon_einrichtung_kraeuterbund.png"
   },
   {
@@ -1272,7 +1408,7 @@
   },
   {
    "id": "regal",
-   "name": "Regal",
+   "name": "Steinregal",
    "effekt": {
     "glueck": 4
    },
@@ -1299,8 +1435,8 @@
    "icon": "assets/icons/icon_einrichtung_kamin.png"
   },
   {
-   "id": "glimmerschale",
-   "name": "Glimmerschale",
+   "id": "aetherschale",
+   "name": "Ätherschale",
    "effekt": {
     "glueck": 8
    },
@@ -1310,7 +1446,7 @@
    "preis": 0,
    "abStufe": 3,
    "text": "Eine Schale voller Licht, das nicht ausgeht.",
-   "icon": "assets/icons/icon_einrichtung_glimmerschale.png"
+   "icon": "assets/icons/icon_einrichtung_aetherschale.png"
   }
  ]
 }

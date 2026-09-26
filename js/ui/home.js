@@ -1,9 +1,9 @@
-// The Envoy's home: grows from a tent to a tower house with wood, stone
-// and Glimmer; furniture set up here speeds recovery or brings luck.
+// The Envoy's home: grows from a tent to a tower house with quartz, stone
+// and Äther; furniture set up here speeds recovery or brings luck.
 
 import { h, icon } from './dom.js';
 import { NAV_ICONS, SLOT_ICONS } from './icons.js';
-import { viewHead, purse, resource, effectList, itemIcon, lockedView, unlockHint } from './parts.js';
+import { viewHead, sectionTitle, supplies, resource, effectList, itemIcon, lockedView, unlockHint, MATERIAL_KEYS } from './parts.js';
 import { openSheet, closeSheet } from './sheet.js';
 import { openEntry } from './itemsheet.js';
 import { effects } from '../world/hero.js';
@@ -32,14 +32,15 @@ export function renderHome(game) {
   let build = null;
   if (next) {
     const lacking = (k) => world.purse[k] < next.cost[k];
-    const affordable = ['holz', 'stein', 'glimmer'].every((k) => !lacking(k));
+    const needed = MATERIAL_KEYS.filter((k) => next.cost[k] > 0);
+    const affordable = needed.every((k) => !lacking(k));
     build = h('section', { class: 'panel' },
-      h('h2', { class: 'section-title' }, `Ausbau zu: ${next.name}`),
+      sectionTitle(`Ausbau: ${next.name}`),
       h('p', { class: 'quest-text' }, next.text),
-      h('div', { class: 'cost-list', style: { margin: '12px 0' } },
-        ['holz', 'stein', 'glimmer'].filter((k) => next.cost[k] > 0).map((k) => resource(k, `${world.purse[k]}/${next.cost[k]}`, { lacking: lacking(k) }))),
-      h('p', { class: 'muted', style: { 'margin-bottom': '12px' } },
-        `Erholung ${next.erholung} %, ${next.plaetze} Plätze, Schrank für ${next.schrank}`),
+      h('div', { class: 'res-list build-cost' },
+        needed.map((k) => resource(k, `${Math.min(world.purse[k], next.cost[k])}/${next.cost[k]}`, { lacking: lacking(k) }))),
+      h('p', { class: 'muted build-gain' },
+        `Danach: Erholung ${next.erholung} %, ${next.plaetze} Plätze für Einrichtung, Schrank für ${next.schrank} Teile`),
       h('button', { class: 'btn primary', disabled: !affordable, onclick: () => game.build() }, 'Ausbauen'));
   }
 
@@ -51,12 +52,12 @@ export function renderHome(game) {
         h('section', { class: 'panel' },
           h('p', { class: 'quest-text', style: { 'margin-bottom': '12px' } }, tier.text),
           h('div', { class: 'bonus-row' }, effectList({ erholung: fx.erholung, glueck: fx.glueck })),
-          h('p', { class: 'muted', style: { 'margin-top': '10px' } }, `Schrank ${countIn(world, 'schrank')}/${capacity(world, game.catalog, 'schrank')}`)),
+          h('p', { class: 'muted', style: { 'margin-top': '10px' } }, `Schrank: ${countIn(world, 'schrank')} von ${capacity(world, game.catalog, 'schrank')} Teilen`)),
         h('section', { class: 'panel' },
-          h('h2', { class: 'section-title' }, `Einrichtung · ${world.placed.length}/${tier.plaetze}`),
+          sectionTitle('Einrichtung', h('span', { class: 'title-note' }, `${world.placed.length} von ${tier.plaetze}`)),
           h('div', { class: 'furniture-slots' }, slots)),
         build,
-        h('section', { class: 'panel' }, h('h2', { class: 'section-title' }, 'Vorrat'), purse(world.purse)))));
+        h('section', { class: 'panel' }, sectionTitle('Vorrat'), supplies(world.purse)))));
 }
 
 function chooseFurniture(game) {

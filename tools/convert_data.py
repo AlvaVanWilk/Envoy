@@ -36,9 +36,12 @@ MEASUREMENTS = ["strecke_km", "stockwerke", "haltezeit_s", "wiederholungen", "da
 EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
 FURNITURE_EFFECTS = ["erholung", "glueck"]
 ORIGINS = ["start", "haendler", "beute", "quest"]
-PLACE_TYPES = ["lager", "wild", "sammeln", "ort"]
+PLACE_TYPES = ["lager", "wild", "sammeln", "ort", "hoehle"]
+QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
 FEATURES = ["zuhause", "haendler"]
-MATERIALS = ["holz", "stein", "glimmer"]
+MATERIALS = ["quarz", "stein", "aether"]
+# older names still read: Holz became Quarz, Glimmer became Äther
+MATERIAL_ALIASES = {"holz": "quarz", "glimmer": "aether", "äther": "aether"}
 TOTALS = {"summe_km": "km", "summe_stockwerke": "stockwerke"}
 XP_MIN, XP_MAX = 14, 28
 
@@ -138,7 +141,8 @@ def parse_pairs(report, row, value, column):
             report.error(row, f"{column}: '{part}' – erwartet name:wert")
             continue
         key, val = part.split(":", 1)
-        pairs.append((key.strip().lower(), val.strip()))
+        key = key.strip().lower()
+        pairs.append((MATERIAL_ALIASES.get(key, key), val.strip()))
     return pairs
 
 
@@ -170,7 +174,7 @@ def parse_conditions(report, row, value):
     for part in split_list(value):
         m = re.fullmatch(r"([a-z_]+)\s*>=\s*(\d+)", part)
         if m:
-            key, amount = m.group(1), int(m.group(2))
+            key, amount = MATERIAL_ALIASES.get(m.group(1), m.group(1)), int(m.group(2))
             if key in STATS:
                 conditions.append({"type": "stat", "stat": key, "min": amount})
             elif key in TOTALS:
@@ -188,17 +192,15 @@ def parse_conditions(report, row, value):
     return conditions
 
 
-def parse_checks(report, row, value):
-    checks = []
-    for key, val in parse_pairs(report, row, value, "pruefungen"):
+def parse_stats(report, row, value, column):
+    stats = []
+    for part in split_list(value):
+        key = part.lower()
         if key not in STATS:
-            report.error(row, f"pruefungen: '{key}' ist kein Stat")
-            continue
-        try:
-            checks.append({"stat": key, "difficulty": int(val)})
-        except ValueError:
-            report.error(row, f"pruefungen: '{val}' ist keine ganze Zahl")
-    return checks
+            report.error(row, f"{column}: '{part}' ist kein Wert (möglich: {', '.join(STATS)})")
+        else:
+            stats.append(key)
+    return stats
 
 
 def parse_materials(report, row, value, column):
@@ -212,7 +214,7 @@ def parse_materials(report, row, value, column):
 
 
 def parse_rewards(report, row, value):
-    reward = {"glimmer": [0, 0], "holz": [0, 0], "stein": [0, 0],
+    reward = {"aether": [0, 0], "quarz": [0, 0], "stein": [0, 0],
               "items": [], "furniture": [], "unlocks": [], "rest": False}
     for key, val in parse_pairs(report, row, value, "belohnung"):
         if key in MATERIALS:
@@ -233,7 +235,7 @@ def parse_rewards(report, row, value):
 
 
 def parse_loot(report, row, value):
-    loot = {"glimmer": [0, 0], "holz": [0, 0], "stein": [0, 0], "itemChance": 0}
+    loot = {"aether": [0, 0], "quarz": [0, 0], "stein": [0, 0], "itemChance": 0}
     for key, val in parse_pairs(report, row, value, "beute"):
         if key in MATERIALS:
             loot[key] = parse_range(report, row, val, "beute")
@@ -496,7 +498,8 @@ def convert_world(path, item_ids):
         check_picture(report, row, "zuhause", picture)
         home.append({
             "stufe": tier, "name": text(r.get("name", "")),
-            "cost": {k: whole_number(r.get(k, "")) or 0 for k in ("holz", "stein", "glimmer")},
+            "cost": {k: whole_number(r.get(k, "") or r.get(old, "")) or 0
+                     for k, old in (("quarz", "holz"), ("stein", "stein"), ("aether", "glimmer"))},
             "erholung": whole_number(r.get("erholung", "")) or 0,
             "plaetze": whole_number(r.get("plaetze", "")) or 0,
             "schrank": whole_number(r.get("schrank", "")) or 0,
@@ -513,18 +516,34 @@ def convert_world(path, item_ids):
             continue
         cost = whole_number(r.get("kosten", ""))
         cooldown = whole_number(r.get("abklingzeit", "")) or 0
+        minutes = number(r.get("dauer", ""))
+        kind = text(r.get("art", "")).lower()
+        if kind not in QUEST_KINDS:
+            report.error(row, f"art '{kind}' unbekannt (möglich: {', '.join(QUEST_KINDS)})")
+        if minutes is None or minutes == "invalid" or minutes <= 0:
+            report.error(row, "dauer muss eine Zahl größer 0 sein (Minuten)")
+            minutes = 10
         quest = {
             "id": qid, "name": text(r.get("name", "")), "place": text(r.get("ort", "")),
+            "kind": kind,
             "text": text(r.get("text", "")),
             "monsters": split_list(r.get("monster", "")),
-            "checks": parse_checks(report, row, r.get("pruefungen", "")),
-            "conditions": parse_conditions(report, row, r.get("bedingung", "")),
+            "conditions": parse_conditions(report, row, r.get("voraussetzung", "") or r.get("bedingung", "")),
+            "minutes": minutes,
+            "speedStats": parse_stats(report, row, r.get("tempo", ""), "tempo"),
+            "yieldStats": parse_stats(report, row, r.get("ertrag", ""), "ertrag"),
             "consumes": parse_materials(report, row, r.get("verbrauch", ""), "verbrauch"),
             "cost": cost if isinstance(cost, int) and cost >= 0 else 2,
             "reward": parse_rewards(report, row, r.get("belohnung", "")),
             "repeatable": is_yes(r.get("wiederholbar", "")),
             "cooldown": cooldown if isinstance(cooldown, int) else 0,
         }
+        if kind == "kampf" and len(quest["monsters"]) != 1:
+            report.error(row, "art kampf braucht genau einen Geist in der Spalte monster")
+        if kind == "hoehle" and len(quest["monsters"]) < 2:
+            report.error(row, "art hoehle braucht mindestens zwei Geister in der Spalte monster")
+        if kind == "bauen" and not quest["consumes"]:
+            report.error(row, "art bauen braucht Material in der Spalte verbrauch")
         check_ids(report, row, [quest["place"]], place_seen, "Ort")
         check_ids(report, row, quest["monsters"], monster_seen, "Monster")
         check_ids(report, row, quest["reward"]["items"], item_ids, "Ausrüstung")

@@ -1,11 +1,14 @@
 // Small building blocks used by several views.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, RESOURCE_ICONS, UI_ICONS } from './icons.js';
+import { NAV_ICONS, RESOURCE_ICONS } from './icons.js';
 import { statEmblem, statInfo } from './stats.js';
-import { CURRENCY } from '../config.js';
+import { shield } from './shield.js';
+import { MATERIALS } from '../config.js';
 
-// Round metal disc with an icon, as in the menu.
+export const MATERIAL_KEYS = ['aether', 'quarz', 'stein'];
+
+// Round metal button with an icon, used for the settings in the corner.
 export function coin(markup, extra = null) {
   return h('span', { class: 'coin' }, icon(markup), extra);
 }
@@ -17,37 +20,58 @@ export function viewHead(eyebrow, title, ...actions) {
       h('a', { class: 'gear', href: '#einstellungen', 'aria-label': 'Einstellungen' }, coin(NAV_ICONS.einstellungen))));
 }
 
-const RESOURCE_NAMES = { glimmer: CURRENCY, holz: 'Holz', stein: 'Stein' };
-
-export function resource(key, amount, { lacking = false } = {}) {
-  return h('span', { class: `purse-item ${key} ${lacking ? 'lacking' : ''}`, title: RESOURCE_NAMES[key] },
-    icon(RESOURCE_ICONS[key]), `${amount} ${RESOURCE_NAMES[key]}`);
+// A heading inside a panel, with an ornament line.
+export function sectionTitle(text, extra = null) {
+  return h('h2', { class: 'section-title' }, h('span', {}, text), extra);
 }
 
-export function purse(p) {
-  return h('div', { class: 'purse' }, resource('glimmer', p.glimmer), resource('holz', p.holz), resource('stein', p.stein));
+export function resourceIcon(key) {
+  return icon(RESOURCE_ICONS[key], 'icon res-icon');
+}
+
+// Inline: picture, amount, name. Used for costs and loot.
+export function resource(key, amount, { lacking = false, sign = '' } = {}) {
+  return h('span', { class: `res ${lacking ? 'lacking' : ''}`, 'data-res': key },
+    resourceIcon(key), h('span', { class: 'res-amount' }, `${sign}${amount}`), h('span', { class: 'res-name' }, MATERIALS[key]));
+}
+
+// The supplies as three small plaques.
+export function supplies(purse) {
+  return h('div', { class: 'supplies' }, MATERIAL_KEYS.map((key) =>
+    h('div', { class: 'supply', 'data-res': key },
+      h('span', { class: 'supply-art' }, resourceIcon(key)),
+      h('span', { class: 'supply-text' },
+        h('span', { class: 'supply-amount' }, String(purse[key] || 0)),
+        h('span', { class: 'supply-name' }, MATERIALS[key])))));
 }
 
 export function price(amount, have) {
-  return h('span', { class: `price ${have < amount ? 'lacking' : ''}` }, icon(RESOURCE_ICONS.glimmer), String(amount));
+  return h('span', { class: `price ${have < amount ? 'lacking' : ''}` }, resourceIcon('aether'), String(amount));
 }
 
-function duration(hours) {
+export function formatMinutes(minutes) {
+  const m = Math.max(0, Math.round(minutes));
+  if (m < 60) return `${m} Min.`;
+  const hours = Math.floor(m / 60);
+  const rest = m % 60;
+  return rest ? `${hours} Std. ${rest} Min.` : `${hours} Std.`;
+}
+
+function refillText(hours) {
   if (hours <= 0) return 'voll';
-  const minutes = Math.ceil(hours * 60);
-  if (minutes < 60) return `voll in ${minutes} Min.`;
-  const h1 = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `voll in ${h1} Std.${m ? ` ${m} Min.` : ''}`;
+  return `voll in ${formatMinutes(Math.ceil(hours * 60))}`;
 }
 
+// The stamina bar with one notch per point.
 export function staminaBar(st) {
   const value = Math.floor(st.value);
   return h('div', { class: 'stamina', 'aria-label': `Ausdauerleiste ${value} von ${st.max}` },
     h('div', { class: 'stamina-top' },
-      h('span', {}, 'Ausdauerleiste'),
-      h('span', {}, h('strong', {}, `${value} / ${st.max}`), ` · ${duration(st.hoursToFull)}`)),
-    h('div', { class: 'bar' }, h('span', { class: 'bar-fill', style: { width: `${(100 * st.value) / st.max}%` } })));
+      h('span', { class: 'stamina-label' }, 'Ausdauerleiste'),
+      h('span', { class: 'stamina-value' }, h('strong', {}, `${value}`), ` / ${st.max}`)),
+    h('div', { class: 'stamina-bar', style: { '--notches': String(st.max) } },
+      h('span', { class: 'stamina-fill', style: { width: `${(100 * st.value) / st.max}%` } })),
+    h('p', { class: 'stamina-note' }, refillText(st.hoursToFull)));
 }
 
 export function itemIcon(thing, className = 'item-icon') {
@@ -85,7 +109,7 @@ export function effectList(effects) {
 export function lockedView(markup, title, text) {
   return h('section', { class: 'view' },
     h('div', { class: 'locked-view' },
-      coin(markup, h('span', { class: 'coin-lock', html: UI_ICONS.lock })),
+      shield(markup, { locked: true }),
       h('h1', {}, title),
       h('p', { class: 'muted' }, text)));
 }
@@ -95,5 +119,5 @@ export function unlockHint(feature, catalog) {
   const quest = catalog.quests.find((q) => q.reward.unlocks.includes(feature));
   if (!quest) return 'Noch verschlossen.';
   const place = catalog.placeById.get(quest.place);
-  return `Wird freigeschaltet durch die Quest „${quest.name}“${place ? ` (${place.name})` : ''}.`;
+  return `Öffnet sich mit der Quest „${quest.name}“${place ? ` (${place.name})` : ''}.`;
 }

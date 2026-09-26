@@ -44,19 +44,22 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
+- Übersicht als Startansicht
 - Charakterfenster mit Paperdoll-Darstellung und Ausrüstungsslots
 - Speicherung und Geräteabgleich
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
-  gewürfelte Kämpfe und Proben, Beute, Währung Glimmer, Holz und Stein
+  Expeditionen in echter Zeit (Hinweg, vor Ort, Rückweg), Kämpfe und Höhlen ohne
+  Scheitern, Beute, Währung Äther, dazu Quarz und Stein
 - Rucksack (von Anfang an), Schrank (mit dem Zuhause), Händler, Zuhause mit Ausbau
   und Einrichtung, Kompendium der getroffenen Geister
 
 Freischaltung: Karte und Quests von Anfang an. Zuhause und Händler über Quests.
-Skilltree bei allen vier Stats auf 10 (Inhalt folgt).
+Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 
 ## Was in Phase 1 NICHT gebaut wird
 
-- Skilltree: existiert nur als ausgegrautes Symbol im Menü, ohne Funktion dahinter
+- Talentbaum: existiert nur als Schild mit Schloss im Menü; Antippen zeigt den Abstand
+  der vier Werte zu Level 10, sonst keine Funktion dahinter
 - Arena, Mehrspieler, Freunde
 - Ernährungsmodul
 
@@ -118,7 +121,7 @@ kleineren Umfang, zählt nicht für die Intensität. Keine Pausenregel für den 
 - `data/ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Effekten und Dateinamen
 - `data/welt.xlsx` — Orte, Monster, Quests, Zuhause-Stufen, Einrichtung
 
-Beide Dateien sind Quelle, nicht Ziel. Nie hineinschreiben. Beim Bauen in ein Format
+Alle drei Dateien sind Quelle, nicht Ziel. Nie hineinschreiben. Beim Bauen in ein Format
 einlesen, das die App zur Laufzeit nutzt, und die Konvertierung wiederholbar halten.
 
 ## Assets
@@ -157,3 +160,5 @@ Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Zuhause
   können, um Vertrauen zu haben.
 - Deutsche UI-Texte knapp und ohne erklärende Kleingedruckte. Keine Motivationssprüche,
   keine Ausrufezeichen, kein Coaching-Ton.
+- In der Oberfläche steht nie „XP“: Gewinne heißen nach ihrem Stat („+14 Kraft“).
+- In der Spielwelt scheitert nichts. Stats bestimmen Zugang, Dauer und Ertrag.

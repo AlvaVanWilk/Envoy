@@ -7,14 +7,14 @@ import { replay, unmetRequirements } from './replay.js';
 import { missingPlans, replans } from './planner.js';
 import { dayKey } from './days.js';
 import { store } from './store.js';
-import { effects, staminaAt, hoursUntilFull, maxStamina } from './world/hero.js';
-import { travelCost } from './world/map.js';
-import { overloaded, hasSpace } from './world/inventory.js';
-import { questById, questState, placeUnlocked } from './world/quests.js';
-import { runQuest } from './world/run.js';
+import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour } from './world/hero.js';
+import { hasSpace } from './world/inventory.js';
+import { questById, questState } from './world/quests.js';
+import { planExpedition, progressAt } from './world/expedition.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
 
+const REPORT_HOURS = 48;
 const listeners = new Set();
 const addListeners = new Set();
 
@@ -144,44 +144,55 @@ export const game = {
       value: staminaAt(c.world, now, c.stats, c.fx),
       max: maxStamina(c.stats),
       hoursToFull: hoursUntilFull(c.world, now, c.stats, c.fx),
+      perHour: staminaPerHour(c.stats, c.fx),
     };
-  },
-
-  here() {
-    return this.catalog.placeById.get(this.state.world.position);
-  },
-
-  costTo(placeId) {
-    const c = this.ctx();
-    return travelCost(this.here(), this.catalog.placeById.get(placeId), c.fx, overloaded(c.world));
   },
 
   unlocked(feature) {
     return this.state.world.unlocked.includes(feature);
   },
 
-  // --- world: actions ------------------------------------------------------
+  // --- world: expeditions ---------------------------------------------------
 
-  travel(placeId) {
-    const place = this.catalog.placeById.get(placeId);
-    if (!place || !placeUnlocked(place, this.ctx())) return false;
-    const cost = this.costTo(placeId);
-    if (cost > this.stamina().value) return false;
-    this.add([this.event('travel', { to: placeId, cost })]);
-    return true;
-  },
-
-  // Plays a quest and stores its result. Returns the outcome for the display.
-  startQuest(questId) {
+  // What an expedition would take, for the display before starting.
+  // Fights are rolled with a fixed seed, so the numbers are a fair guess.
+  preview(questId) {
     const c = this.ctx();
     const quest = questById(questId, c);
-    if (!quest || quest.place !== c.world.position) return null;
-    if (questState(quest, c).status !== 'open') return null;
-    if (quest.cost > this.stamina().value) return null;
-    const event = this.event('quest', { q: quest.id, place: quest.place, cost: quest.cost });
-    event.outcome = runQuest(quest, c, event.id);
+    if (!quest) return null;
+    return { quest, ...planExpedition(quest, c, `vorschau:${questId}:${c.day}`) };
+  },
+
+  // The running expedition, with its progress right now.
+  expedition() {
+    const exp = this.state.world.expedition;
+    return exp ? { ...exp, progress: progressAt(exp, Date.now()) } : null;
+  },
+
+  startExpedition(questId) {
+    const c = this.ctx();
+    if (c.world.expedition) return null;
+    const quest = questById(questId, c);
+    if (!quest || questState(quest, c).status !== 'open') return null;
+    const event = this.event('expedition', { q: quest.id, place: quest.place, title: quest.name });
+    const plan = planExpedition(quest, c, event.id);
+    if (plan.cost > this.stamina().value) return null;
+    Object.assign(event, { out: plan.out, act: plan.act, back: plan.back, cost: plan.cost, outcome: plan.outcome });
     this.add([event]);
-    return { quest, outcome: event.outcome };
+    return event;
+  },
+
+  // Finished expeditions of the last two days this device has not shown yet.
+  unseenReports() {
+    const seen = new Set(store.loadUi().seenReports || []);
+    const since = Date.now() - REPORT_HOURS * 3600000;
+    return this.state.world.reports.filter((r) => !seen.has(r.id) && r.end >= since);
+  },
+
+  markReportSeen(id) {
+    const ui = store.loadUi();
+    ui.seenReports = [...(ui.seenReports || []), id].slice(-60);
+    store.saveUi(ui);
   },
 
   offers() {
@@ -189,7 +200,7 @@ export const game = {
   },
 
   buy(offer) {
-    if (!this.unlocked('haendler') || this.state.world.purse.glimmer < offer.price) return;
+    if (!this.unlocked('haendler') || this.state.world.purse.aether < offer.price) return;
     this.add([this.event('buy', { offer: offer.offer, kind: offer.kind, thing: offer.id, price: offer.price })]);
   },
 

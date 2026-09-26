@@ -1,4 +1,5 @@
-// Stat display: emblem, level, bar and progress as a number (e.g. 4/45).
+// Stat display: emblem, level, bar and progress as a number (e.g. 4 / 45:
+// points of this stat collected on the way to the next level).
 // Remembers what was shown last, so a change animates the bar.
 
 import { h, icon } from './dom.js';
@@ -25,11 +26,11 @@ export function statRow(id, stat, { onclick = null, showLabel = true } = {}) {
   const levelNumber = h('span', { class: 'stat-level-num' }, String(stat.level));
   const progress = stat.level >= STAT_MAX_LEVEL
     ? 'max'
-    : `${Math.floor(stat.xp)}/${xpToNext(stat.level)}`;
+    : `${Math.floor(stat.xp)} / ${xpToNext(stat.level)}`;
 
   const row = h(onclick ? 'button' : 'div', {
     class: 'stat-row', 'data-stat': id, onclick,
-    'aria-label': `${info.name}, Level ${stat.level}, ${progress} XP`,
+    'aria-label': `${info.name}, Level ${stat.level}, ${progress}`,
   },
   statEmblem(id),
   h('span', { class: 'stat-main' },

@@ -9,7 +9,7 @@ import { statRow, statInfo } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { store } from '../store.js';
 import { addDays, formatDayShort } from '../days.js';
-import { viewHead, itemIcon, staminaBar, effectText } from './parts.js';
+import { viewHead, sectionTitle, itemIcon, staminaBar, effectText } from './parts.js';
 import { openSlot, slotName } from './itemsheet.js';
 
 const LEFT_SLOTS = ['kopf', 'torso', 'handschuhe'];
@@ -28,7 +28,7 @@ export function renderCharacter(game) {
       h('div', { class: 'char-side' },
         droppedNotice(game),
         h('section', { class: 'panel' },
-          h('h2', { class: 'section-title' }, 'Werte'),
+          sectionTitle('Werte'),
           STATS.map((st) => statRow(st.id, s.stats[st.id], { onclick: () => openStatDetail(st.id, game) }))),
         worldPanel(game))));
 }
@@ -52,7 +52,7 @@ function worldPanel(game) {
   const fx = game.ctx().fx;
   const effects = Object.entries(fx).filter(([, v]) => v);
   return h('section', { class: 'panel' },
-    h('h2', { class: 'section-title' }, 'In der Welt'),
+    sectionTitle('In der Welt'),
     staminaBar(game.stamina()),
     h('dl', { class: 'facts' },
       h('div', {}, h('dt', {}, 'Leben im Kampf'), h('dd', {}, String(8 + 3 * s.stats.ausdauer.level))),
@@ -74,7 +74,7 @@ function droppedNotice(game) {
     game.refresh();
   };
   return h('section', { class: 'panel notice' },
-    h('h2', { class: 'section-title' }, 'Abgelegt'),
+    sectionTitle('Abgelegt'),
     h('ul', { class: 'notice-list' }, fresh.map((d) => {
       const item = game.catalog.itemById.get(d.item);
       const reasons = d.unmet.map((u) => `${statInfo(u.stat).name} unter ${u.min}`).join(', ');

@@ -94,7 +94,7 @@ Karte die Positionen der Orte (x, y in Prozent) in `welt.xlsx` anpassen.
 | `js/formulas.js` | Levelkurve, Malus, Bodensatz |
 | `js/replay.js` | berechnet den Spielstand aus allen Einträgen |
 | `js/planner.js` | wählt die Übungen des Tages |
-| `js/world/` | Karte, Ausdauerleiste, Kampf, Quests, Händler, Inventar, Zuhause |
+| `js/world/` | Karte, Expeditionen, Ausdauerleiste, Kampf, Quests, Händler, Inventar, Zuhause |
 | `js/ui/` | die Ansichten |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |

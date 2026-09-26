@@ -3,8 +3,10 @@
 import { loadCatalog } from './catalog.js';
 import { game } from './game.js';
 import { sync } from './sync.js';
-import { h, icon, replaceChildren } from './ui/dom.js';
-import { NAV_ICONS, UI_ICONS } from './ui/icons.js';
+import { h, replaceChildren } from './ui/dom.js';
+import { NAV_ICONS } from './ui/icons.js';
+import { shield } from './ui/shield.js';
+import { renderOverview } from './ui/dashboard.js';
 import { renderToday } from './ui/today.js';
 import { renderCharacter, unseenDropCount } from './ui/character.js';
 import { renderInventory } from './ui/inventory.js';
@@ -13,21 +15,28 @@ import { renderHome } from './ui/home.js';
 import { renderTrader } from './ui/trader.js';
 import { renderCompendium } from './ui/compendium.js';
 import { renderSettings } from './ui/settings.js';
+import { openTalents, talentsOpen } from './ui/talents.js';
+import { updateJourneys, showPendingReport } from './ui/journey.js';
+import { isSheetOpen } from './ui/sheet.js';
 
-// The menu at the bottom, left to right. `feature` = unlocked in the game.
+// The menu at the bottom, left to right: the Envoy's own things, the
+// overview in the middle, the world. `feature` = unlocked in the game.
 const DOCK = [
   { id: 'heute', label: 'Heute', render: renderToday },
   { id: 'envoy', label: 'Envoy', render: renderCharacter },
   { id: 'inventar', label: 'Inventar', render: renderInventory },
+  // Talentbaum: shown with a lock; there is nothing behind it yet.
+  { id: 'talente', label: 'Talente', action: () => openTalents(game) },
+  { id: 'uebersicht', label: 'Übersicht', render: renderOverview, main: true },
   { id: 'karte', label: 'Karte', render: renderMap },
   { id: 'zuhause', label: 'Zuhause', render: renderHome, feature: 'zuhause' },
   { id: 'haendler', label: 'Händler', render: renderTrader, feature: 'haendler' },
   { id: 'kompendium', label: 'Kompendium', render: renderCompendium },
-  // Skilltree: visible, greyed out, without a function yet.
-  { id: 'skilltree', label: 'Skilltree', disabled: true },
 ];
 const VIEWS = Object.fromEntries([...DOCK.filter((d) => d.render), { id: 'einstellungen', label: 'Einstellungen', render: renderSettings }].map((v) => [v.id, v]));
-const DEFAULT_VIEW = 'heute';
+const DEFAULT_VIEW = 'uebersicht';
+// Views where a finished expedition reports back by itself.
+const REPORT_VIEWS = ['uebersicht', 'karte'];
 
 const viewRoot = document.getElementById('view');
 const navRoot = document.getElementById('nav');
@@ -37,24 +46,24 @@ function currentView() {
   return VIEWS[name] ? name : DEFAULT_VIEW;
 }
 
+function badgeFor(id) {
+  if (id === 'envoy') return unseenDropCount(game) > 0;
+  if (id === 'karte') return game.unseenReports().length > 0;
+  return false;
+}
+
 function dockItem(item) {
   const active = currentView() === item.id;
-  if (item.disabled) {
-    return h('span', { class: 'dock-item disabled', 'aria-disabled': 'true', 'aria-label': item.label },
-      h('span', { class: 'coin' }, icon(NAV_ICONS[item.id])), h('span', { class: 'dock-label' }, item.label));
-  }
-  const locked = item.feature && !game.unlocked(item.feature);
-  const badge = item.id === 'envoy' ? unseenDropCount(game) : 0;
-  return h('a', {
-    class: `dock-item ${active ? 'active' : ''} ${locked ? 'locked' : ''}`,
-    href: `#${item.id}`,
+  const locked = (item.feature && !game.unlocked(item.feature)) || (item.id === 'talente' && !talentsOpen(game));
+  const art = shield(NAV_ICONS[item.id], { locked, extra: badgeFor(item.id) ? h('span', { class: 'shield-badge' }) : null });
+  const attrs = {
+    class: `dock-item ${item.main ? 'is-main' : ''} ${active ? 'active' : ''} ${locked ? 'locked' : ''}`,
     'aria-label': locked ? `${item.label}, verschlossen` : item.label,
-    'aria-current': active ? 'page' : null,
-  },
-  h('span', { class: 'coin' }, icon(NAV_ICONS[item.id]),
-    locked ? h('span', { class: 'coin-lock', html: UI_ICONS.lock }) : null,
-    badge > 0 ? h('span', { class: 'coin-badge' }, String(badge)) : null),
-  h('span', { class: 'dock-label' }, item.label));
+  };
+  if (item.action) {
+    return h('button', { ...attrs, type: 'button', onclick: item.action }, art, h('span', { class: 'dock-label' }, item.label));
+  }
+  return h('a', { ...attrs, href: `#${item.id}`, 'aria-current': active ? 'page' : null }, art, h('span', { class: 'dock-label' }, item.label));
 }
 
 function syncTone() {
@@ -82,6 +91,7 @@ function render() {
     document.title = name === DEFAULT_VIEW ? 'Envoy' : `${VIEWS[name].label} · Envoy`;
     lastView = name;
   }
+  if (REPORT_VIEWS.includes(name)) setTimeout(() => showPendingReport(game), 350);
 }
 
 function showError(message) {
@@ -115,13 +125,21 @@ async function start() {
   render();
   sync.init();
 
-  // A new day begins at 03:00; the stamina bar refills over time.
+  // Every second: the expedition bar moves; once the Envoy is back, the
+  // state is recalculated and the report appears.
+  setInterval(() => {
+    if (updateJourneys(game)) game.refresh();
+  }, 1000);
+  // Every half minute: a new day may have begun (03:00), the stamina bar refills.
   setInterval(() => {
     game.checkDayChange();
-    if (['karte', 'envoy'].includes(currentView()) && !document.querySelector('.sheet-layer')) render();
+    if (['uebersicht', 'karte', 'envoy'].includes(currentView()) && !isSheetOpen()) render();
   }, 30 * 1000);
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') game.checkDayChange();
+    if (document.visibilityState === 'visible') {
+      game.checkDayChange();
+      if (updateJourneys(game)) game.refresh();
+    }
   });
 }
 

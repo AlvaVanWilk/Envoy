@@ -3,32 +3,36 @@
 // the stats of that moment. Everything here only changes `world`.
 //
 // world = {
-//   position   id of the place where the hero is
-//   stamina    { value, at }: bar value at time `at`, refills from there
-//   purse      { glimmer, holz, stein }
-//   items      owned things, see inventory.js
-//   equipped   { slot: inst }
-//   placed     furniture set up at home (inst list)
-//   unlocked   features: 'zuhause', 'haendler'
-//   home       0 = none yet, then the tier of the home
-//   quests     { questId: { done, last } }
+//   expedition  the running expedition or null: { id, q, place, title, start, out, act, back, end, outcome }
+//   stamina     { value, at }: bar value at time `at`, refills from there
+//   purse       { aether, quarz, stein }
+//   items       owned things, see inventory.js
+//   equipped    { slot: inst }
+//   placed      furniture set up at home (inst list)
+//   unlocked    features: 'zuhause', 'haendler'
+//   home        0 = none yet, then the tier of the home
+//   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
 //   encountersDone { encounterId: true }
-//   bestiary   { monsterId: { seen, won, calmed, lost, first } }
-//   bought     { offerId: true }
-//   dropped    equipment taken off because a stat fell below its requirement
+//   bestiary    { monsterId: { seen, won, calmed, driven, first } }
+//   bought      { offerId: true }
+//   reports     finished expeditions, newest last
+//   dropped     equipment taken off because a stat fell below its requirement
 // }
 
 import { STAMINA_REST_TASK_SHARE } from '../config.js';
 import { effects, maxStamina, staminaAt } from './hero.js';
 import { stow, removeEntry, hasSpace } from './inventory.js';
 import { unmetRequirements } from './items.js';
+import { totalMinutes } from './expedition.js';
+
+const MATERIAL_KEYS = ['aether', 'quarz', 'stein'];
+const KEEP_REPORTS = 30;
 
 export function initialWorld(catalog, startTime, stats) {
-  const camp = catalog.places.find((p) => p.typ === 'lager');
   const world = {
-    position: camp ? camp.id : null,
+    expedition: null,
     stamina: { value: maxStamina(stats), at: startTime },
-    purse: { glimmer: 0, holz: 0, stein: 0 },
+    purse: { aether: 0, quarz: 0, stein: 0 },
     items: {},
     equipped: {},
     placed: [],
@@ -38,6 +42,7 @@ export function initialWorld(catalog, startTime, stats) {
     encountersDone: {},
     bestiary: {},
     bought: {},
+    reports: [],
     dropped: [],
   };
   for (const item of catalog.equipment.filter((i) => i.herkunft.includes('start'))) {
@@ -68,42 +73,62 @@ function unlock(world, feature) {
   if (feature === 'zuhause' && world.home === 0) world.home = 1;
 }
 
-function recordMonsters(world, monsters, day) {
-  for (const { id, result } of monsters) {
-    const entry = world.bestiary[id] || { seen: 0, won: 0, calmed: 0, lost: 0, first: day };
+function recordMonsters(world, fights, day) {
+  for (const { monster, result } of fights) {
+    const entry = world.bestiary[monster] || { seen: 0, won: 0, calmed: 0, driven: 0, first: day };
     entry.seen += 1;
-    entry[result] += 1;
-    world.bestiary[id] = entry;
+    entry[result] = (entry[result] || 0) + 1;
+    world.bestiary[monster] = entry;
   }
 }
 
-function applyQuest(world, e, ctx) {
-  const outcome = e.outcome;
-  spend(world, e.cost);
-  recordMonsters(world, outcome.monsters || [], e.d);
-  if (!outcome.ok) {
-    // A lost fight exhausts the hero: it costs time in the game, never real exercise.
-    if ((outcome.monsters || []).some((m) => m.result === 'lost')) world.stamina.value = 0;
-    return;
-  }
+// The expedition is back: now its result counts.
+function finishExpedition(world, ctx) {
+  const exp = world.expedition;
+  world.expedition = null;
+  settle(world, exp.end, ctx);
+  const outcome = exp.outcome;
   const r = outcome.reward;
-  for (const key of ['glimmer', 'holz', 'stein']) {
-    world.purse[key] += (r[key] || 0) - (outcome.consumed[key] || 0);
-    world.purse[key] = Math.max(0, world.purse[key]);
-  }
+  for (const key of MATERIAL_KEYS) world.purse[key] += r[key] || 0;
   r.things.forEach((thing, n) => {
-    const inst = `${e.id}:${n}`;
-    stow(world, ctx.catalog, { inst, kind: thing.kind, id: thing.id, got: e.t });
+    stow(world, ctx.catalog, { inst: `${exp.id}:${n}`, kind: thing.kind, id: thing.id, got: exp.end });
   });
   for (const feature of r.unlocks) unlock(world, feature);
   if (r.rest) world.stamina.value = maxStamina(ctx.stats);
+  recordMonsters(world, outcome.fights, exp.day);
 
-  if (e.q.startsWith('enc:')) {
-    world.encountersDone[e.q] = true;
+  if (exp.q.startsWith('enc:')) {
+    world.encountersDone[exp.q] = true;
   } else {
-    const record = world.quests[e.q] || { done: 0, last: null };
-    world.quests[e.q] = { done: record.done + 1, last: e.d };
+    const record = world.quests[exp.q] || { done: 0, runs: 0, last: null };
+    world.quests[exp.q] = {
+      done: record.done + (outcome.cleared ? 1 : 0),
+      runs: record.runs + 1,
+      last: exp.day,
+    };
   }
+  world.reports.push({ id: exp.id, q: exp.q, place: exp.place, title: exp.title, start: exp.start, end: exp.end, outcome });
+  if (world.reports.length > KEEP_REPORTS) world.reports.shift();
+}
+
+// Lets time pass up to t: an expedition that is back by then is finished.
+export function advance(world, t, ctx) {
+  if (world.expedition && t >= world.expedition.end) finishExpedition(world, ctx);
+}
+
+function startExpedition(world, e, ctx) {
+  if (world.expedition) return; // one at a time
+  const consumed = e.outcome.consumed || {};
+  if (Object.entries(consumed).some(([k, v]) => world.purse[k] < v)) return;
+  // Material for building is taken along right away.
+  for (const [k, v] of Object.entries(consumed)) world.purse[k] -= v;
+  spend(world, e.cost);
+  world.expedition = {
+    id: e.id, q: e.q, place: e.place, title: e.title, day: e.d,
+    start: e.t, out: e.out, act: e.act, back: e.back,
+    end: e.t + totalMinutes(e) * 60000,
+    outcome: e.outcome,
+  };
 }
 
 function equip(world, e, ctx) {
@@ -122,21 +147,16 @@ function equip(world, e, ctx) {
 }
 
 export function applyWorldEvent(world, e, ctx) {
+  advance(world, e.t, ctx);
   settle(world, e.t, ctx);
   const entry = world.items[e.inst];
   switch (e.type) {
-    case 'travel':
-      if (ctx.catalog.placeById.has(e.to)) {
-        spend(world, e.cost);
-        world.position = e.to;
-      }
-      break;
-    case 'quest':
-      if (e.outcome) applyQuest(world, e, ctx);
+    case 'expedition':
+      if (e.outcome) startExpedition(world, e, ctx);
       break;
     case 'buy':
-      if (!world.bought[e.offer] && world.purse.glimmer >= e.price) {
-        world.purse.glimmer -= e.price;
+      if (!world.bought[e.offer] && world.purse.aether >= e.price) {
+        world.purse.aether -= e.price;
         world.bought[e.offer] = true;
         stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t });
       }
@@ -144,7 +164,7 @@ export function applyWorldEvent(world, e, ctx) {
     case 'sell':
       if (entry && (entry.where === 'rucksack' || entry.where === 'schrank')) {
         removeEntry(world, e.inst);
-        world.purse.glimmer += e.price;
+        world.purse.aether += e.price;
       }
       break;
     case 'drop':
@@ -183,8 +203,8 @@ export function applyWorldEvent(world, e, ctx) {
       break;
     case 'build': {
       const next = ctx.catalog.home[world.home];
-      if (world.home > 0 && next && ['holz', 'stein', 'glimmer'].every((k) => world.purse[k] >= next.cost[k])) {
-        for (const k of ['holz', 'stein', 'glimmer']) world.purse[k] -= next.cost[k];
+      if (world.home > 0 && next && MATERIAL_KEYS.every((k) => world.purse[k] >= next.cost[k])) {
+        for (const k of MATERIAL_KEYS) world.purse[k] -= next.cost[k];
         world.home += 1;
       }
       break;
@@ -196,6 +216,7 @@ export function applyWorldEvent(world, e, ctx) {
 
 // Finishing the Gelassenheit task is a real rest: half a bar back.
 export function restFromTask(world, t, ctx) {
+  advance(world, t, ctx);
   settle(world, t, ctx);
   const max = maxStamina(ctx.stats);
   world.stamina.value = Math.min(max, world.stamina.value + max * STAMINA_REST_TASK_SHARE);
@@ -214,8 +235,4 @@ export function checkEquipment(world, ctx, day) {
       world.dropped.push({ day, slot, item: item.id, unmet });
     }
   }
-}
-
-export function staminaNow(world, now, ctx) {
-  return staminaAt(world, now, ctx.stats, effects(world, ctx.catalog));
 }
