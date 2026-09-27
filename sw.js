@@ -2,7 +2,7 @@
 // Network first, so a new version on the server is used right away;
 // if the network does not answer in time, the stored copy is used.
 
-const CACHE = 'envoy-v12';
+const CACHE = 'envoy-v13';
 const NETWORK_TIMEOUT_MS = 3500;
 
 self.addEventListener('install', () => self.skipWaiting());
@@ -25,7 +25,10 @@ self.addEventListener('fetch', (event) => {
 
 async function networkFirst(request) {
   const cache = await caches.open(CACHE);
-  const network = fetch(request).then((response) => {
+  // Always ask the server whether a file has changed (it answers briefly if
+  // not), so a new drawing under an old name shows up at once.
+  const fresh = request.mode === 'navigate' ? request : new Request(request, { cache: 'no-cache' });
+  const network = fetch(fresh).then((response) => {
     if (response.ok) cache.put(request, response.clone());
     return response;
   });

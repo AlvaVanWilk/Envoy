@@ -9,7 +9,7 @@
 // In clothing layers only pixels with exactly the tint of the drawn skin
 // are painted, for example the fingertips in fingerless gloves.
 
-import { FIGURES, SKIN_TONES, HAIR_COLORS } from '../config.js';
+import { FIGURES, SKIN_TONES, HAIR_COLORS, versioned } from '../config.js';
 
 const painting = new Map(); // key -> Promise of a picture address
 const painted = new Map();  // key -> picture address, once ready
@@ -28,7 +28,7 @@ export function resolveLook(envoy) {
   };
 }
 
-export const baseSrc = (look) => `${look.figure.folder}/basisfigur.png`;
+export const baseSrc = (look) => versioned(`${look.figure.folder}/basisfigur.png`);
 
 // The picture of an item for this figure: its own version if there is one.
 export function layerSrc(item, look) {

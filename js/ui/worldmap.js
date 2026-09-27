@@ -4,7 +4,7 @@
 
 import { h, icon } from './dom.js';
 import { PLACE_ICONS, UI_ICONS, NAV_ICONS } from './icons.js';
-import { CURRENCY } from '../config.js';
+import { CURRENCY, versioned } from '../config.js';
 import {
   viewHead, sectionTitle, supplies, staminaBar, resource, formatMinutes, MATERIAL_KEYS,
 } from './parts.js';
@@ -86,7 +86,7 @@ export function renderMap(game) {
   const pos = heroPosition(exp, Date.now(), game.catalog);
 
   const canvas = h('div', { class: 'map-canvas' },
-    h('img', { class: 'map-image', src: 'assets/welt/karte.jpg', alt: 'Karte der Zwischenwelt', draggable: 'false' }),
+    h('img', { class: 'map-image', src: versioned('assets/welt/karte.jpg'), alt: 'Karte der Zwischenwelt', draggable: 'false' }),
     route(exp, game.catalog),
     game.catalog.places.map((place) => placeMarker(place, game, c)),
     h('span', { class: 'hero-token', style: { left: `${pos.x}%`, top: `${pos.y}%` }, html: UI_ICONS.hero, 'aria-hidden': 'true' }));

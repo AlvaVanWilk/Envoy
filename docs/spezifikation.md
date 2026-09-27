@@ -553,6 +553,10 @@ selbst noch nicht hat. Es wird nie etwas überschrieben. Die Daten liegen in
 Ein GitHub-Ablauf testet bei jeder Änderung, wandelt die Tabellen um und lädt den
 Zweig `main` per SFTP auf den IONOS-Webspace.
 
+Die App fragt bei jedem Laden beim Server nach, ob sich eine Datei geändert hat, und
+Bilder werden mit der App-Version angefragt. Eine neue Zeichnung unter altem Namen
+erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weiter zeigt.
+
 ## Entscheidungen
 
 | Punkt | Entscheidung |

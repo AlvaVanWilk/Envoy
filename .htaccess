@@ -10,7 +10,11 @@ AddType font/woff2 .woff2
   <FilesMatch "\.(html|js|css|json|webmanifest)$">
     Header set Cache-Control "no-cache"
   </FilesMatch>
-  <FilesMatch "\.(png|webp|woff2)$">
+  # Pictures: ask each time whether they changed, so new drawings show at once.
+  <FilesMatch "\.(png|jpg|webp)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.woff2$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
   Header always set X-Content-Type-Options "nosniff"
