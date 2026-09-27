@@ -48,9 +48,14 @@ export function initialWorld(catalog, startTime, stats) {
     reports: [],
     dropped: [],
   };
-  for (const item of catalog.equipment.filter((i) => i.herkunft.includes('start'))) {
+  // The start outfit (herkunft `angezogen`) is worn from the beginning,
+  // other start things (`start`) lie in the backpack.
+  for (const item of catalog.equipment) {
+    const worn = item.herkunft.includes('angezogen');
+    if (!worn && !item.herkunft.includes('start')) continue;
     const inst = `start:${item.id}`;
-    world.items[inst] = { inst, kind: 'item', id: item.id, where: 'rucksack', got: startTime };
+    world.items[inst] = { inst, kind: 'item', id: item.id, where: worn ? 'body' : 'rucksack', got: startTime };
+    if (worn) world.equipped[item.slot] = inst;
   }
   return world;
 }

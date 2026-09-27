@@ -144,6 +144,10 @@ Icons sind eigenständige Grafiken, 256 × 256, nicht aus der Figurenebene gesch
 Wird die Voraussetzung eines getragenen Teils unterschritten, fliegt es aus dem Slot
 und wird **nicht mehr gerendert** — die Figur sieht dort aus, als trüge sie nichts.
 
+Der Envoy ist eine Frau, bisher die einzige Figur. Figur und Ausrüstung zeichnet die
+Nutzerin; keine eigenen Platzhalter für die Figur oder Ausrüstung erzeugen. Teile ohne
+Bild werden nicht gezeichnet, als Icon dient das Slot-Symbol.
+
 Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.
 
 Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Zuhause

@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T19:03:37Z",
+ "generated": "2026-09-27T15:25:26Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -11,7 +11,7 @@
    "faehigkeit": null,
    "effekt": {},
    "herkunft": [
-    "start",
+    "angezogen",
     "haendler"
    ],
    "preis": null,
@@ -27,7 +27,7 @@
    "faehigkeit": null,
    "effekt": {},
    "herkunft": [
-    "start",
+    "angezogen",
     "haendler"
    ],
    "preis": null,
@@ -47,8 +47,8 @@
     "haendler"
    ],
    "preis": null,
-   "figur": "assets/figur/schuhe_bastsandalen_1.png",
-   "icon": "assets/icons/icon_schuhe_bastsandalen_1.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "handschuhe_handwickel_1",
@@ -65,8 +65,8 @@
     "haendler"
    ],
    "preis": null,
-   "figur": "assets/figur/handschuhe_handwickel_1.png",
-   "icon": "assets/icons/icon_handschuhe_handwickel_1.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "kopf_stirnband_1",
@@ -85,8 +85,8 @@
     "quest"
    ],
    "preis": null,
-   "figur": "assets/figur/kopf_stirnband_1.png",
-   "icon": "assets/icons/icon_kopf_stirnband_1.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "umhang_reiseumhang_1",
@@ -105,8 +105,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/umhang_reiseumhang_1.png",
-   "icon": "assets/icons/icon_umhang_reiseumhang_1.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "torso_wickeljacke_2",
@@ -126,8 +126,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/torso_wickeljacke_2.png",
-   "icon": "assets/icons/icon_torso_wickeljacke_2.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "beine_kampfhose_2",
@@ -146,8 +146,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/beine_kampfhose_2.png",
-   "icon": "assets/icons/icon_beine_kampfhose_2.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "schuhe_wanderstiefel_2",
@@ -165,8 +165,27 @@
     "haendler"
    ],
    "preis": null,
-   "figur": "assets/figur/schuhe_wanderstiefel_2.png",
-   "icon": "assets/icons/icon_schuhe_wanderstiefel_2.png"
+   "figur": "",
+   "icon": ""
+  },
+  {
+   "id": "handschuhe_griffhandschuhe_2",
+   "slot": "handschuhe",
+   "name": "Griffhandschuhe",
+   "stufe": 2,
+   "req": {
+    "kraft": 4
+   },
+   "faehigkeit": "Fester Griff, freie Finger.",
+   "effekt": {
+    "schaden": 2
+   },
+   "herkunft": [
+    "quest"
+   ],
+   "preis": null,
+   "figur": "assets/figur/handschuhe_griffhandschuhe_2.png",
+   "icon": "assets/icons/icon_handschuhe_griffhandschuhe_2.png"
   },
   {
    "id": "handschuhe_lederwickel_2",
@@ -186,8 +205,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/handschuhe_lederwickel_2.png",
-   "icon": "assets/icons/icon_handschuhe_lederwickel_2.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "kopf_kapuze_2",
@@ -206,8 +225,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/kopf_kapuze_2.png",
-   "icon": "assets/icons/icon_kopf_kapuze_2.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "umhang_nebelumhang_2",
@@ -226,8 +245,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/umhang_nebelumhang_2.png",
-   "icon": "assets/icons/icon_umhang_nebelumhang_2.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "torso_kampfjacke_3",
@@ -248,8 +267,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/torso_kampfjacke_3.png",
-   "icon": "assets/icons/icon_torso_kampfjacke_3.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "beine_wickelhose_3",
@@ -269,8 +288,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/beine_wickelhose_3.png",
-   "icon": "assets/icons/icon_beine_wickelhose_3.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "schuhe_leichtestiefel_3",
@@ -289,8 +308,8 @@
     "quest"
    ],
    "preis": null,
-   "figur": "assets/figur/schuhe_leichtestiefel_3.png",
-   "icon": "assets/icons/icon_schuhe_leichtestiefel_3.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "handschuhe_eisenwickel_3",
@@ -310,8 +329,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/handschuhe_eisenwickel_3.png",
-   "icon": "assets/icons/icon_handschuhe_eisenwickel_3.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "kopf_stillemaske_3",
@@ -329,8 +348,8 @@
     "quest"
    ],
    "preis": null,
-   "figur": "assets/figur/kopf_stillemaske_3.png",
-   "icon": "assets/icons/icon_kopf_stillemaske_3.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "umhang_sturmmantel_3",
@@ -351,8 +370,8 @@
     "beute"
    ],
    "preis": null,
-   "figur": "assets/figur/umhang_sturmmantel_3.png",
-   "icon": "assets/icons/icon_umhang_sturmmantel_3.png"
+   "figur": "",
+   "icon": ""
   },
   {
    "id": "handschuhe_nebelwickel_4",
@@ -372,8 +391,8 @@
     "quest"
    ],
    "preis": null,
-   "figur": "assets/figur/handschuhe_nebelwickel_4.png",
-   "icon": "assets/icons/icon_handschuhe_nebelwickel_4.png"
+   "figur": "",
+   "icon": ""
   }
  ]
 }

@@ -44,11 +44,14 @@ function expeditionEvent(events, questId, hoursAfter) {
 }
 const total = (e) => e.out + e.act + e.back;
 
-test('start: at the camp, full bar, start items in the backpack', () => {
+test('start: at the camp, full bar, the start outfit worn, other start items in the backpack', () => {
   const s = replay([], catalog, DAY, T0);
   assert.equal(s.world.expedition, null);
   assert.equal(s.world.stamina.value, maxStamina(s.stats));
-  assert.equal(countIn(s.world, 'rucksack'), 4);
+  assert.equal(s.world.equipped.torso, 'start:torso_leinenhemd_1');
+  assert.equal(s.world.equipped.beine, 'start:beine_leinenhose_1');
+  assert.equal(s.world.items['start:torso_leinenhemd_1'].where, 'body');
+  assert.equal(countIn(s.world, 'rucksack'), 2);
   assert.deepEqual(s.world.purse, { splitter: 0, pilzholz: 0, stein: 0 });
 });
 
@@ -156,7 +159,7 @@ test('a single spirit is always overcome; too strong means driven off with less 
   assert.notEqual(strong.fights[0].result, 'driven');
 });
 
-test('a cave: the stronger the Envoy, the deeper he gets; the cave reward only for all', () => {
+test('a cave: the stronger the Envoy, the deeper she gets; the cave reward only for all', () => {
   const quest = catalog.questById.get('q-echohoehle');
   const base = { catalog, world: replay([], catalog, DAY, T0).world, fx: effects(replay([], catalog, DAY, T0).world, catalog) };
   const depth = (level) => {

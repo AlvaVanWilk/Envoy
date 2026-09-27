@@ -81,8 +81,11 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
 
-Alle mitgelieferten Bilder sind Platzhalter. Neue Bilder mit gleichem Namen ersetzen
-sie einfach. Die Umwandlung meldet fehlende Bilder und falsche Maße. Bei einer neuen
+Die Figur des Envoy und ihre Kleidung sind eigene Zeichnungen. Für Ausrüstung ohne
+Bild gibt es keine Platzhalter: Das Teil wird getragen, aber nicht gezeichnet, und als
+Icon steht das Symbol des Slots. Ein neues Bild mit dem Namen aus der Tabelle erscheint
+sofort. Die Umwandlung meldet fehlende Bilder und falsche Maße als Hinweis. Karte,
+Zuhause, Monster und Einrichtung sind noch vorläufige Bilder. Bei einer neuen
 Karte die Positionen der Orte (x, y in Prozent) in `welt.xlsx` anpassen.
 
 ## Aufbau

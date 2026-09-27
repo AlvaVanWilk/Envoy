@@ -1,6 +1,7 @@
 // The figure: transparent layers of identical size stacked on top of each
 // other. Only worn items are drawn; an item whose requirement is no longer
 // met has already been taken off, so the slot shows the base figure.
+// An item without a picture yet is worn but not drawn.
 
 import { h } from './dom.js';
 import { SLOTS, BASE_FIGURE_LAYER, BASE_FIGURE_FILE } from '../config.js';
@@ -10,7 +11,7 @@ export function paperdoll(equipped, world, catalog, { className = '' } = {}) {
   for (const slot of SLOTS) {
     const entry = world.items[equipped[slot.id]];
     const item = entry && catalog.itemById.get(entry.id);
-    if (item) layers.push({ layer: slot.layer, src: item.figur, slot: slot.id });
+    if (item?.figur) layers.push({ layer: slot.layer, src: item.figur, slot: slot.id });
   }
   layers.sort((a, b) => a.layer - b.layer);
 

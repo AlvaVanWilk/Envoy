@@ -236,7 +236,7 @@ Quest beginnen kann, bringt immer etwas zurück.
 
 Jede Unternehmung ist eine Expedition vom Lager aus: Hinweg, die Arbeit vor Ort,
 Rückweg. Alle drei Teile dauern echte Minuten; eine dreiteilige Leiste zeigt, wo der
-Envoy gerade ist und wann er zurück ist. Auf der Karte wandert seine Marke den Weg
+Envoy gerade ist und wann die Expedition endet. Auf der Karte wandert seine Marke den Weg
 entlang. Es läuft immer nur eine Expedition.
 
 **Zeit folgt Ausdauer: Jeder Punkt Ausdauer ist eine Minute unterwegs.** Was lange
@@ -446,7 +446,23 @@ Ebenenreihenfolge (hinten nach vorn): 1 Umhang hinten, 2 Basisfigur (Körper, Ko
 Grundkleidung), 3 Beinkleidung, 4 Schuhe, 5 Torso, 6 Handwickel, 7 Frisur /
 Kopfbedeckung.
 
-Icons sind eigenständige, stilisierte Ansichten, 256 × 256 px, transparent. Weitere
+**Der Envoy ist eine Frau**, bisher die einzige Figur: gezeichnet im Comicstil mit
+schwarzer Kontur, blondes Haar im Dutt, graue Unterwäsche als Grundkleidung. Alle
+Bilder der Figur und der Ausrüstung stammen von der Nutzerin.
+
+**Startoutfit:** Leinenhemd und Leinenhose, ohne Voraussetzung und ohne Fähigkeit. Der
+Envoy trägt sie von Anfang an (Herkunft `angezogen`). Handwickel und Bastsandalen liegen
+beim Start im Rucksack (Herkunft `start`). Die Griffhandschuhe sind die Belohnung für
+die Brücke über die Schlucht.
+
+**Teile ohne Bild:** Fehlt die Ebene eines Teils noch, wird es getragen, aber nicht
+gezeichnet; fehlt sein Icon, zeigt die App das Symbol des Slots. Die Umwandlung listet
+fehlende Bilder als Hinweis, ohne abzubrechen. Sobald eine Datei mit dem Namen aus der
+Tabelle da ist, erscheint sie.
+
+Icons sind eigenständige, stilisierte Ansichten, 256 × 256 px, transparent. Solange es
+für Leinenhemd, Leinenhose und Griffhandschuhe keine eigenen Icons gibt, sind ihre Icons
+aus den Zeichnungen der Ebenen freigestellt. Weitere
 Bilder: Monster 512 × 512, Zuhause-Stufen 1200 × 800, Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.

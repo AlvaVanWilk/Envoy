@@ -35,7 +35,7 @@ SLOTS = ["umhang", "beine", "schuhe", "torso", "handschuhe", "kopf"]
 MEASUREMENTS = ["strecke_km", "stockwerke", "haltezeit_s", "wiederholungen", "dauer_min"]
 EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
 FURNITURE_EFFECTS = ["erholung", "glueck"]
-ORIGINS = ["start", "haendler", "beute", "quest"]
+ORIGINS = ["start", "angezogen", "haendler", "beute", "quest"]
 PLACE_TYPES = ["lager", "wild", "sammeln", "ort", "hoehle"]
 QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
 FEATURES = ["zuhause", "haendler"]
@@ -119,16 +119,19 @@ def png_size(path):
     return struct.unpack(">II", head[16:24])
 
 
+# Returns the path the app uses, or "" when the picture does not exist yet:
+# then the app draws nothing for it and shows the symbol of the slot.
 def check_picture(report, row, kind, filename):
     folder, size = PICTURES[kind]
     path = ROOT / folder / filename
     if not path.exists():
-        report.warn(row, f"Bild fehlt: {folder}/{filename}")
-        return
+        report.warn(row, f"Bild fehlt noch: {folder}/{filename}")
+        return ""
     if path.suffix.lower() == ".png":
         actual = png_size(path)
         if actual != size:
             report.warn(row, f"{filename} ist {actual[0]} × {actual[1]}, erwartet {size[0]} × {size[1]}")
+    return f"{folder}/{filename}"
 
 
 # --- small languages used in cells -----------------------------------------
@@ -403,8 +406,8 @@ def convert_equipment(path):
 
         figure = text(r.get("datei_figur", "")) or f"{slot}_{slug(name)}_{level}.png"
         icon = text(r.get("datei_icon", "")) or f"icon_{figure}"
-        check_picture(report, row, "figur", figure)
-        check_picture(report, row, "icon", icon)
+        figure_path = check_picture(report, row, "figur", figure)
+        icon_path = check_picture(report, row, "icon", icon)
 
         items.append({
             "id": item_id,
@@ -416,8 +419,8 @@ def convert_equipment(path):
             "effekt": parse_effects(report, row, r.get("effekt", ""), EFFECTS),
             "herkunft": parse_origin(report, row, r.get("herkunft", "")),
             "preis": price,
-            "figur": f"{PICTURES['figur'][0]}/{figure}",
-            "icon": f"{PICTURES['icon'][0]}/{icon}",
+            "figur": figure_path,
+            "icon": icon_path,
         })
     return {"equipment": items}, report
 
@@ -478,7 +481,7 @@ def convert_world(path, item_ids):
         if fid is None:
             continue
         icon = text(r.get("datei_icon", "")) or f"icon_einrichtung_{fid}.png"
-        check_picture(report, row, "icon", icon)
+        icon_path = check_picture(report, row, "icon", icon)
         min_tier = whole_number(r.get("ab_stufe", "")) or 1
         furniture.append({
             "id": fid, "name": text(r.get("name", "")),
@@ -487,7 +490,7 @@ def convert_world(path, item_ids):
             "preis": whole_number(r.get("preis", "")) or 0,
             "abStufe": min_tier if isinstance(min_tier, int) else 1,
             "text": text(r.get("beschreibung", "")),
-            "icon": f"{PICTURES['icon'][0]}/{icon}",
+            "icon": icon_path,
         })
 
     home = []

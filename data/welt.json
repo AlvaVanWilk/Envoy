@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T23:24:45Z",
+ "generated": "2026-09-27T15:25:26Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -986,7 +986,7 @@
    "name": "Die Echohöhle",
    "place": "echohoehle",
    "kind": "hoehle",
-   "text": "Tief drinnen hausen fünf Geister. Wie weit der Envoy kommt, hängt an seinen Werten.",
+   "text": "Tief drinnen hausen fünf Geister. Wie weit der Envoy kommt, hängt an den Werten.",
    "monsters": [
     "zauderling",
     "nebelwicht",
@@ -1208,7 +1208,9 @@
      0,
      0
     ],
-    "items": [],
+    "items": [
+     "handschuhe_griffhandschuhe_2"
+    ],
     "furniture": [],
     "unlocks": [],
     "rest": false

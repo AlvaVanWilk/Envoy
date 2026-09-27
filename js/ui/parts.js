@@ -1,7 +1,7 @@
 // Small building blocks used by several views.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, RESOURCE_ICONS } from './icons.js';
+import { NAV_ICONS, RESOURCE_ICONS, SLOT_ICONS } from './icons.js';
 import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
@@ -70,7 +70,9 @@ export function staminaBar(st) {
     h('p', { class: 'stamina-note' }, refillText(st.hoursToFull)));
 }
 
+// The picture of a thing. Without one yet, the symbol of its slot.
 export function itemIcon(thing, className = 'item-icon') {
+  if (!thing.icon) return thing.slot ? icon(SLOT_ICONS[thing.slot], `${className} item-glyph`) : h('span', { class: className });
   return h('img', { class: className, src: thing.icon, alt: '', decoding: 'async', onerror: (e) => { e.currentTarget.hidden = true; } });
 }
 
