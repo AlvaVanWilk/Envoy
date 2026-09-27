@@ -24,6 +24,9 @@
 //   place    { inst }                         furniture set up at home
 //   unplace  { inst }                         furniture taken down
 //   build    { tier, cost }                   home extended
+//
+// The Envoy itself:
+//   envoy    { name, figur, haut, haar }      name, figure, skin and hair colour (the latest counts)
 // (travel and quest from version 2 are still accepted and ignored)
 //
 // Common fields: id, t (timestamp in ms), d (day key), dev (device id).
@@ -73,7 +76,7 @@ export function mergeEvents(listA, listB) {
 export const KNOWN_TYPES = new Set([
   'plan', 'done', 'undo', 'mode',
   'expedition', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
-  'travel', 'quest',
+  'envoy', 'travel', 'quest',
 ]);
 
 // Minimal shape check for events coming from outside (sync, backup file).

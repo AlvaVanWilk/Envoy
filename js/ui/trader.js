@@ -7,6 +7,7 @@ import { viewHead, sectionTitle, supplies, price, resource, itemIcon, reqChips, 
 import { openSheet, closeSheet } from './sheet.js';
 import { thingSubtitle } from './itemsheet.js';
 import { sellPrice, lookup } from '../world/items.js';
+import { reachable } from '../world/inventory.js';
 import { CURRENCY } from '../config.js';
 
 export function renderTrader(game) {
@@ -14,7 +15,8 @@ export function renderTrader(game) {
   if (!game.unlocked('haendler')) return lockedView(NAV_ICONS.haendler, 'Händler', unlockHint('haendler', game.catalog));
 
   const offers = game.offers();
-  const owned = Object.values(world.items).filter((e) => e.where === 'rucksack' || e.where === 'schrank')
+  // Only what the Envoy can reach: things in the storage while at the camp.
+  const owned = Object.values(world.items).filter((e) => (e.where === 'rucksack' || e.where === 'schrank') && reachable(world, e))
     .map((entry) => ({ entry, thing: lookup(entry, game.catalog) })).filter((x) => x.thing);
 
   return h('section', { class: 'view trader' },
@@ -37,7 +39,7 @@ export function renderTrader(game) {
       h('section', { class: 'panel trader-sell' },
         sectionTitle('Verkaufen'),
         owned.length === 0
-          ? h('p', { class: 'muted' }, 'Nichts im Rucksack oder Schrank.')
+          ? h('p', { class: 'muted' }, 'Nichts im Rucksack oder Lager.')
           : h('div', { class: 'item-list' }, owned.map(({ entry, thing }) => h('div', { class: 'item-row' },
             h('span', { class: 'item-frame' }, itemIcon(thing)),
             h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, thing.name), h('span', { class: 'item-sub' }, thingSubtitle(entry, thing))),

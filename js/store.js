@@ -1,12 +1,18 @@
-// Local storage in the browser. Only the event list and a few settings
-// are stored; everything else is recalculated.
+// Local storage in the browser. Every profile (one Envoy, see account.js)
+// keeps its own event list, sync state and settings; only the device id
+// and the list of profiles are shared by the whole device.
+// Everything else is recalculated from the events.
 
-const KEYS = {
-  events: 'envoy.events',
+const GLOBAL = {
   device: 'envoy.device',
-  sync: 'envoy.sync',
-  ui: 'envoy.ui',
+  profiles: 'envoy.profiles',
+  active: 'envoy.active',
+  adopted: 'envoy.legacyAdopted',
 };
+// Where a game from before the accounts lies (one per device).
+const LEGACY = { events: 'envoy.events', sync: 'envoy.sync', ui: 'envoy.ui' };
+
+let prefix = 'envoy.p.none.';
 
 function read(key, fallback) {
   try {
@@ -26,22 +32,52 @@ function write(key, value) {
   }
 }
 
+function remove(key) {
+  try { localStorage.removeItem(key); } catch { /* ignore */ }
+}
+
 export const store = {
-  loadEvents: () => read(KEYS.events, []),
-  saveEvents: (events) => write(KEYS.events, events),
+  // From now on events, sync state and settings belong to this profile.
+  useProfile(id) {
+    prefix = `envoy.p.${id}.`;
+  },
 
-  loadDeviceId: () => read(KEYS.device, null),
-  saveDeviceId: (id) => write(KEYS.device, id),
+  loadEvents: () => read(`${prefix}events`, []),
+  saveEvents: (events) => write(`${prefix}events`, events),
 
-  loadSync: () => read(KEYS.sync, { key: '', since: 0, outbox: [], lastSync: null, lastError: null }),
-  saveSync: (sync) => write(KEYS.sync, sync),
+  loadSync: () => read(`${prefix}sync`, { since: 0, outbox: [], lastSync: null, lastError: null }),
+  saveSync: (sync) => write(`${prefix}sync`, sync),
 
-  loadUi: () => read(KEYS.ui, {}),
-  saveUi: (ui) => write(KEYS.ui, ui),
+  loadUi: () => read(`${prefix}ui`, {}),
+  saveUi: (ui) => write(`${prefix}ui`, ui),
 
+  loadDeviceId: () => read(GLOBAL.device, null),
+  saveDeviceId: (id) => write(GLOBAL.device, id),
+
+  loadProfiles: () => read(GLOBAL.profiles, []),
+  saveProfiles: (profiles) => write(GLOBAL.profiles, profiles),
+  loadActive: () => read(GLOBAL.active, null),
+  saveActive: (id) => (id ? write(GLOBAL.active, id) : remove(GLOBAL.active)),
+
+  // A game from before the accounts, if there is one and it was not taken over yet.
+  loadLegacy() {
+    if (read(GLOBAL.adopted, null)) return null;
+    const events = read(LEGACY.events, []);
+    if (!Array.isArray(events) || events.length === 0) return null;
+    return { events, key: read(LEGACY.sync, {})?.key || '', ui: read(LEGACY.ui, {}) };
+  },
+  // The old data stays where it is, as a spare copy; it is only marked.
+  markLegacyAdopted: (profileId) => write(GLOBAL.adopted, profileId),
+
+  // Everything of this app on this device, all profiles included.
   clearAll() {
-    for (const key of Object.values(KEYS)) {
-      try { localStorage.removeItem(key); } catch { /* ignore */ }
-    }
+    try {
+      const keys = [];
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('envoy.')) keys.push(key);
+      }
+      keys.forEach(remove);
+    } catch { /* ignore */ }
   },
 };

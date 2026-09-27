@@ -8,10 +8,12 @@ import { openSheet, closeSheet } from './sheet.js';
 import { statEmblem, statInfo } from './stats.js';
 import { itemIcon, effectList, reqChips } from './parts.js';
 import { unmetRequirements, lookup } from '../world/items.js';
-import { hasSpace } from '../world/inventory.js';
+import { hasSpace, reachable } from '../world/inventory.js';
 
 export const slotName = (id) => SLOTS.find((s) => s.id === id)?.name || id;
-const WHERE = { rucksack: 'Rucksack', schrank: 'Schrank', body: 'Getragen', home: 'Aufgestellt' };
+export const WHERE = { rucksack: 'Rucksack', schrank: 'Lager', body: 'Getragen', home: 'Aufgestellt' };
+// Shown for things in the storage while the Envoy is away.
+export const AWAY_NOTE = 'Erreichbar, wenn der Envoy im Lager ist.';
 
 export function thingSubtitle(entry, thing) {
   return entry.kind === 'furniture' ? `Einrichtung · ab ${thing.abStufe === 1 ? 'Zelt' : `Stufe ${thing.abStufe}`}` : `${slotName(thing.slot)} · Stufe ${thing.stufe}`;
@@ -48,9 +50,12 @@ export function openEntry(inst, game) {
   const thing = lookup(entry, game.catalog);
   if (!thing) return;
   const hasHome = world.home > 0;
+  const atCamp = game.atCamp();
   const actions = [];
 
-  if (entry.kind === 'item') {
+  if (!reachable(world, entry)) {
+    // In the storage while the Envoy is away: look, but not touch.
+  } else if (entry.kind === 'item') {
     const canWear = unmetRequirements(thing, stats).length === 0;
     if (entry.where === 'body') {
       actions.push(h('button', { class: 'btn ghost', onclick: () => { game.unequip(thing.slot); closeSheet(); } }, 'Ablegen'));
@@ -58,22 +63,23 @@ export function openEntry(inst, game) {
       actions.push(h('button', { class: 'btn primary', disabled: !canWear, onclick: () => { game.equip(thing.slot, inst); closeSheet(); } }, 'Anlegen'));
     }
   } else if (entry.where === 'home') {
-    actions.push(h('button', { class: 'btn ghost', onclick: () => { game.unplace(inst); closeSheet(); } }, 'Abbauen'));
+    actions.push(h('button', { class: 'btn ghost', disabled: !atCamp, onclick: () => { game.unplace(inst); closeSheet(); } }, 'Abbauen'));
   } else if (hasHome) {
     const tier = game.catalog.home[world.home - 1];
     const free = world.placed.length < tier.plaetze;
     const fits = thing.abStufe <= world.home;
-    actions.push(h('button', { class: 'btn primary', disabled: !free || !fits, onclick: () => { game.place(inst); closeSheet(); } },
-      !fits ? `Ab Stufe ${thing.abStufe}` : free ? 'Aufstellen' : 'Kein Platz frei'));
+    actions.push(h('button', { class: 'btn primary', disabled: !free || !fits || !atCamp, onclick: () => { game.place(inst); closeSheet(); } },
+      !fits ? `Ab Stufe ${thing.abStufe}` : !free ? 'Kein Platz frei' : 'Aufstellen'));
   }
 
-  if (hasHome && (entry.where === 'rucksack' || entry.where === 'schrank')) {
+  // Between backpack and storage only at the camp.
+  if (hasHome && atCamp && (entry.where === 'rucksack' || entry.where === 'schrank')) {
     const to = entry.where === 'rucksack' ? 'schrank' : 'rucksack';
     const space = hasSpace(world, game.catalog, to);
     actions.push(h('button', { class: 'btn ghost', disabled: !space, onclick: () => { game.move(inst, to); closeSheet(); } },
-      to === 'schrank' ? 'In den Schrank' : 'In den Rucksack'));
+      to === 'schrank' ? 'Ins Lager' : 'In den Rucksack'));
   }
-  if (entry.where === 'rucksack' || entry.where === 'schrank') {
+  if (reachable(world, entry) && (entry.where === 'rucksack' || entry.where === 'schrank')) {
     actions.push(h('button', { class: 'btn text danger-text', onclick: () => confirmDrop(entry, thing, game) }, 'Liegen lassen'));
   }
 
@@ -86,7 +92,8 @@ export function openEntry(inst, game) {
       entry.kind === 'item' ? requirementList(thing, stats) : null,
       thing.faehigkeit || thing.text ? h('p', { class: 'item-ability' }, thing.faehigkeit || thing.text) : null,
       effectList(thing.effekt),
-      h('div', { class: 'sheet-actions' }, actions),
+      reachable(world, entry) ? null : h('p', { class: 'muted away-note' }, AWAY_NOTE),
+      actions.length > 0 ? h('div', { class: 'sheet-actions' }, actions) : null,
     ],
   });
 }
@@ -104,9 +111,10 @@ export function openSlot(slotId, game) {
     const unmet = unmetRequirements(item, stats);
     let action;
     if (worn) action = h('button', { class: 'btn ghost small', onclick: () => { game.unequip(slotId); closeSheet(); } }, 'Ablegen');
+    else if (!reachable(world, entry)) action = h('span', { class: 'locked-label' }, 'Im Lager');
     else if (unmet.length === 0) action = h('button', { class: 'btn primary small', onclick: () => { game.equip(slotId, entry.inst); closeSheet(); } }, 'Anlegen');
     else action = h('span', { class: 'locked-label' }, icon(UI_ICONS.lock), 'Gesperrt');
-    return h('div', { class: `item-row ${unmet.length && !worn ? 'locked' : ''}` },
+    return h('div', { class: `item-row ${unmet.length && !worn ? 'locked' : ''} ${reachable(world, entry) ? '' : 'away'}` },
       h('span', { class: 'item-frame' }, itemIcon(item)),
       h('span', { class: 'item-row-main' },
         h('span', { class: 'item-name' }, item.name),
@@ -121,7 +129,7 @@ export function openSlot(slotId, game) {
     eyebrow: 'Slot',
     className: 'slot-sheet',
     content: rows.length === 0
-      ? h('p', { class: 'muted' }, 'Nichts für diesen Slot im Rucksack oder Schrank.')
+      ? h('p', { class: 'muted' }, 'Nichts für diesen Slot im Rucksack oder Lager.')
       : h('div', { class: 'item-list' }, rows),
   });
 }

@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '3.6.0';
+export const APP_VERSION = '4.0.0';
 
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
@@ -54,7 +54,40 @@ export const SLOTS = [
 ];
 
 export const BASE_FIGURE_LAYER = 2;
-export const BASE_FIGURE_FILE = 'assets/figur/basisfigur.png';
+
+// The Envoy: figures to choose from when the Envoy is created. Each has
+// its own folder with basisfigur.png. Clothing layers lie in the folder of
+// the first figure; a figure can have its own version of a layer in its
+// folder (same file name), otherwise it wears the one of the first.
+// skin / skinShadow / hair: the colours the figure is drawn in; the app
+// paints them in the chosen colours (see ui/look.js). hairZone: hair only
+// occurs in this upper share of the picture.
+export const FIGURES = [
+  { id: 'erste', name: 'Erste Figur', folder: 'assets/figur', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25 },
+  // placeholder until the user's second figure is drawn
+  { id: 'zweite', name: 'Zweite Figur', folder: 'assets/figur/zweite', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25 },
+];
+
+// Choices for skin and hair. The first of each is the colour the figures
+// are drawn in.
+export const SKIN_TONES = [
+  { id: 'pfirsich', name: 'Pfirsich', rgb: [240, 176, 128] },
+  { id: 'hell', name: 'Hell', rgb: [248, 208, 180] },
+  { id: 'rosig', name: 'Rosig', rgb: [236, 184, 164] },
+  { id: 'oliv', name: 'Oliv', rgb: [206, 158, 112] },
+  { id: 'braun', name: 'Braun', rgb: [160, 108, 70] },
+  { id: 'dunkel', name: 'Dunkel', rgb: [106, 70, 48] },
+];
+export const HAIR_COLORS = [
+  { id: 'blond', name: 'Blond', rgb: [224, 192, 136] },
+  { id: 'hellblond', name: 'Hellblond', rgb: [240, 226, 188] },
+  { id: 'kupfer', name: 'Kupfer', rgb: [200, 104, 52] },
+  { id: 'braun', name: 'Braun', rgb: [128, 84, 52] },
+  { id: 'dunkelbraun', name: 'Dunkelbraun', rgb: [74, 50, 36] },
+  { id: 'schwarz', name: 'Schwarz', rgb: [44, 40, 40] },
+  { id: 'grau', name: 'Grau', rgb: [184, 184, 186] },
+];
+export const NAME_MAX = 24;
 
 export const SLOT_IDS = SLOTS.map((s) => s.id);
 
@@ -124,7 +157,7 @@ export const YIELD_PER_LEVEL = 0.05;                  // +5 % yield per level of
 export const DRIVEN_LOOT_SHARE = 0.5;
 export const CAVE_RETREAT_SHARE = 0.35;
 
-export const BACKPACK_SIZE = 8;
+export const BACKPACK_SIZE = 5;
 export const ENCOUNTER_CHANCE = 0.55;                  // per wild place and day
 export const ENCOUNTER_COST = 3;                        // stamina on site
 export const TRADER_OFFERS = 5;

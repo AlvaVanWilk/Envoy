@@ -32,7 +32,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   externen Abhängigkeiten zur Laufzeit.
 - Läuft auf dem IONOS-Webspace der Nutzerin, aufs iPad als Homescreen-Icon.
 - Speicherung lokal im Browser plus Abgleich über einen eigenen `sync.php`-Endpunkt.
-  Gespeichert wird eine Ereignisliste, der Spielstand wird daraus berechnet.
+  Gespeichert wird eine Ereignisliste, der Spielstand wird daraus berechnet. Jedes Konto
+  (Name und Passwort) hat seine eigene Liste; ohne Konto bleibt ein Envoy auf dem Gerät.
 - Veröffentlichung: Ein GitHub-Ablauf testet, wandelt die Tabellen um und lädt den
   Zweig `main` per SFTP auf den IONOS-Webspace.
 - **Kein Zugriff auf Apple Health oder die Apple Watch.** Eine Webapp kann das nicht.
@@ -45,12 +46,15 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
 - Übersicht als Startansicht
-- Charakterfenster mit Paperdoll-Darstellung und Ausrüstungsslots
-- Speicherung und Geräteabgleich
+- Charakterfenster mit Paperdoll-Darstellung, Ausrüstungsslots, Inventar-Box und dem
+  Namen des Envoy
+- Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
+  Haut- und Haarfarbe, Name
+- Speicherung und Geräteabgleich pro Konto
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
   Expeditionen in echter Zeit (Hinweg, vor Ort, Rückweg), Kämpfe und Höhlen ohne
   Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein
-- Rucksack (von Anfang an), Schrank (mit dem Zuhause), Händler, Zuhause mit Ausbau
+- Rucksack (von Anfang an, 5 Plätze), Lager (mit dem Zuhause, nur im Lager nutzbar), Händler, Zuhause mit Ausbau
   und Einrichtung, Kompendium der getroffenen Geister
 
 Freischaltung: Karte und Quests von Anfang an. Zuhause und Händler über Quests.
@@ -139,14 +143,16 @@ nie zugeschnitten. Reihenfolge hinten nach vorn:
 
 Kein Waffen-Slot, kein Gürtel, keine Schulterstücke.
 
-Icons sind eigenständige Grafiken, 256 × 256, nicht aus der Figurenebene geschnitten.
+Icons sind 256 × 256 und werden aus den Zeichnungen der Ebenen freigestellt (so gewünscht).
 
 Wird die Voraussetzung eines getragenen Teils unterschritten, fliegt es aus dem Slot
 und wird **nicht mehr gerendert** — die Figur sieht dort aus, als trüge sie nichts.
 
-Der Envoy ist eine Frau, bisher die einzige Figur. Figur und Ausrüstung zeichnet die
-Nutzerin; keine eigenen Platzhalter für die Figur oder Ausrüstung erzeugen. Teile ohne
-Bild werden nicht gezeichnet, als Icon dient das Slot-Symbol.
+Zwei Figuren stehen zur Wahl: die Envoy der Nutzerin (`assets/figur/`) und ein
+Platzhalter für die zweite Figur (`assets/figur/zweite/`), bis deren Zeichnung fertig
+ist. Sonst zeichnet die Nutzerin Figur und Ausrüstung; keine weiteren eigenen
+Platzhalter erzeugen. Teile ohne Bild werden nicht gezeichnet, als Icon dient das
+Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`).
 
 Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.
 

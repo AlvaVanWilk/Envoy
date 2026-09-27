@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-27T15:25:26Z",
+ "generated": "2026-09-27T16:12:08Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -16,6 +16,7 @@
    ],
    "preis": null,
    "figur": "assets/figur/torso_leinenhemd_1.png",
+   "figuren": {},
    "icon": "assets/icons/icon_torso_leinenhemd_1.png"
   },
   {
@@ -32,6 +33,7 @@
    ],
    "preis": null,
    "figur": "assets/figur/beine_leinenhose_1.png",
+   "figuren": {},
    "icon": "assets/icons/icon_beine_leinenhose_1.png"
   },
   {
@@ -48,6 +50,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -66,6 +69,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -86,6 +90,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -106,6 +111,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -127,6 +133,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -147,6 +154,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -166,6 +174,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -185,6 +194,7 @@
    ],
    "preis": null,
    "figur": "assets/figur/handschuhe_griffhandschuhe_2.png",
+   "figuren": {},
    "icon": "assets/icons/icon_handschuhe_griffhandschuhe_2.png"
   },
   {
@@ -206,6 +216,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -226,6 +237,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -246,6 +258,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -268,6 +281,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -289,6 +303,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -309,6 +324,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -330,6 +346,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -349,6 +366,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -371,6 +389,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   },
   {
@@ -392,6 +411,7 @@
    ],
    "preis": null,
    "figur": "",
+   "figuren": {},
    "icon": ""
   }
  ]

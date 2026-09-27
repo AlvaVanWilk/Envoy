@@ -1,8 +1,12 @@
-// Start of the app: load the catalogs, build the menu, show a view.
+// Start of the app: load the catalogs; without a profile show the start
+// screen (log in, new account); otherwise build the menu and show a view.
 
 import { loadCatalog } from './catalog.js';
 import { game } from './game.js';
 import { sync } from './sync.js';
+import { store } from './store.js';
+import { account } from './account.js';
+import { renderWelcome } from './ui/welcome.js';
 import { h, replaceChildren } from './ui/dom.js';
 import { NAV_ICONS } from './ui/icons.js';
 import { shield } from './ui/shield.js';
@@ -15,6 +19,7 @@ import { renderHome } from './ui/home.js';
 import { renderTrader } from './ui/trader.js';
 import { renderCompendium } from './ui/compendium.js';
 import { renderSettings } from './ui/settings.js';
+import { renderCreate } from './ui/create.js';
 import { openTalents, talentsOpen } from './ui/talents.js';
 import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
@@ -33,7 +38,13 @@ const DOCK = [
   { id: 'haendler', label: 'Händler', render: renderTrader, feature: 'haendler' },
   { id: 'kompendium', label: 'Kompendium', render: renderCompendium },
 ];
-const VIEWS = Object.fromEntries([...DOCK.filter((d) => d.render), { id: 'einstellungen', label: 'Einstellungen', render: renderSettings }].map((v) => [v.id, v]));
+// Changing the look of the Envoy later, reached from the settings.
+const changeLook = (g) => renderCreate(g, { onDone: () => { location.hash = '#envoy'; }, onCancel: () => { location.hash = '#einstellungen'; } });
+const VIEWS = Object.fromEntries([
+  ...DOCK.filter((d) => d.render),
+  { id: 'einstellungen', label: 'Einstellungen', render: renderSettings },
+  { id: 'aussehen', label: 'Aussehen', render: changeLook, keep: true },
+].map((v) => [v.id, v]));
 const DEFAULT_VIEW = 'uebersicht';
 // Views where a finished expedition reports back by itself.
 const REPORT_VIEWS = ['uebersicht', 'karte'];
@@ -80,9 +91,31 @@ function renderNav() {
   if (gear && tone && !gear.querySelector('.coin-dot')) gear.append(h('span', { class: `coin-dot ${tone}` }));
 }
 
+// Before there is an Envoy: only the creation, without the menu. The screen
+// is built once, so a refresh in between does not reset the choice.
+let creating = null;
+function renderCreation() {
+  if (creating) return;
+  document.body.classList.add('creating');
+  replaceChildren(navRoot);
+  creating = renderCreate(game, { onDone: () => { creating = null; location.hash = `#${DEFAULT_VIEW}`; render(); } });
+  replaceChildren(viewRoot, creating);
+  document.title = 'Envoy';
+  lastView = null;
+}
+
 let lastView = null;
 function render() {
+  if (!game.state.world.envoy) {
+    renderCreation();
+    return;
+  }
+  creating = null;
+  document.body.classList.remove('creating');
+  account.setLabel(game.state.world.envoy.name);
   const name = currentView();
+  // A view with choices in progress is not rebuilt while it is open.
+  if (VIEWS[name].keep && name === lastView) return;
   if (name !== lastView && name === 'karte') markMapForScroll();
   replaceChildren(viewRoot, VIEWS[name].render(game));
   renderNav();
@@ -115,6 +148,15 @@ async function start() {
     return;
   }
 
+  const profile = account.active();
+  if (!profile) {
+    document.body.classList.add('creating');
+    replaceChildren(navRoot);
+    replaceChildren(viewRoot, renderWelcome());
+    return;
+  }
+  store.useProfile(profile.id);
+  sync.load();
   game.init(catalog);
   game.subscribe(render);
   sync.subscribe(() => {

@@ -1,5 +1,6 @@
-// Inventory: backpack from the start, wardrobe once there is a home.
+// Inventory: backpack from the start, storage („Lager“) once there is a home.
 // Search, filter by slot and sort. Tapping a thing opens its sheet.
+// While the Envoy is away, things in the storage are shown greyed out.
 
 import { h, icon, replaceChildren } from './dom.js';
 import { UI_ICONS } from './icons.js';
@@ -7,7 +8,7 @@ import { SLOTS, BACKPACK_SIZE } from '../config.js';
 import { viewHead, itemIcon, reqChips } from './parts.js';
 import { openEntry, thingSubtitle } from './itemsheet.js';
 import { lookup, unmetRequirements } from '../world/items.js';
-import { countIn, capacity } from '../world/inventory.js';
+import { countIn, capacity, reachable } from '../world/inventory.js';
 
 const FILTERS = [{ id: 'alle', name: 'Alle' }, ...SLOTS.map((s) => ({ id: s.id, name: s.name })), { id: 'einrichtung', name: 'Einrichtung' }];
 const SORTS = [
@@ -49,7 +50,8 @@ function sorter(a, b) {
 
 function tile({ entry, thing }, game) {
   const locked = entry.kind === 'item' && unmetRequirements(thing, game.state.stats).length > 0;
-  return h('button', { class: `item-tile ${locked ? 'locked' : ''}`, onclick: () => openEntry(entry.inst, game) },
+  const away = !reachable(game.state.world, entry);
+  return h('button', { class: `item-tile ${locked ? 'locked' : ''} ${away ? 'away' : ''}`, onclick: () => openEntry(entry.inst, game) },
     h('span', { class: 'item-frame' }, itemIcon(thing), locked ? icon(UI_ICONS.lock, 'item-lock') : null),
     h('span', { class: 'item-name' }, thing.name),
     h('span', { class: 'item-sub' }, thingSubtitle(entry, thing)),
@@ -73,7 +75,7 @@ export function renderInventory(game) {
     h('button', { class: `tab ${view.tab === 'rucksack' ? 'active' : ''}`, role: 'tab', onclick: () => { view.tab = 'rucksack'; game.refresh(); } },
       `Rucksack · ${packCount}/${BACKPACK_SIZE}`),
     h('button', { class: `tab ${view.tab === 'schrank' ? 'active' : ''}`, role: 'tab', disabled: !hasHome, onclick: () => { view.tab = 'schrank'; game.refresh(); } },
-      hasHome ? `Schrank · ${countIn(world, 'schrank')}/${capacity(world, game.catalog, 'schrank')}` : [icon(UI_ICONS.lock), 'Schrank']),
+      hasHome ? `Lager · ${countIn(world, 'schrank')}/${capacity(world, game.catalog, 'schrank')}` : [icon(UI_ICONS.lock), 'Lager']),
     h('button', { class: `tab ${view.tab === 'body' ? 'active' : ''}`, role: 'tab', onclick: () => { view.tab = 'body'; game.refresh(); } },
       `Getragen · ${countIn(world, 'body')}`));
 
@@ -99,8 +101,9 @@ export function renderInventory(game) {
 
   const over = packCount > BACKPACK_SIZE;
   return h('section', { class: 'view inventory' },
-    viewHead('Inventar', { rucksack: 'Rucksack', schrank: 'Schrank', body: 'Getragen' }[view.tab]),
+    viewHead('Inventar', { rucksack: 'Rucksack', schrank: 'Lager', body: 'Getragen' }[view.tab]),
     tabs,
+    view.tab === 'schrank' && !game.atCamp() ? h('p', { class: 'capacity' }, 'Der Envoy ist unterwegs. Das Lager ist erst nach der Rückkehr erreichbar.') : null,
     over ? h('p', { class: 'capacity over' }, 'Der Rucksack ist überfüllt. Jede Reise kostet 1 Ausdauer mehr.') : null,
     h('div', { class: 'toolbar' }, h('div', { class: 'toolbar-row' }, search, sort), chips),
     h('div', { class: 'panel' }, grid));

@@ -194,6 +194,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     totals,
     yesterdayExercise: dayExercise[addDays(today, -1)] || {},
     world,
+    envoy: world.envoy,
     equipped: world.equipped,
     dropped: world.dropped,
   };

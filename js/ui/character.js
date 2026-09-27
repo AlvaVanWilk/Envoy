@@ -1,5 +1,5 @@
-// Character window: the Envoy with its slots, the stats and what the
-// equipment adds in the world.
+// Character window: the Envoy with its slots and the inventory box, the
+// stats and what the equipment adds in the world.
 
 import { h, icon } from './dom.js';
 import { SLOT_ICONS } from './icons.js';
@@ -11,6 +11,7 @@ import { store } from '../store.js';
 import { addDays, formatDayShort } from '../days.js';
 import { viewHead, sectionTitle, itemIcon, staminaBar, effectText } from './parts.js';
 import { openSlot, slotName } from './itemsheet.js';
+import { packBox } from './pack.js';
 
 const LEFT_SLOTS = ['kopf', 'torso', 'handschuhe'];
 const RIGHT_SLOTS = ['umhang', 'beine', 'schuhe'];
@@ -19,12 +20,13 @@ const NOTICE_DAYS = 14;
 export function renderCharacter(game) {
   const s = game.state;
   return h('section', { class: 'view character' },
-    viewHead('Charakter', 'Envoy'),
+    viewHead('Envoy', s.world.envoy?.name || 'Envoy'),
     h('div', { class: 'char-grid' },
       h('div', { class: 'panel doll-frame' },
         h('div', { class: 'slot-column' }, LEFT_SLOTS.map((id) => slotTile(id, game))),
         paperdoll(s.equipped, s.world, game.catalog),
         h('div', { class: 'slot-column' }, RIGHT_SLOTS.map((id) => slotTile(id, game)))),
+      packBox(game),
       h('div', { class: 'char-side' },
         droppedNotice(game),
         h('section', { class: 'panel' },

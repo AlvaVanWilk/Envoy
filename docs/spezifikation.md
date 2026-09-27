@@ -363,20 +363,31 @@ höchstens 3 Level darunter oder darüber). Preis in Bannsplittern = 12 + 4 × n
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
 alles für ein Drittel des Preises zurück.
 
-### Rucksack und Schrank
+### Rucksack und Lager
 
-Der Rucksack hat von Anfang an 8 Plätze. Getragenes zählt nicht mit. Der Schrank kommt
-mit dem Zuhause (12 bis 60 Fächer je nach Stufe). Neues landet im Rucksack, ist der voll
-im Schrank, ist auch der voll, wird der Rucksack überfüllt (nichts geht verloren, aber
-jeder Weg kostet 1 mehr). Suchen, nach Slot filtern, nach Slot, Stufe, Name oder
-Neueste sortieren.
+Der Rucksack hat von Anfang an **5 Plätze**. Getragenes zählt nicht mit. Das **Lager**
+kommt mit dem Zuhause (12 bis 60 Plätze je nach Stufe) und steht im Lager, dem
+Ausgangspunkt jeder Expedition. Neues landet im Rucksack, ist der voll im Lager, ist auch
+das voll oder der Envoy unterwegs, wird der Rucksack überfüllt (nichts geht verloren,
+aber jeder Weg kostet 1 mehr).
+
+**Unterwegs** (solange eine Expedition läuft) lässt sich ins Lager nur hineinschauen:
+seine Teile sind ausgegraut. Nichts lässt sich daraus anlegen, hineinlegen,
+herausnehmen, verkaufen oder liegen lassen, und Einrichtung lässt sich weder aufstellen
+noch abbauen. Das geht erst, wenn der Envoy zurück im Lager ist. Was unterwegs abgelegt
+wird, kommt in den Rucksack.
+
+Das Charakterblatt zeigt unter der Figur (auf dem iPad rechts oben) eine Inventar-Box:
+Reiter „Rucksack“ mit seinen fünf Plätzen und, sobald es ein Zuhause gibt, Reiter
+„Lager“. Die Seite Inventar im Menü zeigt dasselbe mit Suche, Filter nach Slot und
+Sortierung (Slot, Stufe, Name, Neueste) und dem Getragenen.
 
 ### Zuhause
 
 Wird durch die Quest „Ein Platz zum Bleiben“ freigeschaltet (6 Pilzholz und 6 Stein im
 Lager). Stufen: Zelt → Steinhütte → Baracke → Steinhaus → Turmhaus, jeweils mit Pilzholz,
 Stein und Bannsplittern ausgebaut. Jede Stufe gibt Erholung (+5 % bis +30 %), Plätze für
-Einrichtung und Schrankfächer. Einrichtung (vom Händler, als Beute oder aus Quests)
+Einrichtung und Plätze im Lager. Einrichtung (vom Händler, als Beute oder aus Quests)
 gibt Erholung oder Glück.
 
 | Stufe | Pilzholz | Stein | Bannsplitter |
@@ -400,7 +411,7 @@ vertrieben, zuerst gesehen).
 | Was | Wann |
 | --- | --- |
 | Karte, Quests, Begegnungen, Rucksack, Kompendium | von Anfang an |
-| Zuhause, Schrank | Quest „Ein Platz zum Bleiben“ |
+| Zuhause, Lager | Quest „Ein Platz zum Bleiben“ |
 | Händler | Quest „Der Händler im Nebel“ |
 | Aschenhang, Turm der Stufen, lange Straße | Quest „Die Brücke über die Schlucht“ |
 | Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
@@ -446,9 +457,23 @@ Ebenenreihenfolge (hinten nach vorn): 1 Umhang hinten, 2 Basisfigur (Körper, Ko
 Grundkleidung), 3 Beinkleidung, 4 Schuhe, 5 Torso, 6 Handwickel, 7 Frisur /
 Kopfbedeckung.
 
-**Der Envoy ist eine Frau**, bisher die einzige Figur: gezeichnet im Comicstil mit
-schwarzer Kontur, blondes Haar im Dutt, graue Unterwäsche als Grundkleidung. Alle
-Bilder der Figur und der Ausrüstung stammen von der Nutzerin.
+**Zwei Figuren** stehen bei der Erstellung zur Wahl. Die erste ist die Envoy der
+Nutzerin: eine Frau im Comicstil mit schwarzer Kontur, blondes Haar im Dutt, graue
+Unterwäsche als Grundkleidung. Die zweite ist ein Platzhalter, bis ihre Zeichnung fertig
+ist; er ist auf dieselbe Vorlage gezeichnet, damit die Kleidung passt. Jede Figur hat
+einen eigenen Ordner mit `basisfigur.png` (die erste `assets/figur/`, die zweite
+`assets/figur/zweite/`). Kleidung liegt im Ordner der ersten Figur; braucht eine andere
+Figur eine eigene Fassung, kommt sie mit gleichem Dateinamen in deren Ordner, sonst trägt
+sie die der ersten.
+
+**Haut- und Haarfarbe** wählt man bei der Erstellung (6 Hauttöne, 7 Haarfarben). Jede
+Figur ist in einer Haut- und einer Haarfarbe gezeichnet; die App färbt diese Stellen im
+Browser um. Was Haut und was Haar ist, ergibt sich aus dem Farbton: Haut ist orange,
+Haar gelblicher und nur im oberen Viertel des Bildes. Schattierung und Linien bleiben,
+wie gezeichnet. In Kleidungsebenen werden nur Stellen im genauen Hautton umgefärbt, etwa
+Fingerspitzen in fingerlosen Handschuhen. Die gezeichneten Farben stehen in
+`js/config.js` (FIGURES); zeichnet die Nutzerin in anderen Farben, werden sie dort
+eingetragen.
 
 **Startoutfit:** Leinenhemd und Leinenhose, ohne Voraussetzung und ohne Fähigkeit. Der
 Envoy trägt sie von Anfang an (Herkunft `angezogen`). Handwickel und Bastsandalen liegen
@@ -460,9 +485,9 @@ gezeichnet; fehlt sein Icon, zeigt die App das Symbol des Slots. Die Umwandlung 
 fehlende Bilder als Hinweis, ohne abzubrechen. Sobald eine Datei mit dem Namen aus der
 Tabelle da ist, erscheint sie.
 
-Icons sind eigenständige, stilisierte Ansichten, 256 × 256 px, transparent. Solange es
-für Leinenhemd, Leinenhose und Griffhandschuhe keine eigenen Icons gibt, sind ihre Icons
-aus den Zeichnungen der Ebenen freigestellt. Weitere
+Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
+freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
+ersetzt das jederzeit. Weitere
 Bilder: Monster 512 × 512, Zuhause-Stufen 1200 × 800, Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
@@ -483,15 +508,46 @@ Blatt „Erklärung“ mit allen Spalten.
   monster, voraussetzung, tempo, ertrag, verbrauch, kosten (Ausdauer vor Ort, zugleich
   Minuten), belohnung, wiederholbar, abklingzeit
 
+## Konten und Envoy-Erstellung
+
+Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
+
+- **Startbildschirm**, solange auf dem Gerät niemand angemeldet ist: Reiter „Anmelden“
+  und „Neues Konto“ (Name und Passwort), darunter die Envoys, die schon auf diesem Gerät
+  sind, und „Ohne Konto spielen“.
+- **Konto:** Name mit 3 bis 30 Zeichen (Groß- und Kleinschreibung zählt beim Anmelden
+  nicht), Passwort mit mindestens 8 Zeichen. Der Server speichert nur einen Hash des
+  Passworts. Ein Gerät bekommt beim Anmelden einen Schlüssel (Token) und bleibt
+  angemeldet, bis es sich abmeldet. Nach fünf falschen Passwörtern in Folge ist das Konto
+  15 Minuten gesperrt. Der Server nimmt höchstens 30 Konten an (in `sync.php`
+  einstellbar).
+- **Ohne Konto:** Der Envoy bleibt auf diesem Gerät. In den Einstellungen lässt sich
+  später ein Konto dazu erstellen; dann geht alles auf den Server.
+- **Bisheriger Spielstand:** Gibt es auf dem Gerät einen Spielstand von vor den Konten,
+  bietet der Startbildschirm an, ihn zu übernehmen (vorausgewählt). Er wird mit allem,
+  was sein alter Geräteschlüssel auf dem Server kennt, in das neue Konto übernommen. Die
+  alten Daten bleiben als Reserve liegen.
+- **Envoy-Erstellung**, wenn es noch keinen Envoy gibt: erst die Figur wählen, dann Haut-
+  und Haarfarbe (mit Vorschau) und einen Namen. Der Name steht als Titel auf dem
+  Charakterblatt. Aussehen und Name lassen sich in den Einstellungen ändern.
+- **Einstellungen:** angemeldet als, Stand des Abgleichs, „Jetzt abgleichen“,
+  „Abmelden“ (die Daten bleiben auf dem Gerät und auf dem Server); ohne Konto „Konto
+  erstellen“ und „Profil wechseln“.
+
+Im Browser hat jedes Profil (ein Envoy) seinen eigenen Speicher; Geräte-Kennung und die
+Liste der Profile teilt sich das Gerät.
+
 ## Speicherung, Abgleich, Veröffentlichung
 
 Gespeichert wird eine Liste von Ereignissen, nie ein fertiger Spielstand. Der Stand
 wird bei jedem Start aus dieser Liste neu berechnet, Tag für Tag, inklusive Malus,
-Bodensatz, Ausdauerleiste und Welt.
+Bodensatz, Ausdauerleiste und Welt. Auch Name und Aussehen des Envoy sind ein Ereignis
+(`envoy`), damit sie auf allen Geräten gleich sind.
 
-`sync.php` gleicht die Liste zwischen Geräten ab: Jedes Gerät schickt, was der Server
-noch nicht kennt, und bekommt, was es selbst noch nicht hat. Es wird nie etwas
-überschrieben. Ein Schlüssel verbindet die Geräte.
+`sync.php` hält für jedes Konto eine eigene Liste und gleicht sie zwischen den Geräten
+des Kontos ab: Jedes Gerät schickt, was der Server noch nicht kennt, und bekommt, was es
+selbst noch nicht hat. Es wird nie etwas überschrieben. Die Daten liegen in
+`sync-daten/` (von außen gesperrt), die Konten in `sync-daten/konten/`.
 
 Ein GitHub-Ablauf testet bei jeder Änderung, wandelt die Tabellen um und lädt den
 Zweig `main` per SFTP auf den IONOS-Webspace.
@@ -509,6 +565,10 @@ Zweig `main` per SFTP auf den IONOS-Webspace.
 | Bodensatz | Level mit Nachkommastelle |
 | Tagesgrenze | 3:00 Uhr |
 | Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot |
+| Rucksack | 5 Plätze; das Lager (bisher Schrank) nur im Lager nutzbar |
+| Konten | Name und Passwort auf dem eigenen Server; ohne Konto nur auf einem Gerät |
+| Figuren | zwei zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |
+| Icons | aus den Zeichnungen der Ebenen freigestellt |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |

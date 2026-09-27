@@ -40,7 +40,7 @@ export function renderHome(game) {
       h('div', { class: 'res-list build-cost' },
         needed.map((k) => resource(k, `${Math.min(world.purse[k], next.cost[k])}/${next.cost[k]}`, { lacking: lacking(k) }))),
       h('p', { class: 'muted build-gain' },
-        `Danach: Erholung ${next.erholung} %, ${next.plaetze} Plätze für Einrichtung, Schrank für ${next.schrank} Teile`),
+        `Danach: Erholung ${next.erholung} %, ${next.plaetze} Plätze für Einrichtung, Lager für ${next.schrank} Teile`),
       h('button', { class: 'btn primary', disabled: !affordable, onclick: () => game.build() }, 'Ausbauen'));
   }
 
@@ -52,7 +52,7 @@ export function renderHome(game) {
         h('section', { class: 'panel' },
           h('p', { class: 'quest-text', style: { 'margin-bottom': '12px' } }, tier.text),
           h('div', { class: 'bonus-row' }, effectList({ erholung: fx.erholung, glueck: fx.glueck })),
-          h('p', { class: 'muted', style: { 'margin-top': '10px' } }, `Schrank: ${countIn(world, 'schrank')} von ${capacity(world, game.catalog, 'schrank')} Teilen`)),
+          h('p', { class: 'muted', style: { 'margin-top': '10px' } }, `Lager: ${countIn(world, 'schrank')} von ${capacity(world, game.catalog, 'schrank')} Teilen`)),
         h('section', { class: 'panel' },
           sectionTitle('Einrichtung', h('span', { class: 'title-note' }, `${world.placed.length} von ${tier.plaetze}`)),
           h('div', { class: 'furniture-slots' }, slots)),
@@ -68,15 +68,22 @@ function chooseFurniture(game) {
     .filter((x) => x.piece);
   openSheet({
     title: 'Einrichtung aufstellen',
-    content: pieces.length === 0
-      ? h('p', { class: 'muted' }, 'Keine Einrichtung im Rucksack oder Schrank. Der Händler hat manchmal welche, Geister lassen sie liegen.')
-      : h('div', { class: 'item-list' }, pieces.map(({ entry, piece }) => {
-        const fits = piece.abStufe <= world.home;
-        return h('div', { class: `item-row ${fits ? '' : 'locked'}` },
-          h('span', { class: 'item-frame' }, itemIcon(piece)),
-          h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, piece.name), effectList(piece.effekt)),
-          h('button', { class: 'btn primary small', disabled: !fits, onclick: () => { game.place(entry.inst); closeSheet(); } },
-            fits ? 'Aufstellen' : `Ab Stufe ${piece.abStufe}`));
-      })),
+    content: !game.atCamp() && pieces.length > 0
+      ? [h('p', { class: 'muted away-note' }, 'Aufstellen geht, wenn der Envoy im Lager ist.'), furnitureList(pieces, game)]
+      : pieces.length === 0
+      ? h('p', { class: 'muted' }, 'Keine Einrichtung im Rucksack oder Lager. Der Händler hat manchmal welche, Geister lassen sie liegen.')
+      : furnitureList(pieces, game),
   });
+}
+
+function furnitureList(pieces, game) {
+  const { world } = game.state;
+  return h('div', { class: 'item-list' }, pieces.map(({ entry, piece }) => {
+    const fits = piece.abStufe <= world.home;
+    return h('div', { class: `item-row ${fits ? '' : 'locked'}` },
+      h('span', { class: 'item-frame' }, itemIcon(piece)),
+      h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, piece.name), effectList(piece.effekt)),
+      h('button', { class: 'btn primary small', disabled: !fits || !game.atCamp(), onclick: () => { game.place(entry.inst); closeSheet(); } },
+        fits ? 'Aufstellen' : `Ab Stufe ${piece.abStufe}`));
+  }));
 }

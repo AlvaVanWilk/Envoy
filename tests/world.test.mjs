@@ -11,7 +11,7 @@ import { planExpedition, progressAt, heroPosition } from '../js/world/expedition
 import { offersFor } from '../js/world/trader.js';
 import { itemLevel } from '../js/world/items.js';
 import { countIn } from '../js/world/inventory.js';
-import { MINUTES_PER_STAMINA } from '../js/config.js';
+import { MINUTES_PER_STAMINA, BACKPACK_SIZE } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -269,6 +269,38 @@ test('home: a build keeps the price it had, even if the table changes later', ()
   const s = replay([gift, build], catalog, DAY, T0 + 2 * H);
   assert.equal(s.world.home, 2);
   assert.deepEqual(s.world.purse, { splitter: 10, pilzholz: 2, stein: 5 });
+});
+
+test('the storage stays at the camp: while away nothing goes in or out', () => {
+  const gift = ev('expedition', { q: 'q-zuhause', place: 'lager', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'bauen', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: ['zuhause'], rest: false } } }, 0);
+  const wraps = 'start:handschuhe_handwickel_1';
+  const store = ev('move', { inst: wraps, to: 'schrank' }, 1);
+  const away = expeditionEvent([gift, store], 'q-stein', 1.1);            // back after 8 minutes
+  const takeOut = ev('move', { inst: wraps, to: 'rucksack' }, 1.12);
+  const wear = ev('equip', { slot: 'handschuhe', inst: wraps }, 1.13);
+  const s = replay([gift, store, away, takeOut, wear], catalog, DAY, T0 + 1.14 * H);
+  assert.ok(s.world.expedition);
+  assert.equal(s.world.items[wraps].where, 'schrank');
+  assert.equal(s.world.equipped.handschuhe, undefined);
+
+  const back = ev('equip', { slot: 'handschuhe', inst: wraps }, 2);
+  const s2 = replay([gift, store, away, takeOut, wear, back], catalog, DAY, T0 + 2.1 * H);
+  assert.equal(s2.world.equipped.handschuhe, wraps);
+});
+
+test('the Envoy: name and look from the latest envoy event, trimmed', () => {
+  assert.equal(replay([], catalog, DAY, T0).world.envoy, null);
+  const first = ev('envoy', { name: '  Mira ', figur: 'erste', haut: 'braun', haar: 'schwarz' }, 0.1);
+  const empty = ev('envoy', { name: '   ', figur: 'zweite' }, 0.2);
+  const later = ev('envoy', { name: 'Mira Kupfer', figur: 'erste', haut: 'hell', haar: 'kupfer' }, 0.3);
+  assert.deepEqual(replay([first, empty], catalog, DAY, T0 + H).envoy, { name: 'Mira', figur: 'erste', haut: 'braun', haar: 'schwarz' });
+  assert.equal(replay([first, empty, later], catalog, DAY, T0 + H).envoy.haar, 'kupfer');
+});
+
+test('the backpack has five places', () => {
+  assert.equal(BACKPACK_SIZE, 5);
 });
 
 test('equipment abilities count, never stats', () => {

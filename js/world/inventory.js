@@ -1,7 +1,9 @@
-// Backpack and wardrobe. Every owned thing is an entry in world.items:
+// Backpack and storage. Every owned thing is an entry in world.items:
 //   { inst, kind: 'item' | 'furniture', id, where, got }
 // where = 'rucksack' | 'schrank' | 'body' (worn) | 'home' (furniture set up)
-// The backpack has a few places from the start; the wardrobe comes with the home.
+// The backpack has a few places from the start. The storage ('schrank',
+// shown as „Lager“) comes with the home and stays at the camp: while the
+// Envoy is away, nothing can be taken out of it or put into it.
 
 import { BACKPACK_SIZE } from '../config.js';
 
@@ -25,11 +27,21 @@ export function overloaded(world) {
   return countIn(world, 'rucksack') > BACKPACK_SIZE;
 }
 
-// New things go into the backpack; if it is full, into the wardrobe;
-// if that is full too, the backpack gets over-full (travel costs more).
+// The Envoy is at the camp when no expedition is running.
+export function atCamp(world) {
+  return !world.expedition;
+}
+
+// Can the Envoy get at this thing right now? Things in storage only at the camp.
+export function reachable(world, entry) {
+  return entry.where !== 'schrank' || atCamp(world);
+}
+
+// New things go into the backpack; if it is full, into the storage (only
+// at the camp); otherwise the backpack gets over-full (travel costs more).
 export function stow(world, catalog, entry) {
   let where = 'rucksack';
-  if (!hasSpace(world, catalog, 'rucksack') && hasSpace(world, catalog, 'schrank')) where = 'schrank';
+  if (!hasSpace(world, catalog, 'rucksack') && atCamp(world) && hasSpace(world, catalog, 'schrank')) where = 'schrank';
   world.items[entry.inst] = { ...entry, where };
   return where;
 }

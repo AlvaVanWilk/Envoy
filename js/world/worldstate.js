@@ -3,6 +3,7 @@
 // the stats of that moment. Everything here only changes `world`.
 //
 // world = {
+//   envoy       { name, figur, haut, haar } or null while the Envoy has not been created
 //   expedition  the running expedition or null: { id, q, place, title, start, out, act, back, end, outcome }
 //   stamina     { value, at }: bar value at time `at`, refills from there
 //   purse       { splitter, pilzholz, stein }
@@ -19,9 +20,9 @@
 //   dropped     equipment taken off because a stat fell below its requirement
 // }
 
-import { STAMINA_REST_TASK_SHARE } from '../config.js';
+import { STAMINA_REST_TASK_SHARE, NAME_MAX } from '../config.js';
 import { effects, maxStamina, staminaAt } from './hero.js';
-import { stow, removeEntry, hasSpace } from './inventory.js';
+import { stow, removeEntry, hasSpace, atCamp, reachable } from './inventory.js';
 import { unmetRequirements } from './items.js';
 import { totalMinutes } from './expedition.js';
 
@@ -33,6 +34,7 @@ const KEEP_REPORTS = 30;
 
 export function initialWorld(catalog, startTime, stats) {
   const world = {
+    envoy: null,
     expedition: null,
     stamina: { value: maxStamina(stats), at: startTime },
     purse: { splitter: 0, pilzholz: 0, stein: 0 },
@@ -69,10 +71,11 @@ function spend(world, amount) {
   world.stamina.value = Math.max(0, world.stamina.value - amount);
 }
 
-// Somewhere to put a thing taken off: backpack, else wardrobe, else backpack anyway.
+// Somewhere to put a thing taken off: backpack, else storage (only at the
+// camp), else backpack anyway.
 function putAway(world, ctx, entry) {
   if (hasSpace(world, ctx.catalog, 'rucksack')) entry.where = 'rucksack';
-  else if (hasSpace(world, ctx.catalog, 'schrank')) entry.where = 'schrank';
+  else if (atCamp(world) && hasSpace(world, ctx.catalog, 'schrank')) entry.where = 'schrank';
   else entry.where = 'rucksack';
 }
 
@@ -147,7 +150,7 @@ function equip(world, e, ctx) {
     // events written before items had their own ids
     entry = Object.values(world.items).find((x) => x.id === e.item && x.where !== 'body');
   }
-  if (!entry || entry.kind !== 'item' || entry.where === 'body') return;
+  if (!entry || entry.kind !== 'item' || entry.where === 'body' || !reachable(world, entry)) return;
   const item = ctx.catalog.itemById.get(entry.id);
   if (!item || item.slot !== e.slot || unmetRequirements(item, ctx.stats).length > 0) return;
   const previous = world.items[world.equipped[e.slot]];
@@ -172,16 +175,17 @@ export function applyWorldEvent(world, e, ctx) {
       }
       break;
     case 'sell':
-      if (entry && (entry.where === 'rucksack' || entry.where === 'schrank')) {
+      if (entry && (entry.where === 'rucksack' || entry.where === 'schrank') && reachable(world, entry)) {
         removeEntry(world, e.inst);
         world.purse.splitter += e.price;
       }
       break;
     case 'drop':
-      if (entry && (entry.where === 'rucksack' || entry.where === 'schrank')) removeEntry(world, e.inst);
+      if (entry && (entry.where === 'rucksack' || entry.where === 'schrank') && reachable(world, entry)) removeEntry(world, e.inst);
       break;
     case 'move':
-      if (entry && ['rucksack', 'schrank'].includes(entry.where) && ['rucksack', 'schrank'].includes(e.to)
+      // between backpack and storage: only at the camp
+      if (entry && atCamp(world) && ['rucksack', 'schrank'].includes(entry.where) && ['rucksack', 'schrank'].includes(e.to)
         && entry.where !== e.to && hasSpace(world, ctx.catalog, e.to)) {
         entry.where = e.to;
       }
@@ -198,7 +202,8 @@ export function applyWorldEvent(world, e, ctx) {
     case 'place': {
       const piece = entry && ctx.catalog.furnitureById.get(entry.id);
       const tier = ctx.catalog.home[world.home - 1];
-      if (piece && tier && ['rucksack', 'schrank'].includes(entry.where)
+      // the home is at the camp
+      if (piece && tier && atCamp(world) && ['rucksack', 'schrank'].includes(entry.where)
         && world.placed.length < tier.plaetze && piece.abStufe <= world.home) {
         entry.where = 'home';
         world.placed.push(entry.inst);
@@ -206,11 +211,16 @@ export function applyWorldEvent(world, e, ctx) {
       break;
     }
     case 'unplace':
-      if (entry && entry.where === 'home') {
+      if (entry && entry.where === 'home' && atCamp(world)) {
         world.placed = world.placed.filter((p) => p !== entry.inst);
         putAway(world, ctx, entry);
       }
       break;
+    case 'envoy': {
+      const name = String(e.name || '').trim().slice(0, NAME_MAX);
+      if (name) world.envoy = { name, figur: String(e.figur || ''), haut: String(e.haut || ''), haar: String(e.haar || '') };
+      break;
+    }
     case 'build': {
       const next = ctx.catalog.home[world.home];
       const cost = next && priceAtTheTime(e.cost, next.cost);

@@ -1,8 +1,10 @@
-// Settings: device sync, backup file, facts about the data.
+// Settings: the account and sync, the Envoy's look, backup file, facts
+// about the data, resetting this device.
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
-import { sync, generateKey, formatKey, isPlausibleKey } from '../sync.js';
+import { sync } from '../sync.js';
+import { account, ACCOUNT_ERRORS, errorText } from '../account.js';
 import { game } from '../game.js';
 import { store } from '../store.js';
 import { toast, openSheet, closeSheet } from './sheet.js';
@@ -10,10 +12,8 @@ import { APP_VERSION } from '../config.js';
 import { dayKey } from '../days.js';
 
 const ERRORS = {
+  ...ACCOUNT_ERRORS,
   offline: 'Offline. Wird nachgeholt.',
-  profile_limit: 'Der Server nimmt keine weiteren Schlüssel an.',
-  bad_key: 'Schlüssel ungültig.',
-  status_404: 'sync.php wurde nicht gefunden.',
   storage: 'Der Server konnte nicht speichern.',
   storage_damaged: 'Die Datei auf dem Server ist beschädigt.',
 };
@@ -31,59 +31,79 @@ function syncStatusText() {
   return 'Noch nicht abgeglichen.';
 }
 
-function syncPanel() {
-  if (!sync.enabled()) {
-    const input = h('input', {
-      type: 'text', autocomplete: 'off', autocapitalize: 'characters', spellcheck: 'false',
-      placeholder: 'XXXX-XXXX-XXXX-XXXX-XXXX', 'aria-label': 'Schlüssel',
-    });
-    const connect = () => {
-      if (!isPlausibleKey(input.value)) {
-        toast('Schlüssel ungültig.');
-        return;
-      }
-      sync.connect(input.value);
-    };
+function accountPanel() {
+  const profile = account.active();
+  if (!profile?.user) {
     return h('section', { class: 'panel settings-panel' },
-      h('h2', { class: 'section-title' }, 'Abgleich'),
+      h('h2', { class: 'section-title' }, 'Konto'),
       h('p', { class: 'muted' }, 'Nur auf diesem Gerät gespeichert.'),
       h('div', { class: 'button-row' },
-        h('button', { class: 'btn primary', onclick: () => sync.connect(generateKey()) }, 'Neuen Schlüssel erzeugen')),
-      h('div', { class: 'field-row' }, input,
-        h('button', { class: 'btn ghost', onclick: connect }, 'Verbinden')));
+        h('button', { class: 'btn primary', onclick: openAttach }, 'Konto erstellen'),
+        h('button', { class: 'btn text', onclick: () => { account.leave(); location.reload(); } }, 'Profil wechseln')));
   }
-
-  const key = formatKey(sync.settings.key);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(key);
-      toast('Kopiert.');
-    } catch {
-      toast('Kopieren nicht möglich.');
-    }
-  };
   const status = sync.settings.lastError ? 'error' : sync.settings.outbox.length > 0 ? 'pending' : 'ok';
+  const relogin = sync.settings.lastError === 'auth';
   return h('section', { class: 'panel settings-panel' },
-    h('h2', { class: 'section-title' }, 'Abgleich'),
+    h('h2', { class: 'section-title' }, 'Konto'),
+    h('p', { class: 'account-name' }, 'Angemeldet als ', h('strong', {}, profile.user)),
     h('p', { class: `sync-status ${status}` }, h('span', { class: 'dot' }), syncStatusText()),
-    h('div', { class: 'key-box' },
-      h('code', { class: 'key' }, key),
-      h('button', { class: 'btn text small', onclick: copy }, 'Kopieren')),
     h('div', { class: 'button-row' },
-      h('button', { class: 'btn ghost', onclick: () => sync.run() }, icon(UI_ICONS.sync), 'Jetzt abgleichen'),
-      h('button', { class: 'btn text', onclick: confirmDisconnect }, 'Trennen')));
+      relogin ? null : h('button', { class: 'btn ghost', onclick: () => sync.run() }, icon(UI_ICONS.sync), 'Jetzt abgleichen'),
+      h('button', { class: relogin ? 'btn primary' : 'btn text', onclick: confirmLogout }, relogin ? 'Neu anmelden' : 'Abmelden')));
 }
 
-function confirmDisconnect() {
+// A local profile gets an account: everything so far goes to the server.
+function openAttach() {
+  const user = h('input', { class: 'field', type: 'text', autocomplete: 'username', autocapitalize: 'none', spellcheck: 'false', placeholder: 'Name', 'aria-label': 'Name' });
+  const password = h('input', { class: 'field', type: 'password', autocomplete: 'new-password', placeholder: 'Passwort', 'aria-label': 'Passwort' });
+  const error = h('p', { class: 'form-error', role: 'alert' });
+  const create = async () => {
+    error.textContent = '';
+    try {
+      await account.attach(user.value, password.value);
+      sync.load();
+      closeSheet();
+      toast('Konto erstellt.');
+      await sync.run();
+      game.refresh();
+    } catch (e) {
+      error.textContent = errorText(e);
+    }
+  };
   openSheet({
-    title: 'Abgleich trennen',
+    title: 'Konto erstellen',
     content: [
-      h('p', {}, 'Die Daten bleiben auf diesem Gerät und auf dem Server.'),
+      h('label', { class: 'form-field' }, h('span', {}, 'Name'), user),
+      h('label', { class: 'form-field' }, h('span', {}, 'Passwort'), password),
+      error,
       h('div', { class: 'sheet-actions' },
         h('button', { class: 'btn ghost', onclick: closeSheet }, 'Abbrechen'),
-        h('button', { class: 'btn primary', onclick: () => { sync.disconnect(); closeSheet(); } }, 'Trennen')),
+        h('button', { class: 'btn primary', onclick: create }, 'Erstellen')),
     ],
   });
+}
+
+function confirmLogout() {
+  const pending = sync.settings.outbox.length > 0;
+  openSheet({
+    title: 'Abmelden',
+    content: [
+      h('p', {}, pending
+        ? 'Einiges ist noch nicht abgeglichen. Es bleibt auf diesem Gerät und geht beim nächsten Anmelden auf den Server.'
+        : 'Der Spielstand bleibt auf dem Server und auf diesem Gerät.'),
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn ghost', onclick: closeSheet }, 'Abbrechen'),
+        h('button', { class: 'btn primary', onclick: async () => { await account.logout(); location.reload(); } }, 'Abmelden')),
+    ],
+  });
+}
+
+function envoyPanel() {
+  const envoy = game.state.world.envoy;
+  return h('section', { class: 'panel settings-panel' },
+    h('h2', { class: 'section-title' }, 'Envoy'),
+    h('p', {}, envoy?.name || 'Envoy'),
+    h('div', { class: 'button-row' }, h('a', { class: 'btn ghost', href: '#aussehen' }, 'Aussehen und Name ändern')));
 }
 
 function backupPanel() {
@@ -142,9 +162,7 @@ function resetPanel() {
   const confirmReset = () => openSheet({
     title: 'Gerät zurücksetzen',
     content: [
-      h('p', {}, sync.enabled()
-        ? 'Löscht alle Daten auf diesem Gerät. Auf dem Server bleiben sie erhalten.'
-        : 'Löscht alle Daten auf diesem Gerät. Ohne Sicherung sind sie verloren.'),
+      h('p', {}, 'Löscht alle Envoys und Daten auf diesem Gerät. Was in einem Konto auf dem Server liegt, bleibt dort. Envoys ohne Konto sind ohne Sicherung verloren.'),
       h('div', { class: 'sheet-actions' },
         h('button', { class: 'btn ghost', onclick: closeSheet }, 'Abbrechen'),
         h('button', { class: 'btn danger', onclick: () => { store.clearAll(); location.reload(); } }, 'Löschen')),
@@ -159,5 +177,5 @@ export function renderSettings() {
   return h('section', { class: 'view settings' },
     h('header', { class: 'view-head' },
       h('div', {}, h('p', { class: 'eyebrow' }, 'Envoy'), h('h1', {}, 'Einstellungen'))),
-    h('div', { class: 'settings-grid' }, syncPanel(), backupPanel(), aboutPanel(), resetPanel()));
+    h('div', { class: 'settings-grid' }, accountPanel(), envoyPanel(), backupPanel(), aboutPanel(), resetPanel()));
 }

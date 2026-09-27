@@ -1,13 +1,12 @@
-// Keeps several devices in step through sync.php on the own web space.
-// Each device sends the events the server has not confirmed yet and gets
-// back every event it has not seen. Nothing is ever overwritten, so there
-// are no conflicts to resolve.
+// Keeps the devices of one account in step through sync.php on the own web
+// space. Each device sends the events the server has not confirmed yet and
+// gets back every event it has not seen. Nothing is ever overwritten, so
+// there are no conflicts to resolve. A profile without account does not sync.
 
-import { SYNC_ENDPOINT } from './config.js';
 import { game, onLocalEvents } from './game.js';
 import { store } from './store.js';
+import { account, post } from './account.js';
 
-const KEY_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const RETRY_DELAY_MS = 2000;
 
 const listeners = new Set();
@@ -15,8 +14,13 @@ let timer = null;
 let running = false;
 
 export const sync = {
-  settings: store.loadSync(),
+  settings: { since: 0, outbox: [], lastSync: null, lastError: null },
   running: false,
+
+  // Reads the sync state of the active profile (after store.useProfile).
+  load() {
+    this.settings = store.loadSync();
+  },
 
   init() {
     document.addEventListener('visibilitychange', () => {
@@ -27,7 +31,8 @@ export const sync = {
   },
 
   enabled() {
-    return Boolean(this.settings.key);
+    const profile = account.active();
+    return Boolean(profile?.user && profile?.token);
   },
 
   save() {
@@ -45,41 +50,16 @@ export const sync = {
     timer = setTimeout(() => this.run(), RETRY_DELAY_MS);
   },
 
-  // Connect this device. All local events go to the server once.
-  connect(key) {
-    this.settings = {
-      key: normalizeKey(key),
-      since: 0,
-      outbox: game.events.map((e) => e.id),
-      lastSync: null,
-      lastError: null,
-    };
-    this.save();
-    return this.run();
-  },
-
-  disconnect() {
-    this.settings = { key: '', since: 0, outbox: [], lastSync: null, lastError: null };
-    this.save();
-  },
-
   async run() {
-    if (!this.settings.key || running) return;
+    const profile = account.active();
+    if (!profile?.token || running) return;
     running = true;
     this.running = true;
     this.save();
     const outbox = new Set(this.settings.outbox);
     const sending = game.events.filter((e) => outbox.has(e.id));
     try {
-      const response = await fetch(SYNC_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: this.settings.key, since: this.settings.since, events: sending }),
-        cache: 'no-store',
-      });
-      const body = await response.json().catch(() => ({}));
-      if (!response.ok || !body.ok) throw new Error(body.error || `status_${response.status}`);
-
+      const body = await post({ action: 'sync', user: profile.user, token: profile.token, since: this.settings.since, events: sending });
       game.receive(body.events || []);
       const sent = new Set(sending.map((e) => e.id));
       if (body.seq < this.settings.since) {
@@ -93,7 +73,7 @@ export const sync = {
       this.settings.lastSync = Date.now();
       this.settings.lastError = null;
     } catch (error) {
-      this.settings.lastError = navigator.onLine === false ? 'offline' : String(error.message || error);
+      this.settings.lastError = String(error.message || error);
     } finally {
       running = false;
       this.running = false;
@@ -105,26 +85,8 @@ export const sync = {
 // Registered when this file loads, before the game creates its first events,
 // so no local event is missed.
 onLocalEvents((events) => {
-  if (!sync.settings.key) return;
+  if (!sync.enabled()) return;
   sync.settings.outbox.push(...events.map((e) => e.id));
   sync.save();
   sync.schedule();
 });
-
-export function generateKey() {
-  const bytes = new Uint8Array(20);
-  crypto.getRandomValues(bytes);
-  return formatKey(Array.from(bytes, (b) => KEY_ALPHABET[b % KEY_ALPHABET.length]).join(''));
-}
-
-export function normalizeKey(input) {
-  return String(input).toUpperCase().replace(/[^A-Z0-9]/g, '');
-}
-
-export function formatKey(key) {
-  return normalizeKey(key).replace(/(.{4})(?=.)/g, '$1-');
-}
-
-export function isPlausibleKey(input) {
-  return /^[A-Z0-9]{20,64}$/.test(normalizeKey(input));
-}

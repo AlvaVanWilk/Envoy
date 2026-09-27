@@ -847,6 +847,31 @@ button.task-check:hover { color: var(--stat); }
 .slot-glyph { width: 26px; height: 26px; color: #37535b; --engrave: rgba(4, 12, 14, 0.6); }
 .item-glyph { display: grid; place-items: center; padding: 18%; color: var(--teal); --engrave: rgba(4, 12, 14, 0.6); }
 .item-glyph svg { width: 100%; height: 100%; }
+
+/* inventory box on the character sheet */
+.title-link { order: 2; font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--copper-bright); text-decoration: none; }
+.pack-tabs { margin-bottom: 12px; }
+.pack-note { margin: -2px 0 10px; font-size: 13px; }
+.pack-note.over { color: var(--loss); }
+.pack-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.pack-cell {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 1px solid #04070a;
+  border-radius: 6px;
+  background: radial-gradient(circle at 50% 38%, #1a272b, #0d1416);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(244, 236, 222, 0.04);
+}
+.pack-cell.filled { cursor: pointer; box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(236, 222, 196, 0.16); }
+.pack-cell .item-icon { width: 86%; height: 86%; }
+.pack-cell.locked .item-icon { filter: grayscale(0.7) brightness(0.7); }
+.pack-cell.over { border-color: var(--loss); }
+.pack-cell.away .item-icon, .item-tile.away .item-icon, .item-row.away .item-icon { filter: grayscale(1) brightness(0.5); opacity: 0.75; }
+.item-tile.away .item-name, .item-row.away .item-name { color: var(--muted); }
+.away-note { margin: 4px 0 12px; }
 .slot.filled .slot-frame { box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(236, 222, 196, 0.18), 0 1px 0 rgba(244, 236, 222, 0.04); }
 .slot-label { max-width: 64px; font-size: 9px; letter-spacing: 0.1em; line-height: 1.1; text-align: center; text-transform: uppercase; color: var(--muted); }
 .facts { margin: 0; display: grid; }
@@ -1221,6 +1246,57 @@ button.task-check:hover { color: var(--stat); }
 .sync-status.error .dot { background: var(--loss); }
 .error-panel { display: grid; justify-items: center; gap: 14px; max-width: 420px; margin: 20vh auto 0; text-align: center; }
 
+/* 14b. creating the Envoy ---------------------------------------------- */
+
+.create { max-width: 900px; margin: 0 auto; }
+body.creating .dock { display: none; }
+.create-head { margin: 6px 0 18px; }
+.figure-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.figure-card { display: grid; place-items: center; padding: 14px 6px 8px; cursor: pointer; transition: box-shadow 0.15s; }
+.figure-card.active { box-shadow: 0 0 0 2px var(--copper), 0 6px 22px rgba(0, 0, 0, 0.45); }
+.figure-card .paperdoll { max-width: 260px; }
+.create-look { display: grid; gap: 12px; }
+.create-preview { display: grid; place-items: center; padding: 12px; }
+.create-preview .paperdoll { max-width: 300px; }
+.create-controls { display: grid; gap: 20px; align-content: start; }
+.swatch-group { display: grid; gap: 10px; }
+.swatch-label { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-2); }
+.swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+.swatch {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 2px solid #04070a;
+  border-radius: 50%;
+  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(244, 236, 222, 0.1);
+  cursor: pointer;
+}
+.swatch.active { box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.25), 0 0 0 3px var(--ivory); }
+.name-field { width: 100%; font-size: 18px; }
+.create-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 18px; }
+
+/* 14c. start screen and account ---------------------------------------- */
+
+.welcome { display: grid; gap: 16px; max-width: 460px; margin: 0 auto; padding-top: 3vh; }
+.welcome-head { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.welcome-sigil { width: 96px; height: 96px; border-radius: 50%; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 0 2px var(--copper-dark); }
+.welcome-form { display: grid; gap: 14px; }
+.welcome-form .tabs { margin-bottom: 0; }
+.form-field { display: grid; gap: 6px; }
+.form-field > span:first-child { font-size: 13px; color: var(--text-2); }
+.password-row { display: flex; align-items: center; gap: 8px; }
+.password-row .field { flex: 1; min-width: 0; }
+.check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); }
+.check input { flex: none; width: 20px; height: 20px; margin: 1px 0 0; accent-color: var(--copper); }
+.form-error { margin: 0; font-size: 14px; color: var(--loss); }
+.form-error:empty { display: none; }
+.welcome.busy { opacity: 0.7; pointer-events: none; }
+.profile-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.profile-row:last-child { border-bottom: 0; }
+.profile-name { font-size: 15px; }
+.welcome-local { justify-self: center; }
+.account-name { margin-bottom: 8px; }
+
 /* 15. wider screens ------------------------------------------------------ */
 
 @media (max-width: 400px) {
@@ -1265,6 +1341,10 @@ button.task-check:hover { color: var(--stat); }
   .map-canvas { width: max(100%, 720px); }
 }
 
+@media (min-width: 760px) {
+  .create-look { grid-template-columns: 1fr 1fr; }
+}
+
 @media (min-width: 900px) {
   .today-grid { grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); }
   .world-grid {
@@ -1280,8 +1360,15 @@ button.task-check:hover { color: var(--stat); }
 @media (min-width: 1100px) {
   .dash-grid { grid-template-columns: 1.15fr 1fr 1fr; }
   .dash-tasks { grid-row: span 2; }
-  .char-grid { grid-template-columns: minmax(420px, 1.05fr) 1fr; align-items: start; }
-  .doll-frame { position: sticky; top: calc(env(safe-area-inset-top) + 20px); }
+  .char-grid {
+    grid-template-columns: minmax(420px, 1.05fr) 1fr;
+    grid-template-areas: "doll pack" "doll side";
+    grid-template-rows: auto 1fr;
+    align-items: start;
+  }
+  .char-grid > .doll-frame { grid-area: doll; }
+  .char-grid > .pack { grid-area: pack; }
+  .char-grid > .char-side { grid-area: side; }
   .home-grid { grid-template-columns: 1.2fr 1fr; }
   .trader-grid { grid-template-columns: 1fr 1.6fr 1fr; }
   .trader-offers { grid-column: auto; }

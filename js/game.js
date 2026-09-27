@@ -8,7 +8,7 @@ import { missingPlans, replans } from './planner.js';
 import { dayKey } from './days.js';
 import { store } from './store.js';
 import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour } from './world/hero.js';
-import { hasSpace } from './world/inventory.js';
+import { hasSpace, atCamp, reachable } from './world/inventory.js';
 import { questById, questState } from './world/quests.js';
 import { planExpedition, progressAt } from './world/expedition.js';
 import { offersFor } from './world/trader.js';
@@ -206,16 +206,22 @@ export const game = {
 
   sell(inst) {
     const entry = this.state.world.items[inst];
-    if (!entry || !this.unlocked('haendler')) return;
+    if (!entry || !this.unlocked('haendler') || !reachable(this.state.world, entry)) return;
     this.add([this.event('sell', { inst, price: sellPrice(entry, this.catalog) })]);
   },
 
   drop(inst) {
-    if (this.state.world.items[inst]) this.add([this.event('drop', { inst })]);
+    const entry = this.state.world.items[inst];
+    if (entry && reachable(this.state.world, entry)) this.add([this.event('drop', { inst })]);
+  },
+
+  // At the camp: the storage can be used and furniture set up.
+  atCamp() {
+    return atCamp(this.state.world);
   },
 
   move(inst, to) {
-    if (hasSpace(this.state.world, this.catalog, to)) this.add([this.event('move', { inst, to })]);
+    if (this.atCamp() && hasSpace(this.state.world, this.catalog, to)) this.add([this.event('move', { inst, to })]);
   },
 
   canEquip(item) {
@@ -225,7 +231,7 @@ export const game = {
   equip(slot, inst) {
     const entry = this.state.world.items[inst];
     const item = entry && this.catalog.itemById.get(entry.id);
-    if (!item || item.slot !== slot || !this.canEquip(item)) return;
+    if (!item || item.slot !== slot || !this.canEquip(item) || !reachable(this.state.world, entry)) return;
     this.add([this.event('equip', { slot, inst })]);
   },
 
@@ -234,11 +240,18 @@ export const game = {
   },
 
   place(inst) {
-    this.add([this.event('place', { inst })]);
+    if (this.atCamp()) this.add([this.event('place', { inst })]);
   },
 
   unplace(inst) {
-    this.add([this.event('unplace', { inst })]);
+    if (this.atCamp()) this.add([this.event('unplace', { inst })]);
+  },
+
+  // Name and look of the Envoy, at the creation or changed later.
+  setEnvoy({ name, figur, haut, haar }) {
+    const clean = String(name || '').trim();
+    if (!clean) return;
+    this.add([this.event('envoy', { name: clean, figur, haut, haar })]);
   },
 
   build() {

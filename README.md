@@ -2,7 +2,8 @@
 
 Webapp, die eine gesunde Alltagsroutine als Rollenspiel belohnt. Jeden Tag teilt die
 App vier reale Übungen zu, eine je Bereich. Nur davon steigen die Werte des Envoy. Mit
-diesen Werten zieht er durch eine Welt aus Orten, Quests und Geistern.
+diesen Werten zieht er durch eine Welt aus Orten, Quests und Geistern. Jede und jeder,
+die mitspielt, hat ein eigenes Konto und einen eigenen Envoy.
 
 Regeln und Formeln: [`docs/spezifikation.md`](docs/spezifikation.md).
 Arbeitsanweisung für die Weiterentwicklung: [`CLAUDE.md`](CLAUDE.md).
@@ -46,12 +47,23 @@ Ohne diese Einrichtung geht es weiter wie bisher von Hand: alle Dateien außer `
 Adresse in Safari öffnen, Teilen-Symbol → **Zum Home-Bildschirm**. Die App startet dann
 im Vollbild und läuft auch ohne Verbindung; Einträge werden nachgeholt.
 
-## Geräte verbinden
+## Konten
 
-1. Auf dem ersten Gerät: Zahnrad oben rechts → **Neuen Schlüssel erzeugen**.
-2. Schlüssel kopieren und auf dem zweiten Gerät eingeben, **Verbinden**.
+Beim ersten Öffnen erscheint der Startbildschirm: **Neues Konto** (Name und Passwort),
+danach Figur, Haut- und Haarfarbe und Name des Envoy wählen. Auf jedem weiteren Gerät
+mit demselben Namen und Passwort **Anmelden**; der Spielstand kommt vom Server.
 
-Der Server nimmt höchstens drei verschiedene Schlüssel an (oben in `sync.php`).
+- Gab es auf dem Gerät schon einen Spielstand von vor den Konten, ist „Den bisherigen
+  Spielstand dieses Geräts übernehmen“ angekreuzt. Er wandert dann ins neue Konto,
+  zusammen mit allem, was der alte Geräteschlüssel auf dem Server kennt.
+- **Ohne Konto spielen** geht auch; dann bleibt der Envoy auf diesem Gerät. Unter
+  Einstellungen → Konto lässt sich später ein Konto dazu erstellen.
+- Konten brauchen PHP auf dem Webspace (bei IONOS vorhanden). Auf einem Webspace ohne
+  PHP, etwa GitHub Pages, meldet die App „Der Server für Konten ist hier nicht
+  erreichbar“; „Ohne Konto spielen“ funktioniert dort trotzdem.
+- Der Server nimmt höchstens 30 Konten an (`MAX_ACCOUNTS` oben in `sync.php`). Nach fünf
+  falschen Passwörtern ist ein Konto 15 Minuten gesperrt. Passwörter liegen nur als Hash
+  auf dem Server, in `sync-daten/konten/`.
 
 ## Übungen, Ausrüstung und Welt pflegen
 
@@ -72,9 +84,10 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 
 | Was | Ort | Größe |
 | --- | --- | --- |
-| Basisfigur | `assets/figur/basisfigur.png` | 1024 × 1536, transparent |
+| Basisfigur (erste Figur) | `assets/figur/basisfigur.png` | 1024 × 1536, transparent |
+| Zweite Figur | `assets/figur/zweite/basisfigur.png` | noch ein Platzhalter; eigene Kleidung mit gleichem Namen in diesen Ordner |
 | Ausrüstung auf der Figur | `assets/figur/slot_name_stufe.png` | 1024 × 1536, transparent, nie zuschneiden |
-| Icons | `assets/icons/icon_slot_name_stufe.png` | 256 × 256, transparent |
+| Icons | `assets/icons/icon_slot_name_stufe.png` | 256 × 256, transparent, aus der Zeichnung freigestellt |
 | Einrichtung | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent |
 | Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
 | Zuhause | `assets/zuhause/stufe_<n>.png` | 1200 × 800, transparent |
@@ -87,6 +100,10 @@ Icon steht das Symbol des Slots. Ein neues Bild mit dem Namen aus der Tabelle er
 sofort. Die Umwandlung meldet fehlende Bilder und falsche Maße als Hinweis. Karte,
 Zuhause, Monster und Einrichtung sind noch vorläufige Bilder. Bei einer neuen
 Karte die Positionen der Orte (x, y in Prozent) in `welt.xlsx` anpassen.
+
+Haut- und Haarfarbe färbt die App selbst um. Dafür muss sie wissen, in welcher Haut- und
+Haarfarbe eine Figur gezeichnet ist; das steht in `js/config.js` unter `FIGURES`. Bleibt
+eine neue Figur bei denselben Farben wie die erste, ist nichts zu tun.
 
 ## Aufbau
 

@@ -408,6 +408,12 @@ def convert_equipment(path):
         icon = text(r.get("datei_icon", "")) or f"icon_{figure}"
         figure_path = check_picture(report, row, "figur", figure)
         icon_path = check_picture(report, row, "icon", icon)
+        # Other figures (sub folders of assets/figur) may have their own
+        # version of the layer; without one they wear the first figure's.
+        own = {}
+        for folder in sorted(p for p in (ROOT / PICTURES["figur"][0]).iterdir() if p.is_dir()):
+            if (folder / figure).exists():
+                own[folder.name] = f"{PICTURES['figur'][0]}/{folder.name}/{figure}"
 
         items.append({
             "id": item_id,
@@ -420,6 +426,7 @@ def convert_equipment(path):
             "herkunft": parse_origin(report, row, r.get("herkunft", "")),
             "preis": price,
             "figur": figure_path,
+            "figuren": own,
             "icon": icon_path,
         })
     return {"equipment": items}, report

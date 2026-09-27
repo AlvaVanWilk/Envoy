@@ -16,7 +16,7 @@ const PHASES = [
 ];
 const RESULT_TEXT = { won: 'besiegt', calmed: 'beruhigt', driven: 'vertrieben' };
 const UNLOCK_TEXT = {
-  zuhause: 'Das Zelt steht. Zuhause und Schrank sind offen.',
+  zuhause: 'Das Zelt steht. Zuhause und Lager sind offen.',
   haendler: 'Der Händler ist gerettet und handelt ab jetzt.',
 };
 
