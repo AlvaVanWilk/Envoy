@@ -85,7 +85,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Was | Ort | Größe |
 | --- | --- | --- |
 | Basisfigur (erste Figur) | `assets/figur/basisfigur.png` | 1024 × 1536, transparent |
-| Zweite Figur | `assets/figur/zweite/basisfigur.png` | noch ein Platzhalter; eigene Kleidung mit gleichem Namen in diesen Ordner |
+| Zweite Figur (Mann) | `assets/figur/zweite/basisfigur.png` | seine eigene Kleidung mit gleichem Namen in diesen Ordner |
 | Ausrüstung auf der Figur | `assets/figur/slot_name_stufe.png` | 1024 × 1536, transparent, nie zuschneiden |
 | Icons | `assets/icons/icon_slot_name_stufe.png` | 256 × 256, transparent, aus der Zeichnung freigestellt |
 | Einrichtung | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent |
@@ -103,7 +103,7 @@ Karte die Positionen der Orte (x, y in Prozent) in `welt.xlsx` anpassen.
 
 Haut- und Haarfarbe färbt die App selbst um. Dafür muss sie wissen, in welcher Haut- und
 Haarfarbe eine Figur gezeichnet ist; das steht in `js/config.js` unter `FIGURES`. Bleibt
-eine neue Figur bei denselben Farben wie die erste, ist nichts zu tun.
+eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 
 ## Aufbau
 

@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-27T16:12:08Z",
+ "generated": "2026-09-27T18:56:14Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -16,7 +16,9 @@
    ],
    "preis": null,
    "figur": "assets/figur/torso_leinenhemd_1.png",
-   "figuren": {},
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_leinenhemd_1.png"
+   },
    "icon": "assets/icons/icon_torso_leinenhemd_1.png"
   },
   {
@@ -33,7 +35,9 @@
    ],
    "preis": null,
    "figur": "assets/figur/beine_leinenhose_1.png",
-   "figuren": {},
+   "figuren": {
+    "zweite": "assets/figur/zweite/beine_leinenhose_1.png"
+   },
    "icon": "assets/icons/icon_beine_leinenhose_1.png"
   },
   {
@@ -194,7 +198,9 @@
    ],
    "preis": null,
    "figur": "assets/figur/handschuhe_griffhandschuhe_2.png",
-   "figuren": {},
+   "figuren": {
+    "zweite": "assets/figur/zweite/handschuhe_griffhandschuhe_2.png"
+   },
    "icon": "assets/icons/icon_handschuhe_griffhandschuhe_2.png"
   },
   {

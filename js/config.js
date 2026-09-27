@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '4.0.0';
+export const APP_VERSION = '4.1.0';
 
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
@@ -55,21 +55,21 @@ export const SLOTS = [
 
 export const BASE_FIGURE_LAYER = 2;
 
-// The Envoy: figures to choose from when the Envoy is created. Each has
-// its own folder with basisfigur.png. Clothing layers lie in the folder of
-// the first figure; a figure can have its own version of a layer in its
-// folder (same file name), otherwise it wears the one of the first.
+// The Envoy: figures to choose from when the Envoy is created, both drawn
+// by the user. Each has its own folder with basisfigur.png. Clothing layers
+// lie in the folder of the first figure; a figure can have its own version
+// of a layer in its folder (same file name), otherwise it wears the one of
+// the first.
 // skin / skinShadow / hair: the colours the figure is drawn in; the app
 // paints them in the chosen colours (see ui/look.js). hairZone: hair only
 // occurs in this upper share of the picture.
 export const FIGURES = [
-  { id: 'erste', name: 'Erste Figur', folder: 'assets/figur', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25 },
-  // placeholder until the user's second figure is drawn
-  { id: 'zweite', name: 'Zweite Figur', folder: 'assets/figur/zweite', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25 },
+  { id: 'erste', name: 'Envoy mit Dutt', folder: 'assets/figur', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25 },
+  { id: 'zweite', name: 'Envoy mit kurzem Haar', folder: 'assets/figur/zweite', skin: [240, 176, 130], skinShadow: [182, 130, 90], hair: [190, 178, 118], hairZone: 0.25 },
 ];
 
-// Choices for skin and hair. The first of each is the colour the figures
-// are drawn in.
+// Choices for skin and hair. The first of each stands for the colour a
+// figure is drawn in (its own blond, its own skin), so it is never painted.
 export const SKIN_TONES = [
   { id: 'pfirsich', name: 'Pfirsich', rgb: [240, 176, 128] },
   { id: 'hell', name: 'Hell', rgb: [248, 208, 180] },

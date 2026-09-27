@@ -148,9 +148,9 @@ Icons sind 256 × 256 und werden aus den Zeichnungen der Ebenen freigestellt (so
 Wird die Voraussetzung eines getragenen Teils unterschritten, fliegt es aus dem Slot
 und wird **nicht mehr gerendert** — die Figur sieht dort aus, als trüge sie nichts.
 
-Zwei Figuren stehen zur Wahl: die Envoy der Nutzerin (`assets/figur/`) und ein
-Platzhalter für die zweite Figur (`assets/figur/zweite/`), bis deren Zeichnung fertig
-ist. Sonst zeichnet die Nutzerin Figur und Ausrüstung; keine weiteren eigenen
+Zwei Figuren stehen zur Wahl, beide von der Nutzerin gezeichnet: eine Frau
+(`assets/figur/`) und ein Mann (`assets/figur/zweite/`, mit eigenen Fassungen von
+Hemd, Hose und Handschuhen). Figur und Ausrüstung zeichnet die Nutzerin; keine eigenen
 Platzhalter erzeugen. Teile ohne Bild werden nicht gezeichnet, als Icon dient das
 Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`).
 

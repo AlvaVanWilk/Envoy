@@ -457,18 +457,19 @@ Ebenenreihenfolge (hinten nach vorn): 1 Umhang hinten, 2 Basisfigur (Körper, Ko
 Grundkleidung), 3 Beinkleidung, 4 Schuhe, 5 Torso, 6 Handwickel, 7 Frisur /
 Kopfbedeckung.
 
-**Zwei Figuren** stehen bei der Erstellung zur Wahl. Die erste ist die Envoy der
-Nutzerin: eine Frau im Comicstil mit schwarzer Kontur, blondes Haar im Dutt, graue
-Unterwäsche als Grundkleidung. Die zweite ist ein Platzhalter, bis ihre Zeichnung fertig
-ist; er ist auf dieselbe Vorlage gezeichnet, damit die Kleidung passt. Jede Figur hat
-einen eigenen Ordner mit `basisfigur.png` (die erste `assets/figur/`, die zweite
+**Zwei Figuren** stehen bei der Erstellung zur Wahl, beide von der Nutzerin im
+Comicstil mit schwarzer Kontur gezeichnet: eine Frau mit blondem Haar im Dutt und ein
+Mann mit kurzem, aschblondem Haar, beide in grauer Unterwäsche als Grundkleidung. Jede
+Figur hat einen eigenen Ordner mit `basisfigur.png` (die Frau `assets/figur/`, der Mann
 `assets/figur/zweite/`). Kleidung liegt im Ordner der ersten Figur; braucht eine andere
 Figur eine eigene Fassung, kommt sie mit gleichem Dateinamen in deren Ordner, sonst trägt
-sie die der ersten.
+sie die der ersten. Der Mann hat eigene Fassungen von Leinenhemd, Leinenhose und
+Griffhandschuhen.
 
 **Haut- und Haarfarbe** wählt man bei der Erstellung (6 Hauttöne, 7 Haarfarben). Jede
 Figur ist in einer Haut- und einer Haarfarbe gezeichnet; die App färbt diese Stellen im
-Browser um. Was Haut und was Haar ist, ergibt sich aus dem Farbton: Haut ist orange,
+Browser um. Die erste Wahl jeder Reihe ist die gezeichnete Farbe der gewählten Figur
+(ihr eigenes Blond, ihre eigene Haut). Was Haut und was Haar ist, ergibt sich aus dem Farbton: Haut ist orange,
 Haar gelblicher und nur im oberen Viertel des Bildes. Schattierung und Linien bleiben,
 wie gezeichnet. In Kleidungsebenen werden nur Stellen im genauen Hautton umgefärbt, etwa
 Fingerspitzen in fingerlosen Handschuhen. Die gezeichneten Farben stehen in
@@ -567,7 +568,7 @@ Zweig `main` per SFTP auf den IONOS-Webspace.
 | Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot |
 | Rucksack | 5 Plätze; das Lager (bisher Schrank) nur im Lager nutzbar |
 | Konten | Name und Passwort auf dem eigenen Server; ohne Konto nur auf einem Gerät |
-| Figuren | zwei zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |
+| Figuren | Frau und Mann zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |
 | Icons | aus den Zeichnungen der Ebenen freigestellt |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |

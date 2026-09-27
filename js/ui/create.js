@@ -5,6 +5,7 @@
 import { h, replaceChildren } from './dom.js';
 import { FIGURES, SKIN_TONES, HAIR_COLORS, NAME_MAX } from '../config.js';
 import { paperdoll } from './paperdoll.js';
+import { resolveLook } from './look.js';
 
 const rgb = (c) => `rgb(${c.rgb.join(',')})`;
 
@@ -41,6 +42,8 @@ export function renderCreate(game, { onDone, onCancel = null } = {}) {
   }
 
   function swatches(list, key, label) {
+    // the first colour is the one the chosen figure is drawn in
+    const drawn = resolveLook({ figur: choice.figur })[key === 'haut' ? 'skin' : 'hair'];
     return h('div', { class: 'swatch-group' },
       h('p', { class: 'swatch-label' }, label),
       h('div', { class: 'swatches', role: 'radiogroup', 'aria-label': label }, list.map((c) => h('button', {
@@ -49,7 +52,7 @@ export function renderCreate(game, { onDone, onCancel = null } = {}) {
         'aria-checked': String(choice[key] === c.id),
         'aria-label': c.name,
         title: c.name,
-        style: { background: rgb(c) },
+        style: { background: rgb(c === list[0] ? drawn : c) },
         onclick: () => { choice[key] = c.id; draw(); },
       }))));
   }

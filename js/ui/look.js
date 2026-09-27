@@ -15,12 +15,16 @@ const painting = new Map(); // key -> Promise of a picture address
 const painted = new Map();  // key -> picture address, once ready
 
 // The figure and colours of an Envoy; unknown or missing values fall back
-// to the first of each list.
+// to the first of each list. The first colour of each list is the one the
+// figure is drawn in.
 export function resolveLook(envoy) {
+  const figure = FIGURES.find((x) => x.id === envoy?.figur) || FIGURES[0];
+  const skin = SKIN_TONES.find((x) => x.id === envoy?.haut) || SKIN_TONES[0];
+  const hair = HAIR_COLORS.find((x) => x.id === envoy?.haar) || HAIR_COLORS[0];
   return {
-    figure: FIGURES.find((x) => x.id === envoy?.figur) || FIGURES[0],
-    skin: SKIN_TONES.find((x) => x.id === envoy?.haut) || SKIN_TONES[0],
-    hair: HAIR_COLORS.find((x) => x.id === envoy?.haar) || HAIR_COLORS[0],
+    figure,
+    skin: skin === SKIN_TONES[0] ? { ...skin, rgb: figure.skin } : skin,
+    hair: hair === HAIR_COLORS[0] ? { ...hair, rgb: figure.hair } : hair,
   };
 }
 
