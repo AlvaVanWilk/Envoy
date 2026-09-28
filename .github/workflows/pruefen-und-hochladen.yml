@@ -1,7 +1,8 @@
 # Läuft bei jeder Änderung im Repository:
 #   1. Tabellen aus data/ umwandeln und die JSON-Dateien mit ablegen
 #   2. Spielregeln testen
-#   3. auf dem Hauptzweig (main): alles per SFTP auf den IONOS-Webspace laden
+#   3. auf dem Hauptzweig (main): alles per SFTP auf den IONOS-Webspace laden;
+#      auf anderen Zweigen nur prüfen, ob der Zugang zum Webspace klappt
 #
 # Für Schritt 3 braucht es einmalig vier Geheimnisse unter
 # Settings → Secrets and variables → Actions (siehe README):
@@ -54,6 +55,32 @@ jobs:
           git add data/*.json
           git commit -m "Daten aus den Tabellen umgewandelt"
           git push
+
+      # Auf jedem anderen Zweig: nur nachsehen, ob die vier Geheimnisse da sind
+      # und die Anmeldung beim Webspace klappt. Es wird nichts hochgeladen.
+      - name: Zugang zum Webspace prüfen
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+        env:
+          LFTP_PASSWORD: ${{ secrets.IONOS_SFTP_PASSWORD }}
+        run: |
+          fehlt=0
+          for name in IONOS_SFTP_HOST IONOS_SFTP_USER IONOS_SFTP_PATH LFTP_PASSWORD; do
+            if [ -z "${!name}" ]; then echo "Fehlt: ${name/LFTP_PASSWORD/IONOS_SFTP_PASSWORD}"; fehlt=1; else echo "Vorhanden: ${name/LFTP_PASSWORD/IONOS_SFTP_PASSWORD}"; fi
+          done
+          if [ "$fehlt" = 1 ]; then echo "Ergebnis: Es fehlen Geheimnisse."; exit 0; fi
+          sudo apt-get install -y -qq lftp > /dev/null
+          if lftp -c "
+            set sftp:auto-confirm yes;
+            set net:max-retries 2;
+            set net:timeout 20;
+            open --env-password -u \"$IONOS_SFTP_USER\" sftp://$IONOS_SFTP_HOST;
+            cd \"$IONOS_SFTP_PATH\";
+            pwd
+          "; then
+            echo "Ergebnis: Anmeldung klappt, der Ordner ist erreichbar."
+          else
+            echo "Ergebnis: Anmeldung oder Ordner klappt nicht."
+          fi
 
       - name: Auf den Webspace laden
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.IONOS_SFTP_HOST != ''
