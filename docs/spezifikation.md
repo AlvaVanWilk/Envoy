@@ -509,6 +509,35 @@ Blatt „Erklärung“ mit allen Spalten.
   monster, voraussetzung, tempo, ertrag, verbrauch, kosten (Ausdauer vor Ort, zugleich
   Minuten), belohnung, wiederholbar, abklingzeit
 
+## Kleiderkammer
+
+Eine private Seite auf claude.ai (https://claude.ai/artifact/92pbHMV3YqemSrC4s86ADj),
+nicht Teil der App: die Austausch-Datenbank zwischen Nutzerin und Claude für alle
+Kleidungsteile. Quelltext in `tools/kleiderkammer.html`.
+
+- **Teile.** Jede Zeichnung ist ein Eintrag mit eindeutigem Namen und fortlaufender
+  Nummer, für eine Figur (Frau oder Mann) und einen Slot. Das Gegenstück für die andere
+  Figur wird verknüpft. Beim Hochladen entsteht das Icon im Browser: das Kleidungsstück
+  allein, auf 256 × 256, weit auseinanderliegende Teile (zwei Handschuhe) rücken
+  zusammen. Die Leinwand wird geprüft (1024 × 1536, durchsichtiger Hintergrund).
+- **Vorgaben der Nutzerin**, alle freiwillig: Verwendung (Quest mit Thema, Erfolg,
+  Zufallsbeute, Händlerware, Startausrüstung), Fortschritt (Anfänger 1–10, frühes
+  Midgame 10–50, spätes Midgame 50–100, Endgame 100+; da die Stats bei 100 enden,
+  heißt 100+: am Ziel), wichtige Werte und eine freie Idee.
+- **Freigabe.** Nur freigegebene Teile verwendet Claude.
+- **Im Spiel.** Claude trägt ein, ob und wie ein Teil verwendet wird (Kennung,
+  Voraussetzung, Fundort, Wirkung). Diese Angaben sind verdeckt und werden erst auf
+  Antippen gezeigt.
+- **Fehlt noch.** Teile, für die Claude eine Zeichnung braucht. Die Nutzerin kann eine
+  Zeichnung dafür hochladen, ein vorhandenes Teil verbinden oder „Nicht zeichnen“
+  wählen.
+
+## Erfolge (später)
+
+Erfolge für echte Leistungen über längere Zeit, etwa „100 km spaziert“. Sie sollen
+Kleidung als Belohnung vergeben können. Noch nicht gebaut; Umfang und Regeln werden
+besprochen, bevor etwas entsteht.
+
 ## Konten und Envoy-Erstellung
 
 Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
@@ -574,6 +603,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Konten | Name und Passwort auf dem eigenen Server; ohne Konto nur auf einem Gerät |
 | Figuren | Frau und Mann zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |
 | Icons | aus den Zeichnungen der Ebenen freigestellt |
+| Kleidung verwalten | Kleiderkammer auf claude.ai, mit Freigabe und verdeckten Spielangaben |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |

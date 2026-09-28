@@ -1,0 +1,1505 @@
+<title>Envoy Kleiderkammer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0c1619;
+  --panel: #16262b;
+  --panel-2: #112024;
+  --panel-3: #1d3137;
+  --edge: #2c434a;
+  --line: rgba(214, 222, 214, 0.12);
+  --line-strong: rgba(214, 222, 214, 0.24);
+  --ivory: #e4d3b9;
+  --ivory-bright: #f3e9d8;
+  --text: #eee8dd;
+  --text-2: #a9b9b8;
+  --muted: #6f8788;
+  --copper: #e8791f;
+  --copper-bright: #f6a152;
+  --copper-dark: #8f370c;
+  --teal: #7ea3a4;
+  --ok: #8fc09c;
+  --warn: #eab75c;
+  --loss: #ef8d6d;
+  --danger: #a3431f;
+  --kraft: #f08a3e;
+  --ausdauer: #a8c48a;
+  --beweglichkeit: #74b5c4;
+  --gelassenheit: #aaa4e2;
+  --radius: 8px;
+  --font-display: 'Cinzel', 'Optima', 'Palatino', Georgia, serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--bg); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+body.locked { overflow: hidden; }
+.backdrop {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% -10%, rgba(126, 163, 164, 0.10), transparent 70%),
+    radial-gradient(ellipse 60% 30% at 50% 108%, rgba(232, 121, 31, 0.12), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.72 0 0 0 0 0.74 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #10181b 0%, #0c1214 55%, #0a0f10 100%);
+}
+h1, h2, h3 { margin: 0; font-weight: 600; }
+h1 { font-family: var(--font-display); font-size: 26px; letter-spacing: 0.02em; line-height: 1.15; }
+h2 { font-family: var(--font-display); font-size: 20px; letter-spacing: 0.02em; line-height: 1.2; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+img { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--ivory-bright); outline-offset: 2px; }
+.muted { color: var(--muted); }
+.eyebrow { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--copper-bright); }
+.label { margin-bottom: 6px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+.main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 20px) max(16px, env(safe-area-inset-right)) 48px max(16px, env(safe-area-inset-left));
+}
+.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.top .sub { margin-top: 4px; font-size: 13px; color: var(--text-2); }
+
+.panel {
+  position: relative;
+  padding: 16px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.02 0.05' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0.6 0 0 0 0 0.76 0 0 0 0 0.78 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, rgba(244, 236, 222, 0.035), rgba(244, 236, 222, 0) 140px),
+    var(--panel);
+  border: 1px solid #090c0f;
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.08), inset 0 -2px 0 rgba(0, 0, 0, 0.25), 0 10px 26px rgba(0, 0, 0, 0.3);
+}
+.panel::before {
+  content: ''; position: absolute; inset: 3px; pointer-events: none;
+  --c: rgba(232, 121, 31, 0.55);
+  background:
+    linear-gradient(var(--c), var(--c)) top left / 12px 1px, linear-gradient(var(--c), var(--c)) top left / 1px 12px,
+    linear-gradient(var(--c), var(--c)) top right / 12px 1px, linear-gradient(var(--c), var(--c)) top right / 1px 12px,
+    linear-gradient(var(--c), var(--c)) bottom left / 12px 1px, linear-gradient(var(--c), var(--c)) bottom left / 1px 12px,
+    linear-gradient(var(--c), var(--c)) bottom right / 12px 1px, linear-gradient(var(--c), var(--c)) bottom right / 1px 12px;
+  background-repeat: no-repeat;
+}
+.section-title {
+  display: flex; align-items: center; gap: 10px; margin: 22px 0 10px;
+  font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ivory);
+}
+.section-title::before { content: ''; flex: none; width: 6px; height: 6px; transform: rotate(45deg); background: linear-gradient(135deg, var(--copper-bright), var(--copper-dark)); box-shadow: 0 0 0 1px #0a0f10; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(232, 121, 31, 0.5), rgba(214, 222, 214, 0.12) 40%, transparent); }
+.section-title .count { order: 2; font-family: var(--font-body); font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 18px;
+  border: 1px solid transparent; border-radius: 6px; background: none;
+  font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.06em;
+  cursor: pointer; user-select: none; -webkit-user-select: none;
+  transition: transform 0.12s, background 0.2s, opacity 0.2s;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn.primary {
+  background: linear-gradient(180deg, #f8b06a 0%, #e8791f 50%, #8f370c 100%);
+  color: #0f1719; border-color: #10191b;
+  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.55), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 2px 3px rgba(0, 0, 0, 0.5);
+}
+.btn.ghost { background: linear-gradient(180deg, #223439, #182428); color: var(--ivory-bright); border-color: #080d0e; box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.08), 0 1px 2px rgba(0, 0, 0, 0.5); }
+.btn.text { color: var(--text-2); padding: 0 10px; }
+.btn.small { min-height: 36px; font-size: 13px; padding: 0 12px; }
+.btn.danger { background: var(--danger); color: #fff; }
+.btn.danger-text { color: var(--loss); }
+.btn svg { width: 17px; height: 17px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.field {
+  min-height: 44px; width: 100%; padding: 0 12px;
+  border: 1px solid var(--line-strong); border-radius: 6px; background: #0d1015;
+  font-size: 16px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
+}
+textarea.field { min-height: 84px; padding: 10px 12px; resize: vertical; line-height: 1.4; }
+select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
+  background: #0d1015 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a9b1ba' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 12px center; }
+.field.bad { border-color: var(--loss); }
+.hint { margin-top: 6px; font-size: 13px; color: var(--text-2); }
+.hint.bad { color: var(--loss); }
+.hint.warn { color: var(--warn); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips.scroll { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.chips.scroll::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none; min-height: 34px; padding: 0 12px;
+  border: 1px solid var(--line-strong); border-radius: 999px; background: transparent;
+  color: var(--text-2); font-size: 13px; cursor: pointer; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chip small { color: var(--muted); font-size: 12px; }
+.chip.active { background: linear-gradient(180deg, #f8b06a, #e8791f); color: #0f1719; border-color: #10191b; }
+.chip.active small { color: #3b2110; }
+.chip[data-stat]::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--stat); }
+.chip[data-stat].active { background: var(--stat); border-color: #10191b; }
+.chip[data-stat].active::before { background: #0f1719; }
+[data-stat="kraft"] { --stat: var(--kraft); }
+[data-stat="ausdauer"] { --stat: var(--ausdauer); }
+[data-stat="beweglichkeit"] { --stat: var(--beweglichkeit); }
+[data-stat="gelassenheit"] { --stat: var(--gelassenheit); }
+
+.tabs { display: flex; gap: 4px; padding: 4px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--edge); margin-bottom: 14px; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4); }
+.tab {
+  flex: 1; min-height: 40px; border: 0; border-radius: 5px; background: none; color: var(--text-2);
+  font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; cursor: pointer;
+}
+.tab.active { background: linear-gradient(180deg, #203035, #172326); color: var(--ivory-bright); box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.08), 0 1px 2px rgba(0, 0, 0, 0.5); }
+.tab .n { margin-left: 6px; font-family: var(--font-body); font-weight: 400; color: var(--muted); }
+
+.toolbar { display: grid; gap: 10px; padding: 12px; }
+.toolbar .filters { display: grid; gap: 8px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 10px; }
+.card {
+  display: flex; flex-direction: column; gap: 8px; padding: 10px; text-align: left;
+  border: 1px solid #090c0f; border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(244, 236, 222, 0.035), transparent 90px), var(--panel);
+  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.07), 0 6px 16px rgba(0, 0, 0, 0.28);
+  cursor: pointer; color: inherit; min-width: 0;
+}
+.card:hover { border-color: var(--edge); }
+.card.dim { opacity: 0.62; }
+.tile {
+  position: relative; aspect-ratio: 1; border-radius: 6px; overflow: hidden;
+  background: radial-gradient(circle at 50% 42%, #22393f, #142226 72%);
+  border: 1px solid #0a1012; box-shadow: inset 0 0 0 1px rgba(244, 236, 222, 0.04);
+  display: grid; place-items: center; color: var(--muted);
+}
+.tile img { width: 100%; height: 100%; object-fit: contain; }
+.tile svg { width: 42%; height: 42%; }
+.tile .nr { position: absolute; left: 6px; top: 5px; font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+.tile .lock { position: absolute; right: 6px; top: 6px; width: 20px; height: 20px; color: var(--loss); }
+.card-name { font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: 0.02em; color: var(--ivory-bright); overflow-wrap: anywhere; line-height: 1.25; }
+.card-meta { font-size: 12px; color: var(--text-2); }
+.badges { display: flex; flex-wrap: wrap; gap: 4px; }
+.badge { font-size: 11px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--text-2); }
+.badge.live { border-color: rgba(143, 192, 156, 0.5); color: var(--ok); }
+.badge.off { border-color: rgba(239, 141, 109, 0.5); color: var(--loss); }
+.badge.part { border-color: rgba(234, 183, 92, 0.5); color: var(--warn); }
+.empty { padding: 28px 16px; text-align: center; color: var(--text-2); }
+
+/* sheet */
+.sheet-wrap { position: fixed; inset: 0; z-index: 20; background: rgba(4, 8, 10, 0.72); display: flex; align-items: flex-end; justify-content: center; }
+.sheet {
+  width: 100%; max-height: 94vh; max-height: 94dvh; overflow-y: auto; overscroll-behavior: contain;
+  border-radius: 12px 12px 0 0; padding: 0;
+}
+.sheet-head {
+  position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px;
+  padding: 12px 12px 12px 16px; background: rgba(22, 38, 43, 0.96); border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.sheet-head .t { flex: 1; min-width: 0; }
+.sheet-head h2 { overflow-wrap: anywhere; }
+.sheet-body { padding: 16px; display: grid; gap: 18px; }
+.sheet-foot {
+  position: sticky; bottom: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: flex-end;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: rgba(17, 32, 36, 0.97); border-top: 1px solid var(--line);
+}
+.sheet-foot .spacer { flex: 1; }
+.icon-btn { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border: 1px solid var(--line); border-radius: 50%; background: rgba(244, 236, 222, 0.03); color: var(--text-2); cursor: pointer; }
+.icon-btn svg { width: 18px; height: 18px; }
+
+.look { display: grid; grid-template-columns: minmax(0, 1fr) 128px; gap: 12px; align-items: start; }
+.doll {
+  position: relative; width: 100%; aspect-ratio: 2 / 3; border-radius: 8px; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 35%, #213840, #10191c 75%); border: 1px solid #0a1012;
+}
+.doll img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.look-side { display: grid; gap: 8px; }
+.look-side .tile { width: 128px; }
+.look-side .btn { width: 100%; padding: 0 8px; font-size: 12px; }
+
+.group { display: grid; gap: 8px; }
+.group > .label { margin: 0; }
+.two { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+.seg { display: inline-flex; padding: 3px; gap: 3px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--edge); }
+.seg button { min-height: 36px; padding: 0 14px; border: 0; border-radius: 5px; background: none; color: var(--text-2); cursor: pointer; font-size: 14px; }
+.seg button.active { background: linear-gradient(180deg, #2a3f45, #1c2c30); color: var(--ivory-bright); box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.08); }
+
+.switch { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; pointer-events: none; }
+.switch .track { position: relative; flex: none; width: 48px; height: 28px; border-radius: 999px; background: #0d1015; border: 1px solid var(--line-strong); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45); transition: background 0.2s; }
+.switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--text-2); transition: transform 0.2s, background 0.2s; }
+.switch input:checked + .track { background: linear-gradient(180deg, #f8b06a, #e8791f); border-color: #10191b; }
+.switch input:checked + .track::after { transform: translateX(20px); background: #0f1719; }
+.switch input:focus-visible + .track { outline: 2px solid var(--ivory-bright); outline-offset: 2px; }
+.switch .txt { display: grid; }
+.switch .txt small { font-size: 12px; color: var(--muted); }
+
+.box { padding: 14px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--edge); display: grid; gap: 14px; }
+.box-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.box-head h3 { font-family: var(--font-display); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ivory); flex: 1; }
+.veil {
+  display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 6px; cursor: pointer; width: 100%; text-align: left;
+  border: 1px dashed var(--line-strong); color: var(--text-2);
+  background: repeating-linear-gradient(135deg, rgba(244, 236, 222, 0.03) 0 8px, transparent 8px 16px);
+}
+.veil svg { width: 22px; height: 22px; flex: none; color: var(--copper-bright); }
+.veil b { color: var(--ivory-bright); font-weight: 600; }
+.facts { display: grid; gap: 10px; }
+.fact { display: grid; gap: 4px; }
+.fact .label { margin: 0; }
+.linked { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 6px; background: rgba(244, 236, 222, 0.03); border: 1px solid var(--line); }
+.linked .tile { width: 44px; flex: none; }
+.linked .tile svg { width: 60%; height: 60%; }
+.linked .grow { flex: 1; min-width: 0; font-size: 14px; }
+.linked .grow small { display: block; color: var(--muted); font-size: 12px; }
+.confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
+.confirm p { flex: 1 1 200px; font-size: 14px; color: var(--ivory); }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 40;
+  max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 8px; font-size: 14px;
+  background: #1d3137; border: 1px solid var(--edge); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45); color: var(--ivory-bright);
+}
+.toast.bad { border-color: var(--loss); color: var(--loss); }
+.status { padding: 40px 16px; text-align: center; color: var(--text-2); }
+.busy { opacity: 0.6; pointer-events: none; }
+
+.wish-card { gap: 10px; }
+.wish-card .desc { font-size: 13px; color: var(--text-2); }
+
+@media (min-width: 720px) {
+  h1 { font-size: 30px; }
+  .toolbar { grid-template-columns: minmax(200px, 280px) 1fr; align-items: start; }
+  .sheet-wrap { align-items: center; padding: 24px; }
+  .sheet { max-width: 900px; border-radius: 12px; max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px); }
+  .sheet-body.split { grid-template-columns: 300px minmax(0, 1fr); align-items: start; }
+  .sheet-body.split > .left { position: sticky; top: 80px; }
+  .look { grid-template-columns: 1fr; }
+  .look-side { grid-template-columns: 96px 1fr; align-items: start; }
+  .look-side .tile { width: 96px; grid-row: span 3; }
+}
+@media (max-width: 380px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .two { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="backdrop"></div>
+<main class="main">
+  <header class="top">
+    <div>
+      <p class="eyebrow">Envoy</p>
+      <h1>Kleiderkammer</h1>
+      <p class="sub" id="summary"></p>
+    </div>
+    <button class="btn primary" id="add" hidden>Neues Teil</button>
+  </header>
+  <nav class="tabs" role="tablist">
+    <button class="tab active" role="tab" data-tab="teile" aria-selected="true">Teile<span class="n" id="n-teile"></span></button>
+    <button class="tab" role="tab" data-tab="wuensche" aria-selected="false">Fehlt noch<span class="n" id="n-wuensche"></span></button>
+  </nav>
+  <section id="view-teile">
+    <div class="panel toolbar">
+      <input class="field" id="search" type="search" placeholder="Name oder Nummer" aria-label="Suchen" autocomplete="off">
+      <div class="filters">
+        <div class="chips scroll" id="f-figur"></div>
+        <div class="chips scroll" id="f-slot"></div>
+        <div class="chips scroll" id="f-status"></div>
+      </div>
+    </div>
+    <div id="list"><p class="status">Die Kleiderkammer wird geöffnet …</p></div>
+  </section>
+  <section id="view-wuensche" hidden>
+    <div class="chips scroll" id="f-wunsch" style="margin-bottom: 4px"></div>
+    <div id="wishes"></div>
+  </section>
+</main>
+<div class="sheet-wrap" id="sheet-wrap" hidden><div class="sheet panel" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<input type="file" id="file" accept="image/png,image/webp" hidden>
+
+<script type="module">
+// ---------------------------------------------------------------------------
+// Envoy Kleiderkammer. A shared list of all clothing drawings for the Envoy.
+// Collections in the store:
+//   teile     one document per drawing (one figure, one slot)
+//   wuensche  items Claude needs a drawing for
+//   config    'figuren': the two base figures used in the preview
+// The user decides everything under `vorgaben` and `freigabe`. Claude fills
+// `imSpiel` and `spiel` when an item is used in the game; `spiel` stays
+// covered until it is uncovered on purpose.
+// ---------------------------------------------------------------------------
+
+const SLOTS = [
+  { id: 'kopf', name: 'Kopf', layer: 7 },
+  { id: 'umhang', name: 'Umhang', layer: 1 },
+  { id: 'torso', name: 'Torso', layer: 5 },
+  { id: 'handschuhe', name: 'Handwickel', layer: 6 },
+  { id: 'beine', name: 'Beinkleidung', layer: 3 },
+  { id: 'schuhe', name: 'Schuhe', layer: 4 },
+];
+const FIGUREN = [{ id: 'frau', name: 'Frau' }, { id: 'mann', name: 'Mann' }];
+const VERWENDUNG = [
+  { id: 'quest', name: 'Quest' },
+  { id: 'erfolg', name: 'Erfolg' },
+  { id: 'beute', name: 'Zufallsbeute' },
+  { id: 'haendler', name: 'Händlerware' },
+  { id: 'start', name: 'Startausrüstung' },
+];
+const THEMEN = [
+  { id: 'stein', name: 'Stein' },
+  { id: 'pilzholz', name: 'Pilzholz' },
+  { id: 'monster', name: 'Monster' },
+  { id: 'bauen', name: 'Bauen' },
+  { id: 'erkunden', name: 'Erkunden' },
+  { id: 'hoehle', name: 'Höhle' },
+  { id: 'sammeln', name: 'Sammeln' },
+  { id: 'ruhe', name: 'Ruhe' },
+  { id: 'reise', name: 'Lange Wege' },
+];
+const BEREICHE = [
+  { id: 'anfaenger', name: 'Anfänger', span: '1–10' },
+  { id: 'frueh', name: 'Frühes Midgame', span: '10–50' },
+  { id: 'spaet', name: 'Spätes Midgame', span: '50–100' },
+  { id: 'ende', name: 'Endgame', span: '100+' },
+];
+const STATS = [
+  { id: 'kraft', name: 'Kraft' },
+  { id: 'ausdauer', name: 'Ausdauer' },
+  { id: 'beweglichkeit', name: 'Beweglichkeit' },
+  { id: 'gelassenheit', name: 'Gelassenheit' },
+];
+// Claude's entries about an item in the game, in this order.
+const SPIEL_FELDER = [
+  { id: 'kennung', name: 'Kennung im Code' },
+  { id: 'stufe', name: 'Stufe' },
+  { id: 'herkunft', name: 'Wo man es bekommt', long: true },
+  { id: 'voraussetzung', name: 'Voraussetzung' },
+  { id: 'faehigkeit', name: 'Fähigkeit' },
+  { id: 'wirkung', name: 'Wirkung' },
+  { id: 'seit', name: 'Im Spiel seit' },
+  { id: 'notiz', name: 'Notiz', long: true },
+];
+
+const ICONS = {
+  kopf: '<path d="M5 12c0-4.4 3.1-8 7-8s7 3.6 7 8"/><path d="M4 12.5h16"/><path d="M6 12.5c.3 3.8 2.8 6.5 6 6.5s5.7-2.7 6-6.5"/>',
+  umhang: '<path d="M9 3h6l1.2 3L20 21H4L7.8 6z"/><path d="M12 6v15"/>',
+  torso: '<path d="M8 3 3 6l2 5 3-1v11h8V10l3 1 2-5-5-3c-.8 1.8-2.2 3-4 3S8.8 4.8 8 3z"/>',
+  handschuhe: '<path d="M7 12V6.5a1.5 1.5 0 0 1 3 0V11M10 11V5.5a1.5 1.5 0 0 1 3 0V11M13 11V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M16 12v-1.5a1.5 1.5 0 0 1 3 0V14c0 4-3 7-7 7-3 0-5.3-1.8-6.3-4.6L4.5 13a1.5 1.5 0 0 1 2.7-1.2L8 13.5"/><path d="M7 16h10"/>',
+  beine: '<path d="M7 3h10l1.2 18h-4.4L12 10l-1.8 11H5.8z"/><path d="M7 6h10"/>',
+  schuhe: '<path d="M6 3h6v9l6 3c1.2.6 2 1.6 2 3v2H6z"/><path d="M6 17h14"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  veil: '<path d="M3 3l18 18"/><path d="M10.6 5.1A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a18 18 0 0 1-3.2 4.1M6.6 6.6C3.9 8.4 2 12 2 12s3.6 7 10 7c1.8 0 3.4-.5 4.8-1.3"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+};
+const svg = (name) => {
+  const box = document.createElement('span');
+  box.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+  return box.firstChild;
+};
+
+// --- small helpers ---------------------------------------------------------
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  let value;
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'value') value = v;
+    else if (k === 'style' && typeof v === 'object') Object.assign(el.style, v);
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (v === true) el.setAttribute(k, '');
+    else el.setAttribute(k, v);
+  }
+  for (const kid of kids.flat(Infinity)) {
+    if (kid == null || kid === false) continue;
+    el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  }
+  if (value !== undefined) el.value = value;
+  return el;
+}
+const $ = (sel) => document.querySelector(sel);
+// replaceChildren without the empty places (null would show up as text)
+const fill = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter((k) => k != null && k !== false));
+const byId = (list, id) => list.find((x) => x.id === id);
+const slotName = (id) => byId(SLOTS, id)?.name || 'Ohne Slot';
+const figurName = (id) => byId(FIGUREN, id)?.name || '–';
+const blobUrl = (id) => (id ? `/_blob/${id}` : '');
+const norm = (s) => String(s || '').trim().toLocaleLowerCase('de');
+const now = () => new Date().toISOString();
+const clone = (x) => JSON.parse(JSON.stringify(x ?? null));
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const list = (a) => (Array.isArray(a) ? a : []);
+
+let toastTimer = 0;
+function toast(text, bad = false) {
+  const el = $('#toast');
+  el.textContent = text;
+  el.className = `toast${bad ? ' bad' : ''}`;
+  el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, bad ? 6000 : 2400);
+}
+const problem = (e) => {
+  const code = e?.code || '';
+  if (code === 'too_large') return 'Das Bild ist zu groß (höchstens 20 MB).';
+  if (code === 'unsupported_type') return 'Dieses Dateiformat geht nicht. Bitte PNG oder WebP.';
+  if (code === 'quota_or_state' || code === 'quota_exceeded') return 'Der Speicher der Kleiderkammer ist voll.';
+  if (code === 'rate_limited') return 'Zu viele Schritte auf einmal. Bitte kurz warten.';
+  if (code === 'not_granted' || code === 'upstream_auth') return 'Keine Berechtigung. Bitte die Seite neu laden.';
+  return 'Das hat nicht geklappt. Bitte noch einmal versuchen.';
+};
+
+// An icon tile: the stored icon, or the slot symbol.
+function tile(iconId, slot, extra) {
+  const box = h('div', { class: 'tile' });
+  const fallback = () => box.prepend(svg(slot));
+  if (iconId) {
+    const img = h('img', { src: blobUrl(iconId), alt: '', loading: 'lazy' });
+    img.addEventListener('error', () => { img.remove(); fallback(); });
+    box.append(img);
+  } else fallback();
+  if (extra) box.append(...[extra].flat().filter(Boolean));
+  return box;
+}
+
+// --- icons from a drawing ----------------------------------------------------
+// The garment alone, centred on 256 x 256 with a soft shadow. Specks left from
+// cutting out the background are ignored. Parts far apart (two gloves, two
+// shoes) are moved close together, so the icon stays large.
+
+function canvasOf(w, hgt) {
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(w));
+  c.height = Math.max(1, Math.round(hgt));
+  return c;
+}
+
+async function loadImage(blob) {
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    const c = canvasOf(img.naturalWidth, img.naturalHeight);
+    c.getContext('2d').drawImage(img, 0, 0);
+    return c;
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+function findPieces(source) {
+  const w = source.width;
+  const hgt = source.height;
+  const data = source.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, w, hgt).data;
+  const F = 4;
+  const gw = Math.ceil(w / F);
+  const gh = Math.ceil(hgt / F);
+  const cell = new Uint8Array(gw * gh);
+  let transparent = false;
+  for (let y = 0; y < hgt; y += 1) {
+    const row = ((y / F) | 0) * gw;
+    for (let x = 0; x < w; x += 1) {
+      const a = data[(y * w + x) * 4 + 3];
+      if (a < 255) transparent = true;
+      if (a > 16) cell[row + ((x / F) | 0)] = 1;
+    }
+  }
+  // connected groups of cells; small ones are specks
+  const minArea = Math.max(4, Math.round(25 * (w / 1024) * (hgt / 1536)));
+  const label = new Int32Array(gw * gh).fill(-1);
+  const keep = new Uint8Array(gw * gh);
+  const stack = [];
+  for (let start = 0; start < cell.length; start += 1) {
+    if (!cell[start] || label[start] !== -1) continue;
+    const members = [];
+    label[start] = start;
+    stack.push(start);
+    while (stack.length) {
+      const i = stack.pop();
+      members.push(i);
+      const cx = i % gw;
+      const cy = (i / gw) | 0;
+      for (let dy = -1; dy <= 1; dy += 1) {
+        for (let dx = -1; dx <= 1; dx += 1) {
+          const nx = cx + dx;
+          const ny = cy + dy;
+          if (nx < 0 || ny < 0 || nx >= gw || ny >= gh) continue;
+          const j = ny * gw + nx;
+          if (cell[j] && label[j] === -1) { label[j] = start; stack.push(j); }
+        }
+      }
+    }
+    if (members.length >= minArea) for (const i of members) keep[i] = 1;
+  }
+  const boxOf = (x0, x1) => {
+    let minX = Infinity; let maxX = -1; let minY = Infinity; let maxY = -1;
+    for (let y = 0; y < gh; y += 1) {
+      for (let x = x0; x <= x1; x += 1) {
+        if (!keep[y * gw + x]) continue;
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+    if (maxX < 0) return null;
+    return { x: minX * F, y: minY * F, w: Math.min(w, (maxX + 1) * F) - minX * F, h: Math.min(hgt, (maxY + 1) * F) - minY * F, cx0: minX, cx1: maxX };
+  };
+  const all = boxOf(0, gw - 1);
+  if (!all) return { pieces: [], transparent };
+  // the widest empty band of columns inside the garment
+  let bestStart = -1; let bestLen = 0; let runStart = -1;
+  for (let x = all.cx0; x <= all.cx1 + 1; x += 1) {
+    let empty = x <= all.cx1;
+    if (empty) for (let y = 0; y < gh; y += 1) if (keep[y * gw + x]) { empty = false; break; }
+    if (empty && runStart < 0) runStart = x;
+    if (!empty && runStart >= 0) {
+      if (x - runStart > bestLen) { bestLen = x - runStart; bestStart = runStart; }
+      runStart = -1;
+    }
+  }
+  if (bestLen * F > 0.12 * all.w) {
+    const left = boxOf(all.cx0, bestStart - 1);
+    const right = boxOf(bestStart + bestLen, all.cx1);
+    return { pieces: [left, right].filter(Boolean), transparent, split: true };
+  }
+  return { pieces: [all], transparent };
+}
+
+function downscale(src, tw, th) {
+  let cur = src;
+  while (cur.width / 2 > tw && cur.height / 2 > th) {
+    const half = canvasOf(cur.width / 2, cur.height / 2);
+    const cx = half.getContext('2d');
+    cx.imageSmoothingQuality = 'high';
+    cx.drawImage(cur, 0, 0, half.width, half.height);
+    cur = half;
+  }
+  const out = canvasOf(tw, th);
+  const ox = out.getContext('2d');
+  ox.imageSmoothingQuality = 'high';
+  ox.drawImage(cur, 0, 0, out.width, out.height);
+  return out;
+}
+
+const toBlob = (c) => new Promise((resolve, reject) => c.toBlob((b) => (b ? resolve(b) : reject(new Error('png'))), 'image/png'));
+
+async function makeIcon(source) {
+  const { pieces, split } = findPieces(source);
+  if (!pieces.length) return null;
+  const gap = split ? Math.round(0.25 * pieces[0].w) : 0;
+  const rowW = pieces.reduce((s, p) => s + p.w, 0) + gap * (pieces.length - 1);
+  const rowH = Math.max(...pieces.map((p) => p.h));
+  const row = canvasOf(rowW, rowH);
+  const rc = row.getContext('2d');
+  let x = 0;
+  for (const p of pieces) {
+    rc.drawImage(source, p.x, p.y, p.w, p.h, x, Math.round((rowH - p.h) / 2), p.w, p.h);
+    x += p.w + gap;
+  }
+  const scale = (0.84 * 256) / Math.max(rowW, rowH);
+  const small = downscale(row, Math.max(1, Math.round(rowW * scale)), Math.max(1, Math.round(rowH * scale)));
+  const icon = canvasOf(256, 256);
+  const ic = icon.getContext('2d');
+  ic.shadowColor = 'rgba(0, 0, 0, 0.55)';
+  ic.shadowBlur = 10;
+  ic.shadowOffsetY = 4;
+  ic.drawImage(small, Math.round((256 - small.width) / 2), Math.round((256 - small.height) / 2) - 4);
+  return toBlob(icon);
+}
+
+// An icon the user brings along: fitted into 256 x 256.
+async function fitIcon(source) {
+  const scale = 256 / Math.max(source.width, source.height);
+  const small = downscale(source, Math.max(1, Math.round(source.width * scale)), Math.max(1, Math.round(source.height * scale)));
+  const icon = canvasOf(256, 256);
+  icon.getContext('2d').drawImage(small, Math.round((256 - small.width) / 2), Math.round((256 - small.height) / 2));
+  return toBlob(icon);
+}
+
+// Reads a picked drawing: its size, whether it is transparent, and its icon.
+async function readDrawing(file) {
+  const source = await loadImage(file);
+  const { transparent } = findPieces(source);
+  const icon = await makeIcon(source);
+  return {
+    file,
+    url: URL.createObjectURL(file),
+    size: [source.width, source.height],
+    transparent,
+    icon,
+    iconUrl: icon ? URL.createObjectURL(icon) : '',
+  };
+}
+
+function pickFile() {
+  return new Promise((resolve) => {
+    const input = $('#file');
+    input.value = '';
+    input.onchange = () => resolve(input.files?.[0] || null);
+    input.click();
+  });
+}
+
+// --- state ------------------------------------------------------------------
+
+const state = {
+  db: null,
+  assets: null,
+  teile: [],
+  wuensche: [],
+  figuren: {},
+  loaded: { teile: false, wuensche: false },
+  tab: 'teile',
+  filter: { figur: 'alle', slot: 'alle', status: 'alle', q: '' },
+  wishFilter: 'offen',
+  sheet: null, // what the open sheet shows, see openTeil / openWish
+};
+
+const covered = (w) => new Set(list(w.teile).map((id) => byId(state.teile, id)?.figur).filter(Boolean));
+function wishStatus(w) {
+  if (w.entscheidung === 'nicht') return { id: 'nicht', name: 'Nicht vorgesehen', cls: 'off' };
+  const need = list(w.figuren).length ? list(w.figuren) : ['frau'];
+  const have = covered(w);
+  if (need.every((f) => have.has(f))) return { id: 'erledigt', name: 'Erledigt', cls: 'live' };
+  if (have.size) return { id: 'teilweise', name: 'Teilweise', cls: 'part' };
+  return { id: 'offen', name: 'Offen', cls: '' };
+}
+
+// --- list of items -----------------------------------------------------------
+
+function chipRow(el, options, current, onPick) {
+  el.replaceChildren(...options.map((o) => h('button', {
+    class: `chip${current === o.id ? ' active' : ''}`,
+    'aria-pressed': String(current === o.id),
+    onclick: () => onPick(o.id),
+  }, o.name, o.n != null ? h('small', {}, o.n) : null)));
+}
+
+function renderFilters() {
+  const f = state.filter;
+  const count = (pred) => state.teile.filter(pred).length;
+  chipRow($('#f-figur'), [{ id: 'alle', name: 'Alle Figuren' }, ...FIGUREN.map((x) => ({ ...x, n: count((t) => t.figur === x.id) }))], f.figur, (id) => { f.figur = id; renderTeile(); });
+  chipRow($('#f-slot'), [{ id: 'alle', name: 'Alle Slots' }, ...SLOTS.map((x) => ({ ...x, n: count((t) => t.slot === x.id) }))], f.slot, (id) => { f.slot = id; renderTeile(); });
+  chipRow($('#f-status'), [
+    { id: 'alle', name: 'Alle' },
+    { id: 'frei', name: 'Freigegeben', n: count((t) => t.freigabe) },
+    { id: 'gesperrt', name: 'Gesperrt', n: count((t) => !t.freigabe) },
+    { id: 'spiel', name: 'Im Spiel', n: count((t) => t.imSpiel) },
+    { id: 'offen', name: 'Nicht im Spiel', n: count((t) => !t.imSpiel) },
+  ], f.status, (id) => { f.status = id; renderTeile(); });
+}
+
+function matches(t) {
+  const f = state.filter;
+  if (f.figur !== 'alle' && t.figur !== f.figur) return false;
+  if (f.slot !== 'alle' && t.slot !== f.slot) return false;
+  if (f.status === 'frei' && !t.freigabe) return false;
+  if (f.status === 'gesperrt' && t.freigabe) return false;
+  if (f.status === 'spiel' && !t.imSpiel) return false;
+  if (f.status === 'offen' && t.imSpiel) return false;
+  const q = norm(f.q).replace(/^nr\.?\s*/, '');
+  if (q && !norm(t.name).includes(q) && String(t.nr) !== q) return false;
+  return true;
+}
+
+function teilCard(t) {
+  return h('button', { class: `card${t.freigabe ? '' : ' dim'}`, onclick: () => openTeil(t.id) },
+    tile(t.icon, t.slot, [h('span', { class: 'nr' }, `Nr. ${t.nr ?? '–'}`), t.freigabe ? null : h('span', { class: 'lock', title: 'Gesperrt' }, svg('lock'))]),
+    h('p', { class: 'card-name' }, t.name || 'Ohne Namen'),
+    h('p', { class: 'card-meta' }, `${figurName(t.figur)} · ${slotName(t.slot)}`),
+    h('div', { class: 'badges' },
+      t.imSpiel ? h('span', { class: 'badge live' }, 'Im Spiel') : null,
+      t.freigabe ? null : h('span', { class: 'badge off' }, 'Gesperrt')));
+}
+
+function renderTeile() {
+  renderFilters();
+  const root = $('#list');
+  if (!state.loaded.teile) return;
+  const shown = state.teile.filter(matches);
+  if (!state.teile.length) {
+    root.replaceChildren(h('div', { class: 'panel empty' }, 'Noch keine Teile.'));
+    return;
+  }
+  if (!shown.length) {
+    root.replaceChildren(h('div', { class: 'panel empty' }, 'Nichts gefunden.'));
+    return;
+  }
+  const groups = SLOTS.map((s) => ({ ...s, items: shown.filter((t) => t.slot === s.id) }));
+  const other = shown.filter((t) => !byId(SLOTS, t.slot));
+  if (other.length) groups.push({ id: 'ohne', name: 'Ohne Slot', items: other });
+  root.replaceChildren(...groups.filter((g) => g.items.length).map((g) => [
+    h('h2', { class: 'section-title' }, g.name, h('span', { class: 'count' }, String(g.items.length))),
+    h('div', { class: 'grid' }, g.items.sort((a, b) => (a.nr ?? 0) - (b.nr ?? 0)).map(teilCard)),
+  ]).flat());
+}
+
+// --- list of wishes ----------------------------------------------------------
+
+function renderWuensche() {
+  const counts = { offen: 0, erledigt: 0, alle: state.wuensche.length };
+  for (const w of state.wuensche) {
+    const s = wishStatus(w).id;
+    if (s === 'offen' || s === 'teilweise') counts.offen += 1;
+    if (s === 'erledigt') counts.erledigt += 1;
+  }
+  chipRow($('#f-wunsch'), [
+    { id: 'offen', name: 'Offen', n: counts.offen },
+    { id: 'erledigt', name: 'Erledigt', n: counts.erledigt },
+    { id: 'alle', name: 'Alle', n: counts.alle },
+  ], state.wishFilter, (id) => { state.wishFilter = id; renderWuensche(); });
+  const root = $('#wishes');
+  if (!state.loaded.wuensche) return;
+  const shown = state.wuensche.filter((w) => {
+    const s = wishStatus(w).id;
+    if (state.wishFilter === 'offen') return s === 'offen' || s === 'teilweise';
+    if (state.wishFilter === 'erledigt') return s === 'erledigt';
+    return true;
+  });
+  if (!shown.length) {
+    root.replaceChildren(h('div', { class: 'panel empty', style: { marginTop: '12px' } }, state.wuensche.length ? 'Nichts in dieser Auswahl.' : 'Im Moment fehlt nichts.'));
+    return;
+  }
+  const groups = SLOTS.map((s) => ({ ...s, items: shown.filter((w) => w.slot === s.id) }));
+  const other = shown.filter((w) => !byId(SLOTS, w.slot));
+  if (other.length) groups.push({ id: 'ohne', name: 'Ohne Slot', items: other });
+  root.replaceChildren(...groups.filter((g) => g.items.length).map((g) => [
+    h('h2', { class: 'section-title' }, g.name, h('span', { class: 'count' }, String(g.items.length))),
+    h('div', { class: 'grid' }, g.items.sort((a, b) => String(a.titel).localeCompare(String(b.titel), 'de')).map(wishCard)),
+  ]).flat());
+}
+
+function wishCard(w) {
+  const status = wishStatus(w);
+  const first = list(w.teile).map((id) => byId(state.teile, id)).find(Boolean);
+  return h('button', { class: `card wish-card${status.id === 'nicht' ? ' dim' : ''}`, onclick: () => openWish(w.id) },
+    tile(first?.icon, w.slot),
+    h('p', { class: 'card-name' }, w.titel || 'Ohne Titel'),
+    h('p', { class: 'card-meta' }, list(w.figuren).map(figurName).join(' und ') || '–'),
+    w.aussehen ? h('p', { class: 'desc' }, w.aussehen) : null,
+    h('div', { class: 'badges' }, h('span', { class: `badge ${status.cls}` }, status.name)));
+}
+
+function renderSummary() {
+  const t = state.teile;
+  const open = state.wuensche.filter((w) => ['offen', 'teilweise'].includes(wishStatus(w).id)).length;
+  $('#summary').textContent = state.loaded.teile
+    ? `${t.length} Teile · ${t.filter((x) => x.freigabe).length} freigegeben · ${t.filter((x) => x.imSpiel).length} im Spiel`
+    : '';
+  $('#n-teile').textContent = state.loaded.teile ? String(t.length) : '';
+  $('#n-wuensche').textContent = state.loaded.wuensche && open ? String(open) : '';
+}
+
+function render() {
+  renderSummary();
+  if (state.tab === 'teile') renderTeile();
+  else renderWuensche();
+}
+
+// --- the sheet ----------------------------------------------------------------
+
+function openSheet(build) {
+  $('#sheet-wrap').hidden = false;
+  document.body.classList.add('locked');
+  build();
+  $('#sheet').scrollTop = 0;
+}
+function closeSheet(force = false) {
+  const s = state.sheet;
+  if (!force && s?.dirty?.()) {
+    s.askDiscard?.();
+    return;
+  }
+  for (const d of [s?.drawing, s?.newIcon]) if (d?.url) URL.revokeObjectURL(d.url);
+  if (s?.drawing?.iconUrl) URL.revokeObjectURL(s.drawing.iconUrl);
+  state.sheet = null;
+  $('#sheet-wrap').hidden = true;
+  document.body.classList.remove('locked');
+  $('#sheet').replaceChildren();
+}
+$('#sheet-wrap').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSheet(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state.sheet) closeSheet(); });
+
+// A row of chips that switches entries of an array on and off.
+function multiChips(options, arr, onChange, withStat = false) {
+  const row = h('div', { class: 'chips' });
+  for (const o of options) {
+    const btn = h('button', {
+      type: 'button',
+      class: `chip${arr.includes(o.id) ? ' active' : ''}`,
+      'aria-pressed': String(arr.includes(o.id)),
+      'data-stat': withStat ? o.id : null,
+    }, o.name, o.span ? h('small', {}, o.span) : null);
+    btn.addEventListener('click', () => {
+      const i = arr.indexOf(o.id);
+      if (i >= 0) arr.splice(i, 1); else arr.push(o.id);
+      btn.classList.toggle('active', i < 0);
+      btn.setAttribute('aria-pressed', String(i < 0));
+      onChange();
+    });
+    row.append(btn);
+  }
+  return row;
+}
+
+function segmented(options, current, onPick) {
+  const seg = h('div', { class: 'seg', role: 'radiogroup' });
+  for (const o of options) {
+    const b = h('button', { type: 'button', role: 'radio', class: current === o.id ? 'active' : '', 'aria-checked': String(current === o.id) }, o.name);
+    b.addEventListener('click', () => {
+      for (const x of seg.children) { x.classList.remove('active'); x.setAttribute('aria-checked', 'false'); }
+      b.classList.add('active');
+      b.setAttribute('aria-checked', 'true');
+      onPick(o.id);
+    });
+    seg.append(b);
+  }
+  return seg;
+}
+
+function toggle(label, note, checked, onChange) {
+  const input = h('input', { type: 'checkbox' });
+  input.checked = !!checked;
+  input.addEventListener('change', () => onChange(input.checked));
+  return h('label', { class: 'switch' }, input, h('span', { class: 'track' }), h('span', { class: 'txt' }, label, note ? h('small', {}, note) : null));
+}
+
+function textField(value, onInput, { long = false, placeholder = '', max = 400 } = {}) {
+  const el = long
+    ? h('textarea', { class: 'field', placeholder, maxlength: String(max * 4) })
+    : h('input', { class: 'field', type: 'text', placeholder, maxlength: String(max), autocomplete: 'off' });
+  el.value = value ?? '';
+  el.addEventListener('input', () => onInput(el.value));
+  return el;
+}
+
+const group = (label, ...kids) => h('div', { class: 'group' }, label ? h('p', { class: 'label' }, label) : null, ...kids);
+
+// The preview: the drawing on the base figure, or alone.
+function lookPreview(s) {
+  const d = s.draft;
+  const doll = h('div', { class: 'doll' });
+  const drawn = () => {
+    const layerSrc = s.drawing?.url || blobUrl(d.bild);
+    const baseId = state.figuren?.[d.figur]?.basis;
+    const imgs = [];
+    const base = s.withFigure && baseId ? h('img', { src: blobUrl(baseId), alt: '' }) : null;
+    const layer = layerSrc ? h('img', { src: layerSrc, alt: '' }) : null;
+    if (d.slot === 'umhang') imgs.push(layer, base); else imgs.push(base, layer);
+    doll.replaceChildren(...imgs.filter(Boolean));
+  };
+  s.redrawDoll = drawn;
+  drawn();
+  const iconSrc = s.newIcon?.url || s.drawing?.iconUrl || blobUrl(d.icon);
+  const iconTile = h('div', { class: 'tile' });
+  const setIcon = (src) => {
+    iconTile.replaceChildren();
+    if (src) {
+      const img = h('img', { src, alt: 'Icon' });
+      img.addEventListener('error', () => iconTile.replaceChildren(svg(d.slot)));
+      iconTile.append(img);
+    } else iconTile.append(svg(d.slot));
+  };
+  setIcon(iconSrc);
+  s.setIcon = setIcon;
+  const canWrite = !!state.assets;
+  return h('div', { class: 'look' },
+    h('div', { class: 'group' }, doll,
+      h('div', { class: 'chips' },
+        h('button', { type: 'button', class: `chip${s.withFigure ? ' active' : ''}`, onclick: (e) => { s.withFigure = !s.withFigure; e.currentTarget.classList.toggle('active', s.withFigure); drawn(); } }, 'Mit Figur'))),
+    h('div', { class: 'look-side' },
+      iconTile,
+      canWrite ? h('button', { type: 'button', class: 'btn ghost small', onclick: () => replaceDrawing(s) }, s.mode === 'new' ? 'Anderes Bild' : 'Bild ersetzen') : null,
+      canWrite ? h('button', { type: 'button', class: 'btn ghost small', onclick: () => remakeIcon(s) }, 'Icon neu erzeugen') : null,
+      canWrite ? h('button', { type: 'button', class: 'btn ghost small', onclick: () => ownIcon(s) }, 'Eigenes Icon') : null));
+}
+
+async function replaceDrawing(s) {
+  const file = await pickFile();
+  if (!file) return;
+  try {
+    const drawing = await readDrawing(file);
+    if (s.drawing?.url) URL.revokeObjectURL(s.drawing.url);
+    if (s.drawing?.iconUrl) URL.revokeObjectURL(s.drawing.iconUrl);
+    s.drawing = drawing;
+    s.newIcon = null;
+    s.redrawDoll();
+    s.setIcon(drawing.iconUrl);
+    s.showNotes?.();
+    s.changed();
+  } catch {
+    toast('Das Bild ließ sich nicht lesen.', true);
+  }
+}
+
+async function remakeIcon(s) {
+  try {
+    let source;
+    if (s.drawing) source = await loadImage(s.drawing.file);
+    else if (s.draft.bild) source = await loadImage(await (await fetch(blobUrl(s.draft.bild))).blob());
+    else return;
+    const icon = await makeIcon(source);
+    if (!icon) { toast('Im Bild ist nichts zu sehen.', true); return; }
+    if (s.newIcon?.url) URL.revokeObjectURL(s.newIcon.url);
+    s.newIcon = { blob: icon, url: URL.createObjectURL(icon) };
+    s.setIcon(s.newIcon.url);
+    s.changed();
+  } catch {
+    toast('Das Icon ließ sich nicht erzeugen.', true);
+  }
+}
+
+async function ownIcon(s) {
+  const file = await pickFile();
+  if (!file) return;
+  try {
+    const icon = await fitIcon(await loadImage(file));
+    if (s.newIcon?.url) URL.revokeObjectURL(s.newIcon.url);
+    s.newIcon = { blob: icon, url: URL.createObjectURL(icon) };
+    s.setIcon(s.newIcon.url);
+    s.changed();
+  } catch {
+    toast('Das Bild ließ sich nicht lesen.', true);
+  }
+}
+
+function drawingNotes(s) {
+  const box = h('div', { class: 'group' });
+  s.showNotes = () => {
+    const notes = [];
+    const d = s.drawing;
+    if (d && (d.size[0] !== 1024 || d.size[1] !== 1536)) notes.push(`Die Leinwand ist ${d.size[0]} × ${d.size[1]}. Im Spiel hat jede Ebene 1024 × 1536.`);
+    if (d && !d.transparent) notes.push('Das Bild hat keinen durchsichtigen Hintergrund.');
+    box.replaceChildren(...notes.map((n) => h('p', { class: 'hint warn' }, n)));
+  };
+  s.showNotes();
+  return box;
+}
+
+const emptyVorgaben = () => ({ verwendung: [], questThemen: [], questThemaFrei: '', erfolg: '', bereich: [], stats: [], idee: '' });
+function normVorgaben(v) {
+  const e = emptyVorgaben();
+  const x = { ...e, ...(v || {}) };
+  for (const k of ['verwendung', 'questThemen', 'bereich', 'stats']) x[k] = list(x[k]).slice();
+  return x;
+}
+
+function vorgabenBox(v, changed) {
+  const questBox = group('Thema der Quest',
+    multiChips(THEMEN, v.questThemen, changed),
+    textField(v.questThemaFrei, (x) => { v.questThemaFrei = x; changed(); }, { placeholder: 'Anderes Thema' }));
+  const erfolgBox = group('Welcher Erfolg',
+    textField(v.erfolg, (x) => { v.erfolg = x; changed(); }, { placeholder: 'zum Beispiel 100 km spaziert' }));
+  const sync = () => {
+    questBox.hidden = !v.verwendung.includes('quest');
+    erfolgBox.hidden = !v.verwendung.includes('erfolg');
+  };
+  sync();
+  return h('div', { class: 'box' },
+    h('div', { class: 'box-head' }, h('h3', {}, 'Deine Vorgaben')),
+    group('Verwendung', multiChips(VERWENDUNG, v.verwendung, () => { sync(); changed(); })),
+    questBox,
+    erfolgBox,
+    group('Fortschritt', multiChips(BEREICHE, v.bereich, changed)),
+    group('Wichtige Werte', multiChips(STATS, v.stats, changed, true)),
+    group('Deine Idee', textField(v.idee, (x) => { v.idee = x; changed(); }, { long: true, placeholder: 'Was du dir vorstellst' })));
+}
+
+// Claude's entries: only visible after they are uncovered on purpose.
+function spielBox(d, s, changed) {
+  const facts = d.spiel && typeof d.spiel === 'object' ? d.spiel : null;
+  const hasFacts = facts && SPIEL_FELDER.some((f) => String(facts[f.id] ?? '').trim());
+  const body = h('div', { class: 'facts' });
+  const draw = () => {
+    if (!s.revealed) {
+      body.replaceChildren(hasFacts
+        ? h('button', { type: 'button', class: 'veil', onclick: () => { s.revealed = true; draw(); } },
+          svg('veil'), h('span', {}, h('b', {}, 'Einträge liegen vor'), h('br'), 'Antippen zum Aufdecken'))
+        : h('p', { class: 'muted' }, d.imSpiel ? 'Noch keine Einträge.' : 'Noch nicht im Spiel.'));
+      return;
+    }
+    if (!d.spiel || typeof d.spiel !== 'object') d.spiel = {};
+    body.replaceChildren(
+      ...SPIEL_FELDER.map((f) => h('div', { class: 'fact' },
+        h('p', { class: 'label' }, f.name),
+        textField(d.spiel[f.id] ?? '', (x) => { d.spiel[f.id] = x; changed(); }, { long: f.long }))),
+      h('div', { class: 'row' }, h('button', { type: 'button', class: 'btn text small', onclick: () => { s.revealed = false; draw(); } }, svg('veil'), 'Wieder verdecken')));
+  };
+  draw();
+  return h('div', { class: 'box' },
+    h('div', { class: 'box-head' },
+      h('h3', {}, 'Im Spiel'),
+      toggle('Wird verwendet', null, d.imSpiel, (x) => { d.imSpiel = x; changed(); if (!s.revealed) draw(); })),
+    body);
+}
+
+function counterpartField(d, id, changed) {
+  const others = state.teile
+    .filter((t) => t.id !== id && t.figur && t.figur !== d.figur && (!d.slot || t.slot === d.slot))
+    .sort((a, b) => (a.nr ?? 0) - (b.nr ?? 0));
+  const select = h('select', { class: 'field', 'aria-label': 'Gegenstück' },
+    h('option', { value: '' }, 'Keins'),
+    others.map((t) => h('option', { value: t.id }, `Nr. ${t.nr} · ${t.name}`)));
+  select.value = others.some((t) => t.id === d.gegenstueck) ? d.gegenstueck : '';
+  select.addEventListener('change', () => { d.gegenstueck = select.value || null; changed(); });
+  return group('Gegenstück für die andere Figur', select);
+}
+
+const blankTeil = (preset = {}) => ({
+  name: '',
+  figur: preset.figur || lastFigure(),
+  slot: preset.slot || '',
+  bild: '',
+  icon: '',
+  bildGroesse: null,
+  gegenstueck: null,
+  freigabe: true,
+  vorgaben: emptyVorgaben(),
+  imSpiel: false,
+  spiel: null,
+  wunsch: preset.wunsch || null,
+});
+function lastFigure() {
+  try { return localStorage.getItem('kk.figur') || 'frau'; } catch { return 'frau'; }
+}
+function rememberFigure(f) {
+  try { localStorage.setItem('kk.figur', f); } catch { /* not needed */ }
+}
+
+async function startNew(preset = {}) {
+  if (!state.assets) { toast('Hochladen geht nur mit Schreibrecht.', true); return; }
+  const file = await pickFile();
+  if (!file) return;
+  let drawing;
+  try {
+    drawing = await readDrawing(file);
+  } catch {
+    toast('Das Bild ließ sich nicht lesen.', true);
+    return;
+  }
+  const draft = blankTeil(preset);
+  if (preset.name) draft.name = preset.name;
+  showTeil({ mode: 'new', id: null, draft, original: null, drawing });
+}
+
+function openTeil(id) {
+  const t = byId(state.teile, id);
+  if (!t) return;
+  const draft = clone(t);
+  delete draft.id;
+  draft.vorgaben = normVorgaben(draft.vorgaben);
+  showTeil({ mode: 'edit', id, draft, original: clone(draft) });
+}
+
+function nameProblem(d, id) {
+  const n = norm(d.name);
+  if (!n) return 'Bitte einen Namen geben.';
+  const twin = state.teile.find((t) => t.id !== id && norm(t.name) === n);
+  return twin ? `Diesen Namen trägt schon Nr. ${twin.nr}.` : '';
+}
+
+function showTeil(s) {
+  s.withFigure = true;
+  s.revealed = false;
+  state.sheet = s;
+  openSheet(() => drawTeil(s));
+}
+
+function drawTeil(s) {
+  const d = s.draft;
+  const sheet = $('#sheet');
+  const saveBtn = h('button', { class: 'btn primary', type: 'button' }, s.mode === 'new' ? 'Anlegen' : 'Speichern');
+  const nameInput = textField(d.name, (x) => { d.name = x; changed(); }, { placeholder: 'Eindeutiger Name', max: 60 });
+  const nameHint = h('p', { class: 'hint bad' });
+  const foot = h('div', { class: 'sheet-foot' });
+  const title = h('h2', {}, d.name || (s.mode === 'new' ? 'Neues Teil' : 'Ohne Namen'));
+
+  function changed() {
+    const problem = nameProblem(d, s.id);
+    const showName = s.mode === 'edit' || s.touchedName || d.name;
+    nameHint.textContent = showName ? problem : '';
+    nameInput.classList.toggle('bad', !!(showName && problem));
+    title.textContent = d.name.trim() || (s.mode === 'new' ? 'Neues Teil' : 'Ohne Namen');
+    const ready = !problem && d.slot && d.figur && (s.mode === 'edit' || s.drawing);
+    saveBtn.disabled = !ready || !(s.mode === 'new' || s.dirty());
+  }
+  s.changed = changed;
+  s.dirty = () => s.mode === 'new' || !!s.drawing || !!s.newIcon || !same(d, s.original);
+  nameInput.addEventListener('blur', () => { s.touchedName = true; changed(); });
+
+  const slotSelect = h('select', { class: 'field', 'aria-label': 'Slot' },
+    h('option', { value: '' }, 'Slot wählen'),
+    SLOTS.map((x) => h('option', { value: x.id }, x.name)));
+  slotSelect.value = d.slot || '';
+  const counterpartBox = h('div');
+  const drawCounterpart = () => counterpartBox.replaceChildren(counterpartField(d, s.id, changed));
+  slotSelect.addEventListener('change', () => { d.slot = slotSelect.value; s.redrawDoll(); drawCounterpart(); changed(); });
+
+  function footDefault() {
+    fill(foot,
+      s.mode === 'edit' && state.db ? h('button', { type: 'button', class: 'btn text danger-text', onclick: askDelete }, 'Löschen') : null,
+      h('span', { class: 'spacer' }),
+      h('button', { type: 'button', class: 'btn text', onclick: () => closeSheet() }, 'Schließen'),
+      saveBtn);
+  }
+  function askDelete() {
+    foot.replaceChildren(h('div', { class: 'confirm' },
+      h('p', {}, d.imSpiel ? 'Löschen? Im Spiel bleibt es, bis Claude es dort herausnimmt.' : 'Dieses Teil löschen?'),
+      h('button', { type: 'button', class: 'btn text', onclick: footDefault }, 'Abbrechen'),
+      h('button', { type: 'button', class: 'btn danger', onclick: () => deleteTeil(s) }, 'Löschen')));
+  }
+  s.askDiscard = () => {
+    foot.replaceChildren(h('div', { class: 'confirm' },
+      h('p', {}, 'Änderungen verwerfen?'),
+      h('button', { type: 'button', class: 'btn text', onclick: footDefault }, 'Weiter bearbeiten'),
+      h('button', { type: 'button', class: 'btn ghost', onclick: () => closeSheet(true) }, 'Verwerfen')));
+  };
+  saveBtn.addEventListener('click', () => saveTeil(s, saveBtn));
+
+  const t = s.id ? byId(state.teile, s.id) : null;
+  const wish = d.wunsch ? byId(state.wuensche, d.wunsch) : null;
+  sheet.replaceChildren(
+    h('div', { class: 'sheet-head' },
+      h('div', { class: 't' },
+        h('p', { class: 'eyebrow' }, s.mode === 'new' ? 'Neu' : `Nr. ${t?.nr ?? '–'}`),
+        title),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Schließen', onclick: () => closeSheet() }, svg('close'))),
+    h('div', { class: 'sheet-body split' },
+      h('div', { class: 'left group' }, lookPreview(s), drawingNotes(s)),
+      h('div', { class: 'group', style: { gap: '18px' } },
+        group('Name', nameInput, nameHint),
+        h('div', { class: 'two' },
+          group('Figur', segmented(FIGUREN, d.figur, (f) => { d.figur = f; rememberFigure(f); s.redrawDoll(); drawCounterpart(); changed(); })),
+          group('Slot', slotSelect)),
+        counterpartBox,
+        wish ? group('Gehört zu', h('p', {}, `„${wish.titel}“ aus Fehlt noch`)) : null,
+        h('div', { class: 'box' },
+          toggle('Claude darf es verwenden', d.freigabe ? 'Freigegeben' : 'Gesperrt', d.freigabe, (x) => {
+            d.freigabe = x;
+            sheet.querySelector('.switch .txt small').textContent = x ? 'Freigegeben' : 'Gesperrt';
+            changed();
+          })),
+        vorgabenBox(d.vorgaben, changed),
+        s.mode === 'edit' ? spielBox(d, s, changed) : null)),
+    foot);
+  drawCounterpart();
+  footDefault();
+  changed();
+}
+
+// Uploads what is new, writes the document, then tidies up.
+async function saveTeil(s, btn) {
+  const { db, assets } = state;
+  if (!db) return;
+  const d = s.draft;
+  if (nameProblem(d, s.id)) { changedSafe(s); return; }
+  btn.disabled = true;
+  $('#sheet').classList.add('busy');
+  const oldAssets = [];
+  try {
+    const body = clone(d);
+    body.name = d.name.trim();
+    if (s.drawing) {
+      if (!assets) throw { code: 'not_granted' };
+      const up = await assets.upload(s.drawing.file, { type: s.drawing.file.type === 'image/webp' ? 'image/webp' : 'image/png' });
+      if (body.bild) oldAssets.push(body.bild);
+      body.bild = up.id;
+      body.bildGroesse = s.drawing.size;
+    }
+    const iconBlob = s.newIcon?.blob || s.drawing?.icon;
+    if (iconBlob) {
+      const up = await assets.upload(iconBlob, { type: 'image/png' });
+      if (body.icon) oldAssets.push(body.icon);
+      body.icon = up.id;
+    }
+    body.geaendert = now();
+    let id = s.id;
+    if (s.mode === 'new') {
+      body.nr = Math.max(0, ...state.teile.map((t) => Number(t.nr) || 0)) + 1;
+      body.erstellt = body.geaendert;
+      const ref = db.collection('teile').doc();
+      id = ref.id;
+      await ref.set(body);
+    } else {
+      await db.doc(`teile/${id}`).set(body);
+    }
+    await linkCounterpart(id, s.original?.gegenstueck || null, body.gegenstueck || null);
+    if (s.mode === 'new' && body.wunsch) {
+      const w = byId(state.wuensche, body.wunsch);
+      if (w && !list(w.teile).includes(id)) await db.doc(`wuensche/${w.id}`).update({ teile: [...list(w.teile), id], geaendert: now() });
+    }
+    for (const a of oldAssets) await assets.delete(a).catch(() => {});
+    toast(s.mode === 'new' ? `Angelegt als Nr. ${body.nr}` : 'Gespeichert');
+    closeSheet(true);
+  } catch (e) {
+    toast(problem(e), true);
+    btn.disabled = false;
+  } finally {
+    $('#sheet').classList.remove('busy');
+  }
+}
+const changedSafe = (s) => s.changed?.();
+
+// Counterparts point at each other.
+async function linkCounterpart(id, before, after) {
+  const { db } = state;
+  if (before === after) return;
+  if (before) {
+    const old = byId(state.teile, before);
+    if (old && old.gegenstueck === id) await db.doc(`teile/${before}`).update({ gegenstueck: null });
+  }
+  if (after) {
+    const next = byId(state.teile, after);
+    if (next?.gegenstueck && next.gegenstueck !== id) {
+      const third = byId(state.teile, next.gegenstueck);
+      if (third && third.gegenstueck === after) await db.doc(`teile/${third.id}`).update({ gegenstueck: null });
+    }
+    if (next) await db.doc(`teile/${after}`).update({ gegenstueck: id });
+  }
+}
+
+async function deleteTeil(s) {
+  const { db, assets } = state;
+  const t = byId(state.teile, s.id);
+  if (!db || !t) return;
+  $('#sheet').classList.add('busy');
+  try {
+    await db.doc(`teile/${t.id}`).delete();
+    if (t.gegenstueck) {
+      const other = byId(state.teile, t.gegenstueck);
+      if (other && other.gegenstueck === t.id) await db.doc(`teile/${other.id}`).update({ gegenstueck: null });
+    }
+    for (const w of state.wuensche) {
+      if (list(w.teile).includes(t.id)) await db.doc(`wuensche/${w.id}`).update({ teile: list(w.teile).filter((x) => x !== t.id) });
+    }
+    if (assets) for (const a of [t.bild, t.icon].filter(Boolean)) await assets.delete(a).catch(() => {});
+    toast('Gelöscht');
+    closeSheet(true);
+  } catch (e) {
+    toast(problem(e), true);
+  } finally {
+    $('#sheet').classList.remove('busy');
+  }
+}
+
+// --- a wish -------------------------------------------------------------------
+
+function openWish(id) {
+  const w = byId(state.wuensche, id);
+  if (!w) return;
+  const draft = clone(w);
+  delete draft.id;
+  for (const k of ['figuren', 'bereich', 'stats', 'teile']) draft[k] = list(draft[k]).slice();
+  const s = { kind: 'wish', id, draft, original: clone(draft), revealed: false };
+  state.sheet = s;
+  openSheet(() => drawWish(s));
+}
+
+function drawWish(s) {
+  const d = s.draft;
+  const sheet = $('#sheet');
+  const saveBtn = h('button', { class: 'btn primary', type: 'button' }, 'Speichern');
+  const foot = h('div', { class: 'sheet-foot' });
+  const title = h('h2', {}, d.titel || 'Ohne Titel');
+  const linkedBox = h('div', { class: 'group' });
+  s.dirty = () => !same(d, s.original);
+  function changed() {
+    title.textContent = d.titel?.trim() || 'Ohne Titel';
+    saveBtn.disabled = !s.dirty();
+  }
+  s.changed = changed;
+
+  function drawLinked() {
+    const linked = list(d.teile).map((id) => byId(state.teile, id)).filter(Boolean);
+    const candidates = state.teile.filter((t) => !d.teile.includes(t.id) && (!d.slot || t.slot === d.slot));
+    const select = h('select', { class: 'field', 'aria-label': 'Teil verbinden' },
+      h('option', { value: '' }, 'Vorhandenes Teil verbinden'),
+      candidates.map((t) => h('option', { value: t.id }, `Nr. ${t.nr} · ${t.name} (${figurName(t.figur)})`)));
+    select.addEventListener('change', () => {
+      if (!select.value) return;
+      d.teile.push(select.value);
+      drawLinked();
+      changed();
+    });
+    fill(linkedBox,
+      h('p', { class: 'label' }, 'Zeichnungen dazu'),
+      ...linked.map((t) => h('div', { class: 'linked' },
+        tile(t.icon, t.slot),
+        h('div', { class: 'grow' }, t.name, h('small', {}, `Nr. ${t.nr} · ${figurName(t.figur)}`)),
+        h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Verbindung lösen', onclick: () => { d.teile = d.teile.filter((x) => x !== t.id); drawLinked(); changed(); } }, svg('close')))),
+      linked.length ? null : h('p', { class: 'muted' }, 'Noch keine.'),
+      candidates.length ? select : null,
+      state.assets ? h('div', { class: 'row' }, h('button', {
+        type: 'button', class: 'btn ghost small',
+        onclick: () => {
+          const missing = list(d.figuren).find((f) => !covered({ teile: d.teile }).has(f)) || d.figuren[0];
+          closeSheet(true);
+          startNew({ slot: d.slot, figur: missing, wunsch: s.id, name: d.titel ? `${d.titel} ${figurName(missing)}` : '' });
+        },
+        disabled: s.dirty() ? true : null,
+      }, 'Zeichnung dafür hochladen')) : null);
+  }
+
+  const facts = h('div', { class: 'facts' });
+  const drawFacts = () => {
+    const has = String(d.wofuer ?? '').trim() || String(d.kennung ?? '').trim();
+    if (!s.revealed) {
+      facts.replaceChildren(has
+        ? h('button', { type: 'button', class: 'veil', onclick: () => { s.revealed = true; drawFacts(); } },
+          svg('veil'), h('span', {}, h('b', {}, 'Einträge liegen vor'), h('br'), 'Antippen zum Aufdecken'))
+        : h('p', { class: 'muted' }, 'Keine Einträge.'));
+      return;
+    }
+    facts.replaceChildren(
+      h('div', { class: 'fact' }, h('p', { class: 'label' }, 'Wofür'), textField(d.wofuer, (x) => { d.wofuer = x; changed(); }, { long: true })),
+      h('div', { class: 'fact' }, h('p', { class: 'label' }, 'Kennung im Code'), textField(d.kennung, (x) => { d.kennung = x; changed(); })),
+      h('div', { class: 'row' }, h('button', { type: 'button', class: 'btn text small', onclick: () => { s.revealed = false; drawFacts(); } }, svg('veil'), 'Wieder verdecken')));
+  };
+  drawFacts();
+
+  const slotSelect = h('select', { class: 'field', 'aria-label': 'Slot' },
+    h('option', { value: '' }, 'Slot wählen'),
+    SLOTS.map((x) => h('option', { value: x.id }, x.name)));
+  slotSelect.value = d.slot || '';
+  slotSelect.addEventListener('change', () => { d.slot = slotSelect.value; drawLinked(); changed(); });
+
+  function footDefault() {
+    foot.replaceChildren(
+      h('button', { type: 'button', class: 'btn text danger-text', onclick: askDelete }, 'Löschen'),
+      h('span', { class: 'spacer' }),
+      h('button', { type: 'button', class: 'btn text', onclick: () => closeSheet() }, 'Schließen'),
+      saveBtn);
+  }
+  function askDelete() {
+    foot.replaceChildren(h('div', { class: 'confirm' },
+      h('p', {}, 'Diesen Eintrag löschen? Die Zeichnungen bleiben.'),
+      h('button', { type: 'button', class: 'btn text', onclick: footDefault }, 'Abbrechen'),
+      h('button', { type: 'button', class: 'btn danger', onclick: () => deleteWish(s) }, 'Löschen')));
+  }
+  s.askDiscard = () => {
+    foot.replaceChildren(h('div', { class: 'confirm' },
+      h('p', {}, 'Änderungen verwerfen?'),
+      h('button', { type: 'button', class: 'btn text', onclick: footDefault }, 'Weiter bearbeiten'),
+      h('button', { type: 'button', class: 'btn ghost', onclick: () => closeSheet(true) }, 'Verwerfen')));
+  };
+  saveBtn.addEventListener('click', () => saveWish(s, saveBtn));
+  const status = wishStatus({ ...d });
+
+  sheet.replaceChildren(
+    h('div', { class: 'sheet-head' },
+      h('div', { class: 't' }, h('p', { class: 'eyebrow' }, 'Fehlt noch'), title),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Schließen', onclick: () => closeSheet() }, svg('close'))),
+    h('div', { class: 'sheet-body' },
+      h('div', { class: 'badges' }, h('span', { class: `badge ${status.cls}` }, status.name)),
+      group('Titel', textField(d.titel, (x) => { d.titel = x; changed(); }, { max: 60 })),
+      h('div', { class: 'two' },
+        group('Slot', slotSelect),
+        group('Für', multiChips(FIGUREN, d.figuren, changed))),
+      group('Aussehen', textField(d.aussehen, (x) => { d.aussehen = x; changed(); }, { long: true })),
+      group('Fortschritt', multiChips(BEREICHE, d.bereich, changed)),
+      group('Wichtige Werte', multiChips(STATS, d.stats, changed, true)),
+      linkedBox,
+      h('div', { class: 'box' },
+        toggle('Nicht zeichnen', 'Claude sucht dann etwas anderes', d.entscheidung === 'nicht', (x) => { d.entscheidung = x ? 'nicht' : ''; changed(); }),
+        group('Deine Notiz', textField(d.notiz, (x) => { d.notiz = x; changed(); }, { long: true }))),
+      h('div', { class: 'box' }, h('div', { class: 'box-head' }, h('h3', {}, 'Von Claude')), facts)),
+    foot);
+  drawLinked();
+  footDefault();
+  changed();
+}
+
+async function saveWish(s, btn) {
+  const { db } = state;
+  if (!db) return;
+  btn.disabled = true;
+  try {
+    await db.doc(`wuensche/${s.id}`).set({ ...clone(s.draft), geaendert: now() });
+    toast('Gespeichert');
+    closeSheet(true);
+  } catch (e) {
+    toast(problem(e), true);
+    btn.disabled = false;
+  }
+}
+
+async function deleteWish(s) {
+  try {
+    await state.db.doc(`wuensche/${s.id}`).delete();
+    toast('Gelöscht');
+    closeSheet(true);
+  } catch (e) {
+    toast(problem(e), true);
+  }
+}
+
+// --- tabs, search, start -----------------------------------------------------
+
+for (const tab of document.querySelectorAll('.tab')) {
+  tab.addEventListener('click', () => {
+    state.tab = tab.dataset.tab;
+    for (const t of document.querySelectorAll('.tab')) {
+      t.classList.toggle('active', t === tab);
+      t.setAttribute('aria-selected', String(t === tab));
+    }
+    $('#view-teile').hidden = state.tab !== 'teile';
+    $('#view-wuensche').hidden = state.tab !== 'wuensche';
+    render();
+  });
+}
+$('#search').addEventListener('input', (e) => { state.filter.q = e.currentTarget.value; renderTeile(); });
+$('#add').addEventListener('click', () => startNew());
+
+async function start() {
+  renderFilters();
+  const db = await window.claude?.use?.('db').catch(() => null);
+  if (!db) {
+    $('#list').replaceChildren(h('p', { class: 'status' }, 'Die Kleiderkammer ist in dieser Ansicht nicht erreichbar.'));
+    return;
+  }
+  state.db = db;
+  const failed = (e) => {
+    const code = e?.code || '';
+    toast(code === 'revoked' || code === 'invalid_argument' ? 'Kein Zugang zur Kleiderkammer.' : 'Die Verbindung ist abgerissen. Bitte neu laden.', true);
+  };
+  db.collection('teile').onSnapshot((snap) => {
+    state.teile = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    state.loaded.teile = true;
+    render();
+  }, failed);
+  db.collection('wuensche').onSnapshot((snap) => {
+    state.wuensche = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    state.loaded.wuensche = true;
+    render();
+  }, failed);
+  db.doc('config/figuren').onSnapshot((snap) => {
+    state.figuren = snap.exists ? snap.data() : {};
+    state.sheet?.redrawDoll?.();
+  }, failed);
+  const assets = await window.claude.use('assets').catch(() => null);
+  state.assets = assets;
+  $('#add').hidden = !assets;
+}
+start();
+</script>

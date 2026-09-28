@@ -66,6 +66,8 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
   der vier Werte zu Level 10, sonst keine Funktion dahinter
 - Arena, Mehrspieler, Freunde
 - Ernährungsmodul
+- Erfolge (etwa „100 km spaziert“): kommen später und können dann Kleidung als
+  Belohnung vergeben; wie genau, wird noch besprochen
 
 Nicht vorgreifen. Keine Platzhalter-Implementierungen für diese Funktionen bauen,
 solange nicht ausdrücklich danach gefragt wird.
@@ -159,6 +161,42 @@ Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.
 Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Zuhause
 `assets/zuhause/stufe_<n>.png` (1200 × 800), Einrichtung
 `assets/icons/icon_einrichtung_<id>.png` (256 × 256), Karte `assets/welt/karte.jpg` (3:2).
+
+## Kleiderkammer
+
+Austausch-Datenbank zwischen Nutzerin und Claude für alle Kleidungsteile, eine private
+Seite auf claude.ai: https://claude.ai/artifact/92pbHMV3YqemSrC4s86ADj. Sie gehört nicht
+zur App und ist für Spieler nicht erreichbar (Zugriffsregel: lesen und schreiben erst
+ab `admin`). Quelltext der Seite: `tools/kleiderkammer.html`; Änderungen dort machen und
+mit dem Werkzeug `Artifact` unter derselben Adresse neu veröffentlichen.
+
+Lesen und Schreiben mit dem Werkzeug `ArtifactData`, Bilder mit `Artifact`
+(`action: read`, `path: <Bild-Id>`). Sammlungen:
+
+- `teile`: eine Zeichnung = ein Eintrag. `nr` und `name` sind eindeutig; wenn die
+  Nutzerin über ein Teil spricht, meint sie diesen Namen oder „Nr. 7“. `figur` (`frau`
+  = Figur `erste`, `mann` = `zweite`), `slot`, `bild` und `icon` (Bild-Ids), `gegenstueck`
+  (Eintrag der anderen Figur), `freigabe`, `vorgaben` (ihre Wünsche: `verwendung`,
+  `questThemen`, `questThemaFrei`, `erfolg`, `bereich`, `stats`, `idee`), `imSpiel`,
+  `spiel` (Claudes Angaben: `kennung`, `stufe`, `herkunft`, `voraussetzung`,
+  `faehigkeit`, `wirkung`, `seit`, `notiz`).
+- `wuensche`: Teile, für die Claude eine Zeichnung braucht (`titel`, `slot`, `figuren`,
+  `aussehen`, `bereich`, `stats`, `wofuer`, `kennung`, `teile`, `entscheidung`, `notiz`).
+  `entscheidung: "nicht"` heißt: sie will es nicht zeichnen, etwas anderes suchen.
+- `config/figuren`: die beiden Basisfiguren für die Vorschau.
+
+Regeln für Claude:
+
+- Nur Teile mit `freigabe: true` verwenden.
+- Einträge nicht verändern, außer die Nutzerin bittet ausdrücklich darum. Ausnahme:
+  Wird ein Teil ins Spiel genommen (oder wieder heraus), `imSpiel` und `spiel` füllen —
+  Anforderung, Fundort, Wirkung. Das ist ihr Spoilerschutz: `spiel` und `wofuer` im Chat
+  nicht ungefragt ausbreiten; sie deckt sie in der Datenbank gezielt auf.
+- Fehlende Angaben in `vorgaben` darf Claude selbst entscheiden; das Ergebnis steht
+  dann in `spiel`, nicht in `vorgaben`.
+- Fehlt für einen Fall ein passendes Teil, einen Eintrag in `wuensche` anlegen.
+- Vor jedem Schreiben lesen und mit `if_version` schreiben, damit keine Änderung der
+  Nutzerin verloren geht.
 
 ## Arbeitsweise
 
