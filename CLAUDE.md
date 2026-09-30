@@ -50,8 +50,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
 - Lager als Startansicht (Bild des Lagers, Vorrat, Expedition, gesichtete Geister)
-- Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben
-  Portrait mit vier Werte-Ringen, Tageswerk-Knopf und Einstellungen
+- Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben auf
+  jeder Seite eine Leiste mit großem Portrait (vier Werte-Ringe; nicht auf der
+  Envoy-Seite), Tageswerk-Knopf und Einstellungen
 - Handbuch als Buch: Anleitung (wächst mit dem Entdeckten), Tageswerk- und
   Quest-Rückblick, Kompendium, Erfolge
 - Charakterfenster mit Paperdoll-Darstellung, Ausrüstungsslots, Inventar-Box und dem
@@ -62,9 +63,10 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
   Expeditionen in echter Zeit (Hinweg, vor Ort, Rückweg), Kämpfe und Höhlen ohne
   Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein
-- Rucksack (von Anfang an, 5 Plätze), Kiste (nach der Quest „Ein Platz zum Bleiben“, nur
-  im Lager nutzbar), Händler, Kompendium der getroffenen Geister
-- Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln)
+- Rucksack (von Anfang an, 5 Plätze), Händler, Kompendium der getroffenen Geister
+  (die Kiste kommt mit dem Lagerausbau, siehe unten)
+- Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
+  15 Minuten nach dem Start)
 
 Freischaltung: Karte und Quests von Anfang an. Lagerausbau und Händler über Quests.
 Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
@@ -77,8 +79,10 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 - Ernährungsmodul
 - Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem
   Konzept der Nutzerin; Erfolge für echte Übungen zählen nur Summen, nie Serien
-- Lagerausbau und Housing (Stufen, Einrichtung): nach dem Konzept der Nutzerin; bis
-  dahin ist „Lager verbessern“ ohne Inhalt, Einrichtung wird nicht gesammelt
+- Lagerausbau und Housing (Stufen, Einrichtung, Kiste): nach dem Konzept der Nutzerin.
+  Bis dahin gibt es keinen Knopf „Lager verbessern“, die Quest „Ein Platz zum Bleiben“ ist
+  mit `aktiv` = nein aus dem Spiel genommen (nicht löschen), Einrichtung wird nicht
+  gesammelt
 - Der Envoy im Bild des Lagers (sitzend, im eigenen Lager-Outfit)
 - Endgame: Inhalte reichen vorerst höchstens bis ins gute Midgame, damit Luft nach oben
   bleibt. Wo genau der jetzige Inhalt endet, ist noch offen.
@@ -101,7 +105,8 @@ Start bei 1, Obergrenze 100.
 
 **XP pro Übung:** 14 bis 28, Schnitt 20. Hängt am Umfang der konkreten Übung, nicht
 am Bereich. Erfolge können darauf einen Bonus geben (so gewünscht): „Angekommen“
-+10 %, gerundet (14 → 15). Angezeigt wird immer der Gewinn mit Bonus.
++10 %, gerundet (14 → 15), aber nur in den ersten 15 Minuten nach dem Start. Angezeigt
+wird immer der Gewinn mit Bonus.
 
 **XP bis zum nächsten Level:**
 
@@ -231,5 +236,7 @@ Regeln für Claude:
   können, um Vertrauen zu haben.
 - Deutsche UI-Texte knapp und ohne erklärende Kleingedruckte. Keine Motivationssprüche,
   keine Ausrufezeichen, kein Coaching-Ton.
-- In der Oberfläche steht nie „XP“: Gewinne heißen nach ihrem Stat („+14 Kraft“).
+- In der Oberfläche steht bisher nie „XP“: Gewinne heißen nach ihrem Stat („+14 Kraft“).
+  Der Nutzerin ist das Wort nicht wichtig; wichtig ist nur: kein XP und kein Level für
+  den Helden selbst, nur je Stat.
 - In der Spielwelt scheitert nichts. Stats bestimmen Zugang, Dauer und Ertrag.

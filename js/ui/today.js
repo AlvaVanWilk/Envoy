@@ -38,6 +38,19 @@ function helpButton(game) {
   }, '?');
 }
 
+const clock = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+// A bonus that only lasts a short while, named once, calmly, with its end.
+function bonusNote(game) {
+  const running = game.bonuses();
+  if (running.length === 0) return null;
+  const tasks = running.filter((b) => b.achievement.reward.tageswerk);
+  if (tasks.length === 0) return null;
+  const share = Math.round(tasks.reduce((sum, b) => sum + b.achievement.reward.tageswerk, 0) * 100);
+  const end = Math.max(...tasks.map((b) => b.end));
+  return h('p', { class: 'bonus-note' }, `${tasks[0].achievement.name}: +${share} % auf jeden Gewinn, bis ${clock(end)} Uhr.`);
+}
+
 // All four done: a calm note and the exercises of tomorrow.
 function restPanel(game) {
   const next = tomorrowPlans(game.state, game.catalog);
@@ -60,6 +73,7 @@ export function renderToday(game) {
   return h('section', { class: `view today ${doneCount === STATS.length ? 'all-done' : ''}` },
     viewHead(formatDayLong(s.today), 'Tageswerk', helpButton(game)),
     helpOpen ? helpPanel() : null,
+    doneCount < STATS.length ? bonusNote(game) : null,
     h('div', { class: 'today-grid' },
       h('div', { class: 'today-main' },
         doneCount === STATS.length ? restPanel(game) : null,

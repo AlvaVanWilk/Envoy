@@ -48,8 +48,8 @@
   --engrave: rgba(4, 12, 14, 0.72);
   --shield-w: clamp(34px, 9.4vw, 46px);
   --bar-h: calc(var(--shield-w) / 2 + 8px);
-  --ring-w: 60px;
-  --top-h: calc(var(--ring-w) + 16px);
+  --ring-w: 120px;
+  --top-h: 56px;
 
   --radius: 8px;
   --font-display: 'Cinzel', 'Optima', 'Palatino', Georgia, serif;
@@ -287,30 +287,29 @@ img { display: block; max-width: 100%; }
 .shield.is-locked .sh-face { fill: url(#sh-face-locked); }
 .shield.is-locked .sh-rim { fill: url(#sh-rim-dull); }
 .shield.is-locked .shield-icon { color: #5f7a7d; filter: none; --engrave: rgba(4, 12, 14, 0.55); }
+/* the lock on a shield still closed: a round, light silver seal */
 .shield-lock {
   position: absolute;
-  right: -2%;
-  bottom: -2%;
-  width: 38%;
-  aspect-ratio: 1;
-  padding: 7%;
+  right: -4%;
+  bottom: -4%;
+  display: grid;
+  place-items: center;
+  width: calc(var(--shield-w) * 0.42);
+  height: calc(var(--shield-w) * 0.42);
+  padding: 0;
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 32%, var(--copper-bright), var(--copper) 55%, var(--copper-dark));
-  border: 1px solid #0a0f10;
-  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.4), 0 1px 2px rgba(0, 0, 0, 0.6);
-  color: #111a1c;
+  background: radial-gradient(circle at 36% 30%, #ffffff, #dde7e9 42%, #a4b8bc 100%);
+  border: 1px solid #1b2629;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -2px 3px rgba(70, 92, 98, 0.35), 0 1px 3px rgba(0, 0, 0, 0.7);
+  color: #22343a;
 }
-.shield-lock svg { width: 100%; height: 100%; display: block; }
-.shield-badge {
-  position: absolute;
-  top: 0;
-  right: 2%;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #f3fcfc, #8fc0c4 60%, #3e6a70);
-  border: 1px solid #070a0d;
-  box-shadow: 0 0 8px rgba(166, 210, 213, 0.8);
+.shield-lock svg { width: 60%; height: 60%; display: block; }
+
+/* something new behind a menu point: its rim glows and shimmers */
+.dock-item.news .shield-art { animation: dock-news 2.2s ease-in-out infinite; }
+@keyframes dock-news {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 2px rgba(232, 121, 31, 0.35)); }
+  50% { filter: brightness(1.3) drop-shadow(0 0 10px rgba(246, 161, 82, 0.95)) drop-shadow(0 0 20px rgba(232, 121, 31, 0.5)); }
 }
 
 /* the small round shield in the corner (settings) */
@@ -614,7 +613,8 @@ button.stat-row:hover { background: rgba(244, 236, 222, 0.025); }
 
 /* 7. top bar, camp ---------------------------------------------------- */
 
-/* The bar at the top: portrait in four rings, the Tageswerk, the settings. */
+/* The bar at the top: the portrait in four rings hangs from its left edge
+   into the page; the Tageswerk sits in the middle, the settings at the right. */
 .topbar { display: none; }
 body.has-topbar .topbar {
   display: block;
@@ -624,31 +624,39 @@ body.has-topbar .topbar {
   left: 0;
   right: 0;
   padding: calc(env(safe-area-inset-top) + 8px) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
-  background: linear-gradient(180deg, rgba(9, 15, 17, 0.97), rgba(12, 20, 23, 0.92));
+  background: linear-gradient(180deg, rgba(9, 15, 17, 0.97), rgba(12, 20, 23, 0.93));
   border-bottom: 1px solid #060a0c;
   box-shadow: inset 0 -1px 0 rgba(244, 236, 222, 0.05), 0 10px 24px rgba(0, 0, 0, 0.4);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
-body.has-topbar .main { padding-top: calc(env(safe-area-inset-top) + var(--top-h) + 18px); }
+body.has-topbar .main { padding-top: calc(env(safe-area-inset-top) + var(--top-h) + 30px); }
 .topbar-row {
+  position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: var(--ring-w) minmax(0, 1fr) 42px;
+  grid-template-rows: var(--top-h);
   align-items: center;
   gap: 12px;
   max-width: 1320px;
   margin: 0 auto;
 }
-.topbar .gear { --shield-w: 42px; }
+/* on the Envoy's own page there is no portrait: the Tageswerk stays in the middle */
+.topbar-row.no-portrait { grid-template-columns: 42px minmax(0, 1fr) 42px; }
+.topbar-row.no-portrait::before { content: ''; }
+.topbar .gear { --shield-w: 42px; position: relative; z-index: 2; justify-self: end; }
 
-.portrait-rings { position: relative; width: var(--ring-w); height: var(--ring-w); flex: none; }
+/* The pages make room for the hanging portrait: their heading moves aside. */
+body.has-portrait .view-head > div:first-child { margin-left: calc(var(--ring-w) + 2px); min-height: 40px; }
+body.has-portrait .view-head .eyebrow { letter-spacing: 0.12em; }
+body.has-portrait .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14px); }
+
+.portrait-rings { position: relative; z-index: 2; align-self: start; width: var(--ring-w); height: var(--ring-w); flex: none; }
 .rings-art, .rings-art svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .rings-art { touch-action: manipulation; }
-.stat-ring-track { fill: none; stroke: color-mix(in srgb, var(--stat) 20%, #0b1214); stroke-width: 2.2; }
+.stat-ring-track { fill: none; stroke: color-mix(in srgb, var(--stat) 20%, #0b1214); stroke-width: 2.8; }
 .stat-ring-fill {
   fill: none;
   stroke: var(--stat);
-  stroke-width: 2.2;
+  stroke-width: 2.8;
   stroke-linecap: round;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
@@ -659,10 +667,10 @@ body.has-topbar .main { padding-top: calc(env(safe-area-inset-top) + var(--top-h
   overflow: hidden;
   border-radius: 50%;
   background: radial-gradient(circle at 45% 35%, #2e4a50, #15252a 72%);
-  box-shadow: 0 0 0 1px #04070a, 0 3px 8px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 1.5px #04070a, 0 4px 14px rgba(0, 0, 0, 0.7);
 }
 .portrait-img { width: 100%; height: 100%; object-fit: cover; }
-.portrait-badge { position: absolute; top: 12%; right: 12%; width: 11px; height: 11px; border-radius: 50%; background: var(--copper-bright); border: 1.5px solid #070a0d; pointer-events: none; }
+.portrait-badge { position: absolute; top: 14%; right: 14%; width: 13px; height: 13px; border-radius: 50%; background: var(--copper-bright); border: 2px solid #070a0d; pointer-events: none; }
 .ring-tip {
   position: absolute;
   z-index: 3;
@@ -684,41 +692,61 @@ body.has-topbar .main { padding-top: calc(env(safe-area-inset-top) + var(--top-h
 }
 .ring-tip.on { opacity: 1; transform: none; }
 
-/* The Tageswerk: glowing while open, at rest with the emblem once done. */
+/* The Tageswerk: dark stone like the menu and the boxes. While tasks are
+   open an orange glow pulses around it; once done it rests with the emblem. */
 .daywork {
   justify-self: center;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: min(100%, 300px);
-  height: 46px;
-  padding: 0 16px;
+  gap: 8px;
+  width: min(100%, 320px);
+  height: var(--top-h);
+  padding: 0 12px;
   overflow: hidden;
   border-radius: 8px;
-  border: 1px solid #10191b;
+  border: 1px solid #070a0d;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='120'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.35' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.62 0 0 0 0 0.78 0 0 0 0 0.8 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #2b4147 0%, #213338 22%, #182428 100%);
+  color: var(--ivory-bright);
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.08em;
+  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.18), inset 0 -8px 16px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 .daywork.open {
-  background: linear-gradient(180deg, #f8b06a 0%, #e8791f 52%, #9a3e0e 100%);
-  color: #0f1719;
-  box-shadow: inset 0 1px 0 rgba(255, 236, 214, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(232, 121, 31, 0.3), 0 0 16px rgba(232, 121, 31, 0.35);
-  animation: daywork-glow 2.8s ease-in-out infinite;
+  box-shadow:
+    inset 0 1px 0 rgba(244, 236, 222, 0.18), inset 0 -8px 16px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(232, 121, 31, 0.6), 0 0 22px 3px rgba(232, 121, 31, 0.5), 0 0 56px 10px rgba(232, 121, 31, 0.26);
+  animation: daywork-glow 2.6s ease-in-out infinite;
+}
+/* an orange sheen rising from the lower edge, in step with the glow */
+.daywork.open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 80% 90% at 50% 130%, rgba(246, 161, 82, 0.55), rgba(232, 121, 31, 0.18) 55%, transparent 75%);
+  animation: daywork-sheen 2.6s ease-in-out infinite;
 }
 @keyframes daywork-glow {
-  0%, 100% { box-shadow: inset 0 1px 0 rgba(255, 236, 214, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(232, 121, 31, 0.3), 0 0 10px rgba(232, 121, 31, 0.25); }
-  50% { box-shadow: inset 0 1px 0 rgba(255, 236, 214, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(246, 161, 82, 0.6), 0 0 26px rgba(246, 161, 82, 0.6); }
+  0%, 100% {
+    box-shadow:
+      inset 0 1px 0 rgba(244, 236, 222, 0.18), inset 0 -8px 16px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(232, 121, 31, 0.4), 0 0 14px 1px rgba(232, 121, 31, 0.34), 0 0 34px 4px rgba(232, 121, 31, 0.16);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(244, 236, 222, 0.18), inset 0 -8px 16px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(246, 161, 82, 0.9), 0 0 34px 8px rgba(246, 161, 82, 0.72), 0 0 84px 22px rgba(232, 121, 31, 0.4);
+  }
 }
-.daywork-title { font-size: 15px; text-transform: uppercase; }
-.daywork-count { padding: 1px 8px; border-radius: 999px; background: rgba(15, 23, 25, 0.18); font-family: var(--font-body); font-size: 12px; letter-spacing: 0; }
-.daywork.done {
-  background: linear-gradient(180deg, #1c2d32, #121d20);
-  border-color: #05080a;
-  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.06), 0 1px 2px rgba(0, 0, 0, 0.5);
-}
+@keyframes daywork-sheen { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+.daywork-title, .daywork-count { position: relative; z-index: 1; }
+.daywork-title { font-size: clamp(12px, 3.6vw, 15px); white-space: nowrap; text-transform: uppercase; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); }
+.daywork-count { flex: none; white-space: nowrap; padding: 1px 8px; border-radius: 999px; background: rgba(232, 121, 31, 0.22); border: 1px solid rgba(246, 161, 82, 0.4); font-family: var(--font-body); font-size: 12px; letter-spacing: 0; color: var(--copper-bright); }
 .daywork-emblem {
   position: absolute;
   left: 50%;
@@ -765,8 +793,6 @@ body.has-topbar .main { padding-top: calc(env(safe-area-inset-top) + var(--top-h
   background: linear-gradient(180deg, #16262b, #111d21);
 }
 .camp-status { margin-top: 2px; font-size: 14px; color: var(--text-2); }
-.camp-upgrade.locked { color: var(--text-2); }
-.camp-upgrade .icon { width: 15px; height: 15px; }
 .camp-grid { display: grid; gap: 14px; align-items: start; }
 .sheet-text { color: var(--text-2); }
 
@@ -931,6 +957,7 @@ button.task-check:hover { color: var(--stat); }
   cursor: pointer;
 }
 .help-btn.on { background: var(--ivory); color: var(--ink); border-color: #05080a; }
+.bonus-note { margin: -4px 0 12px; padding: 8px 12px; border-left: 3px solid var(--copper); border-radius: 4px; background: rgba(232, 121, 31, 0.08); font-size: 14px; color: var(--ivory); }
 .help-panel { display: grid; gap: 8px; margin: -6px 0 14px; font-size: 15px; color: var(--text-2); }
 .help-panel .btn { justify-self: start; padding: 0; color: var(--copper-bright); }
 .rest-panel { display: grid; gap: 6px; margin-bottom: 12px; border-left: 3px solid rgba(143, 192, 156, 0.6); }
@@ -1533,11 +1560,11 @@ button.task-check:hover { color: var(--stat); }
 /* the test copy of the app (see js/stage.js) */
 .stage-tag {
   position: fixed;
-  top: calc(env(safe-area-inset-top) + 1px);
-  right: max(6px, env(safe-area-inset-right));
+  top: env(safe-area-inset-top);
+  left: max(4px, env(safe-area-inset-left));
   z-index: 60;
   font-size: 9px;
-  padding: 1px 8px;
+  padding: 1px 6px;
   border-radius: 999px;
   border: 1px solid rgba(234, 183, 92, 0.6);
   background: rgba(12, 22, 25, 0.85);
@@ -1610,8 +1637,7 @@ body.creating .dock { display: none; }
 }
 
 @media (min-width: 640px) {
-  :root { --shield-w: 52px; --bar-h: calc(52px / 2 + 24px); --ring-w: 68px; }
-  .daywork { height: 50px; }
+  :root { --shield-w: 52px; --bar-h: calc(52px / 2 + 24px); --ring-w: 140px; --top-h: 60px; }
   .book-page { padding: 30px 40px 12px; }
   .page-foot { margin: 16px -40px -12px; }
   .dock-item.is-main { --shield-w: 64px; margin-top: -6px; }
@@ -1643,6 +1669,10 @@ body.creating .dock { display: none; }
   .sheet-layer.open .sheet { opacity: 1; transform: translate(-50%, -50%); }
   .map-scroll { max-height: 70dvh; }
   .map-canvas { width: max(100%, 720px); }
+}
+
+@media (min-width: 900px) {
+  :root { --ring-w: 168px; --top-h: 64px; }
 }
 
 @media (min-width: 760px) {

@@ -13,7 +13,7 @@ import { questById, questState } from './world/quests.js';
 import { planExpedition, progressAt } from './world/expedition.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
-import { bonusOf, withBonus } from './achievements.js';
+import { bonusOf, withBonus, runningBonuses } from './achievements.js';
 
 const REPORT_HOURS = 48;
 const listeners = new Set();
@@ -92,9 +92,14 @@ export const game = {
   },
 
   // What finishing the exercise brings now: its points with the bonus of
-  // the achievements reached so far.
+  // the achievements that still count.
   gainFor(exercise) {
-    return withBonus(exercise.xp, bonusOf(this.state.achievements, 'tageswerk'));
+    return withBonus(exercise.xp, bonusOf(this.state.achievements, 'tageswerk', Date.now()));
+  },
+
+  // Time-limited bonuses running now: [{ achievement, end }], for the display.
+  bonuses() {
+    return runningBonuses(this.state.achievements, Date.now());
   },
 
   // Feedback is only asked when there is no measured value, and only for an
@@ -141,7 +146,7 @@ export const game = {
       fx: effects(s.world, this.catalog),
       totals: s.totals,
       day: s.today,
-      bonus: { sammeln: bonusOf(s.achievements, 'sammeln') },
+      bonus: { sammeln: bonusOf(s.achievements, 'sammeln', Date.now()) },
     };
   },
 

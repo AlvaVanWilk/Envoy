@@ -5,6 +5,7 @@ import { buildCatalog } from '../js/catalog.js';
 import { missingPlans, tomorrowPlans } from '../js/planner.js';
 import { addDays } from '../js/days.js';
 import { mergeEvents } from '../js/events.js';
+import { bonusOf, runningBonuses } from '../js/achievements.js';
 
 const catalog = buildCatalog({
   exercises: [
@@ -185,16 +186,32 @@ test('events from before the accessory slot, when it was the cloak slot, still c
   assert.equal(off.world.items['start:tuch'].where, 'rucksack');
 });
 
-test('the achievement "Angekommen" is reached with the Envoy and adds 10 % to every gain from then on', () => {
-  const before = done(START, 'kraft', 20);
-  const envoy = ev(START, 'envoy', { name: 'Mira', figur: 'erste' });
-  const after = done(addDays(START, 1), 'kraft', 20);
-  const s = replay([before, envoy, after], catalog, addDays(START, 1));
+test('the achievement "Angekommen" is reached with the Envoy and adds 10 % to gains for the first 15 minutes only', () => {
+  const MIN = 60000;
+  const T = 1_000_000_000;
+  const before = { ...done(START, 'kraft', 20), t: T - MIN };
+  const envoy = { ...ev(START, 'envoy', { name: 'Mira', figur: 'erste' }), t: T };
+  const soon = { ...done(START, 'ausdauer', 20), t: T + 10 * MIN };
+  const late = { ...done(START, 'beweglichkeit', 20), t: T + 16 * MIN };
+  const s = replay([before, envoy, soon, late], catalog, START);
   assert.deepEqual(Object.keys(s.achievements), ['angekommen']);
   assert.equal(s.achievements.angekommen.day, START);
-  assert.equal(s.todayDone.kraft.gain, 22);
-  assert.equal(s.stats.kraft.xp, 42); // 20 before the arrival, 22 after
+  assert.equal(s.achievements.angekommen.t, T);
+  assert.equal(s.todayDone.kraft.gain, 20);        // before the arrival
+  assert.equal(s.todayDone.ausdauer.gain, 22);     // within 15 minutes
+  assert.equal(s.todayDone.beweglichkeit.gain, 20); // after 15 minutes
   assert.equal(replay([before], catalog, START).achievements.angekommen, undefined);
+});
+
+test('the time-limited bonus is asked for by time', () => {
+  const earned = { angekommen: { day: START, t: 1000 } };
+  assert.equal(bonusOf(earned, 'tageswerk', 1000 + 14 * 60000), 0.1);
+  assert.equal(bonusOf(earned, 'tageswerk', 1000 + 15 * 60000), 0.1);
+  assert.equal(bonusOf(earned, 'tageswerk', 1000 + 15 * 60000 + 1), 0);
+  assert.equal(bonusOf(earned, 'sammeln', 1000), 0.1);
+  assert.equal(runningBonuses(earned, 1000 + 5 * 60000).length, 1);
+  assert.equal(runningBonuses(earned, 1000 + 20 * 60000).length, 0);
+  assert.equal(bonusOf({}, 'tageswerk', 0), 0);
 });
 
 test('the look at tomorrow names the exercises the next day will bring', () => {

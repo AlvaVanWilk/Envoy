@@ -1,13 +1,14 @@
 // "Lager": the first view. The camp as a picture, where the Envoy is, the
-// way to extend the camp, the supplies, and which spirits were seen today.
+// supplies, and which spirits were seen today. Once the camp can be extended
+// (a quest unlocks it, not offered for now), a button leads there.
 // The picture belongs to the stage of the camp; at the start it is a
 // campfire. (Later the Envoy is to sit there while at the camp.)
 
 import { h, icon } from './dom.js';
-import { UI_ICONS, PLACE_ICONS } from './icons.js';
+import { PLACE_ICONS } from './icons.js';
 import { versioned } from '../config.js';
 import { formatDayLong } from '../days.js';
-import { sectionTitle, supplies, staminaBar, unlockHint } from './parts.js';
+import { sectionTitle, supplies, staminaBar } from './parts.js';
 import { journeyPanel, openReport } from './journey.js';
 import { encountersFor, questState, placeUnlocked } from '../world/quests.js';
 import { openPlace } from './worldmap.js';
@@ -28,18 +29,16 @@ function statusLine(game) {
   return 'Der Envoy ist im Lager.';
 }
 
-// Extending the camp is unlocked by a quest; what it offers comes later.
+// Extending the camp is unlocked by a quest; there is none for now, so the
+// button does not show yet. What it offers comes with the housing.
 function upgradeButton(game) {
-  const open = game.unlocked('zuhause');
+  if (!game.unlocked('zuhause')) return null;
   const show = () => openSheet({
     title: 'Lager verbessern',
     eyebrow: 'Lager',
-    content: h('p', { class: 'sheet-text' }, open
-      ? 'Der Ausbau ist freigeschaltet. Wie das Lager wächst, folgt mit einem späteren Update.'
-      : unlockHint('zuhause', game.catalog)),
+    content: h('p', { class: 'sheet-text' }, 'Wie das Lager wächst, folgt mit einem späteren Update.'),
   });
-  return h('button', { class: `btn ghost small camp-upgrade ${open ? '' : 'locked'}`, onclick: show },
-    open ? null : icon(UI_ICONS.lock), 'Lager verbessern');
+  return h('button', { class: 'btn ghost small camp-upgrade', onclick: show }, 'Lager verbessern');
 }
 
 function hero(game) {

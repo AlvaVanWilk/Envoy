@@ -573,6 +573,8 @@ def convert_world(path, item_ids):
             "reward": parse_rewards(report, row, r.get("belohnung", "")),
             "repeatable": is_yes(r.get("wiederholbar", "")),
             "cooldown": cooldown if isinstance(cooldown, int) else 0,
+            # aktiv = nein: stays in the table but is not offered in the game for now
+            "active": is_yes(r.get("aktiv", ""), default=True),
         }
         if kind == "kampf" and len(quest["monsters"]) != 1:
             report.error(row, "art kampf braucht genau einen Geist in der Spalte monster")

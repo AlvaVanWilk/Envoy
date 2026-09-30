@@ -117,7 +117,8 @@ export function achievementPages(game) {
           h('span', { class: 'achievement-name' }, a.name),
           h('span', {}, a.text),
           h('span', { class: 'achievement-date' }, `Erreicht am ${formatDayShort(earned[a.id].day)}`),
-          Object.entries(a.reward || {}).map(([kind, share]) => h('span', { class: 'achievement-reward' }, BONUS_TEXT[kind] ? BONUS_TEXT[kind](share) : kind)))))),
+          Object.entries(a.reward || {}).map(([kind, share]) => h('span', { class: 'achievement-reward' }, BONUS_TEXT[kind] ? BONUS_TEXT[kind](share) : kind)),
+          a.bonusMinutes ? h('span', { class: 'achievement-date' }, `Gilt die ersten ${a.bonusMinutes} Minuten.`) : null)))),
     ]),
   }];
 }

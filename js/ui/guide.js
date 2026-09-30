@@ -143,6 +143,29 @@ export function newChapters(game) {
   return CHAPTERS.filter((c) => c.when && c.when(game) && !read.has(c.id));
 }
 
+// The menu point glows while there is a chapter the person has not been
+// told about yet. Opening the Handbuch tells them; the chapter itself keeps
+// its mark „Neu“ until it is read.
+const announced = () => new Set(store.loadUi().guideAnnounced || []);
+
+export function hasUnannouncedChapters(game) {
+  const told = announced();
+  return newChapters(game).some((c) => !told.has(c.id));
+}
+
+export function announceChapters(game) {
+  const ui = store.loadUi();
+  const told = new Set(ui.guideAnnounced || []);
+  let changed = false;
+  for (const c of newChapters(game)) {
+    if (!told.has(c.id)) { told.add(c.id); changed = true; }
+  }
+  if (changed) {
+    ui.guideAnnounced = [...told];
+    store.saveUi(ui);
+  }
+}
+
 // The pages of the Anleitung, for the book.
 export function guidePages(game) {
   const unread = new Set(newChapters(game).map((c) => c.id));

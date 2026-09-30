@@ -86,7 +86,8 @@ Die Quellen sind drei Tabellen in `data/`, jede mit einem Blatt **Erklärung**:
 
 - `uebungen.xlsx` — Übungskatalog mit Stufen, XP, Messwert und Ziel
 - `ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Fähigkeiten, Herkunft, Preis
-- `welt.xlsx` — Orte der Karte, Monster, Quests, Zuhause-Stufen, Einrichtung
+- `welt.xlsx` — Orte der Karte, Monster, Quests (mit `aktiv`: nein nimmt eine Quest vorerst aus
+  dem Spiel, ohne sie zu löschen), Zuhause-Stufen, Einrichtung
 
 Nach einer Änderung die Tabelle auf github.com hochladen (im Ordner `data` → **Add
 file → Upload files**). Der Ablauf wandelt sie um. Findet er einen Fehler, bleibt der

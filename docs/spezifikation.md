@@ -386,9 +386,13 @@ Name, Neueste) und dem Getragenen. Das Housing mit eigener Einteilung folgt.
 ### Lagerausbau
 
 Das Lager ist am Anfang nur ein Lagerfeuer. Die Quest „Ein Platz zum Bleiben“ (6 Pilzholz
-und 6 Stein) schaltet den Ausbau frei und bringt die Kiste. Wie das Lager wächst
-(Stufen, Unterstufen, Ausbau und Einrichtung, sichtbar wie eine Anziehpuppe), plant die
-Nutzerin; bis dahin ist der Knopf „Lager verbessern“ ohne Inhalt.
+und 6 Stein) soll den Ausbau freischalten und die Kiste bringen. Sie ist **vorerst
+herausgenommen** (Spalte `aktiv` = nein in `welt.xlsx`; sie bleibt in der Tabelle und wird
+mit dem Housing wieder eingeschaltet). Solange sie nicht erledigt ist, gibt es im Lager
+keinen Knopf „Lager verbessern“ und keine Kiste. Wie das Lager wächst (Stufen,
+Unterstufen, Ausbau und Einrichtung, sichtbar wie eine Anziehpuppe), plant die
+Nutzerin. Da Pilzholz und Stein bis dahin nirgends verbraucht werden, sammeln sie sich
+nur an.
 
 **Einrichtung** wird vorerst nicht gesammelt: Sie kommt weder als Beute noch aus Quests
 noch beim Händler. Die alten Zuhause-Stufen (Zelt bis Turmhaus) und die Einrichtung
@@ -406,7 +410,7 @@ zuerst gesehen).
 | Was | Wann |
 | --- | --- |
 | Karte, Quests, Begegnungen, Rucksack, Handbuch | von Anfang an |
-| Lagerausbau, Kiste | Quest „Ein Platz zum Bleiben“ |
+| Lagerausbau, Kiste | Quest „Ein Platz zum Bleiben“ (vorerst nicht im Spiel) |
 | Händler | Quest „Der Händler im Nebel“ |
 | Aschenhang, Turm der Stufen, lange Straße | Quest „Die Brücke über die Schlucht“ |
 | Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
@@ -418,32 +422,39 @@ zuerst gesehen).
 Schilde (Kupferrand, Fläche aus Stein mit feinen Adern, das Emblem eingehauen; der
 gewählte Schild hell wie Elfenbein), die zur Hälfte über den Sims ragen: **Abenteuer**,
 **Talentbaum**, in der Mitte größer das **Lager**, **Händler**, **Handbuch**. Noch
-verschlossene Bereiche tragen ein kupfernes Schloss.
+verschlossene Bereiche tragen ein rundes, helles Silberschloss. Ist hinter einem
+Menüpunkt etwas Neues (ein Bericht einer Expedition, ein neues Kapitel der Anleitung),
+glüht sein Kupferrand pulsierend auf; öffnet man den Bereich, erlischt das Glühen.
 
-**Oben** eine Leiste über jeder Ansicht außer dem Envoy selbst und dem Handbuch:
+**Oben** eine Leiste über jeder Ansicht (auch Envoy und Handbuch; nicht beim Erstellen
+des Envoy):
 
-- links das runde **Portrait** des Envoy (von der Nutzerin gezeichnet, in Haut- und
-  Haarfarbe umgefärbt wie die Figur). Um das Portrait liegen vier dünne Ringe, innen
+- links das runde **Portrait** des Envoy, groß (120 px am Telefon, 168 px am iPad) und
+  aus der Leiste in die Seite hängend; Überschriften rücken daneben, das Lagerbild
+  reicht darunter. Von der Nutzerin gezeichnet, in Haut- und Haarfarbe umgefärbt wie die
+  Figur. Auf der Envoy-Seite fehlt das Portrait, die Leiste bleibt. Um das Portrait liegen vier dünne Ringe, innen
   Kraft, dann Ausdauer, Beweglichkeit, Gelassenheit, jeder in seiner Farbe. Ein Ring
   füllt sich auf dem Weg zum nächsten Level; ist er voll, steigt der Wert. Zeigen
   (Maus) oder Berühren (Touch) eines Rings nennt Level und Rest („Kraft · Level 1 ·
   noch 30 bis Level 2“); ein Antippen des Rings tut sonst nichts. Das Portrait öffnet
   den Envoy.
-- in der Mitte das **Tageswerk** als großer Knopf: orange mit pulsierendem Schimmer und
-  „2 / 4“, solange Aufgaben offen sind; ist alles erledigt, ruhig und dunkel mit dem
-  Emblem der App und „ENVOY“ quer darüber. Er führt immer zur Tageswerk-Seite.
+- in der Mitte das **Tageswerk** als großer Knopf in dunklem Stein wie Sims und Boxen,
+  mit „2 / 4“. Solange Aufgaben offen sind, pulsiert ein großer oranger Schimmer um ihn;
+  ist alles erledigt, ruht er mit dem Emblem der App und „ENVOY“ quer darüber. Er führt
+  immer zur Tageswerk-Seite.
 - rechts die **Einstellungen** (Zahnrad).
 
 - **Lager** (Startansicht): das Bild des Lagers (am Anfang ein Lagerfeuer, später je
   Stufe ein eigenes; einmal soll dort der Envoy sitzen, wenn er da ist), ob der Envoy da
-  oder unterwegs ist, der Knopf „Lager verbessern“ (verschlossen bis zur Quest „Ein
-  Platz zum Bleiben“), laufende Expedition oder Bericht, Vorrat mit Ausdauerleiste,
-  heute gesichtete Geister, Hinweise.
+  oder unterwegs ist, laufende Expedition oder Bericht, Vorrat mit Ausdauerleiste,
+  heute gesichtete Geister, Hinweise. Der Knopf „Lager verbessern“ erscheint erst, wenn
+  der Ausbau freigeschaltet ist.
 - **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+15 Kraft“) und
   einem Haken zum Erledigen. Antippen klappt eine Aufgabe auf (Timer, Erledigt); die
   Anleitung erscheint nur auf Wunsch. Ein Fragezeichen klappt eine kurze Erklärung auf
   (wozu das Tageswerk da ist, dass Werte bei liegengebliebenen Aufgaben langsam sinken,
-  aber nie ganz verloren gehen) mit Verweis ins Handbuch. Ist alles erledigt, steht oben
+  aber nie ganz verloren gehen) mit Verweis ins Handbuch. Läuft ein befristeter Bonus,
+  steht er mit seinem Ende in einer Zeile darüber. Ist alles erledigt, steht oben
   „Das Tageswerk ist erledigt.“ und ein Ausblick auf die vier Übungen von morgen.
 - **Timer**: Ring mit Restzeit, bei Übungen mit Atemtakt ein Kreis, der wächst und
   schrumpft. Solange die Zeit läuft, spielt ein ruhiger Klang: leises Rauschen wie
@@ -460,7 +471,7 @@ verschlossene Bereiche tragen ein kupfernes Schloss.
   - **Anleitung**: ein Kapitel je Seite. Die Grundkapitel sind von Anfang an da; weitere
     erscheinen erst, wenn man das Erklärte trifft (erster Geist, erste Höhle, erste
     Sammelquest, Erfolge, Lagerausbau, Händler, Talentbaum) und tragen „Neu“, bis sie
-    gelesen sind. Dann trägt auch das Handbuch im Menü einen Punkt.
+    gelesen sind. Das Handbuch im Menü glüht, bis man es geöffnet hat.
   - **Tageswerk**: zuerst heute, dann alle früheren Tage, sieben je Seite: welche Übung,
     erledigt oder nicht, mit Gewinn.
   - **Quests**: jede beendete Expedition, neueste zuerst, mit Ort, Zeit und Ausgang.
@@ -533,7 +544,7 @@ Blatt „Erklärung“ mit allen Spalten.
 - `data/welt.xlsx`: Blätter Orte, Monster, Quests, Zuhause, Einrichtung. Das Blatt
   Quests hat: id, name, ort, art (sammeln, erkunden, bauen, kampf, hoehle), text,
   monster, voraussetzung, tempo, ertrag, verbrauch, kosten (Ausdauer vor Ort, zugleich
-  Minuten), belohnung, wiederholbar, abklingzeit
+  Minuten), belohnung, wiederholbar, abklingzeit, aktiv (nein = vorerst nicht im Spiel)
 
 ## Kleiderkammer
 
@@ -567,11 +578,17 @@ Erfolge auch rückwirkend.
 
 | Erfolg | Wann | Belohnung |
 | --- | --- | --- |
-| Angekommen: „Der Envoy ist in der Zwischenwelt angekommen.“ | mit der Erstellung des Envoy | +10 % auf jeden Gewinn im Tageswerk, +10 % Ertrag beim Sammeln |
+| Angekommen: „Der Envoy ist in der Zwischenwelt angekommen.“ | mit der Erstellung des Envoy | +10 % auf jeden Gewinn im Tageswerk, +10 % Ertrag beim Sammeln, **nur die ersten 15 Minuten** |
+
+Der Bonus ist stark befristet: Er soll dazu bringen, die App gleich nach dem Einrichten
+zu nutzen. Er zählt ab dem Moment, in dem der Erfolg erreicht wurde, 15 Minuten lang
+(`bonusMinutes` in `js/achievements.js`). Für eine erledigte Aufgabe zählt der Zeitpunkt,
+zu dem sie erledigt wurde, für eine Sammel-Expedition der des Aufbruchs. Die Tageswerk-Seite
+nennt ihn mit Uhrzeit, solange er läuft; danach steht der normale Gewinn da.
 
 Der Bonus aufs Tageswerk wird auf die Punkte der Übung gerechnet und gerundet (14 → 15,
 20 → 22, 28 → 31); angezeigt wird immer der Gewinn mit Bonus. Da der Malus am
-durchschnittlichen Tagesgewinn hängt, wächst er im selben Verhältnis mit.
+durchschnittlichen Tagesgewinn hängt, wirkt der kurze Bonus dort kaum nach.
 
 Weitere Erfolge (etwa „100 Steine gesammelt“, „an jedem Slot ein Teil“, später auch für
 echte Summen wie „100 km spaziert“) und Freischaltungen über Erfolge folgen nach dem
@@ -659,7 +676,8 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Obere Leiste | Portrait mit vier Werte-Ringen, Tageswerk-Knopf, Einstellungen |
 | Handbuch | Buch mit Reitern: Anleitung, Tageswerk, Quests, Kompendium, Erfolge |
 | Einrichtung | vorerst nicht sammelbar; das Housing der Nutzerin folgt |
-| Erster Erfolg | „Angekommen“: +10 % Tageswerk und Sammeln |
+| Erster Erfolg | „Angekommen“: +10 % Tageswerk und Sammeln, nur die ersten 15 Minuten |
+| Lager verbessern | Knopf erst, wenn der Ausbau freigeschaltet ist; die Quest ist vorerst heraus |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |

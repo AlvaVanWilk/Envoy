@@ -1,11 +1,12 @@
-// The bar at the top of the screen, above every view except the Envoy's own
-// page and the Handbuch:
-//   left    the portrait of the Envoy in four thin rings, one per stat. A
-//           ring fills in the stat's colour on the way to the next level.
-//           Pointing at a ring (or touching it) tells the level and what is
-//           missing; tapping the portrait opens the Envoy.
-//   middle  the Tageswerk. While tasks are open it glows; once all four are
-//           done it rests and shows the emblem of the app.
+// The bar at the top of the screen, above every view (not while the Envoy
+// is being created):
+//   left    the portrait of the Envoy in four thin rings, one per stat, big
+//           enough to hang into the page. A ring fills in the stat's colour
+//           on the way to the next level. Pointing at a ring (or touching
+//           it) tells the level and what is missing; tapping the portrait
+//           opens the Envoy. On the Envoy's own page the portrait is left out.
+//   middle  the Tageswerk. While tasks are open an orange glow pulses around
+//           it; once all four are done it rests and shows the emblem of the app.
 //   right   the settings.
 
 import { h } from './dom.js';
@@ -18,7 +19,7 @@ import { NAV_ICONS } from './icons.js';
 // Rings from the inside out, in the order of STATS. The portrait lies in
 // the middle (radius 32 of 100); each ring is a band of 4.4 around it.
 const PORTRAIT_R = 32;
-const RING_R = [35.6, 40, 44.4, 48.8];
+const RING_R = [35, 39.4, 43.8, 48.2];
 const BAND = 2.2; // half the width of a band
 
 const share = (s) => (s.level >= STAT_MAX_LEVEL ? 1 : s.xp / xpToNext(s.level));
@@ -101,11 +102,12 @@ function dayworkButton(game, current) {
 
 // syncTone: 'ok', 'pending', 'error' or null (no account).
 // envoyBadge: something on the Envoy's page is new (a piece was taken off).
-export function renderTopbar(game, current, syncTone, envoyBadge = false) {
-  const gear = h('a', { class: 'gear', href: '#einstellungen', 'aria-label': 'Einstellungen' },
+// withPortrait: false on the Envoy's own page.
+export function renderTopbar(game, current, syncTone, { envoyBadge = false, withPortrait = true } = {}) {
+  const gear = h('a', { class: `gear ${current === 'einstellungen' ? 'active' : ''}`, href: '#einstellungen', 'aria-label': 'Einstellungen' },
     shield(NAV_ICONS.einstellungen, { extra: syncTone ? h('span', { class: `coin-dot ${syncTone}` }) : null }));
-  return h('div', { class: 'topbar-row' },
-    portraitRings(game, envoyBadge),
+  return h('div', { class: `topbar-row ${withPortrait ? '' : 'no-portrait'}` },
+    withPortrait ? portraitRings(game, envoyBadge) : null,
     dayworkButton(game, current),
     gear);
 }

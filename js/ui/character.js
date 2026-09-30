@@ -9,7 +9,7 @@ import { statRow, statInfo } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { store } from '../store.js';
 import { addDays, formatDayShort } from '../days.js';
-import { viewHead, gearLink, sectionTitle, itemIcon, staminaBar, effectText } from './parts.js';
+import { viewHead, sectionTitle, itemIcon, staminaBar, effectText } from './parts.js';
 import { openSlot, slotName } from './itemsheet.js';
 import { packBox } from './pack.js';
 
@@ -20,7 +20,7 @@ const NOTICE_DAYS = 14;
 export function renderCharacter(game) {
   const s = game.state;
   return h('section', { class: 'view character' },
-    viewHead('Envoy', s.world.envoy?.name || 'Envoy', gearLink()),
+    viewHead('Envoy', s.world.envoy?.name || 'Envoy'),
     h('div', { class: 'char-grid' },
       h('div', { class: 'panel doll-frame' },
         h('div', { class: 'slot-column' }, LEFT_SLOTS.map((id) => slotTile(id, game))),

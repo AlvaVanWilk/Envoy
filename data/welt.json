@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-30T17:23:58Z",
+ "generated": "2026-09-30T18:13:18Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -573,7 +573,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-pilzholz",
@@ -611,7 +612,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-pilzholz-gross",
@@ -655,7 +657,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-stein-klein",
@@ -690,7 +693,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-stein",
@@ -727,7 +731,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-stein-gross",
@@ -770,7 +775,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-zuhause",
@@ -810,7 +816,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": false
   },
   {
    "id": "q-uferkies",
@@ -845,7 +852,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-saeule",
@@ -888,7 +896,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 3
+   "cooldown": 3,
+   "active": true
   },
   {
    "id": "q-haendler",
@@ -936,7 +945,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-furtwache",
@@ -979,7 +989,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 1
+   "cooldown": 1,
+   "active": true
   },
   {
    "id": "q-echohoehle",
@@ -1026,7 +1037,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 2
+   "cooldown": 2,
+   "active": true
   },
   {
    "id": "q-spalt",
@@ -1071,7 +1083,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-quelle",
@@ -1114,7 +1127,8 @@
     "rest": true
    },
    "repeatable": true,
-   "cooldown": 3
+   "cooldown": 3,
+   "active": true
   },
   {
    "id": "q-dornen",
@@ -1162,7 +1176,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-bruecke",
@@ -1214,7 +1229,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-mondsee",
@@ -1257,7 +1273,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-mondnacht",
@@ -1299,7 +1316,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 2
+   "cooldown": 2,
+   "active": true
   },
   {
    "id": "q-turm",
@@ -1344,7 +1362,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-langestrasse",
@@ -1387,7 +1406,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-horizont",
@@ -1429,7 +1449,8 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 3
+   "cooldown": 3,
+   "active": true
   },
   {
    "id": "q-aschenthron",
@@ -1475,7 +1496,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   },
   {
    "id": "q-leere",
@@ -1516,7 +1538,8 @@
     "rest": false
    },
    "repeatable": false,
-   "cooldown": 0
+   "cooldown": 0,
+   "active": true
   }
  ],
  "home": [

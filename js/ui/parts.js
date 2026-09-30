@@ -1,7 +1,7 @@
 // Small building blocks used by several views.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, RESOURCE_ICONS, SLOT_ICONS } from './icons.js';
+import { RESOURCE_ICONS, SLOT_ICONS } from './icons.js';
 import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
@@ -12,11 +12,6 @@ export function viewHead(eyebrow, title, ...actions) {
   return h('header', { class: 'view-head' },
     h('div', {}, h('p', { class: 'eyebrow' }, eyebrow), h('h1', {}, title)),
     actions.length > 0 ? h('div', { class: 'head-actions' }, ...actions) : null);
-}
-
-// The way to the settings, for views without the bar at the top.
-export function gearLink() {
-  return h('a', { class: 'gear', href: '#einstellungen', 'aria-label': 'Einstellungen' }, shield(NAV_ICONS.einstellungen));
 }
 
 // A heading inside a panel, with an ornament line.

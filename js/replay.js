@@ -100,6 +100,7 @@ export function replay(events, catalog, today, now = Date.now()) {
   const log = [];                   // every day: which exercise, done or not, and the gain
   const totals = { km: 0, stockwerke: 0 };
   const earned = {};                // achievement id -> { day, t }
+  let lastT = 0;                    // moment of the latest event so far
   let sick = false;
   let todayPlan = {};
   let todayDone = {};
@@ -117,6 +118,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     const done = {};
 
     for (const e of byDay.get(day) || []) {
+      lastT = e.t;
       if (!TASK_TYPES.has(e.type)) {
         applyWorldEvent(world, e, ctx);
         checkAchievements(earned, { world, stats, totals }, day, e.t);
@@ -127,7 +129,7 @@ export function replay(events, catalog, today, now = Date.now()) {
         sick = Boolean(e.sick);
       } else if (e.type === 'done') {
         if (undone.has(e.id) || done[e.stat] || !STAT_IDS.includes(e.stat)) continue;
-        const gain = withBonus(e.xp, bonusOf(earned, 'tageswerk'));
+        const gain = withBonus(e.xp, bonusOf(earned, 'tageswerk', e.t));
         done[e.stat] = { ...e, gain };
         stats[e.stat] = addXp(stats[e.stat], gain);
         doneCount[e.ex] = (doneCount[e.ex] || 0) + 1;
@@ -183,7 +185,7 @@ export function replay(events, catalog, today, now = Date.now()) {
       }
     }
     checkEquipment(world, ctx, day);
-    checkAchievements(earned, { world, stats, totals }, day, null);
+    checkAchievements(earned, { world, stats, totals }, day, lastT);
   }
   // An expedition that is back by now counts.
   advance(world, now, ctx);

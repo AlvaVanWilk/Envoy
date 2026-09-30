@@ -34,16 +34,16 @@ const DOCK = [
   { id: 'talente', label: 'Talentbaum', action: () => openTalents(game) },
   { id: 'lager', label: 'Lager', render: renderCamp, main: true },
   { id: 'haendler', label: 'Händler', render: renderTrader, feature: 'haendler' },
-  { id: 'handbuch', label: 'Handbuch', render: renderHandbook, topbar: false },
+  { id: 'handbuch', label: 'Handbuch', render: renderHandbook },
 ];
 // Changing the look of the Envoy later, reached from the settings.
 const changeLook = (g) => renderCreate(g, { onDone: () => { location.hash = '#envoy'; }, onCancel: () => { location.hash = '#einstellungen'; } });
-// topbar: false = the bar at the top is not shown (the Envoy's own page,
-// the Handbuch, which needs the room for its pages).
+// topbar: false = the bar at the top is not shown (while changing the look).
+// portrait: false = the bar has no portrait (the Envoy's own page).
 const VIEWS = Object.fromEntries([
   ...DOCK.filter((d) => d.render),
   { id: 'tageswerk', label: 'Tageswerk', render: renderToday },
-  { id: 'envoy', label: 'Envoy', render: renderCharacter, topbar: false },
+  { id: 'envoy', label: 'Envoy', render: renderCharacter, portrait: false },
   { id: 'inventar', label: 'Inventar', render: renderInventory },
   { id: 'einstellungen', label: 'Einstellungen', render: renderSettings },
   { id: 'aussehen', label: 'Aussehen', render: changeLook, keep: true, topbar: false },
@@ -73,9 +73,9 @@ function badgeFor(id) {
 function dockItem(item) {
   const active = currentView() === item.id;
   const locked = (item.feature && !game.unlocked(item.feature)) || (item.id === 'talente' && !talentsOpen(game));
-  const art = shield(NAV_ICONS[item.id], { locked, extra: badgeFor(item.id) ? h('span', { class: 'shield-badge' }) : null });
+  const art = shield(NAV_ICONS[item.id], { locked });
   const attrs = {
-    class: `dock-item ${item.main ? 'is-main' : ''} ${active ? 'active' : ''} ${locked ? 'locked' : ''}`,
+    class: `dock-item ${item.main ? 'is-main' : ''} ${active ? 'active' : ''} ${locked ? 'locked' : ''} ${badgeFor(item.id) ? 'news' : ''}`,
     'aria-label': locked ? `${item.label}, verschlossen` : item.label,
   };
   if (item.action) {
@@ -95,13 +95,11 @@ function renderNav() {
   replaceChildren(navRoot, h('div', { class: 'dock-row' }, DOCK.map(dockItem)));
   const name = currentView();
   const withBar = VIEWS[name].topbar !== false;
+  const withPortrait = withBar && VIEWS[name].portrait !== false;
   document.body.classList.toggle('has-topbar', withBar);
-  if (withBar) replaceChildren(topRoot, renderTopbar(game, name, syncTone(), unseenDropCount(game) > 0));
+  document.body.classList.toggle('has-portrait', withPortrait);
+  if (withBar) replaceChildren(topRoot, renderTopbar(game, name, syncTone(), { envoyBadge: unseenDropCount(game) > 0, withPortrait }));
   else replaceChildren(topRoot);
-  // The Envoy's own page has no bar at the top; its settings sit in its head.
-  const gear = viewRoot.querySelector('.view-head .gear .shield');
-  const tone = syncTone();
-  if (gear && tone && !gear.querySelector('.coin-dot')) gear.append(h('span', { class: `coin-dot ${tone}` }));
 }
 
 // Before there is an Envoy: only the creation, without the menu. The screen
@@ -110,13 +108,21 @@ let creating = null;
 function renderCreation() {
   if (creating) return;
   document.body.classList.add('creating');
-  document.body.classList.remove('has-topbar');
+  document.body.classList.remove('has-topbar', 'has-portrait');
   replaceChildren(navRoot);
   replaceChildren(topRoot);
   creating = renderCreate(game, { onDone: () => { creating = null; location.hash = `#${DEFAULT_VIEW}`; render(); } });
   replaceChildren(viewRoot, creating);
   document.title = APP_NAME;
   lastView = null;
+}
+
+// A bonus that only lasts a while ends by itself: draw once more when it is over.
+let bonusTimer = 0;
+function scheduleBonusEnd() {
+  clearTimeout(bonusTimer);
+  const ends = game.bonuses().map((b) => b.end);
+  if (ends.length > 0) bonusTimer = setTimeout(() => game.refresh(), Math.max(1000, Math.min(...ends) - Date.now() + 500));
 }
 
 let lastView = null;
@@ -140,6 +146,7 @@ function render() {
     lastView = name;
   }
   if (REPORT_VIEWS.includes(name)) setTimeout(() => showPendingReport(game), 350);
+  scheduleBonusEnd();
 }
 
 function showError(message) {

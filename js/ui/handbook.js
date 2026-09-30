@@ -4,7 +4,7 @@
 // A link such as #handbuch/anleitung/tageswerk opens a certain page.
 
 import { h, replaceChildren } from './dom.js';
-import { guidePages, newChapters } from './guide.js';
+import { guidePages, newChapters, hasUnannouncedChapters, announceChapters } from './guide.js';
 import { daysPages, questPages, achievementPages } from './logbook.js';
 import { compendiumPages } from './compendium.js';
 import { isSheetOpen } from './sheet.js';
@@ -34,12 +34,14 @@ function followLink(game, goTo) {
   history.replaceState(null, '', '#handbuch');
 }
 
+// The menu point glows until the Handbuch has been opened.
 export function handbookBadge(game) {
-  return newChapters(game).length > 0;
+  return hasUnannouncedChapters(game);
 }
 
 export function renderHandbook(game) {
   const root = h('section', { class: 'view handbook' });
+  announceChapters(game);
 
   const pagesOf = (tabId) => TABS.find((t) => t.id === tabId).pages(game, goTo);
   function goTo(pageId) {

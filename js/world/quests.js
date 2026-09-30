@@ -110,7 +110,8 @@ export function questState(quest, ctx) {
 }
 
 export function questsAt(placeId, ctx) {
-  const fixed = ctx.catalog.quests.filter((q) => q.place === placeId);
+  // a quest set to `aktiv: nein` in the table is not offered for now
+  const fixed = ctx.catalog.quests.filter((q) => q.place === placeId && q.active !== false);
   const encounters = encountersFor(ctx.day, ctx).filter((q) => q.place === placeId);
   return [...encounters, ...fixed];
 }
