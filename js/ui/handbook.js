@@ -9,26 +9,32 @@ import { daysPages, questPages, achievementPages } from './logbook.js';
 import { compendiumPages } from './compendium.js';
 import { isSheetOpen } from './sheet.js';
 
+// pages(game, goTo, room): room is the size of a page body, so that long
+// lists can be split to what fits.
 const TABS = [
   { id: 'anleitung', name: 'Anleitung', pages: (game) => guidePages(game) },
-  { id: 'tageswerk', name: 'Tageswerk', pages: (game) => daysPages(game) },
-  { id: 'quests', name: 'Quests', pages: (game) => questPages(game) },
-  { id: 'kompendium', name: 'Kompendium', pages: (game, goTo) => compendiumPages(game, goTo) },
-  { id: 'erfolge', name: 'Erfolge', pages: (game) => achievementPages(game) },
+  { id: 'tageswerk', name: 'Tageswerk', pages: (game, goTo, room) => daysPages(game, room) },
+  { id: 'quests', name: 'Quests', pages: (game, goTo, room) => questPages(game, room) },
+  { id: 'kompendium', name: 'Kompendium', pages: (game, goTo, room) => compendiumPages(game, goTo, room) },
+  { id: 'erfolge', name: 'Erfolge', pages: (game, goTo, room) => achievementPages(game, room) },
 ];
 
 // Where the book is open; kept while the app is open.
 const at = { tab: 'anleitung', page: 0 };
 const SWIPE = 60;
 
+// What a page body holds (px). The book fills the window, so the room comes
+// from the window; the first guess is refined once the book is on screen.
+const roomGuess = () => ({ width: Math.min(window.innerWidth, 860) - 80, height: Math.max(200, window.innerHeight - 430) });
+
 // #handbuch/<tab>/<page id>: open there, then tidy the address.
-function followLink(game, goTo) {
+function followLink(game, goTo, room) {
   const [, tabId, pageId] = location.hash.replace('#', '').split('/');
   if (!tabId) return;
   const tab = TABS.find((t) => t.id === tabId);
   if (tab) {
     at.tab = tab.id;
-    const index = tab.pages(game, goTo).findIndex((p) => p.id === pageId);
+    const index = tab.pages(game, goTo, room).findIndex((p) => p.id === pageId);
     at.page = Math.max(0, index);
   }
   history.replaceState(null, '', '#handbuch');
@@ -42,8 +48,9 @@ export function handbookBadge(game) {
 export function renderHandbook(game) {
   const root = h('section', { class: 'view handbook' });
   announceChapters(game);
+  let room = roomGuess();
 
-  const pagesOf = (tabId) => TABS.find((t) => t.id === tabId).pages(game, goTo);
+  const pagesOf = (tabId) => TABS.find((t) => t.id === tabId).pages(game, goTo, room);
   function goTo(pageId) {
     at.page = Math.max(0, pagesOf(at.tab).findIndex((p) => p.id === pageId));
     draw(1);
@@ -110,9 +117,23 @@ export function renderHandbook(game) {
     if (direction !== 0) window.scrollTo(0, 0);
   }
 
+  // Measures the page body and lays the pages out again if the room is not
+  // what they were made for (first look, turning the iPad).
+  function fit() {
+    const body = root.querySelector('.page-body');
+    if (!root.isConnected || !body) return;
+    const next = { width: body.clientWidth, height: body.clientHeight };
+    if (Math.abs(next.height - room.height) < 6 && Math.abs(next.width - room.width) < 6) return;
+    room = next;
+    draw();
+  }
+  const onResize = () => (root.isConnected ? fit() : window.removeEventListener('resize', onResize));
+  window.addEventListener('resize', onResize);
+
   keys.turn = turn;
-  followLink(game, goTo);
+  followLink(game, goTo, room);
   draw();
+  requestAnimationFrame(fit);
   return root;
 }
 

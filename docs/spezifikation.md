@@ -147,8 +147,10 @@ Wert zusätzlich in einem Gleichgewicht.
 ### Anzeige
 
 Unter jedem Stat steht der Fortschritt als Zahl (z. B. 4 / 45), darüber ein Balken.
-Die Oberfläche schreibt nie „XP“: Ein Gewinn heißt „+14 Kraft“, ein Abzug
-„Pause · −5 Kraft“. So ist sofort sichtbar, welcher Stat wächst.
+Gewinne stehen mit dem Namen ihres Stats: „+14 Kraft“, ein Abzug „Pause · −5 Kraft“.
+So ist sofort sichtbar, welcher Stat wächst. „XP“ darf in der Oberfläche stehen, aber nur
+für einen Stat (etwa „noch 30 XP bis Level 2“ an den Ringen), nie für den Helden selbst:
+Es gibt kein Helden-XP und kein Heldenlevel, nur XP und Level je Stat.
 
 ## Malus bei Nichterledigung
 
@@ -400,10 +402,10 @@ stehen noch in `welt.xlsx`, werden aber nicht gezeigt.
 
 ### Kompendium
 
-Steht im Handbuch: zuerst alle Geister auf einer Seite, noch nicht getroffene als dunkle
-Silhouette mit Stufe; dann für jeden getroffenen eine eigene Seite mit Bild,
-Beschreibung, Werten, Orten und Zählern (Begegnungen, besiegt, beruhigt, vertrieben,
-zuerst gesehen).
+Steht im Handbuch: zuerst das Verzeichnis aller Geister (so viele Seiten, wie das Fenster
+fasst), noch nicht getroffene als dunkle Silhouette mit Stufe; dann für jeden getroffenen
+eine eigene Seite mit Bild, Beschreibung, Werten, Orten und Zählern (Begegnungen,
+besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen passt.
 
 ### Freischaltungen
 
@@ -432,16 +434,20 @@ des Envoy):
 - links das runde **Portrait** des Envoy, groß (120 px am Telefon, 168 px am iPad) und
   aus der Leiste in die Seite hängend; Überschriften rücken daneben, das Lagerbild
   reicht darunter. Von der Nutzerin gezeichnet, in Haut- und Haarfarbe umgefärbt wie die
-  Figur. Auf der Envoy-Seite fehlt das Portrait, die Leiste bleibt. Um das Portrait liegen vier dünne Ringe, innen
+  Figur. Es bleibt auch auf der Envoy-Seite; ein Antippen dort lässt die Seite, wie sie
+  ist. Um das Portrait liegen vier dünne Ringe, innen
   Kraft, dann Ausdauer, Beweglichkeit, Gelassenheit, jeder in seiner Farbe. Ein Ring
   füllt sich auf dem Weg zum nächsten Level; ist er voll, steigt der Wert. Zeigen
   (Maus) oder Berühren (Touch) eines Rings nennt Level und Rest („Kraft · Level 1 ·
-  noch 30 bis Level 2“); ein Antippen des Rings tut sonst nichts. Das Portrait öffnet
+  noch 30 XP bis Level 2“); ein Antippen des Rings tut sonst nichts. Das Portrait öffnet
   den Envoy.
 - in der Mitte das **Tageswerk** als großer Knopf in dunklem Stein wie Sims und Boxen,
   mit „2 / 4“. Solange Aufgaben offen sind, pulsiert ein großer oranger Schimmer um ihn;
-  ist alles erledigt, ruht er mit dem Emblem der App und „ENVOY“ quer darüber. Er führt
-  immer zur Tageswerk-Seite.
+  ist alles erledigt, ruht er: niedriger als der offene Knopf, ohne Glühen und ohne helle
+  Kante, mit dem Emblem der App und dem Schriftzug „ENVOY“ nebeneinander. (Vier
+  Varianten sind gebaut: Schriftzug über dem Emblem, nebeneinander, nur Emblem, nur
+  Schriftzug; die Nutzerin wählt, die übrigen fallen weg.) Er führt immer zur
+  Tageswerk-Seite.
 - rechts die **Einstellungen** (Zahnrad).
 
 - **Lager** (Startansicht): das Bild des Lagers (am Anfang ein Lagerfeuer, später je
@@ -464,16 +470,22 @@ des Envoy):
   Alles wird im Browser erzeugt, es gibt keine Tondateien.
 - **Abenteuer**: gezeichnete Landkarte mit Tintensiegeln für die Orte, Legende, Vorrat
   und Expedition. Keine unerklärten Zahlen auf der Karte.
-- **Envoy**: das Charakterblatt (siehe unten), mit Rucksack; ohne obere Leiste.
+- **Envoy**: das Charakterblatt (siehe unten), mit Rucksack und oberer Leiste.
+- **Talentbaum**: eine eigene Seite (nicht ein Fenster über der alten Ansicht): das Schild
+  mit Schloss und der Abstand der vier Werte zu Level 10.
 - **Handbuch**: ein Buch mit Papierseiten, orangen Reitern an der Oberkante und
   umgeknickten Ecken unten zum Blättern (Wischen und Pfeiltasten gehen auch). Hinter dem
-  letzten Blatt eines Reiters geht es mit dem nächsten Reiter weiter.
+  letzten Blatt eines Reiters geht es mit dem nächsten Reiter weiter. Das Buch hat die
+  Höhe des Fensters (höchstens 680 px), scrollt nicht und zeigt unten die Kante des
+  Seitenstapels. Lange Listen teilen sich auf so viele Seiten, wie das Fenster fasst: am
+  Telefon weniger je Seite als am iPad; dreht man das Gerät, ordnen sich die Seiten neu.
+  Kurze Kapitel stehen je Seite, nicht mehrere untereinander.
   - **Anleitung**: ein Kapitel je Seite. Die Grundkapitel sind von Anfang an da; weitere
     erscheinen erst, wenn man das Erklärte trifft (erster Geist, erste Höhle, erste
     Sammelquest, Erfolge, Lagerausbau, Händler, Talentbaum) und tragen „Neu“, bis sie
     gelesen sind. Das Handbuch im Menü glüht, bis man es geöffnet hat.
-  - **Tageswerk**: zuerst heute, dann alle früheren Tage, sieben je Seite: welche Übung,
-    erledigt oder nicht, mit Gewinn.
+  - **Tageswerk**: zuerst heute, dann alle früheren Tage, so viele je Seite, wie passen:
+    welche Übung, erledigt oder nicht, mit Gewinn.
   - **Quests**: jede beendete Expedition, neueste zuerst, mit Ort, Zeit und Ausgang.
   - **Kompendium**: siehe oben.
   - **Erfolge**: was erreicht ist, wann und mit welcher Belohnung.
@@ -673,8 +685,8 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Icons | aus den Zeichnungen der Ebenen freigestellt |
 | Kleidung verwalten | Kleiderkammer auf claude.ai, mit Freigabe und verdeckten Spielangaben |
 | Menü | fünf Punkte: Abenteuer, Talentbaum, Lager (Mitte, Start), Händler, Handbuch |
-| Obere Leiste | Portrait mit vier Werte-Ringen, Tageswerk-Knopf, Einstellungen |
-| Handbuch | Buch mit Reitern: Anleitung, Tageswerk, Quests, Kompendium, Erfolge |
+| Obere Leiste | Portrait mit vier Werte-Ringen (auch beim Envoy), Tageswerk-Knopf, Einstellungen |
+| Handbuch | Buch mit Reitern: Anleitung, Tageswerk, Quests, Kompendium, Erfolge; füllt das Fenster, ohne zu scrollen |
 | Einrichtung | vorerst nicht sammelbar; das Housing der Nutzerin folgt |
 | Erster Erfolg | „Angekommen“: +10 % Tageswerk und Sammeln, nur die ersten 15 Minuten |
 | Lager verbessern | Knopf erst, wenn der Ausbau freigeschaltet ist; die Quest ist vorerst heraus |
@@ -685,6 +697,6 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit |
 | Kampfergebnis | beim Aufbruch berechnet und gespeichert, zählt bei der Rückkehr |
 | Startansicht | Lager |
-| Wortwahl | kein „XP“ in der Oberfläche, sondern „+14 Kraft“ |
-| Talentbaum | Schild mit Schloss statt ausgegraut |
+| Wortwahl | „XP“ und „Level“ gibt es nur je Stat, nie für den Helden; Gewinne heißen „+14 Kraft“ |
+| Talentbaum | Schild mit Schloss statt ausgegraut; eigene Seite, kein Fenster über der alten Ansicht |
 | Rückgängig | nur für Tagesaufgaben am selben Tag |

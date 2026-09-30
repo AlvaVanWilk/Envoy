@@ -10,15 +10,14 @@ import { formatDayLong, formatDayShort } from '../days.js';
 import { statEmblem } from './stats.js';
 import { RESULT_TEXT } from './journey.js';
 import { ACHIEVEMENTS, BONUS_TEXT } from '../achievements.js';
+import { chunks, perPage } from './room.js';
 
-const DAYS_PER_PAGE = 7;
-const QUESTS_PER_PAGE = 8;
-
-const chunks = (list, size) => {
-  const out = [];
-  for (let i = 0; i < list.length; i += size) out.push(list.slice(i, i + size));
-  return out;
-};
+// What one entry takes up (px), as in the stylesheet; room.js turns it into
+// the number of entries per page. The note above the list is reserved.
+const DAY = { width: 280, height: 120, gap: 12 };
+const QUEST = { width: 300, height: 104, gap: 4 };
+const ACHIEVEMENT = { width: 300, height: 172, gap: 12 };
+const NOTE = 30;
 
 // --- Tageswerk ----------------------------------------------------------------
 
@@ -38,7 +37,8 @@ function dayBlock(entry, game, { withDate = true } = {}) {
     h('ul', { class: 'log-tasks' }, STATS.filter((st) => entry.tasks[st.id]).map((st) => taskLine(st.id, entry.tasks[st.id], game))));
 }
 
-export function daysPages(game) {
+// room: how much a page body holds, see room.js.
+export function daysPages(game, room) {
   const { log, today } = game.state;
   const todayEntry = log.find((e) => e.day === today);
   const earlier = log.filter((e) => e.day !== today).reverse();
@@ -51,12 +51,12 @@ export function daysPages(game) {
       h('a', { class: 'book-link', href: '#tageswerk' }, 'Zum Tageswerk'),
     ],
   };
-  const pages = chunks(earlier, DAYS_PER_PAGE).map((part, n) => ({
+  const pages = chunks(earlier, perPage(room, DAY, NOTE)).map((part, n) => ({
     id: `tage-${n + 1}`,
     title: 'Die Tage davor',
     body: () => [
       h('p', { class: 'page-note' }, `${formatDayShort(part[part.length - 1].day)} bis ${formatDayShort(part[0].day)}`),
-      part.map((e) => dayBlock(e, game)),
+      h('div', { class: 'log-days' }, part.map((e) => dayBlock(e, game))),
     ],
   }));
   return [first, ...pages];
@@ -90,12 +90,12 @@ function questLine(entry, game) {
       h('span', { class: 'log-quest-outcome' }, outcomeText(entry, game))));
 }
 
-export function questPages(game) {
+export function questPages(game, room) {
   const journal = [...game.state.world.journal].reverse();
   if (journal.length === 0) {
     return [{ id: 'quests', title: 'Quests', body: () => [h('p', {}, 'Noch keine Expedition beendet.')] }];
   }
-  return chunks(journal, QUESTS_PER_PAGE).map((part, n) => ({
+  return chunks(journal, perPage(room, QUEST)).map((part, n) => ({
     id: `quests-${n + 1}`,
     title: n === 0 ? 'Zuletzt' : 'Davor',
     body: () => [h('ul', { class: 'log-quests' }, part.map((e) => questLine(e, game)))],
@@ -104,14 +104,17 @@ export function questPages(game) {
 
 // --- Erfolge ---------------------------------------------------------------------
 
-export function achievementPages(game) {
+export function achievementPages(game, room) {
   const earned = game.state.achievements;
   const reached = ACHIEVEMENTS.filter((a) => earned[a.id]);
-  return [{
-    id: 'erfolge',
+  if (reached.length === 0) {
+    return [{ id: 'erfolge', title: 'Erfolge', body: () => [h('p', {}, 'Noch keine Erfolge.')] }];
+  }
+  return chunks(reached, perPage(room, ACHIEVEMENT)).map((part, n) => ({
+    id: n === 0 ? 'erfolge' : `erfolge-${n + 1}`,
     title: 'Erfolge',
-    body: () => (reached.length === 0 ? [h('p', {}, 'Noch keine Erfolge.')] : [
-      h('ul', { class: 'book-achievements' }, reached.map((a) => h('li', { class: 'book-achievement' },
+    body: () => [
+      h('ul', { class: 'book-achievements' }, part.map((a) => h('li', { class: 'book-achievement' },
         h('span', { class: 'achievement-seal' }, icon(UI_ICONS.check)),
         h('span', { class: 'achievement-text' },
           h('span', { class: 'achievement-name' }, a.name),
@@ -119,6 +122,6 @@ export function achievementPages(game) {
           h('span', { class: 'achievement-date' }, `Erreicht am ${formatDayShort(earned[a.id].day)}`),
           Object.entries(a.reward || {}).map(([kind, share]) => h('span', { class: 'achievement-reward' }, BONUS_TEXT[kind] ? BONUS_TEXT[kind](share) : kind)),
           a.bonusMinutes ? h('span', { class: 'achievement-date' }, `Gilt die ersten ${a.bonusMinutes} Minuten.`) : null)))),
-    ]),
-  }];
+    ],
+  }));
 }

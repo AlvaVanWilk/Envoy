@@ -21,7 +21,7 @@ import { renderHandbook, handbookBadge } from './ui/handbook.js';
 import { renderTopbar } from './ui/topbar.js';
 import { renderSettings } from './ui/settings.js';
 import { renderCreate } from './ui/create.js';
-import { openTalents, talentsOpen } from './ui/talents.js';
+import { renderTalents, talentsOpen } from './ui/talents.js';
 import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
 import { IS_TEST, APP_NAME } from './stage.js';
@@ -30,8 +30,8 @@ import { IS_TEST, APP_NAME } from './stage.js';
 // start. `feature` = unlocked in the game.
 const DOCK = [
   { id: 'abenteuer', label: 'Abenteuer', render: renderMap },
-  // Talentbaum: shown with a lock; there is nothing behind it yet.
-  { id: 'talente', label: 'Talentbaum', action: () => openTalents(game) },
+  // Talentbaum: shown with a lock; its page only tells how far away it is.
+  { id: 'talente', label: 'Talentbaum', render: renderTalents },
   { id: 'lager', label: 'Lager', render: renderCamp, main: true },
   { id: 'haendler', label: 'Händler', render: renderTrader, feature: 'haendler' },
   { id: 'handbuch', label: 'Handbuch', render: renderHandbook },
@@ -39,11 +39,10 @@ const DOCK = [
 // Changing the look of the Envoy later, reached from the settings.
 const changeLook = (g) => renderCreate(g, { onDone: () => { location.hash = '#envoy'; }, onCancel: () => { location.hash = '#einstellungen'; } });
 // topbar: false = the bar at the top is not shown (while changing the look).
-// portrait: false = the bar has no portrait (the Envoy's own page).
 const VIEWS = Object.fromEntries([
   ...DOCK.filter((d) => d.render),
   { id: 'tageswerk', label: 'Tageswerk', render: renderToday },
-  { id: 'envoy', label: 'Envoy', render: renderCharacter, portrait: false },
+  { id: 'envoy', label: 'Envoy', render: renderCharacter },
   { id: 'inventar', label: 'Inventar', render: renderInventory },
   { id: 'einstellungen', label: 'Einstellungen', render: renderSettings },
   { id: 'aussehen', label: 'Aussehen', render: changeLook, keep: true, topbar: false },
@@ -78,9 +77,6 @@ function dockItem(item) {
     class: `dock-item ${item.main ? 'is-main' : ''} ${active ? 'active' : ''} ${locked ? 'locked' : ''} ${badgeFor(item.id) ? 'news' : ''}`,
     'aria-label': locked ? `${item.label}, verschlossen` : item.label,
   };
-  if (item.action) {
-    return h('button', { ...attrs, type: 'button', onclick: item.action }, art, h('span', { class: 'dock-label' }, item.label));
-  }
   return h('a', { ...attrs, href: `#${item.id}`, 'aria-current': active ? 'page' : null }, art, h('span', { class: 'dock-label' }, item.label));
 }
 
@@ -95,10 +91,8 @@ function renderNav() {
   replaceChildren(navRoot, h('div', { class: 'dock-row' }, DOCK.map(dockItem)));
   const name = currentView();
   const withBar = VIEWS[name].topbar !== false;
-  const withPortrait = withBar && VIEWS[name].portrait !== false;
   document.body.classList.toggle('has-topbar', withBar);
-  document.body.classList.toggle('has-portrait', withPortrait);
-  if (withBar) replaceChildren(topRoot, renderTopbar(game, name, syncTone(), { envoyBadge: unseenDropCount(game) > 0, withPortrait }));
+  if (withBar) replaceChildren(topRoot, renderTopbar(game, name, syncTone(), { envoyBadge: unseenDropCount(game) > 0 }));
   else replaceChildren(topRoot);
 }
 
@@ -108,7 +102,7 @@ let creating = null;
 function renderCreation() {
   if (creating) return;
   document.body.classList.add('creating');
-  document.body.classList.remove('has-topbar', 'has-portrait');
+  document.body.classList.remove('has-topbar');
   replaceChildren(navRoot);
   replaceChildren(topRoot);
   creating = renderCreate(game, { onDone: () => { creating = null; location.hash = `#${DEFAULT_VIEW}`; render(); } });

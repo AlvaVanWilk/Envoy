@@ -27,10 +27,31 @@ const CHAPTERS = [
     title: 'Das Tageswerk',
     text: [
       'Jeden Tag wählt die App vier Aufgaben aus, eine für jeden Wert. Auswählen musst du nichts. Ein neuer Tag beginnt um 3 Uhr.',
-      'Tippe auf eine Aufgabe, um sie zu öffnen. Dort stehen die Anleitung und, wo es passt, ein Zeitmesser. Manche Aufgaben fragen danach nach einem Messwert, etwa der Strecke. Bei einer neuen Übung fragt die App einmal, wie es war.',
-      'Danach richtet sich die Stufe der Übungen: Nach drei guten Durchgängen in Folge wird es etwas mehr, nach zwei zu schweren gleich wieder weniger. Nach einer Woche Pause geht es eine Stufe leichter weiter.',
-      'Bleibt eine Aufgabe liegen, passiert am ersten Tag nichts. Ab dem zweiten Tag sinkt ihr Wert langsam, ab dem achten schneller. Ganz verloren geht er nie: 60 % des besten Levels bleiben immer.',
-      'Im Krankheitsmodus gibt es nur die leichtesten Übungen, und sie zählen nicht für die Stufe. Aus Versehen abgehakt? Am selben Tag lässt es sich rückgängig machen.',
+      'Tippe auf eine Aufgabe, um sie zu öffnen. Dort stehen die Anleitung und, wo es passt, ein Zeitmesser. Manche Aufgaben fragen danach nach einem Messwert, etwa der Strecke.',
+    ],
+  },
+  {
+    id: 'stufe',
+    title: 'Die Stufe der Übungen',
+    text: [
+      'Nach drei guten Durchgängen in Folge wird es etwas mehr, nach zwei zu schweren gleich wieder weniger. Bei einer neuen Übung fragt die App einmal, wie es war.',
+      'Nach einer Woche Pause geht es eine Stufe leichter weiter.',
+    ],
+  },
+  {
+    id: 'liegenbleiben',
+    title: 'Wenn etwas liegen bleibt',
+    text: [
+      'Bleibt eine Aufgabe liegen, passiert am ersten Tag nichts. Ab dem zweiten Tag sinkt ihr Wert langsam, ab dem achten schneller.',
+      'Ganz verloren geht er nie: 60 % des besten Levels bleiben immer.',
+    ],
+  },
+  {
+    id: 'krankheit',
+    title: 'Krankheit und Versehen',
+    text: [
+      'Im Krankheitsmodus gibt es nur die leichtesten Übungen, und sie zählen nicht für die Stufe.',
+      'Aus Versehen abgehakt? Am selben Tag lässt es sich rückgängig machen.',
     ],
   },
   {
@@ -38,8 +59,15 @@ const CHAPTERS = [
     title: 'Werte und Level',
     text: [
       'Der Envoy hat vier Werte: Kraft, Ausdauer, Beweglichkeit und Gelassenheit. Jeder beginnt bei Level 1.',
-      'Die vier Ringe um das Portrait zeigen, wie weit es bis zum nächsten Level ist. Ist ein Ring voll, steigt der Wert. Zeigst du auf einen Ring oder berührst ihn, steht dort das Level. Das Portrait selbst öffnet den Envoy.',
-      'In der Welt bestimmt Kraft den Schaden im Kampf. Ausdauer gibt Leben und eine längere Ausdauerleiste. Beweglichkeit macht Treffer und Ausweichen wahrscheinlicher. Gelassenheit hilft, Geister zu beruhigen, und lässt die Ausdauerleiste schneller wieder voll werden.',
+      'Die vier Ringe um das Portrait zeigen, wie weit es bis zum nächsten Level ist. Ist ein Ring voll, steigt der Wert. Zeigst du auf einen Ring oder berührst ihn, steht dort das Level und wie viele XP noch fehlen.',
+    ],
+  },
+  {
+    id: 'wirkung',
+    title: 'Was die Werte bewirken',
+    text: [
+      'In der Welt bestimmt Kraft den Schaden im Kampf. Ausdauer gibt Leben und eine längere Ausdauerleiste.',
+      'Beweglichkeit macht Treffer und Ausweichen wahrscheinlicher. Gelassenheit hilft, Geister zu beruhigen, und lässt die Ausdauerleiste schneller wieder voll werden.',
     ],
   },
   {
@@ -56,14 +84,26 @@ const CHAPTERS = [
     text: [
       'Unter Abenteuer liegt die Karte der Zwischenwelt. Jeder Ort hat seine Quests: sammeln, erkunden, bauen, kämpfen.',
       'Eine Expedition dauert echte Zeit: Hinweg, vor Ort und Rückweg. Jeder Punkt Ausdauer ist eine Minute. Der Envoy ist immer nur auf einer Expedition zugleich.',
+    ],
+  },
+  {
+    id: 'nichts-scheitert',
+    title: 'Nichts scheitert',
+    text: [
       'In der Zwischenwelt scheitert nichts. Die Werte bestimmen, wohin der Envoy kommt, wie lange es dauert und wie viel er mitbringt.',
     ],
   },
   {
-    id: 'ausruestung',
-    title: 'Rucksack und Ausrüstung',
+    id: 'rucksack',
+    title: 'Der Rucksack',
     text: [
       `Im Rucksack ist Platz für ${BACKPACK_SIZE} Dinge. Du findest ihn beim Envoy.`,
+    ],
+  },
+  {
+    id: 'ausruestung',
+    title: 'Ausrüstung',
+    text: [
       'Ausrüstung macht den Envoy nie stärker. Sie gibt Fähigkeiten, etwa mehr Schaden oder weniger Ausdauer für lange Wege. Dafür verlangt sie Mindestwerte.',
       'Sinkt ein Wert unter die Voraussetzung, legt der Envoy das Teil ab. Es liegt dann wieder im Rucksack.',
     ],

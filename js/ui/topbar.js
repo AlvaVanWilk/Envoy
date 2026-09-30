@@ -4,9 +4,10 @@
 //           enough to hang into the page. A ring fills in the stat's colour
 //           on the way to the next level. Pointing at a ring (or touching
 //           it) tells the level and what is missing; tapping the portrait
-//           opens the Envoy. On the Envoy's own page the portrait is left out.
+//           opens the Envoy (on the Envoy's own page it stays where it is).
 //   middle  the Tageswerk. While tasks are open an orange glow pulses around
-//           it; once all four are done it rests and shows the emblem of the app.
+//           it; once all four are done it rests, quiet, with the emblem of
+//           the app and its name (DONE_STYLE).
 //   right   the settings.
 
 import { h } from './dom.js';
@@ -27,7 +28,7 @@ const share = (s) => (s.level >= STAT_MAX_LEVEL ? 1 : s.xp / xpToNext(s.level));
 export function ringText(stat, s) {
   if (s.level >= STAT_MAX_LEVEL) return `${stat.name} · Level ${s.level}`;
   const missing = Math.max(1, Math.ceil(xpToNext(s.level) - s.xp));
-  return `${stat.name} · Level ${s.level} · noch ${missing} bis Level ${s.level + 1}`;
+  return `${stat.name} · Level ${s.level} · noch ${missing} XP bis Level ${s.level + 1}`;
 }
 
 function rings(stats) {
@@ -48,7 +49,7 @@ function ringAt(box, x, y) {
   return n === -1 ? RING_R.length - 1 : n;
 }
 
-function portraitRings(game, badge) {
+function portraitRings(game, current, badge) {
   const { stats, world } = game.state;
   const look = resolveLook(world.envoy);
   const img = h('img', { class: 'portrait-img', alt: '', draggable: 'false' });
@@ -58,7 +59,7 @@ function portraitRings(game, badge) {
   const art = h('span', { class: 'rings-art', html: rings(stats) });
   const wrap = h('div', { class: 'portrait-rings' },
     art,
-    h('a', { class: 'portrait-link', href: '#envoy', 'aria-label': `${world.envoy?.name || 'Envoy'} öffnen. ${levels}` }, img),
+    h('a', { class: `portrait-link ${current === 'envoy' ? 'active' : ''}`, href: '#envoy', 'aria-label': `${world.envoy?.name || 'Envoy'} öffnen. ${levels}` }, img),
     badge ? h('span', { class: 'portrait-badge', title: 'Ein Teil wurde abgelegt' }) : null,
     tip);
 
@@ -86,14 +87,19 @@ function portraitRings(game, badge) {
   return wrap;
 }
 
+// How the resting Tageswerk looks (see the stylesheet): 'next' emblem and name
+// side by side, 'logo' the emblem only, 'word' the name only, 'over' the name
+// faintly over the emblem.
+const DONE_STYLE = 'next';
+
 function dayworkButton(game, current) {
   const s = game.state;
   const doneCount = STATS.filter((st) => s.todayDone[st.id]).length;
   const active = current === 'tageswerk';
   if (doneCount === STATS.length) {
-    return h('a', { class: `daywork done ${active ? 'active' : ''}`, href: '#tageswerk', 'aria-label': 'Tageswerk, erledigt' },
+    return h('a', { class: `daywork done style-${DONE_STYLE} ${active ? 'active' : ''}`, href: '#tageswerk', 'aria-label': 'Tageswerk, erledigt' },
       h('img', { class: 'daywork-emblem', src: versioned('assets/app/icon-192.png'), alt: '' }),
-      h('span', { class: 'daywork-word', 'aria-hidden': 'true' }, ...'ENVOY'.split('').map((c) => h('span', {}, c))));
+      h('span', { class: 'daywork-word', 'aria-hidden': 'true' }, 'ENVOY'));
   }
   return h('a', { class: `daywork open ${active ? 'active' : ''}`, href: '#tageswerk', 'aria-label': `Tageswerk, ${doneCount} von 4 erledigt` },
     h('span', { class: 'daywork-title' }, 'Tageswerk'),
@@ -102,12 +108,11 @@ function dayworkButton(game, current) {
 
 // syncTone: 'ok', 'pending', 'error' or null (no account).
 // envoyBadge: something on the Envoy's page is new (a piece was taken off).
-// withPortrait: false on the Envoy's own page.
-export function renderTopbar(game, current, syncTone, { envoyBadge = false, withPortrait = true } = {}) {
+export function renderTopbar(game, current, syncTone, { envoyBadge = false } = {}) {
   const gear = h('a', { class: `gear ${current === 'einstellungen' ? 'active' : ''}`, href: '#einstellungen', 'aria-label': 'Einstellungen' },
     shield(NAV_ICONS.einstellungen, { extra: syncTone ? h('span', { class: `coin-dot ${syncTone}` }) : null }));
-  return h('div', { class: `topbar-row ${withPortrait ? '' : 'no-portrait'}` },
-    withPortrait ? portraitRings(game, envoyBadge) : null,
+  return h('div', { class: 'topbar-row' },
+    portraitRings(game, current, envoyBadge),
     dayworkButton(game, current),
     gear);
 }

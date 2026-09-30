@@ -51,10 +51,11 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Stats, XP, Levelkurve, Malus, Bodensatz
 - Lager als Startansicht (Bild des Lagers, Vorrat, Expedition, gesichtete Geister)
 - Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben auf
-  jeder Seite eine Leiste mit großem Portrait (vier Werte-Ringe; nicht auf der
+  jeder Seite eine Leiste mit großem Portrait (vier Werte-Ringe, auch auf der
   Envoy-Seite), Tageswerk-Knopf und Einstellungen
 - Handbuch als Buch: Anleitung (wächst mit dem Entdeckten), Tageswerk- und
-  Quest-Rückblick, Kompendium, Erfolge
+  Quest-Rückblick, Kompendium, Erfolge; das Buch füllt das Fenster, ohne zu scrollen
+  (lange Listen teilen sich auf so viele Seiten, wie das Fenster fasst)
 - Charakterfenster mit Paperdoll-Darstellung, Ausrüstungsslots, Inventar-Box und dem
   Namen des Envoy
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
@@ -73,8 +74,8 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 
 ## Was in Phase 1 NICHT gebaut wird
 
-- Talentbaum: existiert nur als Rundschild mit Schloss im Menü; Antippen zeigt den Abstand
-  der vier Werte zu Level 10, sonst keine Funktion dahinter
+- Talentbaum: existiert nur als Rundschild mit Schloss im Menü; Antippen öffnet eine eigene
+  Seite, die den Abstand der vier Werte zu Level 10 zeigt, sonst keine Funktion dahinter
 - Arena, Mehrspieler, Freunde
 - Ernährungsmodul
 - Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem
@@ -236,7 +237,7 @@ Regeln für Claude:
   können, um Vertrauen zu haben.
 - Deutsche UI-Texte knapp und ohne erklärende Kleingedruckte. Keine Motivationssprüche,
   keine Ausrufezeichen, kein Coaching-Ton.
-- In der Oberfläche steht bisher nie „XP“: Gewinne heißen nach ihrem Stat („+14 Kraft“).
-  Der Nutzerin ist das Wort nicht wichtig; wichtig ist nur: kein XP und kein Level für
-  den Helden selbst, nur je Stat.
+- „XP“ und „Level“ gibt es nur je Stat, nie für den Helden selbst (Punkt 4 oben). Damit
+  darf „XP“ in der Oberfläche stehen, wenn es um einen Stat geht („noch 30 XP bis
+  Level 2“). Gewinne heißen weiterhin nach ihrem Stat („+14 Kraft“).
 - In der Spielwelt scheitert nichts. Stats bestimmen Zugang, Dauer und Ertrag.
