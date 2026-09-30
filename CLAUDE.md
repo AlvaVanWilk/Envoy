@@ -34,8 +34,12 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Speicherung lokal im Browser plus Abgleich über einen eigenen `sync.php`-Endpunkt.
   Gespeichert wird eine Ereignisliste, der Spielstand wird daraus berechnet. Jedes Konto
   (Name und Passwort) hat seine eigene Liste; ohne Konto bleibt ein Envoy auf dem Gerät.
-- Veröffentlichung: Ein GitHub-Ablauf testet, wandelt die Tabellen um und lädt den
-  Zweig `main` per SFTP auf den IONOS-Webspace.
+- Veröffentlichung: Ein GitHub-Ablauf testet, wandelt die Tabellen um und lädt per SFTP
+  auf den IONOS-Webspace: den Arbeitszweig in den Testordner (`<Ordner>-test`, dort als
+  „Envoy Test“ gekennzeichnet, mit eigenem Speicher, siehe `js/stage.js`), den Zweig
+  `main` in den echten Ordner. Auf `main` kommt nur, was die Nutzerin im Testordner
+  angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
+  unverändert auf `main` bringen.
 - **Kein Zugriff auf Apple Health oder die Apple Watch.** Eine Webapp kann das nicht.
   Gemessene Werte (Strecke, Tempo, Haltezeit) werden von Hand eingetragen.
 - UI-Texte auf Deutsch. Bezeichner und Kommentare im Code auf Englisch.
@@ -68,6 +72,8 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 - Ernährungsmodul
 - Erfolge (etwa „100 km spaziert“): kommen später und können dann Kleidung als
   Belohnung vergeben; wie genau, wird noch besprochen
+- Endgame: Inhalte reichen vorerst höchstens bis ins gute Midgame, damit Luft nach oben
+  bleibt. Wo genau der jetzige Inhalt endet, ist noch offen.
 
 Nicht vorgreifen. Keine Platzhalter-Implementierungen für diese Funktionen bauen,
 solange nicht ausdrücklich danach gefragt wird.
@@ -135,7 +141,7 @@ einlesen, das die App zur Laufzeit nutzt, und die Konvertierung wiederholbar hal
 Paperdoll-Ebenen, alle mit identischer Leinwand **1024 × 1536**, PNG mit Alphakanal,
 nie zugeschnitten. Reihenfolge hinten nach vorn:
 
-1. Umhang hinten
+1. Accessoire (Platz für Besonderes: Umhang, Schal, Tasche; liegt je nach Teil)
 2. Basisfigur
 3. Beinkleidung
 4. Schuhe
@@ -144,6 +150,12 @@ nie zugeschnitten. Reihenfolge hinten nach vorn:
 7. Frisur / Kopfbedeckung
 
 Kein Waffen-Slot, kein Gürtel, keine Schulterstücke.
+
+Ein Teil kann an anderer Stelle liegen als sein Slot (Spalte `ebene` in
+`ausruestung.xlsx`, Feld `ebene` in der Kleiderkammer, `EBENEN` in `js/config.js`):
+Hinter der Figur, Unter der Hose (eingestecktes Hemd), Über den Schuhen (weite Hose),
+Über jeder Hose (hohe Stiefel), Unter dem Oberteil, Über dem Oberteil, Ganz vorn.
+Das entscheidet die Nutzerin; aus dem Bild allein lässt es sich nicht sicher ablesen.
 
 Icons sind 256 × 256 und werden aus den Zeichnungen der Ebenen freigestellt (so gewünscht).
 
@@ -175,7 +187,8 @@ Lesen und Schreiben mit dem Werkzeug `ArtifactData`, Bilder mit `Artifact`
 
 - `teile`: eine Zeichnung = ein Eintrag. `nr` und `name` sind eindeutig; wenn die
   Nutzerin über ein Teil spricht, meint sie diesen Namen oder „Nr. 7“. `figur` (`frau`
-  = Figur `erste`, `mann` = `zweite`), `slot`, `bild` und `icon` (Bild-Ids), `gegenstueck`
+  = Figur `erste`, `mann` = `zweite`), `slot`, `ebene` (leer = wie der Slot), `bild` und
+  `icon` (Bild-Ids), `gegenstueck`
   (Eintrag der anderen Figur), `freigabe`, `vorgaben` (ihre Wünsche: `verwendung`,
   `questThemen`, `questThemaFrei`, `erfolg`, `bereich`, `stats`, `idee`), `imSpiel`,
   `spiel` (Claudes Angaben: `kennung`, `stufe`, `herkunft`, `voraussetzung`,

@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-27T18:56:14Z",
+ "generated": "2026-09-30T14:00:12Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -19,7 +19,8 @@
    "figuren": {
     "zweite": "assets/figur/zweite/torso_leinenhemd_1.png"
    },
-   "icon": "assets/icons/icon_torso_leinenhemd_1.png"
+   "icon": "assets/icons/icon_torso_leinenhemd_1.png",
+   "ebene": null
   },
   {
    "id": "beine_leinenhose_1",
@@ -38,7 +39,8 @@
    "figuren": {
     "zweite": "assets/figur/zweite/beine_leinenhose_1.png"
    },
-   "icon": "assets/icons/icon_beine_leinenhose_1.png"
+   "icon": "assets/icons/icon_beine_leinenhose_1.png",
+   "ebene": null
   },
   {
    "id": "schuhe_bastsandalen_1",
@@ -55,7 +57,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "handschuhe_handwickel_1",
@@ -74,7 +77,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "kopf_stirnband_1",
@@ -95,11 +99,12 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "umhang_reiseumhang_1",
-   "slot": "umhang",
+   "slot": "accessoire",
    "name": "Reiseumhang",
    "stufe": 1,
    "req": {
@@ -116,7 +121,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "torso_wickeljacke_2",
@@ -138,7 +144,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "beine_kampfhose_2",
@@ -159,7 +166,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "schuhe_wanderstiefel_2",
@@ -179,7 +187,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "handschuhe_griffhandschuhe_2",
@@ -201,7 +210,8 @@
    "figuren": {
     "zweite": "assets/figur/zweite/handschuhe_griffhandschuhe_2.png"
    },
-   "icon": "assets/icons/icon_handschuhe_griffhandschuhe_2.png"
+   "icon": "assets/icons/icon_handschuhe_griffhandschuhe_2.png",
+   "ebene": null
   },
   {
    "id": "handschuhe_lederwickel_2",
@@ -223,7 +233,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "kopf_kapuze_2",
@@ -244,11 +255,12 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "umhang_nebelumhang_2",
-   "slot": "umhang",
+   "slot": "accessoire",
    "name": "Nebelumhang",
    "stufe": 2,
    "req": {
@@ -265,7 +277,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "torso_kampfjacke_3",
@@ -288,7 +301,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "beine_wickelhose_3",
@@ -310,7 +324,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "schuhe_leichtestiefel_3",
@@ -331,7 +346,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "handschuhe_eisenwickel_3",
@@ -353,7 +369,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "kopf_stillemaske_3",
@@ -373,11 +390,12 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "umhang_sturmmantel_3",
-   "slot": "umhang",
+   "slot": "accessoire",
    "name": "Sturmmantel",
    "stufe": 3,
    "req": {
@@ -396,7 +414,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   },
   {
    "id": "handschuhe_nebelwickel_4",
@@ -418,7 +437,8 @@
    "preis": null,
    "figur": "",
    "figuren": {},
-   "icon": ""
+   "icon": "",
+   "ebene": null
   }
  ]
 }

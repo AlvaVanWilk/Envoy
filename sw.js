@@ -2,7 +2,10 @@
 // Network first, so a new version on the server is used right away;
 // if the network does not answer in time, the stored copy is used.
 
-const CACHE = 'envoy-v13';
+// The real app and its test copy can lie side by side on one web space.
+// Each keeps its own store, named after its folder, and only clears its own.
+const FOLDER = new URL(self.registration.scope).pathname;
+const CACHE = `envoy-v14 ${FOLDER}`;
 const NETWORK_TIMEOUT_MS = 3500;
 
 self.addEventListener('install', () => self.skipWaiting());
@@ -10,7 +13,9 @@ self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    // own older stores, and the ones from before stores were named per folder
+    const old = keys.filter((k) => k.startsWith('envoy-') && k !== CACHE && (k.endsWith(` ${FOLDER}`) || !k.includes(' ')));
+    await Promise.all(old.map((k) => caches.delete(k)));
     await self.clients.claim();
   })());
 });

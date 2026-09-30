@@ -21,6 +21,7 @@ const catalog = buildCatalog({
   equipment: [
     { id: 'hemd', slot: 'torso', name: 'Hemd', req: {}, herkunft: ['start'], effekt: {} },
     { id: 'wickel', slot: 'handschuhe', name: 'Wickel', req: { kraft: 2 }, herkunft: ['start'], effekt: {} },
+    { id: 'tuch', slot: 'accessoire', name: 'Tuch', req: {}, herkunft: ['start'], effekt: {} },
   ],
 });
 
@@ -170,4 +171,16 @@ test('merging keeps each event once; the latest plan counts', () => {
   const merged = mergeEvents(b, a);
   assert.equal(merged.length, 2);
   assert.equal(replay(merged, catalog, START).todayPlan.kraft.ex, 'k1b');
+});
+
+test('events from before the accessory slot, when it was the cloak slot, still count', () => {
+  const worn = replay([ev(START, 'equip', { slot: 'umhang', inst: 'start:tuch' })], catalog, START);
+  assert.equal(worn.equipped.accessoire, 'start:tuch');
+  assert.equal(worn.equipped.umhang, undefined);
+  const off = replay([
+    ev(START, 'equip', { slot: 'umhang', inst: 'start:tuch' }),
+    ev(START, 'unequip', { slot: 'umhang' }),
+  ], catalog, START);
+  assert.equal(off.equipped.accessoire, undefined);
+  assert.equal(off.world.items['start:tuch'].where, 'rucksack');
 });

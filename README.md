@@ -8,9 +8,24 @@ die mitspielt, hat ein eigenes Konto und einen eigenen Envoy.
 Regeln und Formeln: [`docs/spezifikation.md`](docs/spezifikation.md).
 Arbeitsanweisung für die Weiterentwicklung: [`CLAUDE.md`](CLAUDE.md).
 
+## Testfassung und echte App
+
+Es gibt zwei Fassungen auf dem Webspace:
+
+- **Testfassung** im Ordner neben dem echten, mit „-test“ am Ende (zum Beispiel
+  `envoy-test`). Jede neue Arbeit landet zuerst hier. Sie heißt „Envoy Test“, trägt
+  oben ein kleines Schild „Test“ und speichert alles getrennt von der echten App,
+  auch die Konten. Hier wird angesehen und ausprobiert.
+- **Echte App** im eigenen Ordner (zum Beispiel `envoy`). Sie ändert sich nur, wenn
+  eine geprüfte Fassung freigegeben wird: dann kommt der Stand der Testfassung auf den
+  Zweig `main`, und genau dieser wird hochgeladen.
+
+Freigeben: Claude sagen „freigeben“. Mehr braucht es nicht.
+
 ## Automatisch auf IONOS hochladen (einmal einrichten)
 
-Nach der Einrichtung landet jede Änderung am Zweig `main` von selbst auf dem Webspace.
+Nach der Einrichtung landet jede Änderung von selbst auf dem Webspace: der
+Arbeitszweig im Testordner, der Zweig `main` im echten Ordner.
 
 **1. SFTP-Zugang bei IONOS anlegen**
 
@@ -35,7 +50,7 @@ GitHub zeigt die Werte danach nie wieder an, auch nicht in Protokollen.
 **3. Fertig**
 
 Unter **Actions** siehst du jeden Lauf. Ein grüner Haken heißt: getestet, umgewandelt,
-hochgeladen. Tabellen, Werkzeuge, Tests und Doku werden nicht hochgeladen. Der Ordner
+hochgeladen. Der Testordner wird beim ersten Mal von selbst angelegt. Tabellen, Werkzeuge, Tests und Doku werden nicht hochgeladen. Der Ordner
 `sync-daten/` auf dem Server wird nie angefasst.
 
 Ohne diese Einrichtung geht es weiter wie bisher von Hand: alle Dateien außer `tools/`,

@@ -20,7 +20,7 @@
 //   dropped     equipment taken off because a stat fell below its requirement
 // }
 
-import { STAMINA_REST_TASK_SHARE, NAME_MAX } from '../config.js';
+import { STAMINA_REST_TASK_SHARE, NAME_MAX, OLD_SLOT_NAMES } from '../config.js';
 import { effects, maxStamina, staminaAt } from './hero.js';
 import { stow, removeEntry, hasSpace, atCamp, reachable } from './inventory.js';
 import { unmetRequirements } from './items.js';
@@ -30,6 +30,7 @@ const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 // Materials in events written under an older name.
 const OLD_NAMES = { quarz: 'pilzholz', aether: 'splitter' };
 export const materialKey = (key) => OLD_NAMES[key] || key;
+const slotKey = (slot) => OLD_SLOT_NAMES[slot] || slot;
 const KEEP_REPORTS = 30;
 
 export function initialWorld(catalog, startTime, stats) {
@@ -145,6 +146,7 @@ function startExpedition(world, e, ctx) {
 }
 
 function equip(world, e, ctx) {
+  const slot = slotKey(e.slot);
   let entry = world.items[e.inst];
   if (!entry && e.item) {
     // events written before items had their own ids
@@ -152,11 +154,11 @@ function equip(world, e, ctx) {
   }
   if (!entry || entry.kind !== 'item' || entry.where === 'body' || !reachable(world, entry)) return;
   const item = ctx.catalog.itemById.get(entry.id);
-  if (!item || item.slot !== e.slot || unmetRequirements(item, ctx.stats).length > 0) return;
-  const previous = world.items[world.equipped[e.slot]];
+  if (!item || item.slot !== slot || unmetRequirements(item, ctx.stats).length > 0) return;
+  const previous = world.items[world.equipped[slot]];
   if (previous) previous.where = entry.where;
   entry.where = 'body';
-  world.equipped[e.slot] = entry.inst;
+  world.equipped[slot] = entry.inst;
 }
 
 export function applyWorldEvent(world, e, ctx) {
@@ -194,8 +196,9 @@ export function applyWorldEvent(world, e, ctx) {
       equip(world, e, ctx);
       break;
     case 'unequip': {
-      const worn = world.items[world.equipped[e.slot]];
-      delete world.equipped[e.slot];
+      const slot = slotKey(e.slot);
+      const worn = world.items[world.equipped[slot]];
+      delete world.equipped[slot];
       if (worn) putAway(world, ctx, worn);
       break;
     }

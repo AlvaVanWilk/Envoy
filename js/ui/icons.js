@@ -89,7 +89,8 @@ export const STAT_ICONS = {
 
 export const SLOT_ICONS = {
   kopf: emblem(`<path fill-rule="evenodd" d="${HOOD}${FACE}"/>`),
-  umhang: emblem(`<path d="M8 3h8l1.5 2l3 16l-3.5-1.2l-2.2 2L12 20l-2.8 1.8l-2.2-2L3.5 21l3-16Z"/>${eng('M8 3.2q4 3.4 8 0M9.6 8.4l-1.4 11M14.4 8.4l1.4 11')}${engFill('M12 4.4a1.1 1.1 0 1 0 0 2.2a1.1 1.1 0 1 0 0-2.2Z')}`),
+  // something special: an amulet on a cord
+  accessoire: emblem(`<path d="M4.6 2.9l1.5-.6L12 10.6l5.9-8.3l1.5.6l-6.4 9.4h-2Z"/><path d="M12 11.2l4.8 4.4L12 22.2l-4.8-6.6Z"/>${eng('M7.6 15.6h8.8M12 11.8v10M9.8 13.6l2.2 2l2.2-2', 0.9)}`),
   torso: emblem(`<path d="M8 3L4 5.5L2.4 11l3.1 1l1-2.5V21h11V9.5l1 2.5l3.1-1L20 5.5L16 3c-1 2-7 2-8 0Z"/>${eng('M12 5.8V21M9 3.6q3 2.6 6 0')}`),
   handschuhe: emblem(`${FIST}${eng('M5.4 8.4l13 3.2M5.4 11.6l13 2.6M5.6 15l10 2', 0.9)}`),
   beine: emblem(`<path d="M6 2.5h12l1.5 19h-5.3L12 9l-2.2 12.5H4.5Z"/>${eng('M6.2 5.2h11.6M12 5.4V9', 1)}`),

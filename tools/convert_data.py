@@ -31,7 +31,20 @@ AREA_NAMES = {
     "beweglichkeit": "beweglichkeit", "stretching": "beweglichkeit", "mobility": "beweglichkeit",
     "gelassenheit": "gelassenheit", "entspannung": "gelassenheit", "konzentration": "gelassenheit",
 }
-SLOTS = ["umhang", "beine", "schuhe", "torso", "handschuhe", "kopf"]
+SLOTS = ["accessoire", "beine", "schuhe", "torso", "handschuhe", "kopf"]
+# older slot names still read: the Umhang slot became Accessoire
+SLOT_ALIASES = {"umhang": "accessoire", "besonderes": "accessoire", "accessoires": "accessoire"}
+# where a layer may lie instead of its slot's place (see EBENEN in js/config.js);
+# the table may give the key or the name
+LAYERS = {
+    "hinten": "Hinter der Figur",
+    "unter_hose": "Unter der Hose",
+    "ueber_schuhen": "Über den Schuhen",
+    "ueber_jeder_hose": "Über jeder Hose",
+    "unter_oberteil": "Unter dem Oberteil",
+    "ueber_oberteil": "Über dem Oberteil",
+    "vorn": "Ganz vorn",
+}
 MEASUREMENTS = ["strecke_km", "stockwerke", "haltezeit_s", "wiederholungen", "dauer_min"]
 EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
 FURNITURE_EFFECTS = ["erholung", "glueck"]
@@ -98,6 +111,10 @@ def slug(value):
     for a, b in (("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")):
         value = value.replace(a, b)
     return re.sub(r"[^a-z0-9]+", "", value)
+
+
+def layer_words():
+    return {slug(word): key for key, name in LAYERS.items() for word in (key, name)}
 
 
 def split_list(value):
@@ -370,6 +387,7 @@ def convert_equipment(path):
             continue
 
         slot = slug(r.get("slot", ""))
+        slot = SLOT_ALIASES.get(slot, slot)
         if slot == "waffe":
             report.error(row, "es gibt keinen Waffen-Slot, der Envoy kämpft waffenlos")
         elif slot not in SLOTS:
@@ -404,6 +422,11 @@ def convert_equipment(path):
             report.error(row, "preis muss eine ganze Zahl sein")
             price = None
 
+        given = text(r.get("ebene", ""))
+        layer = layer_words().get(slug(given)) if given else None
+        if given and not layer:
+            report.error(row, f"ebene: unbekannt '{given}' (möglich: {', '.join(LAYERS.values())}; leer = wie der Slot)")
+
         figure = text(r.get("datei_figur", "")) or f"{slot}_{slug(name)}_{level}.png"
         icon = text(r.get("datei_icon", "")) or f"icon_{figure}"
         figure_path = check_picture(report, row, "figur", figure)
@@ -428,6 +451,7 @@ def convert_equipment(path):
             "figur": figure_path,
             "figuren": own,
             "icon": icon_path,
+            "ebene": layer,
         })
     return {"equipment": items}, report
 

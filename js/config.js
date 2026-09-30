@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '4.1.1';
+export const APP_VERSION = '4.2.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -45,11 +45,12 @@ export const INTENSITY_DOWN_AFTER_MISSED_DAYS = 7;
 export const DAY_START_HOUR = 3;
 
 // Equipment slots. `layer` is the drawing order on the paperdoll,
-// back to front. The base figure sits between cloak and legs.
+// back to front. The base figure sits between the accessory and the legs.
 // There is no weapon slot: the Envoy fights unarmed, the hand wraps
-// take that role.
+// take that role. The accessory slot holds special things: a cloak, a
+// scarf, a bag; where it is drawn depends on the item (see EBENEN).
 export const SLOTS = [
-  { id: 'umhang',     name: 'Umhang',       short: 'Umhang', layer: 1 },
+  { id: 'accessoire', name: 'Accessoire',   short: 'Accessoire', layer: 1 },
   { id: 'beine',      name: 'Beinkleidung', short: 'Beine',  layer: 3 },
   { id: 'schuhe',     name: 'Schuhe',       short: 'Schuhe', layer: 4 },
   { id: 'torso',      name: 'Torso',        short: 'Torso',  layer: 5 },
@@ -58,6 +59,23 @@ export const SLOTS = [
 ];
 
 export const BASE_FIGURE_LAYER = 2;
+
+// Slots under an older name, as they may stand in stored events.
+export const OLD_SLOT_NAMES = { umhang: 'accessoire' };
+
+// Where an item is drawn when it should not lie at its slot's place
+// (column `ebene` in ausruestung.xlsx). The numbers fit in between the
+// layers of the slots: wide trousers over the shoes lie at 4.5, above the
+// shoes (4) and below the torso (5).
+export const EBENEN = [
+  { id: 'hinten',           name: 'Hinter der Figur',   layer: 1 },
+  { id: 'unter_hose',       name: 'Unter der Hose',     layer: 2.5 },
+  { id: 'ueber_schuhen',    name: 'Über den Schuhen',   layer: 4.5 },
+  { id: 'ueber_jeder_hose', name: 'Über jeder Hose',    layer: 4.7 },
+  { id: 'unter_oberteil',   name: 'Unter dem Oberteil', layer: 4.9 },
+  { id: 'ueber_oberteil',   name: 'Über dem Oberteil',  layer: 5.5 },
+  { id: 'vorn',             name: 'Ganz vorn',          layer: 8 },
+];
 
 // The Envoy: figures to choose from when the Envoy is created, both drawn
 // by the user. Each has its own folder with basisfigur.png. Clothing layers

@@ -2,11 +2,14 @@
 // other. Only worn items are drawn; an item whose requirement is no longer
 // met has already been taken off, so the slot shows the base figure.
 // An item without a picture yet is worn but not drawn.
+// Each item lies at its slot's place unless it names another (EBENEN).
 // Which figure and which colours: see look.js.
 
 import { h } from './dom.js';
-import { SLOTS, BASE_FIGURE_LAYER } from '../config.js';
+import { SLOTS, BASE_FIGURE_LAYER, EBENEN } from '../config.js';
 import { resolveLook, baseSrc, layerSrc, showLayer } from './look.js';
+
+const layerOf = (item, slot) => EBENEN.find((e) => e.id === item.ebene)?.layer ?? slot.layer;
 
 // envoy: { figur, haut, haar } – by default the Envoy of this world.
 export function paperdoll(equipped, world, catalog, { className = '', envoy = world.envoy } = {}) {
@@ -16,7 +19,7 @@ export function paperdoll(equipped, world, catalog, { className = '', envoy = wo
     const entry = world.items[equipped[slot.id]];
     const item = entry && catalog.itemById.get(entry.id);
     const src = item && layerSrc(item, look);
-    if (src) layers.push({ layer: slot.layer, src, slot: slot.id });
+    if (src) layers.push({ layer: layerOf(item, slot), src, slot: slot.id });
   }
   layers.sort((a, b) => a.layer - b.layer);
 

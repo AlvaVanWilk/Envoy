@@ -14,7 +14,7 @@ import { openSlot, slotName } from './itemsheet.js';
 import { packBox } from './pack.js';
 
 const LEFT_SLOTS = ['kopf', 'torso', 'handschuhe'];
-const RIGHT_SLOTS = ['umhang', 'beine', 'schuhe'];
+const RIGHT_SLOTS = ['accessoire', 'beine', 'schuhe'];
 const NOTICE_DAYS = 14;
 
 export function renderCharacter(game) {

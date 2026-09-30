@@ -2,17 +2,22 @@
 // keeps its own event list, sync state and settings; only the device id
 // and the list of profiles are shared by the whole device.
 // Everything else is recalculated from the events.
+// The test copy of the app (see stage.js) uses its own names, so it never
+// touches the data of the real app on the same web space.
 
+import { IS_TEST } from './stage.js';
+
+const NS = IS_TEST ? 'envoy-test' : 'envoy';
 const GLOBAL = {
-  device: 'envoy.device',
-  profiles: 'envoy.profiles',
-  active: 'envoy.active',
-  adopted: 'envoy.legacyAdopted',
+  device: `${NS}.device`,
+  profiles: `${NS}.profiles`,
+  active: `${NS}.active`,
+  adopted: `${NS}.legacyAdopted`,
 };
 // Where a game from before the accounts lies (one per device).
-const LEGACY = { events: 'envoy.events', sync: 'envoy.sync', ui: 'envoy.ui' };
+const LEGACY = { events: `${NS}.events`, sync: `${NS}.sync`, ui: `${NS}.ui` };
 
-let prefix = 'envoy.p.none.';
+let prefix = `${NS}.p.none.`;
 
 function read(key, fallback) {
   try {
@@ -39,7 +44,7 @@ function remove(key) {
 export const store = {
   // From now on events, sync state and settings belong to this profile.
   useProfile(id) {
-    prefix = `envoy.p.${id}.`;
+    prefix = `${NS}.p.${id}.`;
   },
 
   loadEvents: () => read(`${prefix}events`, []),
@@ -75,7 +80,7 @@ export const store = {
       const keys = [];
       for (let i = 0; i < localStorage.length; i += 1) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('envoy.')) keys.push(key);
+        if (key && key.startsWith(`${NS}.`)) keys.push(key);
       }
       keys.forEach(remove);
     } catch { /* ignore */ }

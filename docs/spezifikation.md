@@ -212,9 +212,11 @@ Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 | erholung | Ausdauerleiste füllt sich schneller |
 | glueck | mehr Bannsplitter und öfter ein Fundstück |
 
-**Sechs Slots:** Kopf, Torso, Handwickel, Umhang, Beinkleidung, Schuhe. Kein
+**Sechs Slots:** Kopf, Torso, Handwickel, Accessoire, Beinkleidung, Schuhe. Kein
 Waffen-Slot, kein Gürtel, keine Schulterstücke. Die **Handwickel** sind das Gegenstück
-zur Waffe: Wickelbandagen der Kampfkunst, sie tragen den Schadensbonus.
+zur Waffe: Wickelbandagen der Kampfkunst, sie tragen den Schadensbonus. Das
+**Accessoire** ist der Platz für Besonderes: ein Umhang, ein Schal, eine Tasche (früher
+hieß er Umhang; alte Kennungen beginnen noch mit `umhang_`).
 
 **Voraussetzung.** Jedes Teil verlangt Mindestwerte in einem oder mehreren Stats.
 **Bei Unterschreitung** fliegt das Teil nach Tagesende aus dem Slot, liegt danach im
@@ -453,7 +455,7 @@ Bildausschnitt zusammengesetzt.
 | Leinwand | 1024 × 1536 px, für jede Ebene identisch |
 | Beschnitt | nie zuschneiden — jede Ebene behält die volle Leinwand |
 
-Ebenenreihenfolge (hinten nach vorn): 1 Umhang hinten, 2 Basisfigur (Körper, Kopf,
+Ebenenreihenfolge (hinten nach vorn): 1 Accessoire, 2 Basisfigur (Körper, Kopf,
 Grundkleidung), 3 Beinkleidung, 4 Schuhe, 5 Torso, 6 Handwickel, 7 Frisur /
 Kopfbedeckung.
 
@@ -579,8 +581,16 @@ des Kontos ab: Jedes Gerät schickt, was der Server noch nicht kennt, und bekomm
 selbst noch nicht hat. Es wird nie etwas überschrieben. Die Daten liegen in
 `sync-daten/` (von außen gesperrt), die Konten in `sync-daten/konten/`.
 
-Ein GitHub-Ablauf testet bei jeder Änderung, wandelt die Tabellen um und lädt den
-Zweig `main` per SFTP auf den IONOS-Webspace.
+Ein GitHub-Ablauf testet bei jeder Änderung, wandelt die Tabellen um und lädt per SFTP
+auf den IONOS-Webspace, in zwei Ordner:
+
+- **Testordner** (Name des echten Ordners mit „-test“): jede neue Arbeit. Beim
+  Hochladen wird sie als Testfassung gekennzeichnet (`js/stage.js`): Sie heißt „Envoy
+  Test“, zeigt oben ein kleines Schild „Test“, und alles, was sie im Browser speichert,
+  liegt unter eigenen Namen (`envoy-test.…` statt `envoy.…`), ebenso ihr Offline-Speicher.
+  Auf dem Server hat sie ihr eigenes `sync-daten/`, also eigene Konten.
+- **Echter Ordner**: nur der Zweig `main`. Dorthin kommt eine Fassung erst, wenn die
+  Nutzerin sie im Testordner angesehen und freigegeben hat.
 
 Die App fragt bei jedem Laden beim Server nach, ob sich eine Datei geändert hat, und
 Bilder werden mit der App-Version angefragt. Eine neue Zeichnung unter altem Namen
@@ -598,7 +608,10 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Tabellenwerte der Levelkurve | so, wie die Formel rechnet (304, 756, 2755) |
 | Bodensatz | Level mit Nachkommastelle |
 | Tagesgrenze | 3:00 Uhr |
-| Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot |
+| Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot; Accessoire statt Umhang |
+| Ebene je Teil | wählbar (Spalte `ebene`), sonst die Stelle des Slots |
+| Inhaltsumfang | vorerst höchstens bis ins gute Midgame; Luft nach oben |
+| Veröffentlichung | erst Testordner, echter Ordner nur nach Freigabe (Zweig `main`) |
 | Rucksack | 5 Plätze; das Lager (bisher Schrank) nur im Lager nutzbar |
 | Konten | Name und Passwort auf dem eigenen Server; ohne Konto nur auf einem Gerät |
 | Figuren | Frau und Mann zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |

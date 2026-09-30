@@ -1246,6 +1246,24 @@ button.task-check:hover { color: var(--stat); }
 .sync-status.error .dot { background: var(--loss); }
 .error-panel { display: grid; justify-items: center; gap: 14px; max-width: 420px; margin: 20vh auto 0; text-align: center; }
 
+/* the test copy of the app (see js/stage.js) */
+.stage-tag {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(234, 183, 92, 0.6);
+  background: rgba(12, 22, 25, 0.85);
+  color: var(--warn);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
 /* 14b. creating the Envoy ---------------------------------------------- */
 
 .create { max-width: 900px; margin: 0 auto; }

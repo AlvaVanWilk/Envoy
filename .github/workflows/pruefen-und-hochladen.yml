@@ -1,13 +1,17 @@
 # Läuft bei jeder Änderung im Repository:
 #   1. Tabellen aus data/ umwandeln und die JSON-Dateien mit ablegen
 #   2. Spielregeln testen
-#   3. auf dem Hauptzweig (main): alles per SFTP auf den IONOS-Webspace laden;
-#      auf anderen Zweigen nur prüfen, ob der Zugang zum Webspace klappt
+#   3. per SFTP auf den IONOS-Webspace laden:
+#      - der Arbeitszweig in den Testordner (Name des echten Ordners mit „-test“,
+#        zum Beispiel /envoy-test). Diese Fassung heißt „Envoy Test“, trägt ein
+#        kleines Test-Schild und speichert getrennt von der echten App;
+#      - der Zweig main in den echten Ordner. Auf main kommt nur, was die
+#        Nutzerin im Testordner angesehen und freigegeben hat.
 #
 # Für Schritt 3 braucht es einmalig vier Geheimnisse unter
 # Settings → Secrets and variables → Actions (siehe README):
 #   IONOS_SFTP_HOST, IONOS_SFTP_USER, IONOS_SFTP_PASSWORD, IONOS_SFTP_PATH
-# Fehlen sie, wird Schritt 3 einfach übersprungen.
+# Fehlen sie, wird Schritt 3 übersprungen.
 
 name: Prüfen und hochladen
 
@@ -56,44 +60,38 @@ jobs:
           git commit -m "Daten aus den Tabellen umgewandelt"
           git push
 
-      # Auf jedem anderen Zweig: nur nachsehen, ob die vier Geheimnisse da sind
-      # und die Anmeldung beim Webspace klappt. Es wird nichts hochgeladen.
-      - name: Zugang zum Webspace prüfen
-        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+      - name: Auf den Webspace laden
+        if: github.event_name != 'pull_request'
         env:
           LFTP_PASSWORD: ${{ secrets.IONOS_SFTP_PASSWORD }}
         run: |
           fehlt=0
           for name in IONOS_SFTP_HOST IONOS_SFTP_USER IONOS_SFTP_PATH LFTP_PASSWORD; do
-            if [ -z "${!name}" ]; then echo "Fehlt: ${name/LFTP_PASSWORD/IONOS_SFTP_PASSWORD}"; fehlt=1; else echo "Vorhanden: ${name/LFTP_PASSWORD/IONOS_SFTP_PASSWORD}"; fi
+            if [ -z "${!name}" ]; then echo "Fehlt: ${name/LFTP_PASSWORD/IONOS_SFTP_PASSWORD}"; fehlt=1; fi
           done
-          if [ "$fehlt" = 1 ]; then echo "Ergebnis: Es fehlen Geheimnisse."; exit 0; fi
-          sudo apt-get install -y -qq lftp > /dev/null
-          if lftp -c "
-            set sftp:auto-confirm yes;
-            set net:max-retries 2;
-            set net:timeout 20;
-            open --env-password -u \"$IONOS_SFTP_USER\" sftp://$IONOS_SFTP_HOST;
-            cd \"$IONOS_SFTP_PATH\";
-            pwd
-          "; then
-            echo "Ergebnis: Anmeldung klappt, der Ordner ist erreichbar."
+          if [ "$fehlt" = 1 ]; then echo "Nicht hochgeladen: Es fehlen Geheimnisse (siehe README)."; exit 0; fi
+
+          ordner="${IONOS_SFTP_PATH%/}"
+          if [ "$GITHUB_REF" = "refs/heads/main" ]; then
+            echo "Ziel: der echte Ordner."
           else
-            echo "Ergebnis: Anmeldung oder Ordner klappt nicht."
+            ordner="${ordner:-/envoy}-test"
+            # Als Testfassung kennzeichnen: eigener Speicher, eigener Name.
+            sed -i "s/export const STAGE = 'live';/export const STAGE = 'test';/" js/stage.js
+            sed -i 's/"name": "Envoy"/"name": "Envoy Test"/; s/"short_name": "Envoy"/"short_name": "Envoy Test"/' manifest.webmanifest
+            sed -i 's/name="apple-mobile-web-app-title" content="Envoy"/name="apple-mobile-web-app-title" content="Envoy Test"/' index.html
+            grep -q "STAGE = 'test'" js/stage.js || { echo "Die Testfassung ließ sich nicht kennzeichnen."; exit 1; }
+            echo "Ziel: der Testordner (echter Ordner mit -test)."
           fi
 
-      - name: Auf den Webspace laden
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.IONOS_SFTP_HOST != ''
-        env:
-          LFTP_PASSWORD: ${{ secrets.IONOS_SFTP_PASSWORD }}
-        run: |
           sudo apt-get install -y -qq lftp > /dev/null
           lftp -c "
             set sftp:auto-confirm yes;
             set net:max-retries 3;
+            set net:timeout 30;
             open --env-password -u \"$IONOS_SFTP_USER\" sftp://$IONOS_SFTP_HOST;
-            mkdir -p -f \"$IONOS_SFTP_PATH\";
-            mirror --reverse --verbose --parallel=4 \
+            mkdir -p -f \"$ordner\";
+            mirror --reverse --parallel=4 \
               --exclude-glob .git* \
               --exclude-glob .github/ \
               --exclude-glob tools/ \
@@ -104,5 +102,6 @@ jobs:
               --exclude-glob '*.md' \
               --exclude-glob '*.xlsx' \
               --exclude-glob package.json \
-              ./ \"$IONOS_SFTP_PATH\"
+              ./ \"$ordner\"
           "
+          echo "Hochgeladen."

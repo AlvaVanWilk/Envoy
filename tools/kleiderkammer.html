@@ -348,13 +348,35 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
 
 const SLOTS = [
   { id: 'kopf', name: 'Kopf', layer: 7 },
-  { id: 'umhang', name: 'Umhang', layer: 1 },
+  { id: 'accessoire', name: 'Accessoire', layer: 1 },
   { id: 'torso', name: 'Torso', layer: 5 },
   { id: 'handschuhe', name: 'Handwickel', layer: 6 },
   { id: 'beine', name: 'Beinkleidung', layer: 3 },
   { id: 'schuhe', name: 'Schuhe', layer: 4 },
 ];
 const FIGUREN = [{ id: 'frau', name: 'Frau' }, { id: 'mann', name: 'Mann' }];
+// Where a drawing lies when not at its slot's place; same as in the game
+// (EBENEN in js/config.js). The base figure lies at 2.
+const EBENEN = [
+  { id: 'hinten', name: 'Hinter der Figur', layer: 1 },
+  { id: 'unter_hose', name: 'Unter der Hose', layer: 2.5 },
+  { id: 'ueber_schuhen', name: 'Über den Schuhen', layer: 4.5 },
+  { id: 'ueber_jeder_hose', name: 'Über jeder Hose', layer: 4.7 },
+  { id: 'unter_oberteil', name: 'Unter dem Oberteil', layer: 4.9 },
+  { id: 'ueber_oberteil', name: 'Über dem Oberteil', layer: 5.5 },
+  { id: 'vorn', name: 'Ganz vorn', layer: 8 },
+];
+const STANDARD_EBENE = {
+  accessoire: 'hinter der Figur',
+  beine: 'unter den Schuhen',
+  schuhe: 'über der Hose',
+  torso: 'über der Hose',
+  handschuhe: 'über dem Oberteil',
+  kopf: 'vorn',
+};
+// Slots under an older name.
+const OLD_SLOTS = { umhang: 'accessoire' };
+const slotOf = (x) => OLD_SLOTS[x] || x;
 const VERWENDUNG = [
   { id: 'quest', name: 'Quest' },
   { id: 'erfolg', name: 'Erfolg' },
@@ -399,7 +421,7 @@ const SPIEL_FELDER = [
 
 const ICONS = {
   kopf: '<path d="M5 12c0-4.4 3.1-8 7-8s7 3.6 7 8"/><path d="M4 12.5h16"/><path d="M6 12.5c.3 3.8 2.8 6.5 6 6.5s5.7-2.7 6-6.5"/>',
-  umhang: '<path d="M9 3h6l1.2 3L20 21H4L7.8 6z"/><path d="M12 6v15"/>',
+  accessoire: '<path d="M5 3l7 9 7-9"/><path d="M12 12l4.4 4L12 21.5 7.6 16z"/><path d="M7.6 16h8.8"/>',
   torso: '<path d="M8 3 3 6l2 5 3-1v11h8V10l3 1 2-5-5-3c-.8 1.8-2.2 3-4 3S8.8 4.8 8 3z"/>',
   handschuhe: '<path d="M7 12V6.5a1.5 1.5 0 0 1 3 0V11M10 11V5.5a1.5 1.5 0 0 1 3 0V11M13 11V6.5a1.5 1.5 0 0 1 3 0V12"/><path d="M16 12v-1.5a1.5 1.5 0 0 1 3 0V14c0 4-3 7-7 7-3 0-5.3-1.8-6.3-4.6L4.5 13a1.5 1.5 0 0 1 2.7-1.2L8 13.5"/><path d="M7 16h10"/>',
   beine: '<path d="M7 3h10l1.2 18h-4.4L12 10l-1.8 11H5.8z"/><path d="M7 6h10"/>',
@@ -906,7 +928,8 @@ function lookPreview(s) {
     const imgs = [];
     const base = s.withFigure && baseId ? h('img', { src: blobUrl(baseId), alt: '' }) : null;
     const layer = layerSrc ? h('img', { src: layerSrc, alt: '' }) : null;
-    if (d.slot === 'umhang') imgs.push(layer, base); else imgs.push(base, layer);
+    const at = byId(EBENEN, d.ebene)?.layer ?? byId(SLOTS, d.slot)?.layer ?? 5;
+    if (at < 2) imgs.push(layer, base); else imgs.push(base, layer);
     doll.replaceChildren(...imgs.filter(Boolean));
   };
   s.redrawDoll = drawn;
@@ -1073,6 +1096,7 @@ const blankTeil = (preset = {}) => ({
   bild: '',
   icon: '',
   bildGroesse: null,
+  ebene: '',
   gegenstueck: null,
   freigabe: true,
   vorgaben: emptyVorgaben(),
@@ -1109,6 +1133,7 @@ function openTeil(id) {
   const draft = clone(t);
   delete draft.id;
   draft.vorgaben = normVorgaben(draft.vorgaben);
+  draft.ebene = draft.ebene || '';
   showTeil({ mode: 'edit', id, draft, original: clone(draft) });
 }
 
@@ -1154,7 +1179,14 @@ function drawTeil(s) {
   slotSelect.value = d.slot || '';
   const counterpartBox = h('div');
   const drawCounterpart = () => counterpartBox.replaceChildren(counterpartField(d, s.id, changed));
-  slotSelect.addEventListener('change', () => { d.slot = slotSelect.value; s.redrawDoll(); drawCounterpart(); changed(); });
+  const standard = h('option', { value: '' });
+  const layerSelect = h('select', { class: 'field', 'aria-label': 'Ebene' },
+    standard, EBENEN.map((x) => h('option', { value: x.id }, x.name)));
+  const nameStandard = () => { standard.textContent = `Standard${STANDARD_EBENE[d.slot] ? ` (${STANDARD_EBENE[d.slot]})` : ''}`; };
+  nameStandard();
+  layerSelect.value = d.ebene || '';
+  layerSelect.addEventListener('change', () => { d.ebene = layerSelect.value; s.redrawDoll(); changed(); });
+  slotSelect.addEventListener('change', () => { d.slot = slotSelect.value; nameStandard(); s.redrawDoll(); drawCounterpart(); changed(); });
 
   function footDefault() {
     fill(foot,
@@ -1192,6 +1224,7 @@ function drawTeil(s) {
         h('div', { class: 'two' },
           group('Figur', segmented(FIGUREN, d.figur, (f) => { d.figur = f; rememberFigure(f); s.redrawDoll(); drawCounterpart(); changed(); })),
           group('Slot', slotSelect)),
+        group('Ebene', layerSelect),
         counterpartBox,
         wish ? group('Gehört zu', h('p', {}, `„${wish.titel}“ aus Fehlt noch`)) : null,
         h('div', { class: 'box' },
@@ -1484,12 +1517,12 @@ async function start() {
     toast(code === 'revoked' || code === 'invalid_argument' ? 'Kein Zugang zur Kleiderkammer.' : 'Die Verbindung ist abgerissen. Bitte neu laden.', true);
   };
   db.collection('teile').onSnapshot((snap) => {
-    state.teile = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    state.teile = snap.docs.map((doc) => { const x = doc.data(); return { id: doc.id, ...x, slot: slotOf(x.slot) }; });
     state.loaded.teile = true;
     render();
   }, failed);
   db.collection('wuensche').onSnapshot((snap) => {
-    state.wuensche = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    state.wuensche = snap.docs.map((doc) => { const x = doc.data(); return { id: doc.id, ...x, slot: slotOf(x.slot) }; });
     state.loaded.wuensche = true;
     render();
   }, failed);

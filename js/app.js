@@ -23,6 +23,7 @@ import { renderCreate } from './ui/create.js';
 import { openTalents, talentsOpen } from './ui/talents.js';
 import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
+import { IS_TEST, APP_NAME } from './stage.js';
 
 // The menu at the bottom, left to right: the Envoy's own things, the
 // overview in the middle, the world. `feature` = unlocked in the game.
@@ -100,7 +101,7 @@ function renderCreation() {
   replaceChildren(navRoot);
   creating = renderCreate(game, { onDone: () => { creating = null; location.hash = `#${DEFAULT_VIEW}`; render(); } });
   replaceChildren(viewRoot, creating);
-  document.title = 'Envoy';
+  document.title = APP_NAME;
   lastView = null;
 }
 
@@ -121,7 +122,7 @@ function render() {
   renderNav();
   if (name !== lastView) {
     window.scrollTo(0, 0);
-    document.title = name === DEFAULT_VIEW ? 'Envoy' : `${VIEWS[name].label} · Envoy`;
+    document.title = name === DEFAULT_VIEW ? APP_NAME : `${VIEWS[name].label} · ${APP_NAME}`;
     lastView = name;
   }
   if (REPORT_VIEWS.includes(name)) setTimeout(() => showPendingReport(game), 350);
@@ -136,6 +137,11 @@ function showError(message) {
 }
 
 async function start() {
+  if (IS_TEST) {
+    document.title = APP_NAME;
+    document.body.classList.add('stage-test');
+    document.body.append(h('div', { class: 'stage-tag', 'aria-hidden': 'true' }, 'Test'));
+  }
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => { /* works without */ });
   }
