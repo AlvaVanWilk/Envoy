@@ -57,7 +57,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Quest-Rückblick, Kompendium, Erfolge; das Buch füllt das Fenster, ohne zu scrollen
   (lange Listen teilen sich auf so viele Seiten, wie das Fenster fasst)
 - Charakterfenster mit Paperdoll-Darstellung, Ausrüstungsslots, Inventar-Box und dem
-  Namen des Envoy
+  Namen des Envoy; nach dem ersten Erstellen beginnt das Spiel dort mit einem kurzen,
+  überspringbaren Rundgang (Overlay, vier Schritte), jeder spätere Start ist im Lager
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
   Haut- und Haarfarbe, Name
 - Speicherung und Geräteabgleich pro Konto
@@ -76,6 +77,7 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 
 - Talentbaum: existiert nur als Rundschild mit Schloss im Menü; Antippen öffnet eine eigene
   Seite, die den Abstand der vier Werte zu Level 10 zeigt, sonst keine Funktion dahinter
+- Rundgänge für die anderen Seiten (folgen später)
 - Arena, Mehrspieler, Freunde
 - Ernährungsmodul
 - Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem

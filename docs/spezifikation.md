@@ -444,10 +444,9 @@ des Envoy):
 - in der Mitte das **Tageswerk** als großer Knopf in dunklem Stein wie Sims und Boxen,
   mit „2 / 4“. Solange Aufgaben offen sind, pulsiert ein großer oranger Schimmer um ihn;
   ist alles erledigt, ruht er: niedriger als der offene Knopf, ohne Glühen und ohne helle
-  Kante, mit dem Emblem der App und dem Schriftzug „ENVOY“ nebeneinander. (Vier
-  Varianten sind gebaut: Schriftzug über dem Emblem, nebeneinander, nur Emblem, nur
-  Schriftzug; die Nutzerin wählt, die übrigen fallen weg.) Er führt immer zur
-  Tageswerk-Seite.
+  Kante, mit dem Emblem der App und dem Schriftzug „ENVOY“ nebeneinander (so von der
+  Nutzerin vorerst gewählt; zur Wahl standen auch Schriftzug über dem Emblem, nur
+  Emblem, nur Schriftzug). Er führt immer zur Tageswerk-Seite.
 - rechts die **Einstellungen** (Zahnrad).
 
 - **Lager** (Startansicht): das Bild des Lagers (am Anfang ein Lagerfeuer, später je
@@ -470,7 +469,9 @@ des Envoy):
   Alles wird im Browser erzeugt, es gibt keine Tondateien.
 - **Abenteuer**: gezeichnete Landkarte mit Tintensiegeln für die Orte, Legende, Vorrat
   und Expedition. Keine unerklärten Zahlen auf der Karte.
-- **Envoy**: das Charakterblatt (siehe unten), mit Rucksack und oberer Leiste.
+- **Envoy**: das Charakterblatt (siehe unten), mit Rucksack und oberer Leiste. Nach dem
+  ersten Erstellen eines Envoy beginnt das Spiel hier, nicht im Lager; dort läuft der
+  Rundgang (siehe unten). Jeder spätere Start ist im Lager.
 - **Talentbaum**: eine eigene Seite (nicht ein Fenster über der alten Ansicht): das Schild
   mit Schloss und der Abstand der vier Werte zu Level 10.
 - **Handbuch**: ein Buch mit Papierseiten, orangen Reitern an der Oberkante und
@@ -628,7 +629,18 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   alten Daten bleiben als Reserve liegen.
 - **Envoy-Erstellung**, wenn es noch keinen Envoy gibt: erst die Figur wählen, dann Haut-
   und Haarfarbe (mit Vorschau) und einen Namen. Der Name steht als Titel auf dem
-  Charakterblatt. Aussehen und Name lassen sich in den Einstellungen ändern.
+  Charakterblatt. Aussehen und Name lassen sich in den Einstellungen ändern. Danach
+  öffnet sich die Envoy-Seite mit dem Rundgang.
+- **Rundgang** auf der Envoy-Seite: Beim ersten Öffnen der Seite (also gleich nach dem
+  Erstellen) wird die Seite abgedunkelt, ein Teil leuchtet auf, daneben steht eine Karte
+  mit einem Satz. Vier Schritte: „Hier siehst du deinen Envoy.“ (die Figur), „Du kannst
+  ihm andere Kleidung anlegen.“ (die Plätze), „In deinem Rucksack ist Platz für 5
+  Gegenstände.“ (der Rucksack), „Mit einem Tipp auf das Portrait kommst du jederzeit
+  hierher zurück.“ (das Portrait). Jede Karte hat „Weiter“ und „Überspringen“ (auch die
+  Esc-Taste), „1 von 4“ und beim letzten Schritt „Fertig“. Gesehen oder übersprungen
+  kommt er nicht wieder (je Profil gemerkt); in den Einstellungen unter „Envoy“ lässt er
+  sich mit „Rundgang ansehen“ wiederholen. Er ist kein Tutorial für die Übungen, nur ein
+  Rundgang durch die Oberfläche. Rundgänge für die anderen Seiten folgen später.
 - **Einstellungen:** angemeldet als, Stand des Abgleichs, „Jetzt abgleichen“,
   „Abmelden“ (die Daten bleiben auf dem Gerät und auf dem Server); ohne Konto „Konto
   erstellen“ und „Profil wechseln“.
@@ -696,7 +708,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Scheitern | gibt es nicht; Stats bestimmen Zugang, Dauer und Ertrag |
 | Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit |
 | Kampfergebnis | beim Aufbruch berechnet und gespeichert, zählt bei der Rückkehr |
-| Startansicht | Lager |
+| Startansicht | Lager; nur direkt nach dem ersten Erstellen eines Envoy die Envoy-Seite mit Rundgang |
 | Wortwahl | „XP“ und „Level“ gibt es nur je Stat, nie für den Helden; Gewinne heißen „+14 Kraft“ |
 | Talentbaum | Schild mit Schloss statt ausgegraut; eigene Seite, kein Fenster über der alten Ansicht |
 | Rückgängig | nur für Tagesaufgaben am selben Tag |

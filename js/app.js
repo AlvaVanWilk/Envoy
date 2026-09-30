@@ -24,6 +24,7 @@ import { renderCreate } from './ui/create.js';
 import { renderTalents, talentsOpen } from './ui/talents.js';
 import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
+import { startEnvoyTourIfNew } from './ui/tours.js';
 import { IS_TEST, APP_NAME } from './stage.js';
 
 // The menu at the bottom, left to right. The camp in the middle is the
@@ -97,7 +98,8 @@ function renderNav() {
 }
 
 // Before there is an Envoy: only the creation, without the menu. The screen
-// is built once, so a refresh in between does not reset the choice.
+// is built once, so a refresh in between does not reset the choice. A new
+// Envoy starts on its own page (with the tour); later starts are at the camp.
 let creating = null;
 function renderCreation() {
   if (creating) return;
@@ -105,7 +107,7 @@ function renderCreation() {
   document.body.classList.remove('has-topbar');
   replaceChildren(navRoot);
   replaceChildren(topRoot);
-  creating = renderCreate(game, { onDone: () => { creating = null; location.hash = `#${DEFAULT_VIEW}`; render(); } });
+  creating = renderCreate(game, { onDone: () => { creating = null; location.hash = '#envoy'; render(); } });
   replaceChildren(viewRoot, creating);
   document.title = APP_NAME;
   lastView = null;
@@ -134,6 +136,7 @@ function render() {
   if (name !== lastView && name === 'abenteuer') markMapForScroll();
   replaceChildren(viewRoot, VIEWS[name].render(game));
   renderNav();
+  if (name === 'envoy' && name !== lastView) startEnvoyTourIfNew(() => currentView() === 'envoy' && !isSheetOpen());
   if (name !== lastView) {
     window.scrollTo(0, 0);
     document.title = name === DEFAULT_VIEW ? APP_NAME : `${VIEWS[name].label} · ${APP_NAME}`;

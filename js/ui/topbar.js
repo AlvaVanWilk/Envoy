@@ -7,7 +7,7 @@
 //           opens the Envoy (on the Envoy's own page it stays where it is).
 //   middle  the Tageswerk. While tasks are open an orange glow pulses around
 //           it; once all four are done it rests, quiet, with the emblem of
-//           the app and its name (DONE_STYLE).
+//           the app and its name side by side.
 //   right   the settings.
 
 import { h } from './dom.js';
@@ -87,17 +87,12 @@ function portraitRings(game, current, badge) {
   return wrap;
 }
 
-// How the resting Tageswerk looks (see the stylesheet): 'next' emblem and name
-// side by side, 'logo' the emblem only, 'word' the name only, 'over' the name
-// faintly over the emblem.
-const DONE_STYLE = 'next';
-
 function dayworkButton(game, current) {
   const s = game.state;
   const doneCount = STATS.filter((st) => s.todayDone[st.id]).length;
   const active = current === 'tageswerk';
   if (doneCount === STATS.length) {
-    return h('a', { class: `daywork done style-${DONE_STYLE} ${active ? 'active' : ''}`, href: '#tageswerk', 'aria-label': 'Tageswerk, erledigt' },
+    return h('a', { class: `daywork done ${active ? 'active' : ''}`, href: '#tageswerk', 'aria-label': 'Tageswerk, erledigt' },
       h('img', { class: 'daywork-emblem', src: versioned('assets/app/icon-192.png'), alt: '' }),
       h('span', { class: 'daywork-word', 'aria-hidden': 'true' }, 'ENVOY'));
   }

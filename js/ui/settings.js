@@ -10,6 +10,7 @@ import { store } from '../store.js';
 import { toast, openSheet, closeSheet } from './sheet.js';
 import { APP_VERSION } from '../config.js';
 import { dayKey } from '../days.js';
+import { resetEnvoyTour } from './tours.js';
 
 const ERRORS = {
   ...ACCOUNT_ERRORS,
@@ -103,7 +104,9 @@ function envoyPanel() {
   return h('section', { class: 'panel settings-panel' },
     h('h2', { class: 'section-title' }, 'Envoy'),
     h('p', {}, envoy?.name || 'Envoy'),
-    h('div', { class: 'button-row' }, h('a', { class: 'btn ghost', href: '#aussehen' }, 'Aussehen und Name ändern')));
+    h('div', { class: 'button-row' },
+      h('a', { class: 'btn ghost', href: '#aussehen' }, 'Aussehen und Name ändern'),
+      h('button', { class: 'btn ghost', type: 'button', onclick: () => { resetEnvoyTour(); location.hash = '#envoy'; } }, 'Rundgang ansehen')));
 }
 
 function backupPanel() {
