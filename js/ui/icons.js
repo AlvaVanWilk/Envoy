@@ -16,31 +16,6 @@ const polar = (r, deg) => {
   return [round(12 + r * Math.cos(a)), round(12 + r * Math.sin(a))];
 };
 
-// A compass star: every arm split along its axis, one half light, one half dark.
-function compassStar() {
-  let light = '';
-  let dark = '';
-  for (const [deg, len, wid] of [[-90, 11, 2.6], [0, 11, 2.6], [90, 11, 2.6], [180, 11, 2.6], [-45, 6.6, 1.9], [45, 6.6, 1.9], [135, 6.6, 1.9], [225, 6.6, 1.9]]) {
-    const tip = polar(len, deg);
-    const left = polar(wid, deg - 90);
-    const right = polar(wid, deg + 90);
-    light += `M12 12L${left}L${tip}Z`;
-    dark += `M12 12L${right}L${tip}Z`;
-  }
-  return `<path d="${light}"/><path d="${dark}" opacity="0.55"/><circle cx="12" cy="12" r="2.2"/>${engFill('M12 10.9a1.1 1.1 0 1 0 0 2.2a1.1 1.1 0 1 0 0-2.2Z')}`;
-}
-
-function sunRays() {
-  let d = '';
-  for (const deg of [198, 222, 246, 270, 294, 318, 342]) {
-    const [x1, y1] = polar(7.6, deg - 5).map((v, i) => (i === 1 ? v + 5.5 : v));
-    const [x2, y2] = polar(7.6, deg + 5).map((v, i) => (i === 1 ? v + 5.5 : v));
-    const [tx, ty] = polar(11, deg).map((v, i) => (i === 1 ? v + 5.5 : v));
-    d += `M${x1} ${y1}L${tx} ${ty}L${x2} ${y2}Z`;
-  }
-  return `<path d="${d}"/>`;
-}
-
 function gear() {
   const teeth = 8;
   let d = '';
@@ -64,18 +39,17 @@ const FIST = [
 ].join('');
 const BOOT = '<path d="M6.3 2.4h6.9v9l5.4 2.7c2 1 2.9 2.3 2.9 4.2v1.3H3.4v-2.5c0-1.9 1.4-2.9 2.9-3.9Z"/><rect x="3" y="20" width="19" height="2.4" rx="0.9" opacity="0.75"/>';
 
+// A campfire in a ring of stones: the camp.
+const CAMPFIRE = '<path fill-rule="evenodd" d="M12 2.6c1 3.5 4.6 5 4.6 9.6c0 3-2 5-4.6 5s-4.6-2-4.6-4.8c0-2.3 1.5-3.3 2-5.3c1 1.5 1.5 2 2 2.5c0-2.5 0-5 .6-7ZM12 11c1 1.5 2 2.3 2 3.8c0 1.2-.9 2-2 2s-2-.8-2-1.9c0-1.3 1.4-2.1 2-3.9Z"/><ellipse cx="5.4" cy="20" rx="2.3" ry="1.6"/><ellipse cx="9.6" cy="21" rx="2.3" ry="1.4"/><ellipse cx="14.4" cy="21" rx="2.3" ry="1.4"/><ellipse cx="18.6" cy="20" rx="2.3" ry="1.6"/>';
+
 export const NAV_ICONS = {
-  uebersicht: emblem(compassStar()),
-  // a sun rising over the horizon: today's work
-  heute: emblem(`<path d="M6 17.5a6 6 0 0 1 12 0Z"/>${sunRays()}<rect x="1.8" y="18.3" width="20.4" height="1.7" rx="0.85"/><rect x="5" y="21.1" width="14" height="1.3" rx="0.65" opacity="0.6"/>`),
-  // the Envoy: a hooded figure with two points of light
-  envoy: emblem(`<path fill-rule="evenodd" d="${HOOD}${FACE}"/><circle cx="10.6" cy="11" r="0.85"/><circle cx="13.4" cy="11" r="0.85"/>${eng('M12 2v4.2M7 17.6l2 4.4M17 17.6l-2 4.4')}`),
-  inventar: emblem(`<path d="M4 9h16v10.6a2.4 2.4 0 0 1-2.4 2.4H6.4A2.4 2.4 0 0 1 4 19.6Z"/><path d="M8.4 9V6.6a3.6 3.6 0 0 1 7.2 0V9h-1.9V6.8a1.7 1.7 0 0 0-3.4 0V9Z"/>${eng('M4.6 13.4q7.4 3.2 14.8 0M6 16.8v3.4M18 16.8v3.4')}${engFill('M10.7 14.4h2.6v2.8h-2.6Z')}`),
-  karte: emblem(`<path d="M2 5.6l6-2.1l8 2.1l6-2.1v15l-6 2.1l-8-2.1l-6 2.1Z"/>${engFill('M8 3.5l8 2.1v15l-8-2.1Z')}${eng('M4.6 16.4c1.6-2.8 4.4-1.8 6-4.6s3.4-3.8 5-2.2', 1)}${eng('M17.4 6.6l2.4 2.4M19.8 6.6l-2.4 2.4', 1.3)}`),
-  zuhause: emblem(`<path d="M2.8 22V12.4L9 7.2l6 5V22Z"/><path d="M14 22V6.2h1.3V4h1.5v2.2h1.4V4h1.5v2.2H21V22Z"/>${engFill('M7.4 22v-3.6a1.6 1.6 0 0 1 3.2 0V22Z')}${engFill('M16.8 9.2h1.4v2.6h-1.4Z')}${eng('M3.4 15.8H14M14.6 13.6h5.8M14.6 17.6h5.8', 0.8)}`),
-  haendler: emblem(`<path d="M8.6 7.2C5.1 9.2 3.5 13 3.5 16c0 4 3.5 6 8.5 6s8.5-2 8.5-6c0-3-1.6-6.8-5.1-8.8Z"/><path d="M7.8 3.6c1.6 1.2 6.8 1.2 8.4 0l-.7 3.8H8.5Z"/>${eng('M8.4 7.4q3.6 1.6 7.2 0')}${eng('M12 12.6l1.8 2.9l-1.8 2.9l-1.8-2.9Z', 1)}`),
-  kompendium: emblem(`<path d="M5 4.6a2.1 2.1 0 0 1 2.1-2.1h12.4V18H7.1A2.1 2.1 0 0 0 5 20.1Z"/><path d="M7.1 18.8h12.4v2.7H7.1a1.35 1.35 0 0 1 0-2.7Z" opacity="0.6"/>${eng('M8.6 10.2q3.7-3.8 7.4 0q-3.7 3.8-7.4 0Z', 1.1)}${engFill('M12.3 8.9a1.3 1.3 0 1 0 0 2.6a1.3 1.3 0 1 0 0-2.6Z')}`),
+  // a map with a winding path: the adventures in the world
+  abenteuer: emblem(`<path d="M2 5.6l6-2.1l8 2.1l6-2.1v15l-6 2.1l-8-2.1l-6 2.1Z"/>${engFill('M8 3.5l8 2.1v15l-8-2.1Z')}${eng('M4.6 16.4c1.6-2.8 4.4-1.8 6-4.6s3.4-3.8 5-2.2', 1)}${eng('M17.4 6.6l2.4 2.4M19.8 6.6l-2.4 2.4', 1.3)}`),
   talente: emblem(`<circle cx="12" cy="7.2" r="5"/><circle cx="7.3" cy="10.4" r="3.6"/><circle cx="16.7" cy="10.4" r="3.6"/><circle cx="9.4" cy="13" r="3"/><circle cx="14.6" cy="13" r="3"/><path d="M11 13.5h2l.6 6c.9 1 2.4 1.5 3.4 1.7v.9H7v-.9c1-.2 2.5-.7 3.4-1.7Z"/>${eng('M12 15V9.4M12 12.4L9.4 10M12 11.4l2.8-2.4', 1)}`),
+  lager: emblem(CAMPFIRE),
+  haendler: emblem(`<path d="M8.6 7.2C5.1 9.2 3.5 13 3.5 16c0 4 3.5 6 8.5 6s8.5-2 8.5-6c0-3-1.6-6.8-5.1-8.8Z"/><path d="M7.8 3.6c1.6 1.2 6.8 1.2 8.4 0l-.7 3.8H8.5Z"/>${eng('M8.4 7.4q3.6 1.6 7.2 0')}${eng('M12 12.6l1.8 2.9l-1.8 2.9l-1.8-2.9Z', 1)}`),
+  // a closed book with an eye on the cover: the Handbuch
+  handbuch: emblem(`<path d="M5 4.6a2.1 2.1 0 0 1 2.1-2.1h12.4V18H7.1A2.1 2.1 0 0 0 5 20.1Z"/><path d="M7.1 18.8h12.4v2.7H7.1a1.35 1.35 0 0 1 0-2.7Z" opacity="0.6"/>${eng('M8.6 10.2q3.7-3.8 7.4 0q-3.7 3.8-7.4 0Z', 1.1)}${engFill('M12.3 8.9a1.3 1.3 0 1 0 0 2.6a1.3 1.3 0 1 0 0-2.6Z')}`),
   einstellungen: emblem(gear()),
 };
 
@@ -100,7 +74,7 @@ export const SLOT_ICONS = {
 
 // Map places, drawn light on a dark ink seal.
 export const PLACE_ICONS = {
-  lager: emblem('<path fill-rule="evenodd" d="M12 2.6c1 3.5 4.6 5 4.6 9.6c0 3-2 5-4.6 5s-4.6-2-4.6-4.8c0-2.3 1.5-3.3 2-5.3c1 1.5 1.5 2 2 2.5c0-2.5 0-5 .6-7ZM12 11c1 1.5 2 2.3 2 3.8c0 1.2-.9 2-2 2s-2-.8-2-1.9c0-1.3 1.4-2.1 2-3.9Z"/><ellipse cx="5.4" cy="20" rx="2.3" ry="1.6"/><ellipse cx="9.6" cy="21" rx="2.3" ry="1.4"/><ellipse cx="14.4" cy="21" rx="2.3" ry="1.4"/><ellipse cx="18.6" cy="20" rx="2.3" ry="1.6"/>'),
+  lager: emblem(CAMPFIRE),
   // a basket: here something is gathered
   sammeln: emblem(`<path d="M7 10c0-5.4 10-5.4 10 0h-1.8c0-3.2-6.4-3.2-6.4 0Z"/><path d="M3.4 10h17.2l-1.9 10.2a1.6 1.6 0 0 1-1.6 1.3H6.9a1.6 1.6 0 0 1-1.6-1.3Z"/>${eng('M3.8 12.2h16.4M5 15.4h14M5.7 18.6h12.6', 0.9)}${eng('M8.6 12.4v8.8M12 12.4v9M15.4 12.4v8.8', 0.8)}`),
   wild: emblem('<path fill-rule="evenodd" d="M12 2.4c4.5 0 7 3.6 7 8.1v10.1l-2.3-1.7l-2.3 2.2L12 19l-2.4 2.1l-2.3-2.2L5 20.6V10.5c0-4.5 2.5-8.1 7-8.1ZM9.6 8.6c-.7 0-1.3.8-1.3 1.9s.6 1.9 1.3 1.9s1.3-.8 1.3-1.9s-.6-1.9-1.3-1.9ZM14.4 8.6c-.7 0-1.3.8-1.3 1.9s.6 1.9 1.3 1.9s1.3-.8 1.3-1.9s-.6-1.9-1.3-1.9Z"/>'),

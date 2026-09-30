@@ -11,7 +11,7 @@ import { unmetRequirements, lookup } from '../world/items.js';
 import { hasSpace, reachable } from '../world/inventory.js';
 
 export const slotName = (id) => SLOTS.find((s) => s.id === id)?.name || id;
-export const WHERE = { rucksack: 'Rucksack', schrank: 'Lager', body: 'Getragen', home: 'Aufgestellt' };
+export const WHERE = { rucksack: 'Rucksack', schrank: 'Kiste', body: 'Getragen', home: 'Aufgestellt' };
 // Shown for things in the storage while the Envoy is away.
 export const AWAY_NOTE = 'Erreichbar, wenn der Envoy im Lager ist.';
 
@@ -77,7 +77,7 @@ export function openEntry(inst, game) {
     const to = entry.where === 'rucksack' ? 'schrank' : 'rucksack';
     const space = hasSpace(world, game.catalog, to);
     actions.push(h('button', { class: 'btn ghost', disabled: !space, onclick: () => { game.move(inst, to); closeSheet(); } },
-      to === 'schrank' ? 'Ins Lager' : 'In den Rucksack'));
+      to === 'schrank' ? 'In die Kiste' : 'In den Rucksack'));
   }
   if (reachable(world, entry) && (entry.where === 'rucksack' || entry.where === 'schrank')) {
     actions.push(h('button', { class: 'btn text danger-text', onclick: () => confirmDrop(entry, thing, game) }, 'Liegen lassen'));
@@ -111,7 +111,7 @@ export function openSlot(slotId, game) {
     const unmet = unmetRequirements(item, stats);
     let action;
     if (worn) action = h('button', { class: 'btn ghost small', onclick: () => { game.unequip(slotId); closeSheet(); } }, 'Ablegen');
-    else if (!reachable(world, entry)) action = h('span', { class: 'locked-label' }, 'Im Lager');
+    else if (!reachable(world, entry)) action = h('span', { class: 'locked-label' }, 'In der Kiste');
     else if (unmet.length === 0) action = h('button', { class: 'btn primary small', onclick: () => { game.equip(slotId, entry.inst); closeSheet(); } }, 'Anlegen');
     else action = h('span', { class: 'locked-label' }, icon(UI_ICONS.lock), 'Gesperrt');
     return h('div', { class: `item-row ${unmet.length && !worn ? 'locked' : ''} ${reachable(world, entry) ? '' : 'away'}` },

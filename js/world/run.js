@@ -19,7 +19,6 @@ import { fight } from './combat.js';
 import { itemLevel } from './items.js';
 
 const LOOT_BAND = 3;
-const FURNITURE_SHARE = 0.3;
 
 const average = (stats, ids) => (ids.length === 0 ? 1 : ids.reduce((sum, id) => sum + stats[id].level, 0) / ids.length);
 
@@ -48,15 +47,12 @@ function scaled(rng, amount, factor) {
   return whole + (rng() < exact - whole ? 1 : 0);
 }
 
-// An equipment piece or furniture that fits the hero's strength.
+// An equipment piece that fits the hero's strength. (Furniture is not
+// found for now; the camp gets its own way of growing.)
 function lootThing(ctx, rng) {
   const power = heroPower(ctx.stats);
   const items = ctx.catalog.equipment.filter((i) => i.herkunft.includes('beute')
     && Math.abs(itemLevel(i) - power) <= LOOT_BAND);
-  const furniture = ctx.catalog.furniture.filter((f) => f.herkunft.includes('beute'));
-  if (furniture.length > 0 && (items.length === 0 || rng() < FURNITURE_SHARE)) {
-    return { kind: 'furniture', id: pick(rng, furniture).id };
-  }
   return items.length > 0 ? { kind: 'item', id: pick(rng, items).id } : null;
 }
 
@@ -74,10 +70,12 @@ function monsterLoot(monster, result, ctx, rng, into) {
 
 // How much the `ertrag` stats add: +5 % per level above 1, for gathering
 // on the pieces, for exploring on the Bannsplitter. Luck adds Bannsplitter.
+// Achievements can add to gathering (ctx.bonus.sammeln).
 export function yieldBonus(quest, ctx) {
   const extra = YIELD_PER_LEVEL * (average(ctx.stats, quest.yieldStats || []) - 1);
+  const gathering = 1 + extra + (ctx.bonus?.sammeln || 0);
   return {
-    pieces: quest.kind === 'sammeln' ? 1 + extra : 1,
+    pieces: quest.kind === 'sammeln' ? gathering : 1,
     splitter: (quest.kind === 'erkunden' ? 1 + extra : 1) * (1 + ctx.fx.glueck / 100),
   };
 }

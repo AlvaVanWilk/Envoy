@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '4.2.0';
+export const APP_VERSION = '4.3.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -84,10 +84,12 @@ export const EBENEN = [
 // the first.
 // skin / skinShadow / hair: the colours the figure is drawn in; the app
 // paints them in the chosen colours (see ui/look.js). hairZone: hair only
-// occurs in this upper share of the picture.
+// occurs in this upper share of the picture. Each folder also holds
+// portrait.png, the round picture at the top of the screen; portraitHairZone
+// is the same share for it.
 export const FIGURES = [
-  { id: 'erste', name: 'Envoy mit Dutt', folder: 'assets/figur', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25 },
-  { id: 'zweite', name: 'Envoy mit kurzem Haar', folder: 'assets/figur/zweite', skin: [240, 176, 130], skinShadow: [182, 130, 90], hair: [190, 178, 118], hairZone: 0.25 },
+  { id: 'erste', name: 'Envoy mit Dutt', folder: 'assets/figur', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25, portraitHairZone: 0.78 },
+  { id: 'zweite', name: 'Envoy mit kurzem Haar', folder: 'assets/figur/zweite', skin: [240, 176, 130], skinShadow: [182, 130, 90], hair: [190, 178, 118], hairZone: 0.25, portraitHairZone: 0.62 },
 ];
 
 // Choices for skin and hair. The first of each stands for the colour a

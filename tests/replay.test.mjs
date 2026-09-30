@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { replay } from '../js/replay.js';
 import { buildCatalog } from '../js/catalog.js';
-import { missingPlans } from '../js/planner.js';
+import { missingPlans, tomorrowPlans } from '../js/planner.js';
 import { addDays } from '../js/days.js';
 import { mergeEvents } from '../js/events.js';
 
@@ -183,4 +183,27 @@ test('events from before the accessory slot, when it was the cloak slot, still c
   ], catalog, START);
   assert.equal(off.equipped.accessoire, undefined);
   assert.equal(off.world.items['start:tuch'].where, 'rucksack');
+});
+
+test('the achievement "Angekommen" is reached with the Envoy and adds 10 % to every gain from then on', () => {
+  const before = done(START, 'kraft', 20);
+  const envoy = ev(START, 'envoy', { name: 'Mira', figur: 'erste' });
+  const after = done(addDays(START, 1), 'kraft', 20);
+  const s = replay([before, envoy, after], catalog, addDays(START, 1));
+  assert.deepEqual(Object.keys(s.achievements), ['angekommen']);
+  assert.equal(s.achievements.angekommen.day, START);
+  assert.equal(s.todayDone.kraft.gain, 22);
+  assert.equal(s.stats.kraft.xp, 42); // 20 before the arrival, 22 after
+  assert.equal(replay([before], catalog, START).achievements.angekommen, undefined);
+});
+
+test('the look at tomorrow names the exercises the next day will bring', () => {
+  const events = [done(START, 'kraft', 14)];
+  const s = replay(events, catalog, START);
+  const next = tomorrowPlans(s, catalog);
+  assert.equal(Object.keys(next).length, 4);
+  // tomorrow the app actually picks the same
+  const s2 = replay(events, catalog, addDays(START, 1));
+  const picked = missingPlans(s2, catalog);
+  for (const stat of Object.keys(next)) assert.equal(picked[stat].id, next[stat].id);
 });

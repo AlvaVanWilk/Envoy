@@ -34,7 +34,7 @@ export function paperdoll(equipped, world, catalog, { className = '', envoy = wo
         draggable: 'false',
         onerror: (e) => { e.currentTarget.hidden = true; },
       });
-      showLayer(img, l.src, look, Boolean(l.base));
+      showLayer(img, l.src, look, l.base ? 'base' : 'layer');
       return img;
     }));
 }

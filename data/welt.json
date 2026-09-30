@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-27T15:25:26Z",
+ "generated": "2026-09-30T17:23:58Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -777,7 +777,7 @@
    "name": "Ein Platz zum Bleiben",
    "place": "lager",
    "kind": "bauen",
-   "text": "Zwischen den Säulen ist Platz für ein Zelt. Es fehlt nur das Material.",
+   "text": "Am Feuer ist Platz für mehr. Mit Pilzholz und Stein lässt sich das Lager ausbauen.",
    "monsters": [],
    "conditions": [],
    "speedStats": [
@@ -1157,9 +1157,7 @@
      0
     ],
     "items": [],
-    "furniture": [
-     "windspiel"
-    ],
+    "furniture": [],
     "unlocks": [],
     "rest": false
    },
@@ -1472,9 +1470,7 @@
     "items": [
      "handschuhe_nebelwickel_4"
     ],
-    "furniture": [
-     "splitterschale"
-    ],
+    "furniture": [],
     "unlocks": [],
     "rest": false
    },

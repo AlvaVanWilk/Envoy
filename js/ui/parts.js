@@ -11,8 +11,12 @@ export const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 export function viewHead(eyebrow, title, ...actions) {
   return h('header', { class: 'view-head' },
     h('div', {}, h('p', { class: 'eyebrow' }, eyebrow), h('h1', {}, title)),
-    h('div', { class: 'head-actions' }, ...actions,
-      h('a', { class: 'gear', href: '#einstellungen', 'aria-label': 'Einstellungen' }, shield(NAV_ICONS.einstellungen))));
+    actions.length > 0 ? h('div', { class: 'head-actions' }, ...actions) : null);
+}
+
+// The way to the settings, for views without the bar at the top.
+export function gearLink() {
+  return h('a', { class: 'gear', href: '#einstellungen', 'aria-label': 'Einstellungen' }, shield(NAV_ICONS.einstellungen));
 }
 
 // A heading inside a panel, with an ornament line.

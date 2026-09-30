@@ -6,7 +6,7 @@ import { buildCatalog } from '../js/catalog.js';
 import { effects, maxStamina, staminaAt } from '../js/world/hero.js';
 import { wayStamina, camp } from '../js/world/map.js';
 import { encountersFor, questState, questById } from '../js/world/quests.js';
-import { runQuest, speedShare } from '../js/world/run.js';
+import { runQuest, speedShare, yieldBonus } from '../js/world/run.js';
 import { planExpedition, progressAt, heroPosition } from '../js/world/expedition.js';
 import { offersFor } from '../js/world/trader.js';
 import { itemLevel } from '../js/world/items.js';
@@ -307,4 +307,15 @@ test('equipment abilities count, never stats', () => {
   const s = replay([ev('equip', { slot: 'handschuhe', inst: 'start:handschuhe_handwickel_1' }, 0.1)], catalog, DAY, T0);
   assert.equal(effects(s.world, catalog).schaden, 1);
   assert.equal(s.stats.kraft.level, 1);
+});
+
+test('an achievement bonus on gathering adds to the pieces, not to the Bannsplitter', () => {
+  const s = replay([], catalog, DAY, T0);
+  const quest = catalog.questById.get('q-stein');
+  const plain = yieldBonus(quest, ctxOf(s));
+  const boosted = yieldBonus(quest, { ...ctxOf(s), bonus: { sammeln: 0.1 } });
+  assert.ok(Math.abs(boosted.pieces - plain.pieces - 0.1) < 1e-9);
+  assert.equal(boosted.splitter, plain.splitter);
+  const explore = catalog.questById.get('q-uferkies');
+  assert.equal(yieldBonus(explore, { ...ctxOf(s), bonus: { sammeln: 0.1 } }).pieces, 1);
 });

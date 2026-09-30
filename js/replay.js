@@ -4,6 +4,8 @@
 //      tasks, intensity changes, and everything done in the world
 //   2. when the day is over: malus for every stat whose task was not done,
 //      then take off equipment whose requirements are no longer met.
+// Achievements are checked along the way; a bonus they give counts from
+// the moment they were reached.
 // Same events + same catalog = same result on every device.
 
 import {
@@ -14,6 +16,7 @@ import { addXp, removeXp, malusFactor, average } from './formulas.js';
 import { dayRange, addDays } from './days.js';
 import { compareEvents } from './events.js';
 import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance } from './world/worldstate.js';
+import { checkAchievements, bonusOf, withBonus } from './achievements.js';
 
 export { unmetRequirements } from './world/items.js';
 
@@ -94,7 +97,9 @@ export function replay(events, catalog, today, now = Date.now()) {
   const lastUsed = {};              // exercise id -> last day it was assigned or done
   const doneCount = {};             // exercise id -> how often it was done
   const dayExercise = {};           // day -> stat -> exercise id
+  const log = [];                   // every day: which exercise, done or not, and the gain
   const totals = { km: 0, stockwerke: 0 };
+  const earned = {};                // achievement id -> { day, t }
   let sick = false;
   let todayPlan = {};
   let todayDone = {};
@@ -114,6 +119,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     for (const e of byDay.get(day) || []) {
       if (!TASK_TYPES.has(e.type)) {
         applyWorldEvent(world, e, ctx);
+        checkAchievements(earned, { world, stats, totals }, day, e.t);
       } else if (e.type === 'plan') {
         // the latest assignment counts, as long as the task is still open
         if (!done[e.stat] && catalog.exerciseById.has(e.ex)) plan[e.stat] = e;
@@ -121,8 +127,9 @@ export function replay(events, catalog, today, now = Date.now()) {
         sick = Boolean(e.sick);
       } else if (e.type === 'done') {
         if (undone.has(e.id) || done[e.stat] || !STAT_IDS.includes(e.stat)) continue;
-        done[e.stat] = e;
-        stats[e.stat] = addXp(stats[e.stat], e.xp);
+        const gain = withBonus(e.xp, bonusOf(earned, 'tageswerk'));
+        done[e.stat] = { ...e, gain };
+        stats[e.stat] = addXp(stats[e.stat], gain);
         doneCount[e.ex] = (doneCount[e.ex] || 0) + 1;
         if (e.m) {
           totals.km += Number(e.m.strecke_km) || 0;
@@ -135,19 +142,22 @@ export function replay(events, catalog, today, now = Date.now()) {
     }
 
     dayExercise[day] = {};
+    const tasks = {};
     for (const stat of STAT_IDS) {
       const ex = done[stat]?.ex || plan[stat]?.ex;
       if (ex) {
         dayExercise[day][stat] = ex;
         lastUsed[ex] = day;
+        tasks[stat] = { ex, done: Boolean(done[stat]), gain: done[stat]?.gain || 0 };
       }
     }
+    if (Object.keys(tasks).length > 0) log.push({ day, tasks, sick });
 
     if (day === today) {
       todayPlan = plan;
       todayDone = done;
       for (const stat of STAT_IDS) {
-        if (done[stat]) history[stat].push({ day, kind: 'gain', xp: done[stat].xp, level: stats[stat].level });
+        if (done[stat]) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: stats[stat].level });
       }
       break;
     }
@@ -156,10 +166,10 @@ export function replay(events, catalog, today, now = Date.now()) {
     for (const stat of STAT_IDS) {
       const before = stats[stat];
       if (done[stat]) {
-        recentGains[stat].push(done[stat].xp);
+        recentGains[stat].push(done[stat].gain);
         if (recentGains[stat].length > MALUS_AVERAGE_WINDOW) recentGains[stat].shift();
         stats[stat] = { ...before, missed: 0 };
-        if (day >= historyFrom) history[stat].push({ day, kind: 'gain', xp: done[stat].xp, level: before.level });
+        if (day >= historyFrom) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: before.level });
       } else {
         const missed = before.missed + 1;
         const malus = Math.round(malusFactor(missed) * average(recentGains[stat]));
@@ -173,6 +183,7 @@ export function replay(events, catalog, today, now = Date.now()) {
       }
     }
     checkEquipment(world, ctx, day);
+    checkAchievements(earned, { world, stats, totals }, day, null);
   }
   // An expedition that is back by now counts.
   advance(world, now, ctx);
@@ -189,11 +200,13 @@ export function replay(events, catalog, today, now = Date.now()) {
     todayPlan,
     todayDone,
     history,
+    log,
     lastUsed,
     doneCount,
     totals,
     yesterdayExercise: dayExercise[addDays(today, -1)] || {},
     world,
+    achievements: earned,
     envoy: world.envoy,
     equipped: world.equipped,
     dropped: world.dropped,

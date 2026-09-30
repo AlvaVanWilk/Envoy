@@ -1,5 +1,6 @@
 // Start of the app: load the catalogs; without a profile show the start
-// screen (log in, new account); otherwise build the menu and show a view.
+// screen (log in, new account); otherwise build the menu, the bar at the
+// top and show a view.
 
 import { loadCatalog } from './catalog.js';
 import { game } from './game.js';
@@ -10,14 +11,14 @@ import { renderWelcome } from './ui/welcome.js';
 import { h, replaceChildren } from './ui/dom.js';
 import { NAV_ICONS } from './ui/icons.js';
 import { shield } from './ui/shield.js';
-import { renderOverview } from './ui/dashboard.js';
+import { renderCamp } from './ui/camp.js';
 import { renderToday } from './ui/today.js';
 import { renderCharacter, unseenDropCount } from './ui/character.js';
 import { renderInventory } from './ui/inventory.js';
 import { renderMap, markMapForScroll } from './ui/worldmap.js';
-import { renderHome } from './ui/home.js';
 import { renderTrader } from './ui/trader.js';
-import { renderCompendium } from './ui/compendium.js';
+import { renderHandbook, handbookBadge } from './ui/handbook.js';
+import { renderTopbar } from './ui/topbar.js';
 import { renderSettings } from './ui/settings.js';
 import { renderCreate } from './ui/create.js';
 import { openTalents, talentsOpen } from './ui/talents.js';
@@ -25,42 +26,47 @@ import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
 import { IS_TEST, APP_NAME } from './stage.js';
 
-// The menu at the bottom, left to right: the Envoy's own things, the
-// overview in the middle, the world. `feature` = unlocked in the game.
+// The menu at the bottom, left to right. The camp in the middle is the
+// start. `feature` = unlocked in the game.
 const DOCK = [
-  { id: 'heute', label: 'Heute', render: renderToday },
-  { id: 'envoy', label: 'Envoy', render: renderCharacter },
-  { id: 'inventar', label: 'Inventar', render: renderInventory },
+  { id: 'abenteuer', label: 'Abenteuer', render: renderMap },
   // Talentbaum: shown with a lock; there is nothing behind it yet.
-  { id: 'talente', label: 'Talente', action: () => openTalents(game) },
-  { id: 'uebersicht', label: 'Übersicht', render: renderOverview, main: true },
-  { id: 'karte', label: 'Karte', render: renderMap },
-  { id: 'zuhause', label: 'Zuhause', render: renderHome, feature: 'zuhause' },
+  { id: 'talente', label: 'Talentbaum', action: () => openTalents(game) },
+  { id: 'lager', label: 'Lager', render: renderCamp, main: true },
   { id: 'haendler', label: 'Händler', render: renderTrader, feature: 'haendler' },
-  { id: 'kompendium', label: 'Kompendium', render: renderCompendium },
+  { id: 'handbuch', label: 'Handbuch', render: renderHandbook, topbar: false },
 ];
 // Changing the look of the Envoy later, reached from the settings.
 const changeLook = (g) => renderCreate(g, { onDone: () => { location.hash = '#envoy'; }, onCancel: () => { location.hash = '#einstellungen'; } });
+// topbar: false = the bar at the top is not shown (the Envoy's own page,
+// the Handbuch, which needs the room for its pages).
 const VIEWS = Object.fromEntries([
   ...DOCK.filter((d) => d.render),
+  { id: 'tageswerk', label: 'Tageswerk', render: renderToday },
+  { id: 'envoy', label: 'Envoy', render: renderCharacter, topbar: false },
+  { id: 'inventar', label: 'Inventar', render: renderInventory },
   { id: 'einstellungen', label: 'Einstellungen', render: renderSettings },
-  { id: 'aussehen', label: 'Aussehen', render: changeLook, keep: true },
+  { id: 'aussehen', label: 'Aussehen', render: changeLook, keep: true, topbar: false },
 ].map((v) => [v.id, v]));
-const DEFAULT_VIEW = 'uebersicht';
+// Names of views from earlier versions, so old links and bookmarks still work.
+const OLD_NAMES = { heute: 'tageswerk', uebersicht: 'lager', karte: 'abenteuer', zuhause: 'lager', kompendium: 'handbuch' };
+const DEFAULT_VIEW = 'lager';
 // Views where a finished expedition reports back by itself.
-const REPORT_VIEWS = ['uebersicht', 'karte'];
+const REPORT_VIEWS = ['lager', 'abenteuer'];
 
 const viewRoot = document.getElementById('view');
 const navRoot = document.getElementById('nav');
+const topRoot = document.getElementById('topbar');
 
 function currentView() {
-  const name = location.hash.replace('#', '');
+  const hash = location.hash.replace('#', '');
+  const name = OLD_NAMES[hash] || hash.split('/')[0];
   return VIEWS[name] ? name : DEFAULT_VIEW;
 }
 
 function badgeFor(id) {
-  if (id === 'envoy') return unseenDropCount(game) > 0;
-  if (id === 'karte') return game.unseenReports().length > 0;
+  if (id === 'abenteuer') return game.unseenReports().length > 0;
+  if (id === 'handbuch') return handbookBadge(game);
   return false;
 }
 
@@ -87,8 +93,14 @@ function syncTone() {
 
 function renderNav() {
   replaceChildren(navRoot, h('div', { class: 'dock-row' }, DOCK.map(dockItem)));
+  const name = currentView();
+  const withBar = VIEWS[name].topbar !== false;
+  document.body.classList.toggle('has-topbar', withBar);
+  if (withBar) replaceChildren(topRoot, renderTopbar(game, name, syncTone(), unseenDropCount(game) > 0));
+  else replaceChildren(topRoot);
+  // The Envoy's own page has no bar at the top; its settings sit in its head.
+  const gear = viewRoot.querySelector('.view-head .gear .shield');
   const tone = syncTone();
-  const gear = viewRoot.querySelector('.gear .shield');
   if (gear && tone && !gear.querySelector('.coin-dot')) gear.append(h('span', { class: `coin-dot ${tone}` }));
 }
 
@@ -98,7 +110,9 @@ let creating = null;
 function renderCreation() {
   if (creating) return;
   document.body.classList.add('creating');
+  document.body.classList.remove('has-topbar');
   replaceChildren(navRoot);
+  replaceChildren(topRoot);
   creating = renderCreate(game, { onDone: () => { creating = null; location.hash = `#${DEFAULT_VIEW}`; render(); } });
   replaceChildren(viewRoot, creating);
   document.title = APP_NAME;
@@ -117,7 +131,7 @@ function render() {
   const name = currentView();
   // A view with choices in progress is not rebuilt while it is open.
   if (VIEWS[name].keep && name === lastView) return;
-  if (name !== lastView && name === 'karte') markMapForScroll();
+  if (name !== lastView && name === 'abenteuer') markMapForScroll();
   replaceChildren(viewRoot, VIEWS[name].render(game));
   renderNav();
   if (name !== lastView) {
@@ -158,6 +172,7 @@ async function start() {
   if (!profile) {
     document.body.classList.add('creating');
     replaceChildren(navRoot);
+    replaceChildren(topRoot);
     replaceChildren(viewRoot, renderWelcome());
     return;
   }
@@ -181,7 +196,7 @@ async function start() {
   // Every half minute: a new day may have begun (03:00), the stamina bar refills.
   setInterval(() => {
     game.checkDayChange();
-    if (['uebersicht', 'karte', 'envoy'].includes(currentView()) && !isSheetOpen()) render();
+    if (['lager', 'abenteuer', 'envoy'].includes(currentView()) && !isSheetOpen()) render();
   }, 30 * 1000);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {

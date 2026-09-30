@@ -16,7 +16,8 @@
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
 //   bought      { offerId: true }
-//   reports     finished expeditions, newest last
+//   reports     finished expeditions, newest last (the latest 30, with all details)
+//   journal     every finished expedition in short, oldest first (for the Handbuch)
 //   dropped     equipment taken off because a stat fell below its requirement
 // }
 
@@ -49,6 +50,7 @@ export function initialWorld(catalog, startTime, stats) {
     bestiary: {},
     bought: {},
     reports: [],
+    journal: [],
     dropped: [],
   };
   // The start outfit (herkunft `angezogen`) is worn from the beginning,
@@ -123,6 +125,12 @@ function finishExpedition(world, ctx) {
   }
   world.reports.push({ id: exp.id, q: exp.q, place: exp.place, title: exp.title, start: exp.start, end: exp.end, outcome });
   if (world.reports.length > KEEP_REPORTS) world.reports.shift();
+  world.journal.push({
+    id: exp.id, q: exp.q, place: exp.place, title: exp.title, day: exp.day, end: exp.end,
+    kind: outcome.kind, cleared: outcome.cleared,
+    fights: (outcome.fights || []).map((f) => ({ monster: f.monster, result: f.result })),
+    reward: { splitter: r.splitter || 0, pilzholz: r.pilzholz || 0, stein: r.stein || 0, things: r.things.length },
+  });
 }
 
 // Lets time pass up to t: an expedition that is back by then is finished.

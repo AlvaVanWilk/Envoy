@@ -13,6 +13,7 @@ import { questById, questState } from './world/quests.js';
 import { planExpedition, progressAt } from './world/expedition.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
+import { bonusOf, withBonus } from './achievements.js';
 
 const REPORT_HOURS = 48;
 const listeners = new Set();
@@ -90,6 +91,12 @@ export const game = {
     return id ? this.catalog.exerciseById.get(id) || null : null;
   },
 
+  // What finishing the exercise brings now: its points with the bonus of
+  // the achievements reached so far.
+  gainFor(exercise) {
+    return withBonus(exercise.xp, bonusOf(this.state.achievements, 'tageswerk'));
+  },
+
   // Feedback is only asked when there is no measured value, and only for an
   // exercise done for the first time or right after the intensity changed.
   needsFeedback(stat) {
@@ -134,6 +141,7 @@ export const game = {
       fx: effects(s.world, this.catalog),
       totals: s.totals,
       day: s.today,
+      bonus: { sammeln: bonusOf(s.achievements, 'sammeln') },
     };
   },
 

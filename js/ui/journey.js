@@ -14,9 +14,9 @@ const PHASES = [
   { id: 'act', name: 'Vor Ort' },
   { id: 'back', name: 'Rückweg' },
 ];
-const RESULT_TEXT = { won: 'besiegt', calmed: 'beruhigt', driven: 'vertrieben' };
+export const RESULT_TEXT = { won: 'besiegt', calmed: 'beruhigt', driven: 'vertrieben' };
 const UNLOCK_TEXT = {
-  zuhause: 'Das Zelt steht. Zuhause und Lager sind offen.',
+  zuhause: 'Der Ausbau des Lagers ist freigeschaltet.',
   haendler: 'Der Händler ist gerettet und handelt ab jetzt.',
 };
 

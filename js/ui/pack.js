@@ -1,5 +1,5 @@
 // The inventory box on the character sheet: the backpack with its few
-// places and, once there is a home, the storage („Lager“) at the camp.
+// places and, once the camp can be extended, the storage („Kiste“) at the camp.
 // While the Envoy is away, the storage can be looked at but not used:
 // its things are greyed out.
 
@@ -61,7 +61,7 @@ export function packBox(game) {
         h('button', { class: `tab ${tab === 'rucksack' ? 'active' : ''}`, role: 'tab', onclick: choose('rucksack') },
           `Rucksack · ${packCount}/${BACKPACK_SIZE}`),
         h('button', { class: `tab ${tab === 'schrank' ? 'active' : ''}`, role: 'tab', onclick: choose('schrank') },
-          `Lager · ${storeCount}/${capacity(world, game.catalog, 'schrank')}`))
+          `Kiste · ${storeCount}/${capacity(world, game.catalog, 'schrank')}`))
       : null;
 
     replaceChildren(box,

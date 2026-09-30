@@ -1,4 +1,4 @@
-// Inventory: backpack from the start, storage („Lager“) once there is a home.
+// Inventory: backpack from the start, storage („Kiste“) once the camp can be extended.
 // Search, filter by slot and sort. Tapping a thing opens its sheet.
 // While the Envoy is away, things in the storage are shown greyed out.
 
@@ -75,7 +75,7 @@ export function renderInventory(game) {
     h('button', { class: `tab ${view.tab === 'rucksack' ? 'active' : ''}`, role: 'tab', onclick: () => { view.tab = 'rucksack'; game.refresh(); } },
       `Rucksack · ${packCount}/${BACKPACK_SIZE}`),
     h('button', { class: `tab ${view.tab === 'schrank' ? 'active' : ''}`, role: 'tab', disabled: !hasHome, onclick: () => { view.tab = 'schrank'; game.refresh(); } },
-      hasHome ? `Lager · ${countIn(world, 'schrank')}/${capacity(world, game.catalog, 'schrank')}` : [icon(UI_ICONS.lock), 'Lager']),
+      hasHome ? `Kiste · ${countIn(world, 'schrank')}/${capacity(world, game.catalog, 'schrank')}` : [icon(UI_ICONS.lock), 'Kiste']),
     h('button', { class: `tab ${view.tab === 'body' ? 'active' : ''}`, role: 'tab', onclick: () => { view.tab = 'body'; game.refresh(); } },
       `Getragen · ${countIn(world, 'body')}`));
 
@@ -101,9 +101,9 @@ export function renderInventory(game) {
 
   const over = packCount > BACKPACK_SIZE;
   return h('section', { class: 'view inventory' },
-    viewHead('Inventar', { rucksack: 'Rucksack', schrank: 'Lager', body: 'Getragen' }[view.tab]),
+    viewHead('Inventar', { rucksack: 'Rucksack', schrank: 'Kiste', body: 'Getragen' }[view.tab]),
     tabs,
-    view.tab === 'schrank' && !game.atCamp() ? h('p', { class: 'capacity' }, 'Der Envoy ist unterwegs. Das Lager ist erst nach der Rückkehr erreichbar.') : null,
+    view.tab === 'schrank' && !game.atCamp() ? h('p', { class: 'capacity' }, 'Der Envoy ist unterwegs. Die Kiste ist erst nach der Rückkehr erreichbar.') : null,
     over ? h('p', { class: 'capacity over' }, 'Der Rucksack ist überfüllt. Jede Reise kostet 1 Ausdauer mehr.') : null,
     h('div', { class: 'toolbar' }, h('div', { class: 'toolbar-row' }, search, sort), chips),
     h('div', { class: 'panel' }, grid));

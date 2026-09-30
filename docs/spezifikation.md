@@ -102,7 +102,7 @@ Gesammelte Strecken und Stockwerke fließen zusätzlich in die Welt ein
 
 Es gibt keine Pausenregel für den Malus: Die Grundaufgaben sind absichtlich so
 niedrigschwellig, dass sie auch bei kleiner Krankheit machbar sind. Der
-Krankheitsmodus (Schalter auf „Heute“) verlegt die Aufgaben auf die niedrigste
+Krankheitsmodus (Schalter auf der Tageswerk-Seite) verlegt die Aufgaben auf die niedrigste
 Stufe. Die XP sinken dabei von selbst, weil die Übungen kleiner sind (14 statt bis zu
 28). Durchgänge im Krankheitsmodus zählen nicht für die Intensität. Der Modus bleibt
 an, bis er ausgeschaltet wird.
@@ -312,7 +312,7 @@ Stockwerke gebunden.
 **Begegnungen:** Jeden Tag erscheinen an wilden Orten Geister (je Ort 55 % Chance,
 mindestens eine an einem von Anfang an offenen Ort). Welcher Geist kommt, richtet sich
 nach der Stärke des Helden (Durchschnitt der Stats zu Tagesbeginn): meist gleich stark,
-manchmal eine Stufe darüber. Eine Begegnung kostet 3 Ausdauer vor Ort plus Wege. Die Übersicht listet die Geister des Tages.
+manchmal eine Stufe darüber. Eine Begegnung kostet 3 Ausdauer vor Ort plus Wege. Das Lager listet die Geister des Tages.
 
 ### Kampf
 
@@ -365,55 +365,48 @@ höchstens 3 Level darunter oder darüber). Preis in Bannsplittern = 12 + 4 × n
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
 alles für ein Drittel des Preises zurück.
 
-### Rucksack und Lager
+### Rucksack und Kiste
 
-Der Rucksack hat von Anfang an **5 Plätze**. Getragenes zählt nicht mit. Das **Lager**
-kommt mit dem Zuhause (12 bis 60 Plätze je nach Stufe) und steht im Lager, dem
-Ausgangspunkt jeder Expedition. Neues landet im Rucksack, ist der voll im Lager, ist auch
-das voll oder der Envoy unterwegs, wird der Rucksack überfüllt (nichts geht verloren,
-aber jeder Weg kostet 1 mehr).
+Der Rucksack hat von Anfang an **5 Plätze**. Getragenes zählt nicht mit. Die **Kiste**
+kommt mit der Quest „Ein Platz zum Bleiben“ (12 Plätze) und steht im Lager, dem
+Ausgangspunkt jeder Expedition. Neues landet im Rucksack, ist der voll in der Kiste, ist
+auch die voll oder der Envoy unterwegs, wird der Rucksack überfüllt (nichts geht
+verloren, aber jeder Weg kostet 1 mehr).
 
-**Unterwegs** (solange eine Expedition läuft) lässt sich ins Lager nur hineinschauen:
-seine Teile sind ausgegraut. Nichts lässt sich daraus anlegen, hineinlegen,
-herausnehmen, verkaufen oder liegen lassen, und Einrichtung lässt sich weder aufstellen
-noch abbauen. Das geht erst, wenn der Envoy zurück im Lager ist. Was unterwegs abgelegt
-wird, kommt in den Rucksack.
+**Unterwegs** (solange eine Expedition läuft) lässt sich in die Kiste nur hineinschauen:
+ihre Teile sind ausgegraut. Nichts lässt sich daraus anlegen, hineinlegen,
+herausnehmen, verkaufen oder liegen lassen. Das geht erst, wenn der Envoy zurück im
+Lager ist. Was unterwegs abgelegt wird, kommt in den Rucksack.
 
 Das Charakterblatt zeigt unter der Figur (auf dem iPad rechts oben) eine Inventar-Box:
-Reiter „Rucksack“ mit seinen fünf Plätzen und, sobald es ein Zuhause gibt, Reiter
-„Lager“. Die Seite Inventar im Menü zeigt dasselbe mit Suche, Filter nach Slot und
-Sortierung (Slot, Stufe, Name, Neueste) und dem Getragenen.
+Reiter „Rucksack“ mit seinen fünf Plätzen und, sobald es sie gibt, Reiter „Kiste“.
+„Alle“ öffnet die Seite Inventar mit Suche, Filter nach Slot und Sortierung (Slot, Stufe,
+Name, Neueste) und dem Getragenen. Das Housing mit eigener Einteilung folgt.
 
-### Zuhause
+### Lagerausbau
 
-Wird durch die Quest „Ein Platz zum Bleiben“ freigeschaltet (6 Pilzholz und 6 Stein im
-Lager). Stufen: Zelt → Steinhütte → Baracke → Steinhaus → Turmhaus, jeweils mit Pilzholz,
-Stein und Bannsplittern ausgebaut. Jede Stufe gibt Erholung (+5 % bis +30 %), Plätze für
-Einrichtung und Plätze im Lager. Einrichtung (vom Händler, als Beute oder aus Quests)
-gibt Erholung oder Glück.
+Das Lager ist am Anfang nur ein Lagerfeuer. Die Quest „Ein Platz zum Bleiben“ (6 Pilzholz
+und 6 Stein) schaltet den Ausbau frei und bringt die Kiste. Wie das Lager wächst
+(Stufen, Unterstufen, Ausbau und Einrichtung, sichtbar wie eine Anziehpuppe), plant die
+Nutzerin; bis dahin ist der Knopf „Lager verbessern“ ohne Inhalt.
 
-| Stufe | Pilzholz | Stein | Bannsplitter |
-| --- | --- | --- | --- |
-| Steinhütte | 20 | 40 | 60 |
-| Baracke | 50 | 100 | 200 |
-| Steinhaus | 100 | 180 | 450 |
-| Turmhaus | 180 | 300 | 900 |
-
-Ein Ausbau zählt immer mit dem Preis, den er beim Bauen hatte; spätere Änderungen an
-der Tabelle nehmen kein gebautes Zuhause wieder weg.
+**Einrichtung** wird vorerst nicht gesammelt: Sie kommt weder als Beute noch aus Quests
+noch beim Händler. Die alten Zuhause-Stufen (Zelt bis Turmhaus) und die Einrichtung
+stehen noch in `welt.xlsx`, werden aber nicht gezeigt.
 
 ### Kompendium
 
-Zeigt alle Geister; noch nicht getroffene nur als dunkle Silhouette mit Stufe. Getroffene
-mit Bild, Beschreibung, Werten, Orten und Zählern (Begegnungen, besiegt, beruhigt,
-vertrieben, zuerst gesehen).
+Steht im Handbuch: zuerst alle Geister auf einer Seite, noch nicht getroffene als dunkle
+Silhouette mit Stufe; dann für jeden getroffenen eine eigene Seite mit Bild,
+Beschreibung, Werten, Orten und Zählern (Begegnungen, besiegt, beruhigt, vertrieben,
+zuerst gesehen).
 
 ### Freischaltungen
 
 | Was | Wann |
 | --- | --- |
-| Karte, Quests, Begegnungen, Rucksack, Kompendium | von Anfang an |
-| Zuhause, Lager | Quest „Ein Platz zum Bleiben“ |
+| Karte, Quests, Begegnungen, Rucksack, Handbuch | von Anfang an |
+| Lagerausbau, Kiste | Quest „Ein Platz zum Bleiben“ |
 | Händler | Quest „Der Händler im Nebel“ |
 | Aschenhang, Turm der Stufen, lange Straße | Quest „Die Brücke über die Schlucht“ |
 | Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
@@ -421,27 +414,58 @@ vertrieben, zuerst gesehen).
 
 ## Menü und Ansichten
 
-Unten ein Sims aus Stein mit einer Kupferleiste; die Menüpunkte sind runde Schilde
-(Kupferrand, Fläche aus Stein mit feinen Adern, das Emblem eingehauen; der gewählte
-Schild hell wie Elfenbein), die zur Hälfte über den Sims
-ragen. Links das Eigene (Heute, Envoy, Inventar, Talente), in der Mitte größer die
-Übersicht, rechts die Welt (Karte, Zuhause, Händler, Kompendium). Noch verschlossene
-Bereiche tragen ein kupfernes Schloss auf dem Schild. Die Einstellungen sitzen als
-kleiner Rundschild mit Zahnrad oben rechts.
+**Unten** ein Sims aus Stein mit einer Kupferleiste; die fünf Menüpunkte sind runde
+Schilde (Kupferrand, Fläche aus Stein mit feinen Adern, das Emblem eingehauen; der
+gewählte Schild hell wie Elfenbein), die zur Hälfte über den Sims ragen: **Abenteuer**,
+**Talentbaum**, in der Mitte größer das **Lager**, **Händler**, **Handbuch**. Noch
+verschlossene Bereiche tragen ein kupfernes Schloss.
 
-- **Übersicht** (Startansicht): Tageswerk auf einen Blick, laufende Expedition oder
-  Bericht, Vorrat mit Ausdauerleiste, Werte, heute gesichtete Geister, Hinweise.
-- **Heute**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+14 Kraft“) und
+**Oben** eine Leiste über jeder Ansicht außer dem Envoy selbst und dem Handbuch:
+
+- links das runde **Portrait** des Envoy (von der Nutzerin gezeichnet, in Haut- und
+  Haarfarbe umgefärbt wie die Figur). Um das Portrait liegen vier dünne Ringe, innen
+  Kraft, dann Ausdauer, Beweglichkeit, Gelassenheit, jeder in seiner Farbe. Ein Ring
+  füllt sich auf dem Weg zum nächsten Level; ist er voll, steigt der Wert. Zeigen
+  (Maus) oder Berühren (Touch) eines Rings nennt Level und Rest („Kraft · Level 1 ·
+  noch 30 bis Level 2“); ein Antippen des Rings tut sonst nichts. Das Portrait öffnet
+  den Envoy.
+- in der Mitte das **Tageswerk** als großer Knopf: orange mit pulsierendem Schimmer und
+  „2 / 4“, solange Aufgaben offen sind; ist alles erledigt, ruhig und dunkel mit dem
+  Emblem der App und „ENVOY“ quer darüber. Er führt immer zur Tageswerk-Seite.
+- rechts die **Einstellungen** (Zahnrad).
+
+- **Lager** (Startansicht): das Bild des Lagers (am Anfang ein Lagerfeuer, später je
+  Stufe ein eigenes; einmal soll dort der Envoy sitzen, wenn er da ist), ob der Envoy da
+  oder unterwegs ist, der Knopf „Lager verbessern“ (verschlossen bis zur Quest „Ein
+  Platz zum Bleiben“), laufende Expedition oder Bericht, Vorrat mit Ausdauerleiste,
+  heute gesichtete Geister, Hinweise.
+- **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+15 Kraft“) und
   einem Haken zum Erledigen. Antippen klappt eine Aufgabe auf (Timer, Erledigt); die
-  Anleitung erscheint nur auf Wunsch. Kein Charakterbild.
+  Anleitung erscheint nur auf Wunsch. Ein Fragezeichen klappt eine kurze Erklärung auf
+  (wozu das Tageswerk da ist, dass Werte bei liegengebliebenen Aufgaben langsam sinken,
+  aber nie ganz verloren gehen) mit Verweis ins Handbuch. Ist alles erledigt, steht oben
+  „Das Tageswerk ist erledigt.“ und ein Ausblick auf die vier Übungen von morgen.
 - **Timer**: Ring mit Restzeit, bei Übungen mit Atemtakt ein Kreis, der wächst und
   schrumpft. Solange die Zeit läuft, spielt ein ruhiger Klang: leises Rauschen wie
   Wellen, ein tiefer Akkord, ab und zu eine Klangschale. Mit Atemtakt kommen und gehen
   die Wellen mit dem Atem. Am Ende verklingt der Hintergrund und ein Ton sagt, dass die
   Zeit um ist. Der Klang lässt sich im Timer abschalten; die Wahl bleibt gespeichert.
   Alles wird im Browser erzeugt, es gibt keine Tondateien.
-- **Karte**: gezeichnete Landkarte mit Tintensiegeln für die Orte, Legende, Vorrat und
-  Expedition. Keine unerklärten Zahlen auf der Karte.
+- **Abenteuer**: gezeichnete Landkarte mit Tintensiegeln für die Orte, Legende, Vorrat
+  und Expedition. Keine unerklärten Zahlen auf der Karte.
+- **Envoy**: das Charakterblatt (siehe unten), mit Rucksack; ohne obere Leiste.
+- **Handbuch**: ein Buch mit Papierseiten, orangen Reitern an der Oberkante und
+  umgeknickten Ecken unten zum Blättern (Wischen und Pfeiltasten gehen auch). Hinter dem
+  letzten Blatt eines Reiters geht es mit dem nächsten Reiter weiter.
+  - **Anleitung**: ein Kapitel je Seite. Die Grundkapitel sind von Anfang an da; weitere
+    erscheinen erst, wenn man das Erklärte trifft (erster Geist, erste Höhle, erste
+    Sammelquest, Erfolge, Lagerausbau, Händler, Talentbaum) und tragen „Neu“, bis sie
+    gelesen sind. Dann trägt auch das Handbuch im Menü einen Punkt.
+  - **Tageswerk**: zuerst heute, dann alle früheren Tage, sieben je Seite: welche Übung,
+    erledigt oder nicht, mit Gewinn.
+  - **Quests**: jede beendete Expedition, neueste zuerst, mit Ort, Zeit und Ausgang.
+  - **Kompendium**: siehe oben.
+  - **Erfolge**: was erreicht ist, wann und mit welcher Belohnung.
 
 ## Charakterfenster und Paperdoll
 
@@ -491,7 +515,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Zuhause-Stufen 1200 × 800, Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>.jpg` im Seitenverhältnis 16:9 (Stufe 0 = Lagerfeuer), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 
@@ -534,11 +558,25 @@ Kleidungsteile. Quelltext in `tools/kleiderkammer.html`.
   Zeichnung dafür hochladen, ein vorhandenes Teil verbinden oder „Nicht zeichnen“
   wählen.
 
-## Erfolge (später)
+## Erfolge
 
-Erfolge für echte Leistungen über längere Zeit, etwa „100 km spaziert“. Sie sollen
-Kleidung als Belohnung vergeben können. Noch nicht gebaut; Umfang und Regeln werden
-besprochen, bevor etwas entsteht.
+Erfolge werden erreicht und nie wieder verloren. Sie ergeben sich aus den Ereignissen
+(`js/achievements.js`): beim Nachrechnen wird festgehalten, wann ein Erfolg erreicht
+wurde, und seine Belohnung gilt ab diesem Moment. Deshalb zählen später hinzukommende
+Erfolge auch rückwirkend.
+
+| Erfolg | Wann | Belohnung |
+| --- | --- | --- |
+| Angekommen: „Der Envoy ist in der Zwischenwelt angekommen.“ | mit der Erstellung des Envoy | +10 % auf jeden Gewinn im Tageswerk, +10 % Ertrag beim Sammeln |
+
+Der Bonus aufs Tageswerk wird auf die Punkte der Übung gerechnet und gerundet (14 → 15,
+20 → 22, 28 → 31); angezeigt wird immer der Gewinn mit Bonus. Da der Malus am
+durchschnittlichen Tagesgewinn hängt, wächst er im selben Verhältnis mit.
+
+Weitere Erfolge (etwa „100 Steine gesammelt“, „an jedem Slot ein Teil“, später auch für
+echte Summen wie „100 km spaziert“) und Freischaltungen über Erfolge folgen nach dem
+Konzept der Nutzerin. Erfolge für echte Übungen zählen nur Summen, nie Serien oder
+Tagesbestwerte.
 
 ## Konten und Envoy-Erstellung
 
@@ -617,13 +655,18 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Figuren | Frau und Mann zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |
 | Icons | aus den Zeichnungen der Ebenen freigestellt |
 | Kleidung verwalten | Kleiderkammer auf claude.ai, mit Freigabe und verdeckten Spielangaben |
+| Menü | fünf Punkte: Abenteuer, Talentbaum, Lager (Mitte, Start), Händler, Handbuch |
+| Obere Leiste | Portrait mit vier Werte-Ringen, Tageswerk-Knopf, Einstellungen |
+| Handbuch | Buch mit Reitern: Anleitung, Tageswerk, Quests, Kompendium, Erfolge |
+| Einrichtung | vorerst nicht sammelbar; das Housing der Nutzerin folgt |
+| Erster Erfolg | „Angekommen“: +10 % Tageswerk und Sammeln |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |
 | Scheitern | gibt es nicht; Stats bestimmen Zugang, Dauer und Ertrag |
 | Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit |
 | Kampfergebnis | beim Aufbruch berechnet und gespeichert, zählt bei der Rückkehr |
-| Startansicht | Übersicht |
+| Startansicht | Lager |
 | Wortwahl | kein „XP“ in der Oberfläche, sondern „+14 Kraft“ |
 | Talentbaum | Schild mit Schloss statt ausgegraut |
 | Rückgängig | nur für Tagesaufgaben am selben Tag |

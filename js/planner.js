@@ -8,6 +8,7 @@
 // device picks the same exercise for the same day.
 
 import { STAT_IDS } from './config.js';
+import { addDays } from './days.js';
 
 function hash(text) {
   let h = 2166136261;
@@ -90,6 +91,25 @@ export function replans(state, catalog) {
       yesterdayExerciseId: state.yesterdayExercise[stat],
       lastUsed: state.lastUsed,
       day: state.today,
+    });
+    if (exercise) result[stat] = exercise;
+  }
+  return result;
+}
+
+// A look at tomorrow once today's work is done: the exercises the app would
+// pick if nothing changes until then. { stat: exercise }
+export function tomorrowPlans(state, catalog) {
+  const result = {};
+  for (const stat of STAT_IDS) {
+    const today = state.todayDone[stat]?.ex || state.todayPlan[stat]?.ex;
+    const exercise = pickExercise({
+      stat,
+      exercises: catalog.exercises,
+      intensityLevel: state.sick ? 1 : state.intensity[stat].level,
+      yesterdayExerciseId: today,
+      lastUsed: state.lastUsed,
+      day: addDays(state.today, 1),
     });
     if (exercise) result[stat] = exercise;
   }

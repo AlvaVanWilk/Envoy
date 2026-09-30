@@ -1,6 +1,8 @@
-// "Heute": the four tasks the app has chosen for today.
+// "Tageswerk": the four tasks the app has chosen for today.
 // Each task is one short row. Tapping it opens it: timer, done, and the
-// instructions only when asked for.
+// instructions only when asked for. A question mark explains what the
+// Tageswerk is for. Once all four are done, the page rests and shows what
+// tomorrow brings.
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
@@ -11,11 +13,40 @@ import { openSheet, closeSheet, toast } from './sheet.js';
 import { openTimer } from './timer.js';
 import { openStatDetail } from './statdetail.js';
 import { viewHead, sectionTitle } from './parts.js';
+import { tomorrowPlans } from '../planner.js';
 
 // Which rows are open and which show their instructions. Kept while the
 // app is open, so a new render keeps them.
 const open = new Set();
 const guide = new Set();
+let helpOpen = false;
+
+// What the Tageswerk is for, in a few calm lines. The Handbuch says more.
+function helpPanel() {
+  return h('div', { class: 'panel help-panel', id: 'tageswerk-hilfe' },
+    h('p', {}, 'Das Tageswerk sind vier Aufgaben, eine für jeden Wert des Envoy. Die App wählt sie jeden Tag neu aus.'),
+    h('p', {}, 'Nur das Tageswerk stärkt den Envoy. Jede erledigte Aufgabe bringt ihrem Wert Fortschritt; ist der Ring am Portrait voll, steigt der Wert um ein Level.'),
+    h('p', {}, 'Bleibt eine Aufgabe länger als einen Tag liegen, sinkt ihr Wert langsam. Ganz verloren geht er nie.'),
+    h('a', { class: 'btn text small', href: '#handbuch/anleitung/tageswerk' }, icon(UI_ICONS.book), 'Mehr im Handbuch'));
+}
+
+function helpButton(game) {
+  return h('button', {
+    class: `help-btn ${helpOpen ? 'on' : ''}`, type: 'button',
+    'aria-expanded': String(helpOpen), 'aria-controls': 'tageswerk-hilfe', 'aria-label': 'Was ist das Tageswerk?',
+    onclick: () => { helpOpen = !helpOpen; game.refresh(); },
+  }, '?');
+}
+
+// All four done: a calm note and the exercises of tomorrow.
+function restPanel(game) {
+  const next = tomorrowPlans(game.state, game.catalog);
+  return h('section', { class: 'panel rest-panel' },
+    h('p', { class: 'rest-title' }, 'Das Tageswerk ist erledigt.'),
+    h('p', { class: 'muted' }, 'Morgen ab 3 Uhr'),
+    h('ul', { class: 'tomorrow' }, STATS.filter((st) => next[st.id]).map((st) =>
+      h('li', { 'data-stat': st.id }, statEmblem(st.id, 'tiny'), h('span', {}, next[st.id].name)))));
+}
 
 export function renderToday(game) {
   const s = game.state;
@@ -26,10 +57,12 @@ export function renderToday(game) {
     onclick: () => game.setSick(!s.sick),
   }, h('span', { class: 'switch-knob' }), 'Krankheitsmodus');
 
-  return h('section', { class: 'view today' },
-    viewHead(formatDayLong(s.today), 'Tageswerk'),
+  return h('section', { class: `view today ${doneCount === STATS.length ? 'all-done' : ''}` },
+    viewHead(formatDayLong(s.today), 'Tageswerk', helpButton(game)),
+    helpOpen ? helpPanel() : null,
     h('div', { class: 'today-grid' },
       h('div', { class: 'today-main' },
+        doneCount === STATS.length ? restPanel(game) : null,
         h('div', { class: 'today-meta' },
           h('span', { class: 'today-count' }, `${doneCount} von 4 erledigt`),
           sickSwitch),
@@ -43,6 +76,8 @@ export function renderToday(game) {
 
 const formatValue = (value) => String(Math.round(value * 100) / 100).replace('.', ',');
 const gainText = (stat, xp) => `+${xp} ${statInfo(stat).name}`;
+// The gain of a task: what it brought, or what it brings now.
+const gainOf = (stat, exercise, game) => game.state.todayDone[stat]?.gain ?? game.gainFor(exercise);
 
 function formatMinutes(min) {
   return min < 1 ? `${Math.round(min * 60)} Sek.` : `${String(min).replace('.', ',')} Min.`;
@@ -69,7 +104,7 @@ function taskRow(stat, game) {
     statEmblem(stat),
     h('span', { class: 'task-title' },
       h('span', { class: 'task-name' }, exercise.name),
-      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, gainText(stat, exercise.xp)), h('span', { class: 'task-area' }, ` · ${info.area}`))),
+      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, gainText(stat, gainOf(stat, exercise, game))), h('span', { class: 'task-area' }, ` · ${info.area}`))),
     icon(UI_ICONS.expand, 'icon task-chevron'));
 
   const quick = done
@@ -135,13 +170,14 @@ export function finish(stat, game) {
 
 function commit(stat, answer, game) {
   const exercise = game.todayExercise(stat);
+  const gain = game.gainFor(exercise);
   const before = game.state.stats[stat];
   const anchor = document.querySelector(`.task-row[data-stat="${stat}"] .task-gain`);
   const rect = anchor ? anchor.getBoundingClientRect() : null;
   game.complete(stat, answer);
   closeSheet();
   const after = game.state.stats[stat];
-  if (rect) floatGain(gainText(stat, exercise.xp), rect, stat);
+  if (rect) floatGain(gainText(stat, gain), rect, stat);
   if (after.level > before.level) {
     setTimeout(() => toast(`${statInfo(stat).name} · Level ${after.level}`, { tone: 'level' }), 700);
   }

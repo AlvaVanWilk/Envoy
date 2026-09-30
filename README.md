@@ -105,7 +105,8 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Icons | `assets/icons/icon_slot_name_stufe.png` | 256 × 256, transparent, aus der Zeichnung freigestellt |
 | Einrichtung | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent |
 | Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
-| Zuhause | `assets/zuhause/stufe_<n>.png` | 1200 × 800, transparent |
+| Lager | `assets/lager/stufe_<n>.jpg` | Seitenverhältnis 16:9; Stufe 0 ist das Lagerfeuer |
+| Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
 
@@ -113,7 +114,7 @@ Die Figur des Envoy und ihre Kleidung sind eigene Zeichnungen. Für Ausrüstung 
 Bild gibt es keine Platzhalter: Das Teil wird getragen, aber nicht gezeichnet, und als
 Icon steht das Symbol des Slots. Ein neues Bild mit dem Namen aus der Tabelle erscheint
 sofort. Die Umwandlung meldet fehlende Bilder und falsche Maße als Hinweis. Karte,
-Zuhause, Monster und Einrichtung sind noch vorläufige Bilder. Bei einer neuen
+Monster und Einrichtung sind noch vorläufige Bilder. Bei einer neuen
 Karte die Positionen der Orte (x, y in Prozent) in `welt.xlsx` anpassen.
 
 Haut- und Haarfarbe färbt die App selbst um. Dafür muss sie wissen, in welcher Haut- und
@@ -129,8 +130,9 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/formulas.js` | Levelkurve, Malus, Bodensatz |
 | `js/replay.js` | berechnet den Spielstand aus allen Einträgen |
 | `js/planner.js` | wählt die Übungen des Tages |
-| `js/world/` | Karte, Expeditionen, Ausdauerleiste, Kampf, Quests, Händler, Inventar, Zuhause |
-| `js/ui/` | die Ansichten |
+| `js/world/` | Karte, Expeditionen, Ausdauerleiste, Kampf, Quests, Händler, Inventar, Lager |
+| `js/achievements.js` | die Erfolge und ihre Belohnungen |
+| `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager, `handbook.js` das Handbuch |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
 | `tools/` | Umwandlung der Tabellen |

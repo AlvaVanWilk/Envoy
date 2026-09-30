@@ -107,7 +107,7 @@ export function renderMap(game) {
   });
 
   return h('section', { class: 'view world' },
-    viewHead('Karte', 'Die Zwischenwelt'),
+    viewHead('Abenteuer', 'Die Zwischenwelt'),
     h('div', { class: 'world-grid' },
       h('div', { class: 'world-supplies panel' },
         sectionTitle('Vorrat'),
@@ -133,7 +133,7 @@ function rewardText(quest, c) {
     ...quest.reward?.furniture.map((id) => c.catalog.furnitureById.get(id)?.name) || [],
   ].filter(Boolean);
   for (const name of names) parts.push(h('span', { class: 'pill' }, name));
-  for (const f of quest.reward?.unlocks || []) parts.push(h('span', { class: 'pill' }, f === 'zuhause' ? 'Zuhause' : f === 'haendler' ? 'Händler' : f));
+  for (const f of quest.reward?.unlocks || []) parts.push(h('span', { class: 'pill' }, f === 'zuhause' ? 'Lagerausbau' : f === 'haendler' ? 'Händler' : f));
   if (quest.reward?.rest) parts.push(h('span', { class: 'pill' }, 'Ausdauerleiste voll'));
   return parts;
 }
@@ -233,8 +233,8 @@ export function openPlace(placeId, game) {
   const unlocked = placeUnlocked(place, c);
   const quests = unlocked ? questsAt(placeId, c) : [];
 
-  const homeLink = place.typ === 'lager' && game.unlocked('zuhause')
-    ? h('a', { class: 'btn ghost small', href: '#zuhause', onclick: closeSheet }, icon(NAV_ICONS.zuhause), 'Zum Zuhause')
+  const homeLink = place.typ === 'lager'
+    ? h('a', { class: 'btn ghost small', href: '#lager', onclick: closeSheet }, icon(NAV_ICONS.lager), 'Zum Lager')
     : null;
 
   openSheet({

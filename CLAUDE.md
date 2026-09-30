@@ -49,7 +49,11 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
-- Übersicht als Startansicht
+- Lager als Startansicht (Bild des Lagers, Vorrat, Expedition, gesichtete Geister)
+- Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben
+  Portrait mit vier Werte-Ringen, Tageswerk-Knopf und Einstellungen
+- Handbuch als Buch: Anleitung (wächst mit dem Entdeckten), Tageswerk- und
+  Quest-Rückblick, Kompendium, Erfolge
 - Charakterfenster mit Paperdoll-Darstellung, Ausrüstungsslots, Inventar-Box und dem
   Namen des Envoy
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
@@ -58,10 +62,11 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
   Expeditionen in echter Zeit (Hinweg, vor Ort, Rückweg), Kämpfe und Höhlen ohne
   Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein
-- Rucksack (von Anfang an, 5 Plätze), Lager (mit dem Zuhause, nur im Lager nutzbar), Händler, Zuhause mit Ausbau
-  und Einrichtung, Kompendium der getroffenen Geister
+- Rucksack (von Anfang an, 5 Plätze), Kiste (nach der Quest „Ein Platz zum Bleiben“, nur
+  im Lager nutzbar), Händler, Kompendium der getroffenen Geister
+- Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln)
 
-Freischaltung: Karte und Quests von Anfang an. Zuhause und Händler über Quests.
+Freischaltung: Karte und Quests von Anfang an. Lagerausbau und Händler über Quests.
 Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 
 ## Was in Phase 1 NICHT gebaut wird
@@ -70,8 +75,11 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
   der vier Werte zu Level 10, sonst keine Funktion dahinter
 - Arena, Mehrspieler, Freunde
 - Ernährungsmodul
-- Erfolge (etwa „100 km spaziert“): kommen später und können dann Kleidung als
-  Belohnung vergeben; wie genau, wird noch besprochen
+- Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem
+  Konzept der Nutzerin; Erfolge für echte Übungen zählen nur Summen, nie Serien
+- Lagerausbau und Housing (Stufen, Einrichtung): nach dem Konzept der Nutzerin; bis
+  dahin ist „Lager verbessern“ ohne Inhalt, Einrichtung wird nicht gesammelt
+- Der Envoy im Bild des Lagers (sitzend, im eigenen Lager-Outfit)
 - Endgame: Inhalte reichen vorerst höchstens bis ins gute Midgame, damit Luft nach oben
   bleibt. Wo genau der jetzige Inhalt endet, ist noch offen.
 
@@ -92,7 +100,8 @@ Start bei 1, Obergrenze 100.
 ## Kernformeln
 
 **XP pro Übung:** 14 bis 28, Schnitt 20. Hängt am Umfang der konkreten Übung, nicht
-am Bereich.
+am Bereich. Erfolge können darauf einen Bonus geben (so gewünscht): „Angekommen“
++10 %, gerundet (14 → 15). Angezeigt wird immer der Gewinn mit Bonus.
 
 **XP bis zum nächsten Level:**
 
@@ -170,8 +179,9 @@ Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`).
 
 Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.
 
-Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Zuhause
-`assets/zuhause/stufe_<n>.png` (1200 × 800), Einrichtung
+Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Lager
+`assets/lager/stufe_<n>.jpg` (16:9, Stufe 0 = Lagerfeuer), Portrait des Envoy
+`portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Einrichtung
 `assets/icons/icon_einrichtung_<id>.png` (256 × 256), Karte `assets/welt/karte.jpg` (3:2).
 
 ## Kleiderkammer

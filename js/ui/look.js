@@ -8,6 +8,7 @@
 // every colour channel keeps its ratio to the drawn colour.
 // In clothing layers only pixels with exactly the tint of the drawn skin
 // are painted, for example the fingertips in fingerless gloves.
+// The portrait is painted like the base figure, with the same factors.
 
 import { FIGURES, SKIN_TONES, HAIR_COLORS, versioned } from '../config.js';
 
@@ -29,6 +30,7 @@ export function resolveLook(envoy) {
 }
 
 export const baseSrc = (look) => versioned(`${look.figure.folder}/basisfigur.png`);
+export const portraitSrc = (look) => versioned(`${look.figure.folder}/portrait.png`);
 
 // The picture of an item for this figure: its own version if there is one.
 export function layerSrc(item, look) {
@@ -39,19 +41,22 @@ const same = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
 
 // Shows a layer in an <img>. Painted first when the colours differ from
 // the drawing; until then the layer stays invisible.
-export function showLayer(img, src, look, isBase) {
+// kind: 'base' (the figure: skin and hair), 'portrait' (the same, with the
+// portrait's hair zone) or 'layer' (clothing: only visible skin).
+export function showLayer(img, src, look, kind = 'layer') {
+  const withHair = kind !== 'layer';
   const skinChanged = !same(look.skin.rgb, look.figure.skin);
-  const hairChanged = isBase && !same(look.hair.rgb, look.figure.hair);
+  const hairChanged = withHair && !same(look.hair.rgb, look.figure.hair);
   if (!skinChanged && !hairChanged) {
     img.src = src;
     return;
   }
-  const key = `${src}|${look.skin.id}|${isBase ? look.hair.id : ''}`;
+  const key = `${src}|${look.skin.id}|${withHair ? look.hair.id : ''}`;
   if (painted.has(key)) {
     img.src = painted.get(key);
     return;
   }
-  if (!painting.has(key)) painting.set(key, paint(src, look, isBase).then((url) => { painted.set(key, url); return url; }));
+  if (!painting.has(key)) painting.set(key, paint(src, look, kind).then((url) => { painted.set(key, url); return url; }));
   img.style.visibility = 'hidden';
   painting.get(key)
     .then((url) => { img.src = url; })
@@ -68,7 +73,7 @@ function loadImage(src) {
   });
 }
 
-async function paint(src, look, isBase) {
+async function paint(src, look, kind) {
   const image = await loadImage(src);
   const canvas = document.createElement('canvas');
   canvas.width = image.naturalWidth;
@@ -76,7 +81,8 @@ async function paint(src, look, isBase) {
   const context = canvas.getContext('2d', { willReadFrequently: true });
   context.drawImage(image, 0, 0);
   const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
-  if (isBase) paintFigure(pixels, look);
+  if (kind === 'base') paintFigure(pixels, look, look.figure.hairZone);
+  else if (kind === 'portrait') paintFigure(pixels, look, look.figure.portraitHairZone);
   else paintSkinInLayer(pixels, look);
   context.putImageData(pixels, 0, 0);
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
@@ -97,11 +103,11 @@ function hueOf(r, g, b, max, min) {
   return (h * 60 + 360) % 360;
 }
 
-function paintFigure({ data, width, height }, look) {
+function paintFigure({ data, width, height }, look, hairZone) {
   const { figure } = look;
   const skin = factors(look.skin.rgb, figure.skin);
   const hair = factors(look.hair.rgb, figure.hair);
-  const hairEnd = Math.round(height * figure.hairZone) * width * 4;
+  const hairEnd = Math.round(height * hairZone) * width * 4;
   for (let i = 0; i < data.length; i += 4) {
     if (data[i + 3] === 0) continue;
     const r = data[i];
