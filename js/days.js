@@ -10,6 +10,12 @@ export function dayKey(date = new Date()) {
   return `${shifted.getFullYear()}-${pad(shifted.getMonth() + 1)}-${pad(shifted.getDate())}`;
 }
 
+// The moment (ms) a day begins, in local time.
+export function dayStartMs(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d, DAY_START_HOUR).getTime();
+}
+
 // Day arithmetic in UTC, so daylight saving time never skips or repeats a day.
 function parse(key) {
   const [y, m, d] = key.split('-').map(Number);

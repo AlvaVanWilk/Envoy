@@ -1,0 +1,240 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { replay } from '../js/replay.js';
+import { buildCatalog } from '../js/catalog.js';
+import { effects, maxStamina, staminaAt, sleepBonus } from '../js/world/hero.js';
+import { questById, questsAt } from '../js/world/quests.js';
+import { gatherChance, gatherEstimate, gatherRoll, runQuest } from '../js/world/run.js';
+import { planExpedition } from '../js/world/expedition.js';
+import { carried, materialPlaces, freePlaces, roomFor, storeCapacity, hasSpace, stow } from '../js/world/inventory.js';
+import { seededRandom } from '../js/world/rng.js';
+import { BACKPACK_SIZE, MATERIAL_STACK, GATHER_BASE, GATHER_DICE } from '../js/config.js';
+
+const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
+const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
+
+const DAY = '2026-05-01';
+const NEXT = '2026-05-02';
+const T0 = Date.parse(`${DAY}T08:00:00`);
+const H = 3600000;
+let n = 0;
+function ev(type, fields, hoursAfter = 0, day = DAY) {
+  n += 1;
+  return { id: `c-${n}`, t: T0 + hoursAfter * H + n, d: day, dev: 't', type, ...fields };
+}
+function ctxOf(state, extra = {}) {
+  return {
+    catalog, world: state.world, stats: state.stats, statsAtDayStart: state.statsAtDayStart,
+    fx: effects(state.world, catalog), totals: state.totals, day: state.today, ...extra,
+  };
+}
+function gift(reward, hoursAfter = 0, consumed = {}, day = DAY) {
+  return ev('expedition', { q: 'q-test', place: 'lager', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed,
+      reward: { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false, ...reward } } }, hoursAfter, day);
+}
+// Starts an expedition like the app does.
+function expeditionEvent(events, questId, hoursAfter, options = {}) {
+  const s = replay(events, catalog, DAY, T0 + hoursAfter * H);
+  const c = ctxOf(s);
+  const quest = questById(questId, c);
+  const e = ev('expedition', { q: quest.id, place: quest.place, title: quest.name }, hoursAfter);
+  const energy = staminaAt(s.world, e.t, s.stats, c.fx);
+  const plan = planExpedition(quest, c, e.id, { ...options, energy });
+  return Object.assign(e, { out: plan.out, act: plan.act, back: plan.back, cost: plan.cost, outcome: plan.outcome });
+}
+const total = (e) => e.out + e.act + e.back;
+
+// --- carrying -----------------------------------------------------------------
+
+test('pilzholz and stein take places in the backpack, two pieces to a place', () => {
+  assert.equal(MATERIAL_STACK, 2);
+  const s = replay([gift({ stein: 5, pilzholz: 1 })], catalog, DAY, T0 + H);
+  assert.deepEqual(carried(s.world, catalog), { stein: 5, pilzholz: 1 });
+  assert.equal(materialPlaces(s.world, catalog), 3 + 1);
+  assert.equal(freePlaces(s.world, catalog), BACKPACK_SIZE - 4);
+  // one place left for two more pieces, and one more piece fits into the half-full place of Stein
+  assert.equal(roomFor(s.world, catalog, 'stein'), 1 + 2);
+  assert.equal(roomFor(s.world, catalog, 'pilzholz'), 1 + 2);
+});
+
+test('an empty backpack carries ten pieces: eight Stein and two Pilzholz fill it', () => {
+  const s = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
+  assert.equal(materialPlaces(s.world, catalog), 5);
+  assert.equal(freePlaces(s.world, catalog), 0);
+  assert.equal(roomFor(s.world, catalog, 'stein'), 0);
+  assert.equal(roomFor(s.world, catalog, 'pilzholz'), 0);
+  assert.equal(hasSpace(s.world, catalog, 'rucksack'), false);
+});
+
+test('more than he can carry stays behind and is noted in the report', () => {
+  const s = replay([gift({ stein: 14 })], catalog, DAY, T0 + H);
+  assert.equal(s.world.purse.stein, 10);
+  assert.deepEqual(s.world.reports.at(-1).leftBehind, { stein: 4 });
+});
+
+test('Steinlager and Pilzlager take what the Envoy brings home', () => {
+  const camp1 = gift({ unlocks: ['lagerfeuer', 'steinlager:1'] }, 0);
+  const load = gift({ stein: 10 }, 0.2);
+  const s = replay([camp1, load], catalog, DAY, T0 + H);
+  assert.equal(storeCapacity(s.world, catalog, 'stein'), 20);
+  assert.equal(s.world.purse.stein, 10);
+  assert.equal(materialPlaces(s.world, catalog), 0);                    // all of it lies in the store
+  assert.equal(roomFor(s.world, catalog, 'stein'), 10 + 10);            // the rest of the store and a whole backpack
+  assert.equal(roomFor(s.world, catalog, 'stein', { atTheCamp: false }), 10);   // on the way only what he can carry
+  const full = replay([camp1, gift({ stein: 20 }, 0.2), gift({ stein: 6 }, 0.4)], catalog, DAY, T0 + H);
+  assert.equal(full.world.purse.stein, 26);
+  assert.deepEqual(carried(full.world, catalog), { stein: 6, pilzholz: 0 });
+  assert.equal(materialPlaces(full.world, catalog), 3);
+});
+
+test('things go into the backpack only while it has places left', () => {
+  const s = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
+  const world = structuredClone(s.world);
+  assert.equal(stow(world, catalog, { inst: 'x', kind: 'item', id: 'kopf_kapuze_2', got: 0 }), 'rucksack');   // over-full, no storage yet
+  assert.equal(world.items.x.where, 'rucksack');
+  const free = replay([gift({ stein: 2 })], catalog, DAY, T0 + H);
+  assert.equal(hasSpace(free.world, catalog, 'rucksack'), true);
+});
+
+// --- gathering ------------------------------------------------------------------
+
+const GATHER = (material) => questById(`gather:${material}`, ctxOf(replay([], catalog, DAY, T0)));
+
+test('gathering is offered at the camp from the start and costs no way', () => {
+  const s = replay([], catalog, DAY, T0);
+  const ids = questsAt('lager', ctxOf(s)).map((q) => q.id);
+  assert.ok(ids.includes('gather:stein') && ids.includes('gather:pilzholz') && ids.includes('q-lagerfeuer'));
+  const plan = planExpedition(GATHER('stein'), ctxOf(s), 'x', { mode: 'menge', amount: 6, energy: 10 });
+  assert.equal(plan.out, 0);
+  assert.equal(plan.back, 0);
+  assert.equal(plan.act, plan.outcome.stamina);
+  assert.equal(plan.cost, plan.outcome.stamina);
+});
+
+test('every Energie brings at least two pieces and at most four, never less, however the dice fall', () => {
+  assert.equal(GATHER_BASE, 2);
+  assert.equal(GATHER_DICE, 2);
+  const rng = seededRandom('dice');
+  const seen = new Set();
+  for (let i = 0; i < 2000; i += 1) seen.add(gatherRoll(rng, gatherChance(1)));
+  assert.deepEqual([...seen].sort(), [2, 3, 4]);
+  // on average 2.5 at level 1
+  const rng2 = seededRandom('average');
+  let sum = 0;
+  for (let i = 0; i < 20000; i += 1) sum += gatherRoll(rng2, gatherChance(1));
+  assert.ok(Math.abs(sum / 20000 - 2.5) < 0.05, `average ${sum / 20000}`);
+});
+
+test('a higher stat raises the chance of the dice, not the minimum', () => {
+  assert.equal(gatherChance(1), 0.25);
+  assert.ok(gatherChance(10) > gatherChance(1));
+  assert.ok(gatherChance(100) <= 0.9);
+  const s = replay([], catalog, DAY, T0);
+  const strong = { ...s.stats, kraft: { ...s.stats.kraft, level: 20 } };
+  assert.ok(gatherEstimate(GATHER('stein'), ctxOf(s, { stats: strong }), { amount: 8, energy: 10 }).perEnergy.average
+    > gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 8, energy: 10 }).perEnergy.average);
+});
+
+test('Stein follows Kraft, Pilzholz follows Beweglichkeit', () => {
+  assert.equal(GATHER('stein').gather.stat, 'kraft');
+  assert.equal(GATHER('pilzholz').gather.stat, 'beweglichkeit');
+});
+
+test('to a set amount: exactly that many, never more; with the energy as the limit: as much as fits', () => {
+  const s = replay([], catalog, DAY, T0);
+  for (let i = 0; i < 50; i += 1) {
+    const exact = runQuest(GATHER('stein'), ctxOf(s), `menge${i}`, { mode: 'menge', amount: 7, energy: 10 });
+    assert.equal(exact.reward.stein, 7);
+    assert.ok(exact.stamina >= 2 && exact.stamina <= 4, `energy ${exact.stamina}`);
+    assert.equal(exact.minutes, exact.stamina * 1);
+  }
+  const all = runQuest(GATHER('pilzholz'), ctxOf(s), 'alles', { mode: 'energie', energy: 3 });
+  assert.equal(all.stamina, 3);
+  assert.ok(all.reward.pilzholz >= 6 && all.reward.pilzholz <= 10);      // 3 Energie, 2 to 4 each, and room for 10
+  const filled = runQuest(GATHER('pilzholz'), ctxOf(s), 'voll', { mode: 'energie', energy: 100 });
+  assert.equal(filled.reward.pilzholz, 10);                              // the empty backpack is full
+  assert.ok(filled.stamina <= 5);
+});
+
+test('he cannot gather more than he can carry', () => {
+  const s = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
+  const out = runQuest(GATHER('stein'), ctxOf(s), 'x', { mode: 'menge', amount: 5, energy: 10 });
+  assert.equal(out.reward.stein, 0);
+  assert.equal(out.stamina, 0);
+  assert.equal(gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 5, energy: 10 }).room, 0);
+});
+
+test('the first day: the Lagerfeuer is sure to be built with the 10 Energie of the start, whatever the dice do', () => {
+  const s = replay([], catalog, DAY, T0);
+  assert.equal(maxStamina(s.stats), 10);
+  const est = gatherEstimate(GATHER('stein'), ctxOf(s), { mode: 'menge', amount: 8, energy: 10 });
+  const estPilz = gatherEstimate(GATHER('pilzholz'), ctxOf(s), { mode: 'menge', amount: 2, energy: 10 });
+  assert.equal(est.atMost, 4);        // 8 Stein: four Energie at the very most
+  assert.equal(estPilz.atMost, 1);    // 2 Pilzholz: one Energie at the very most
+  const fire = catalog.questById.get('q-lagerfeuer');
+  assert.ok(est.atMost + estPilz.atMost + fire.cost <= 10);
+  // and in play, with many different dice
+  for (let i = 0; i < 300; i += 1) {
+    const stone = runQuest(GATHER('stein'), ctxOf(s), `stein${i}`, { mode: 'menge', amount: 8, energy: 10 });
+    assert.equal(stone.reward.stein, 8);
+    assert.ok(stone.stamina <= 4);
+    const afterStone = replay([gift({ stein: 8 })], catalog, DAY, T0 + H);
+    const wood = runQuest(GATHER('pilzholz'), ctxOf(afterStone), `holz${i}`, { mode: 'menge', amount: 2, energy: 10 });
+    assert.equal(wood.reward.pilzholz, 2);
+    assert.ok(wood.stamina <= 1);
+    assert.ok(stone.stamina + wood.stamina + fire.cost <= 7);
+  }
+});
+
+test('gathering and building in play: from the empty start to the Lagerfeuer in one day', () => {
+  let events = [];
+  let hours = 0.1;
+  const stone = expeditionEvent(events, 'gather:stein', hours, { mode: 'menge', amount: 8 });
+  events = [...events, stone];
+  hours += total(stone) / 60 + 0.01;
+  const wood = expeditionEvent(events, 'gather:pilzholz', hours, { mode: 'menge', amount: 2 });
+  events = [...events, wood];
+  hours += total(wood) / 60 + 0.01;
+  const mid = replay(events, catalog, DAY, T0 + hours * H);
+  assert.deepEqual(mid.world.purse, { splitter: 0, pilzholz: 2, stein: 8 });
+  const fire = expeditionEvent(events, 'q-lagerfeuer', hours);
+  events = [...events, fire];
+  hours += total(fire) / 60 + 0.01;
+  const done = replay(events, catalog, DAY, T0 + hours * H);
+  assert.equal(done.world.camp.stage, 1);
+  assert.deepEqual(done.world.purse, { splitter: 0, pilzholz: 0, stein: 0 });
+  assert.ok(done.world.stamina.value >= 3, `left ${done.world.stamina.value}`);
+});
+
+// --- Schlafplatz ----------------------------------------------------------------
+
+test('the Schlafplatz adds Energie each morning, once, beyond the end of the bar', () => {
+  const built = gift({ unlocks: ['lagerfeuer', 'schlafplatz:1'] }, 0);
+  const s1 = replay([built], catalog, DAY, T0 + H);
+  assert.equal(sleepBonus(s1.world, catalog, s1.stats), 2);              // 20 % of 10
+  const noBed = replay([], catalog, NEXT, Date.parse(`${NEXT}T09:00:00`));
+  assert.equal(noBed.world.stamina.value, 10);
+  // the day after: 12 of 10
+  const morning = Date.parse(`${NEXT}T09:00:00`);
+  const s2 = replay([built], catalog, NEXT, morning);
+  assert.equal(s2.world.stamina.value, 12);
+  assert.equal(staminaAt(s2.world, morning + 5 * H, s2.stats, effects(s2.world, catalog)), 12);   // does not drain by itself
+  // spent, it is gone: the bar fills only to the normal end during the day
+  const work = ev('expedition', { q: 'q-test', place: 'lager', title: 'x', out: 0, act: 6, back: 0, cost: 6,
+    outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 6, consumed: {},
+      reward: { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false } } }, 25, NEXT);
+  work.t = morning + 0.5 * H;
+  const s3 = replay([built, work], catalog, NEXT, morning + 1 * H);
+  assert.equal(Math.round(s3.world.stamina.value), 6);
+  const evening = replay([built, work], catalog, NEXT, morning + 20 * H);
+  assert.equal(staminaAt(evening.world, morning + 20 * H, evening.stats, effects(evening.world, catalog)), 10);
+});
+
+test('the bonus of the Schlafplatz grows with the bar', () => {
+  const built = gift({ unlocks: ['lagerfeuer', 'schlafplatz:1'] }, 0);
+  const s = replay([built], catalog, DAY, T0 + H);
+  const strong = { ...s.stats, ausdauer: { ...s.stats.ausdauer, level: 10 } };
+  assert.equal(sleepBonus(s.world, catalog, strong), 20);
+});

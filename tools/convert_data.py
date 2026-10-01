@@ -51,7 +51,9 @@ FURNITURE_EFFECTS = ["erholung", "glueck"]
 ORIGINS = ["start", "angezogen", "haendler", "beute", "quest"]
 PLACE_TYPES = ["lager", "wild", "sammeln", "ort", "hoehle"]
 QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
-FEATURES = ["zuhause", "haendler"]
+FEATURES = ["lagerfeuer", "haendler"]
+# the facilities of the camp, each in levels (sheet Einrichtungen)
+FACILITIES = ["steinlager", "pilzlager", "aufbewahrung", "schlafplatz"]
 MATERIALS = ["pilzholz", "stein", "splitter"]
 # older names still read: Holz and Quarz became Pilzholz; Glimmer and Äther became Bannsplitter
 MATERIAL_ALIASES = {"holz": "pilzholz", "quarz": "pilzholz", "glimmer": "splitter", "aether": "splitter",
@@ -63,7 +65,6 @@ PICTURES = {
     "figur": ("assets/figur", (1024, 1536)),
     "icon": ("assets/icons", (256, 256)),
     "monster": ("assets/monster", (512, 512)),
-    "zuhause": ("assets/zuhause", (1200, 800)),
 }
 
 
@@ -196,7 +197,9 @@ def parse_conditions(report, row, value):
         m = re.fullmatch(r"([a-z_]+)\s*>=\s*(\d+)", part)
         if m:
             key, amount = MATERIAL_ALIASES.get(m.group(1), m.group(1)), int(m.group(2))
-            if key in STATS:
+            if key == "lager":
+                conditions.append({"type": "camp", "min": amount})
+            elif key in STATS:
                 conditions.append({"type": "stat", "stat": key, "min": amount})
             elif key in TOTALS:
                 conditions.append({"type": "total", "key": TOTALS[key], "min": amount})
@@ -209,7 +212,11 @@ def parse_conditions(report, row, value):
         if m:
             conditions.append({"type": "quest", "id": m.group(1)})
             continue
-        report.error(row, f"bedingung: '{part}' nicht verstanden (z. B. kraft>=3, quest:q-spalt, summe_km>=30)")
+        m = re.fullmatch(r"lager\s*>=\s*(\d+)", part)
+        if m:
+            conditions.append({"type": "camp", "min": int(m.group(1))})
+            continue
+        report.error(row, f"bedingung: '{part}' nicht verstanden (z. B. kraft>=3, quest:q-spalt, summe_km>=30, lager>=1)")
     return conditions
 
 
@@ -507,7 +514,7 @@ def convert_world(path, item_ids):
         })
 
     furniture = []
-    for row, r in records(path, "Einrichtung"):
+    for row, r in records(path, "Deko"):
         fid = unique_id(report, row, r.get("id", ""), furniture_seen)
         if fid is None:
             continue
@@ -524,24 +531,62 @@ def convert_world(path, item_ids):
             "icon": icon_path,
         })
 
-    home = []
-    for row, r in records(path, "Zuhause"):
-        tier = whole_number(r.get("stufe", ""))
-        if not isinstance(tier, int) or tier != len(home) + 1:
+    stages = []
+    for row, r in records(path, "Lagerstufen"):
+        stage = whole_number(r.get("stufe", ""))
+        if not isinstance(stage, int) or stage != len(stages) + 1:
             report.error(row, "stufe muss bei 1 beginnen und lückenlos steigen")
-        picture = text(r.get("datei_bild", "")) or f"stufe_{tier}.png"
-        check_picture(report, row, "zuhause", picture)
-        home.append({
-            "stufe": tier, "name": text(r.get("name", "")),
-            "cost": {k: whole_number(r.get(k, "") or r.get(old, "") or r.get(older, "")) or 0
-                     for k, old, older in (("pilzholz", "quarz", "holz"), ("stein", "stein", "stein"),
-                                           ("splitter", "aether", "glimmer"))},
-            "erholung": whole_number(r.get("erholung", "")) or 0,
-            "plaetze": whole_number(r.get("plaetze", "")) or 0,
-            "schrank": whole_number(r.get("schrank", "")) or 0,
-            "text": text(r.get("beschreibung", "")),
-            "bild": f"{PICTURES['zuhause'][0]}/{picture}",
+        need = whole_number(r.get("hygge_bis_naechste", ""))
+        if not isinstance(need, int) or need < 0:
+            report.error(row, "hygge_bis_naechste muss eine ganze Zahl sein")
+            need = 0
+        stages.append({
+            "stufe": stage, "name": text(r.get("name", "")),
+            "hyggeBisNaechste": need, "text": text(r.get("beschreibung", "")),
         })
+
+    facilities = []
+    levels = {}
+    for row, r in records(path, "Einrichtungen"):
+        fid = text(r.get("id", "")).lower()
+        if fid not in FACILITIES:
+            report.error(row, f"id '{fid}' unbekannt (möglich: {', '.join(FACILITIES)})")
+            continue
+        level = whole_number(r.get("stufe", ""))
+        levels[fid] = levels.get(fid, 0) + 1
+        if not isinstance(level, int) or level != levels[fid]:
+            report.error(row, f"stufe muss bei 1 beginnen und lückenlos steigen ({fid})")
+        row_values = {}
+        for column in ("lagerstufe", "pilzholz", "stein", "energie", "hygge"):
+            value = whole_number(r.get(column, ""))
+            if value is None:
+                value = 0
+            if not isinstance(value, int) or value < 0:
+                report.error(row, f"{column} muss eine ganze Zahl sein")
+                value = 0
+            row_values[column] = value
+        if row_values["lagerstufe"] < 1:
+            report.error(row, "lagerstufe muss mindestens 1 sein")
+        if row_values["energie"] < 1:
+            report.error(row, "energie muss mindestens 1 sein")
+        capacity = whole_number(r.get("kapazitaet", ""))
+        bonus = whole_number(r.get("bonus", ""))
+        if fid != "schlafplatz" and (not isinstance(capacity, int) or capacity <= 0):
+            report.error(row, "kapazitaet muss eine ganze Zahl größer 0 sein")
+        if fid == "schlafplatz" and (not isinstance(bonus, int) or bonus <= 0):
+            report.error(row, "bonus muss eine ganze Zahl größer 0 sein (Prozent der Energieleiste)")
+        facilities.append({
+            "id": fid, "stufe": level, "name": text(r.get("name", "")),
+            "lagerstufe": row_values["lagerstufe"],
+            "cost": {"pilzholz": row_values["pilzholz"], "stein": row_values["stein"]},
+            "energie": row_values["energie"], "hygge": row_values["hygge"],
+            "kapazitaet": capacity if isinstance(capacity, int) else 0,
+            "bonus": bonus if isinstance(bonus, int) else 0,
+            "text": text(r.get("beschreibung", "")),
+        })
+    for fid in FACILITIES:
+        if fid not in levels:
+            report.error("-", f"Blatt Einrichtungen: {fid} fehlt")
 
     quests = []
     quest_rows = records(path, "Quests")
@@ -595,7 +640,7 @@ def convert_world(path, item_ids):
         del p["_row"]
 
     return {"places": places, "monsters": monsters, "quests": quests,
-            "home": home, "furniture": furniture}, report
+            "camp": {"stages": stages, "facilities": facilities}, "furniture": furniture}, report
 
 
 # --- main -------------------------------------------------------------------

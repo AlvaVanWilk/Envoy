@@ -3,7 +3,7 @@
 
 import { DATA_FILES, STAT_IDS, versioned } from './config.js';
 
-const EMPTY_WORLD = { places: [], monsters: [], quests: [], home: [], furniture: [] };
+const EMPTY_WORLD = { places: [], monsters: [], quests: [], camp: { stages: [], facilities: [] }, furniture: [] };
 
 // The picture fields of a list, with the app version added (see versioned).
 function withVersions(list, fields) {
@@ -22,7 +22,6 @@ export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORL
   const world = {
     ...given,
     monsters: withVersions(given.monsters, ['bild']),
-    home: withVersions(given.home, ['bild']),
     furniture: withVersions(given.furniture, ['icon']),
   };
   const maxIntensity = {};
@@ -43,7 +42,7 @@ export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORL
     monsterById: byId(world.monsters),
     quests: world.quests,
     questById: byId(world.quests),
-    home: world.home,
+    camp: world.camp,
     furniture: world.furniture,
     furnitureById: byId(world.furniture),
     generated: exerciseData.generated || null,

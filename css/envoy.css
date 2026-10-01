@@ -522,6 +522,7 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
 .supply-text { display: grid; justify-items: center; min-width: 0; line-height: 1.25; }
 .supply-amount { font-family: var(--font-display); font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
 .supply-name { padding-top: 2px; font-size: 12px; letter-spacing: 0.02em; color: var(--text-2); }
+.supply-limit { font-family: var(--font-body); font-size: 12px; font-weight: 400; color: var(--muted); }
 
 .stamina { display: grid; gap: 6px; }
 .stamina-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
@@ -543,6 +544,12 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
   background: linear-gradient(180deg, #dcefee 0%, #7ea3a4 55%, #3f6c73 100%);
   box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.4);
   transition: width 0.6s var(--ease);
+}
+.stamina-extra {
+  position: absolute;
+  inset: 0 0 0 auto;
+  background: linear-gradient(180deg, #ffd9b0 0%, #f6a152 55%, #b8530f 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 214, 0.5), 0 0 10px rgba(246, 161, 82, 0.5);
 }
 .stamina-bar::after {
   /* one notch per point */
@@ -764,7 +771,12 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
   background: #0c1417;
 }
-.camp-picture { width: 100%; aspect-ratio: 16 / 9; max-height: 460px; object-fit: cover; object-position: 50% 70%; }
+.camp-picture { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: 460px; object-fit: cover; object-position: 50% 78%; }
+/* the day picture, darker or warmer, where the camp has no picture of its own for the time of day */
+.camp-picture.tint-morgen { filter: sepia(0.28) saturate(1.05) hue-rotate(-12deg) brightness(0.96); }
+.camp-picture.tint-abend { filter: sepia(0.45) saturate(1.35) hue-rotate(-22deg) brightness(0.78); }
+.camp-picture.tint-nacht { filter: brightness(0.36) saturate(0.7) hue-rotate(12deg) contrast(1.1); }
+.camp-stage { margin: 0; font-family: var(--font-display); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--copper-bright); }
 .camp-caption {
   display: flex;
   align-items: flex-end;
@@ -1041,6 +1053,8 @@ button.task-check:hover { color: var(--stat); }
 .pack-cell .item-icon { width: 86%; height: 86%; }
 .pack-cell.locked .item-icon { filter: grayscale(0.7) brightness(0.7); }
 .pack-cell.over { border-color: var(--loss); }
+.pack-cell.material .res-icon { width: 64%; height: 64%; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6)); }
+.pack-count { position: absolute; right: 5px; bottom: 3px; font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--ivory-bright); text-shadow: 0 1px 2px #000; }
 .pack-cell.away .item-icon, .item-tile.away .item-icon, .item-row.away .item-icon { filter: grayscale(1) brightness(0.5); opacity: 0.75; }
 .item-tile.away .item-name, .item-row.away .item-name { color: var(--muted); }
 .away-note { margin: 4px 0 12px; }
@@ -1271,7 +1285,42 @@ button.task-check:hover { color: var(--stat); }
 .quest-title { display: grid; gap: 1px; min-width: 0; }
 .quest-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
 .quest-kind { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-.quest-text { font-size: 14px; color: var(--text-2); }
+.quest-text { display: grid; gap: 8px; font-size: 14px; color: var(--text-2); }
+.quest-text p { margin: 0; }
+.gather-mode { flex-wrap: wrap; }
+.stepper { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 4px 0; }
+.stepper .btn { min-width: 52px; font-size: 20px; }
+.stepper-value { min-width: 96px; text-align: center; font-size: 22px; }
+.stepper-value .res-icon { width: 28px; height: 28px; }
+.gather-note { color: var(--warn); }
+
+/* the camp: first task, facilities, Hygge */
+.camp-first { display: grid; gap: 10px; }
+.camp-first p { margin: 0; color: var(--text-2); }
+.camp-first .btn { justify-self: start; }
+.facilities { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.facility { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #05090d; border-radius: 8px; background: linear-gradient(180deg, #172326, #10181a); box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.05); }
+.facility.built { border-color: rgba(143, 192, 156, 0.35); }
+.facility-main { display: grid; gap: 3px; min-width: 0; }
+.facility-name { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+.facility-level { font-family: var(--font-body); font-size: 12px; font-weight: 400; color: var(--ok); }
+.facility-text { font-size: 13px; color: var(--text-2); }
+.facility-effect { font-size: 13px; color: var(--copper-bright); }
+.facility-costs { margin-top: 2px; font-size: 13px; }
+.facility-action { display: grid; justify-items: end; max-width: 220px; text-align: right; }
+@media (max-width: 520px) {
+  .facility { grid-template-columns: 1fr; }
+  .facility-action { justify-items: start; max-width: none; text-align: left; }
+}
+.hygge { display: grid; gap: 6px; margin-bottom: 14px; }
+.hygge-top { display: flex; justify-content: space-between; align-items: baseline; }
+.hygge-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
+.hygge-value { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.hygge-value strong { font-family: var(--font-display); font-size: 17px; color: var(--text); }
+.hygge-bar { position: relative; height: 12px; overflow: hidden; border-radius: 3px; background: #090c11; border: 1px solid #04070a; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8); }
+.hygge-fill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(180deg, #ffd9b0 0%, #f6a152 55%, #b8530f 100%); box-shadow: inset 0 1px 0 rgba(255, 236, 214, 0.45); transition: width 0.6s var(--ease); }
+.hygge-note { margin: 0; font-size: 12px; color: var(--muted); }
+.hygge[data-ready="true"] .hygge-note { color: var(--ok); }
 .quest-facts { margin: 0; display: grid; gap: 7px; padding-top: 10px; border-top: 1px solid var(--line); }
 .fact { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: baseline; gap: 10px; font-size: 14px; }
 .fact dt { font-size: 12px; letter-spacing: 0.03em; color: var(--muted); }
@@ -1677,6 +1726,7 @@ body.creating .dock { display: none; }
 }
 
 @media (min-width: 640px) {
+  .camp-picture { aspect-ratio: 8 / 3; object-position: 50% 70%; }
   :root { --shield-w: 52px; --bar-h: calc(52px / 2 + 24px); --ring-w: 140px; --top-h: 60px; }
   .handbook { --page-px: 34px; --page-pb: 8px; }
   .book-page { padding-top: 20px; font-size: 17px; }

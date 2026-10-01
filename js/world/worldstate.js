@@ -5,13 +5,13 @@
 // world = {
 //   envoy       { name, figur, haut, haar } or null while the Envoy has not been created
 //   expedition  the running expedition or null: { id, q, place, title, start, out, act, back, end, outcome }
-//   stamina     { value, at }: bar value at time `at`, refills from there
-//   purse       { splitter, pilzholz, stein }
+//   stamina     { value, at }: bar of Energie at time `at`, refills from there
+//   purse       { splitter, pilzholz, stein }: the totals; what the Envoy carries and
+//               what lies in the stores of the camp follows from them (see inventory.js)
 //   items       owned things, see inventory.js
 //   equipped    { slot: inst }
-//   placed      furniture set up at home (inst list)
-//   unlocked    features: 'zuhause', 'haendler'
-//   home        0 = none yet, then the tier of the home
+//   unlocked    features: 'haendler'
+//   camp        { stage, facilities }: Lagerstufe and the level of each facility, see camp.js
 //   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
@@ -22,8 +22,9 @@
 // }
 
 import { STAMINA_REST_TASK_SHARE, NAME_MAX, OLD_SLOT_NAMES } from '../config.js';
-import { effects, maxStamina, staminaAt } from './hero.js';
-import { stow, removeEntry, hasSpace, atCamp, reachable } from './inventory.js';
+import { effects, maxStamina, staminaAt, sleepBonus } from './hero.js';
+import { stow, removeEntry, hasSpace, atCamp, reachable, roomFor, CARRIED_MATERIALS } from './inventory.js';
+import { emptyCamp, FACILITY_IDS } from './camp.js';
 import { unmetRequirements } from './items.js';
 import { totalMinutes } from './expedition.js';
 
@@ -42,9 +43,8 @@ export function initialWorld(catalog, startTime, stats) {
     purse: { splitter: 0, pilzholz: 0, stein: 0 },
     items: {},
     equipped: {},
-    placed: [],
     unlocked: [],
-    home: 0,
+    camp: emptyCamp(),
     quests: {},
     encountersDone: {},
     bestiary: {},
@@ -82,9 +82,13 @@ function putAway(world, ctx, entry) {
   else entry.where = 'rucksack';
 }
 
+// A feature of the game, the Lagerfeuer (stage 1 of the camp) or a level of
+// a facility, written id:level.
 function unlock(world, feature) {
-  if (!world.unlocked.includes(feature)) world.unlocked.push(feature);
-  if (feature === 'zuhause' && world.home === 0) world.home = 1;
+  const [id, level] = feature.split(':');
+  if (feature === 'lagerfeuer') world.camp.stage = Math.max(world.camp.stage, 1);
+  else if (FACILITY_IDS.includes(id)) world.camp.facilities[id] = Math.max(world.camp.facilities[id] || 0, Number(level) || 1);
+  else if (!world.unlocked.includes(feature)) world.unlocked.push(feature);
 }
 
 function recordMonsters(world, fights, day) {
@@ -103,14 +107,22 @@ function finishExpedition(world, ctx) {
   settle(world, exp.end, ctx);
   const outcome = exp.outcome;
   const r = outcome.reward;
+  // Back at the camp: what he brought goes into the stores, what does not
+  // fit anywhere stays behind.
+  const leftBehind = {};
   for (const [key, amount] of Object.entries(r)) {
-    if (MATERIAL_KEYS.includes(materialKey(key))) world.purse[materialKey(key)] += amount || 0;
+    const name = materialKey(key);
+    if (!MATERIAL_KEYS.includes(name) || !amount) continue;
+    const room = CARRIED_MATERIALS.includes(name) ? roomFor(world, ctx.catalog, name) : Infinity;
+    const taken = Math.min(amount, room);
+    world.purse[name] += taken;
+    if (taken < amount) leftBehind[name] = amount - taken;
   }
   r.things.forEach((thing, n) => {
     stow(world, ctx.catalog, { inst: `${exp.id}:${n}`, kind: thing.kind, id: thing.id, got: exp.end });
   });
   for (const feature of r.unlocks) unlock(world, feature);
-  if (r.rest) world.stamina.value = maxStamina(ctx.stats);
+  if (r.rest) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
   recordMonsters(world, outcome.fights, exp.day);
 
   if (exp.q.startsWith('enc:')) {
@@ -123,7 +135,7 @@ function finishExpedition(world, ctx) {
       last: exp.day,
     };
   }
-  world.reports.push({ id: exp.id, q: exp.q, place: exp.place, title: exp.title, start: exp.start, end: exp.end, outcome });
+  world.reports.push({ id: exp.id, q: exp.q, place: exp.place, title: exp.title, start: exp.start, end: exp.end, outcome, leftBehind });
   if (world.reports.length > KEEP_REPORTS) world.reports.shift();
   world.journal.push({
     id: exp.id, q: exp.q, place: exp.place, title: exp.title, day: exp.day, end: exp.end,
@@ -210,35 +222,9 @@ export function applyWorldEvent(world, e, ctx) {
       if (worn) putAway(world, ctx, worn);
       break;
     }
-    case 'place': {
-      const piece = entry && ctx.catalog.furnitureById.get(entry.id);
-      const tier = ctx.catalog.home[world.home - 1];
-      // the home is at the camp
-      if (piece && tier && atCamp(world) && ['rucksack', 'schrank'].includes(entry.where)
-        && world.placed.length < tier.plaetze && piece.abStufe <= world.home) {
-        entry.where = 'home';
-        world.placed.push(entry.inst);
-      }
-      break;
-    }
-    case 'unplace':
-      if (entry && entry.where === 'home' && atCamp(world)) {
-        world.placed = world.placed.filter((p) => p !== entry.inst);
-        putAway(world, ctx, entry);
-      }
-      break;
     case 'envoy': {
       const name = String(e.name || '').trim().slice(0, NAME_MAX);
       if (name) world.envoy = { name, figur: String(e.figur || ''), haut: String(e.haut || ''), haar: String(e.haar || '') };
-      break;
-    }
-    case 'build': {
-      const next = ctx.catalog.home[world.home];
-      const cost = next && priceAtTheTime(e.cost, next.cost);
-      if (world.home > 0 && next && MATERIAL_KEYS.every((k) => world.purse[k] >= cost[k])) {
-        for (const k of MATERIAL_KEYS) world.purse[k] -= cost[k];
-        world.home += 1;
-      }
       break;
     }
     default:
@@ -246,23 +232,21 @@ export function applyWorldEvent(world, e, ctx) {
   }
 }
 
-// A build counts with the price it had when it was built, so a later change
-// in data/welt.xlsx never takes away a home that already stands.
-function priceAtTheTime(stored, current) {
-  if (!stored) return current;
-  const price = { splitter: 0, pilzholz: 0, stein: 0 };
-  for (const [key, amount] of Object.entries(stored)) {
-    if (materialKey(key) in price) price[materialKey(key)] = amount || 0;
-  }
-  return price;
-}
-
 // Finishing the Gelassenheit task is a real rest: half a bar back.
 export function restFromTask(world, t, ctx) {
   advance(world, t, ctx);
   settle(world, t, ctx);
   const max = maxStamina(ctx.stats);
-  world.stamina.value = Math.min(max, world.stamina.value + max * STAMINA_REST_TASK_SHARE);
+  world.stamina.value = Math.max(world.stamina.value, Math.min(max, world.stamina.value + max * STAMINA_REST_TASK_SHARE));
+}
+
+// A new day: with a Schlafplatz the Envoy starts it with extra Energie, once,
+// even beyond the end of the bar. Spent, it does not come back until the next morning.
+export function startOfDay(world, t, ctx) {
+  advance(world, t, ctx);
+  settle(world, t, ctx);
+  const bonus = sleepBonus(world, ctx.catalog, ctx.stats);
+  if (bonus > 0) world.stamina.value = Math.min(maxStamina(ctx.stats) + bonus, world.stamina.value + bonus);
 }
 
 // After a day: equipment whose requirements are no longer met comes off.

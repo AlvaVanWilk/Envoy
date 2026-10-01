@@ -21,9 +21,7 @@
 //   move     { inst, to }                     between backpack and wardrobe
 //   equip    { slot, inst }                   item put on
 //   unequip  { slot }                         slot emptied by hand
-//   place    { inst }                         furniture set up at home
-//   unplace  { inst }                         furniture taken down
-//   build    { tier, cost }                   home extended
+//   place, unplace, build                     from earlier versions (furniture, extending the home); ignored now
 //
 // The Envoy itself:
 //   envoy    { name, figur, haut, haar }      name, figure, skin and hair colour (the latest counts)

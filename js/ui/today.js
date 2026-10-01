@@ -146,7 +146,7 @@ function taskBody(stat, exercise, done, game) {
       h('div', { class: 'task-done-row' },
         value !== null && def ? h('span', { class: 'pill' }, `${formatValue(value)} ${def.unit}`) : null,
         feedback ? h('span', { class: 'pill' }, feedback.label) : null,
-        stat === 'gelassenheit' ? h('span', { class: 'pill' }, 'Rast: Ausdauerleiste halb aufgefüllt') : null),
+        stat === 'gelassenheit' ? h('span', { class: 'pill' }, 'Rast: Energie halb aufgefüllt') : null),
       h('div', { class: 'task-actions' },
         guideButton,
         h('button', { class: 'btn text small', onclick: () => game.undo(stat) }, icon(UI_ICONS.undo), 'Rückgängig')),

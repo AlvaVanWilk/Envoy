@@ -13,9 +13,9 @@ import {
   INTENSITY_DOWN_AFTER_MISSED_DAYS, RATIO_GOOD, RATIO_HARD, FEEDBACK,
 } from './config.js';
 import { addXp, removeXp, malusFactor, average } from './formulas.js';
-import { dayRange, addDays } from './days.js';
+import { dayRange, addDays, dayStartMs } from './days.js';
 import { compareEvents } from './events.js';
-import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance } from './world/worldstate.js';
+import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance, startOfDay } from './world/worldstate.js';
 import { checkAchievements, bonusOf, withBonus } from './achievements.js';
 
 export { unmetRequirements } from './world/items.js';
@@ -116,6 +116,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     statsAtDayStart = { ...stats };
     const plan = {};
     const done = {};
+    if (day !== firstDay) startOfDay(world, dayStartMs(day), ctx);
 
     for (const e of byDay.get(day) || []) {
       lastT = e.t;

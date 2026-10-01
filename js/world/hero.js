@@ -1,11 +1,12 @@
 // What the hero can do in the world, derived from the four stats and the
-// abilities of worn equipment and home furniture. Equipment never raises
-// a stat; it only adds abilities such as extra damage or dodging.
+// abilities of worn equipment. Equipment never raises a stat; it only adds
+// abilities such as extra damage or dodging.
 
 import {
   STAT_IDS, STAMINA_BASE, STAMINA_PER_AUSDAUER, STAMINA_REFILL_HOURS,
   STAMINA_BONUS_PER_GELASSENHEIT,
 } from '../config.js';
+import { facilityNow } from './camp.js';
 
 const EMPTY = { schaden: 0, treffer: 0, ausweichen: 0, beruhigen: 0, reise: 0, erholung: 0, glueck: 0 };
 
@@ -14,7 +15,7 @@ function addEffects(total, effects) {
   return total;
 }
 
-// All abilities from worn items, placed furniture and the home itself.
+// All abilities from worn items.
 export function effects(world, catalog) {
   const total = { ...EMPTY };
   for (const inst of Object.values(world.equipped)) {
@@ -22,13 +23,6 @@ export function effects(world, catalog) {
     const item = entry && catalog.itemById.get(entry.id);
     if (item) addEffects(total, item.effekt);
   }
-  for (const inst of world.placed) {
-    const entry = world.items[inst];
-    const piece = entry && catalog.furnitureById.get(entry.id);
-    if (piece) addEffects(total, piece.effekt);
-  }
-  const tier = catalog.home[world.home - 1];
-  if (tier) total.erholung += tier.erholung;
   return total;
 }
 
@@ -46,11 +40,20 @@ export function staminaPerHour(stats, fx) {
   return (maxStamina(stats) / STAMINA_REFILL_HOURS) * speed;
 }
 
-// The bar refills over time. Returns the value at time t.
+// The bar refills over time. Returns the value at time t. A bar that is full
+// or over-full (the Schlafplatz adds energy beyond the end of the bar) does
+// not change by itself.
 export function staminaAt(world, t, stats, fx) {
   const max = maxStamina(stats);
+  if (world.stamina.value >= max) return world.stamina.value;
   const hours = Math.max(0, t - world.stamina.at) / 3600000;
   return Math.min(max, world.stamina.value + hours * staminaPerHour(stats, fx));
+}
+
+// What the Schlafplatz adds each morning, in Energie (once a day, over the end of the bar).
+export function sleepBonus(world, catalog, stats) {
+  const row = facilityNow(world, catalog, 'schlafplatz');
+  return row ? Math.round((maxStamina(stats) * row.bonus) / 100) : 0;
 }
 
 // Hours until the bar is full again.

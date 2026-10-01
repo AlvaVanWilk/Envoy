@@ -87,7 +87,7 @@ Die Quellen sind drei Tabellen in `data/`, jede mit einem Blatt **Erklärung**:
 - `uebungen.xlsx` — Übungskatalog mit Stufen, XP, Messwert und Ziel
 - `ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Fähigkeiten, Herkunft, Preis
 - `welt.xlsx` — Orte der Karte, Monster, Quests (mit `aktiv`: nein nimmt eine Quest vorerst aus
-  dem Spiel, ohne sie zu löschen), Zuhause-Stufen, Einrichtung
+  dem Spiel, ohne sie zu löschen), Lagerstufen, Einrichtungen (mit Hygge), Deko
 
 Nach einer Änderung die Tabelle auf github.com hochladen (im Ordner `data` → **Add
 file → Upload files**). Der Ablauf wandelt sie um. Findet er einen Fehler, bleibt der
@@ -104,9 +104,9 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Zweite Figur (Mann) | `assets/figur/zweite/basisfigur.png` | seine eigene Kleidung mit gleichem Namen in diesen Ordner |
 | Ausrüstung auf der Figur | `assets/figur/slot_name_stufe.png` | 1024 × 1536, transparent, nie zuschneiden |
 | Icons | `assets/icons/icon_slot_name_stufe.png` | 256 × 256, transparent, aus der Zeichnung freigestellt |
-| Einrichtung | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent |
+| Deko (ab Lagerstufe 2) | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent |
 | Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
-| Lager | `assets/lager/stufe_<n>.jpg` | Seitenverhältnis 16:9; Stufe 0 ist das Lagerfeuer |
+| Lager | `assets/lager/stufe_<n>_<zeit>.jpg` | 1792 × 672; Zeit morgen, tag, abend, nacht; Stufe 0 ohne Feuer (bisher nur tag), Stufe 1 mit Lagerfeuer |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
@@ -131,9 +131,9 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/formulas.js` | Levelkurve, Malus, Bodensatz |
 | `js/replay.js` | berechnet den Spielstand aus allen Einträgen |
 | `js/planner.js` | wählt die Übungen des Tages |
-| `js/world/` | Karte, Expeditionen, Ausdauerleiste, Kampf, Quests, Händler, Inventar, Lager |
+| `js/world/` | Karte, Expeditionen, Energie, Kampf, Quests, Händler, Inventar, Lager |
 | `js/achievements.js` | die Erfolge und ihre Belohnungen |
-| `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager, `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` der Rundgang |
+| `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager, `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge; `js/world/camp.js` das Lager (Stufe, Einrichtungen, Hygge), `js/daylight.js` die Tageszeit |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
 | `tools/` | Umwandlung der Tabellen |

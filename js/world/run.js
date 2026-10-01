@@ -1,6 +1,7 @@
 // What happens on site. Nothing fails: the stats decide whether a quest can
 // be started at all, how long the work takes and how much it yields.
-//   sammeln   material, more with the `ertrag` stats
+//   sammeln   material, more with the `ertrag` stats; on the Trümmerfeld by the
+//             dice of gatherRoll() (see below)
 //   erkunden  a fixed reward, more Bannsplitter with the `ertrag` stats
 //   bauen     uses material, gives the reward
 //   kampf     one spirit: calmed, defeated or, if it is too strong, driven off
@@ -12,11 +13,13 @@
 import {
   SPEEDUP_PER_LEVEL, FASTEST_SHARE, YIELD_PER_LEVEL, MINUTES_PER_STAMINA,
   DRIVEN_LOOT_SHARE, CAVE_RETREAT_SHARE,
+  GATHER_BASE, GATHER_DICE, GATHER_CHANCE, GATHER_CHANCE_PER_LEVEL, GATHER_CHANCE_MAX,
 } from '../config.js';
 import { seededRandom, randomInt, pick } from './rng.js';
 import { fighter, heroPower } from './hero.js';
 import { fight } from './combat.js';
 import { itemLevel } from './items.js';
+import { roomFor } from './inventory.js';
 
 const LOOT_BAND = 3;
 
@@ -106,8 +109,74 @@ function fixedReward(quest, ctx, rng, into) {
   into.rest = into.rest || r.rest;
 }
 
-export function runQuest(quest, ctx, seed) {
+// --- gathering on the Trümmerfeld ------------------------------------------
+// Every point of Energie is a minute of work. It brings GATHER_BASE pieces
+// and one more for each of GATHER_DICE dice that succeeds. The chance of a
+// die grows with the stat that belongs to the material, so a higher stat
+// means a better day, never a failure: there are at least GATHER_BASE pieces
+// for every Energie, however the dice fall. (A pool of success dice is how
+// many pen-and-paper games let a skill help without making a roll fail.)
+
+export function gatherChance(statLevel, bonus = 0) {
+  return Math.min(GATHER_CHANCE_MAX, GATHER_CHANCE + GATHER_CHANCE_PER_LEVEL * (statLevel - 1) + bonus);
+}
+
+export function gatherRoll(rng, chance) {
+  let pieces = GATHER_BASE;
+  for (let i = 0; i < GATHER_DICE; i += 1) if (rng() < chance) pieces += 1;
+  return pieces;
+}
+
+// What the Envoy can expect, for the display before he sets out.
+// options: { mode: 'menge' | 'energie', amount, energy }
+export function gatherEstimate(quest, ctx, { mode = 'menge', amount = 1, energy = 0 } = {}) {
+  const chance = gatherChance(ctx.stats[quest.gather.stat].level, ctx.bonus?.sammeln || 0);
+  const average = GATHER_BASE + GATHER_DICE * chance;
+  const room = roomFor(ctx.world, ctx.catalog, quest.gather.material);
+  const wanted = mode === 'energie' ? room : Math.min(Math.max(1, amount), room);
+  const budget = Math.floor(energy);
+  return {
+    room,
+    wanted,
+    perEnergy: { min: GATHER_BASE, max: GATHER_BASE + GATHER_DICE, average },
+    // Energie it takes: usually, and at most (the worst the dice can do)
+    likely: Math.min(budget, Math.ceil(wanted / average)),
+    atMost: Math.min(budget, Math.ceil(wanted / GATHER_BASE)),
+    sure: Math.ceil(wanted / GATHER_BASE) <= budget,
+  };
+}
+
+function runGather(quest, ctx, rng, { mode = 'menge', amount = 1, energy = Infinity } = {}) {
+  const { material, stat } = quest.gather;
+  const chance = gatherChance(ctx.stats[stat].level, ctx.bonus?.sammeln || 0);
+  const room = roomFor(ctx.world, ctx.catalog, material);
+  const wanted = mode === 'energie' ? room : Math.min(Math.max(1, amount), room);
+  const budget = Math.max(0, Math.floor(energy));
+  let units = 0;
+  let got = 0;
+  while (got < wanted && units < budget) {
+    units += 1;
+    got += gatherRoll(rng, chance);
+  }
+  got = Math.min(got, wanted);
+  return {
+    kind: 'sammeln',
+    fights: [],
+    defeated: 0,
+    total: 0,
+    cleared: true,
+    stamina: units,
+    minutes: units * MINUTES_PER_STAMINA,
+    reward: { splitter: 0, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], unlocks: [], rest: false },
+    consumed: {},
+    gather: { material, mode, wanted, units },
+  };
+}
+
+// options: for gathering { mode, amount, energy }
+export function runQuest(quest, ctx, seed, options = {}) {
   const rng = seededRandom(seed);
+  if (quest.gather) return runGather(quest, ctx, rng, options);
   const reward = { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false };
   const fights = [];
   const stamina = siteStamina(quest, ctx.stats);

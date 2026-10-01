@@ -4,9 +4,10 @@
 //   encounters: every day a few spirits appear at wild places, chosen to
 //   fit the hero's current strength (average of the stats at the start of the day)
 
-import { ENCOUNTER_COST, ENCOUNTER_CHANCE, STATS, MATERIALS } from '../config.js';
+import { ENCOUNTER_COST, ENCOUNTER_CHANCE, STATS, MATERIALS, GATHER_STATS } from '../config.js';
 import { seededRandom } from './rng.js';
 import { heroPower } from './hero.js';
+import { facilityQuests, facilityQuestById, stageRow, CAMP_PLACE } from './camp.js';
 import { addDays } from '../days.js';
 
 const statName = (id) => STATS.find((s) => s.id === id).name;
@@ -18,6 +19,7 @@ export function conditionMet(c, ctx) {
   if (c.type === 'quest') return (ctx.world.quests[c.id]?.done || 0) > 0;
   if (c.type === 'total') return (ctx.totals[c.key] || 0) >= c.min;
   if (c.type === 'material') return (ctx.world.purse[c.key] || 0) >= c.min;
+  if (c.type === 'camp') return ctx.world.camp.stage >= c.min;
   return false;
 }
 
@@ -31,6 +33,10 @@ export function describeCondition(c, ctx) {
       : `${c.min} Stockwerke real gestiegen (bisher ${Math.floor(now)})`;
   }
   if (c.type === 'material') return `${c.min} ${MATERIALS[c.key]}`;
+  if (c.type === 'camp') {
+    const name = stageRow(ctx.catalog, c.min)?.name;
+    return `Lager Stufe ${c.min}${name ? ` (${name})` : ''}`;
+  }
   return '';
 }
 
@@ -84,8 +90,38 @@ export function encountersFor(day, ctx) {
     });
 }
 
+// Gathering on the Trümmerfeld: always on offer, at the camp itself, so the way costs nothing.
+// What it brings is rolled when the Envoy sets out (see run.js).
+const GATHER = {
+  stein: { name: 'Steine sammeln', text: 'Lose Steine liegen überall zwischen den Trümmern. Der Envoy hebt auf, was er tragen kann.' },
+  pilzholz: { name: 'Pilzholz sammeln', text: 'Abgebrochene Pilzstiele, leicht und zäh. Der Envoy sammelt, was er tragen kann.' },
+};
+
+export function gatherQuests() {
+  return Object.entries(GATHER).map(([material, g]) => ({
+    id: `gather:${material}`,
+    name: g.name,
+    place: CAMP_PLACE,
+    kind: 'sammeln',
+    gather: { material, stat: GATHER_STATS[material] },
+    text: g.text,
+    monsters: [],
+    conditions: [],
+    speedStats: [],
+    yieldStats: [GATHER_STATS[material]],
+    consumes: {},
+    cost: 1,
+    reward: null,
+    repeatable: true,
+    cooldown: 0,
+    active: true,
+  }));
+}
+
 export function questById(id, ctx) {
   if (id.startsWith('enc:')) return encountersFor(ctx.day, ctx).find((q) => q.id === id) || null;
+  if (id.startsWith('gather:')) return gatherQuests().find((q) => q.id === id) || null;
+  if (id.startsWith('bau:')) return facilityQuestById(ctx.catalog, id);
   return ctx.catalog.questById.get(id) || null;
 }
 
@@ -113,7 +149,11 @@ export function questsAt(placeId, ctx) {
   // a quest set to `aktiv: nein` in the table is not offered for now
   const fixed = ctx.catalog.quests.filter((q) => q.place === placeId && q.active !== false);
   const encounters = encountersFor(ctx.day, ctx).filter((q) => q.place === placeId);
-  return [...encounters, ...fixed];
+  // the camp itself offers the building of its facilities (once it has a fire) and gathering
+  const atTheCamp = placeId === CAMP_PLACE;
+  const building = atTheCamp && ctx.world.camp.stage >= 1 ? facilityQuests(ctx.world, ctx.catalog) : [];
+  const gathering = atTheCamp ? gatherQuests() : [];
+  return [...encounters, ...fixed, ...building, ...gathering];
 }
 
 export const KIND_NAMES = {

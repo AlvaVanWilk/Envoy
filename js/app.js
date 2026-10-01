@@ -24,7 +24,7 @@ import { renderCreate } from './ui/create.js';
 import { renderTalents, talentsOpen } from './ui/talents.js';
 import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
-import { startEnvoyTourIfNew } from './ui/tours.js';
+import { startTourIfNew } from './ui/tours.js';
 import { IS_TEST, APP_NAME } from './stage.js';
 
 // The menu at the bottom, left to right. The camp in the middle is the
@@ -136,7 +136,9 @@ function render() {
   if (name !== lastView && name === 'abenteuer') markMapForScroll();
   replaceChildren(viewRoot, VIEWS[name].render(game));
   renderNav();
-  if (name === 'envoy' && name !== lastView) startEnvoyTourIfNew(() => currentView() === 'envoy' && !isSheetOpen());
+  if (name !== lastView && ['envoy', 'abenteuer', 'lager'].includes(name) && (name !== 'lager' || game.state.world.camp.stage >= 1)) {
+    startTourIfNew(name, game, () => currentView() === name);
+  }
   if (name !== lastView) {
     window.scrollTo(0, 0);
     document.title = name === DEFAULT_VIEW ? APP_NAME : `${VIEWS[name].label} · ${APP_NAME}`;

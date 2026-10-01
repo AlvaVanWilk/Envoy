@@ -150,6 +150,8 @@ export const game = {
     };
   },
 
+
+
   stamina() {
     const c = this.ctx();
     const now = Date.now();
@@ -169,11 +171,13 @@ export const game = {
 
   // What an expedition would take, for the display before starting.
   // Fights are rolled with a fixed seed, so the numbers are a fair guess.
-  preview(questId) {
+  // options: for gathering { mode: 'menge' | 'energie', amount }
+  preview(questId, options = {}) {
     const c = this.ctx();
     const quest = questById(questId, c);
     if (!quest) return null;
-    return { quest, ...planExpedition(quest, c, `vorschau:${questId}:${c.day}`) };
+    const energy = this.stamina().value;
+    return { quest, ...planExpedition(quest, c, `vorschau:${questId}:${c.day}`, { ...options, energy }) };
   },
 
   // The running expedition, with its progress right now.
@@ -182,14 +186,15 @@ export const game = {
     return exp ? { ...exp, progress: progressAt(exp, Date.now()) } : null;
   },
 
-  startExpedition(questId) {
+  startExpedition(questId, options = {}) {
     const c = this.ctx();
     if (c.world.expedition) return null;
     const quest = questById(questId, c);
     if (!quest || questState(quest, c).status !== 'open') return null;
     const event = this.event('expedition', { q: quest.id, place: quest.place, title: quest.name });
-    const plan = planExpedition(quest, c, event.id);
-    if (plan.cost > this.stamina().value) return null;
+    const energy = this.stamina().value;
+    const plan = planExpedition(quest, c, event.id, { ...options, energy });
+    if (plan.cost > energy || (quest.gather && plan.cost < 1)) return null;
     Object.assign(event, { out: plan.out, act: plan.act, back: plan.back, cost: plan.cost, outcome: plan.outcome });
     this.add([event]);
     return event;
@@ -228,7 +233,7 @@ export const game = {
     if (entry && reachable(this.state.world, entry)) this.add([this.event('drop', { inst })]);
   },
 
-  // At the camp: the storage can be used and furniture set up.
+  // At the camp: the storage can be used.
   atCamp() {
     return atCamp(this.state.world);
   },
@@ -252,25 +257,11 @@ export const game = {
     if (this.state.world.equipped[slot]) this.add([this.event('unequip', { slot })]);
   },
 
-  place(inst) {
-    if (this.atCamp()) this.add([this.event('place', { inst })]);
-  },
-
-  unplace(inst) {
-    if (this.atCamp()) this.add([this.event('unplace', { inst })]);
-  },
-
   // Name and look of the Envoy, at the creation or changed later.
   setEnvoy({ name, figur, haut, haar }) {
     const clean = String(name || '').trim();
     if (!clean) return;
     this.add([this.event('envoy', { name: clean, figur, haut, haar })]);
-  },
-
-  build() {
-    const next = this.catalog.home[this.state.world.home];
-    if (!next) return;
-    this.add([this.event('build', { tier: next.stufe, cost: next.cost })]);
   },
 };
 

@@ -5,6 +5,7 @@ import { RESOURCE_ICONS, SLOT_ICONS } from './icons.js';
 import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
+import { roomFor, CARRIED_MATERIALS } from '../world/inventory.js';
 
 export const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 
@@ -29,13 +30,23 @@ export function resource(key, amount, { lacking = false, sign = '' } = {}) {
     resourceIcon(key), h('span', { class: 'res-amount' }, `${sign}${amount}`), h('span', { class: 'res-name' }, MATERIALS[key]));
 }
 
-// The supplies as three small plaques.
-export function supplies(purse) {
+// How much of Stein and Pilzholz the Envoy can have in all right now: what he
+// has plus what still fits (his backpack and the stores of the camp).
+export function materialLimits(world, catalog) {
+  const limits = {};
+  for (const key of CARRIED_MATERIALS) limits[key] = (world.purse[key] || 0) + roomFor(world, catalog, key);
+  return limits;
+}
+
+// The supplies as three small plaques. limits: how much of a material fits
+// (see materialLimits); shown as „8 / 10“.
+export function supplies(purse, limits = {}) {
   return h('div', { class: 'supplies' }, MATERIAL_KEYS.map((key) =>
     h('div', { class: 'supply', 'data-res': key },
       h('span', { class: 'supply-art' }, resourceIcon(key)),
       h('span', { class: 'supply-text' },
-        h('span', { class: 'supply-amount' }, String(purse[key] || 0)),
+        h('span', { class: 'supply-amount' }, String(purse[key] || 0),
+          limits[key] !== undefined ? h('span', { class: 'supply-limit' }, ` / ${limits[key]}`) : null),
         h('span', { class: 'supply-name' }, MATERIALS[key])))));
 }
 
@@ -56,17 +67,22 @@ function refillText(hours) {
   return `voll in ${formatMinutes(Math.ceil(hours * 60))}`;
 }
 
-// The stamina bar with a notch every 5 points (10 or 20 on a long bar).
+// The Energie bar with a notch for every point (every 5, 10 or 20 on a long bar).
+// After a night at the Schlafplatz it holds more than its normal length: the
+// extra is shown as a copper end of the bar.
 export function staminaBar(st) {
   const value = Math.floor(st.value);
-  const step = st.max <= 60 ? 5 : st.max <= 120 ? 10 : 20;
-  return h('div', { class: 'stamina', 'aria-label': `Ausdauerleiste ${value} von ${st.max}` },
+  const over = Math.max(0, value - st.max);
+  const total = st.max + over;
+  const step = st.max <= 30 ? 1 : st.max <= 60 ? 5 : st.max <= 120 ? 10 : 20;
+  return h('div', { class: 'stamina', 'aria-label': `Energie ${value} von ${st.max}` },
     h('div', { class: 'stamina-top' },
-      h('span', { class: 'stamina-label' }, 'Ausdauerleiste'),
+      h('span', { class: 'stamina-label' }, 'Energie'),
       h('span', { class: 'stamina-value' }, h('strong', {}, `${value}`), ` / ${st.max}`)),
-    h('div', { class: 'stamina-bar', style: { '--notches': String(st.max / step) } },
-      h('span', { class: 'stamina-fill', style: { width: `${(100 * st.value) / st.max}%` } })),
-    h('p', { class: 'stamina-note' }, refillText(st.hoursToFull)));
+    h('div', { class: 'stamina-bar', style: { '--notches': String(total / step) } },
+      h('span', { class: 'stamina-fill', style: { width: `${(100 * Math.min(st.value, st.max)) / total}%` } }),
+      over > 0 ? h('span', { class: 'stamina-extra', style: { left: `${(100 * st.max) / total}%` } }) : null),
+    h('p', { class: 'stamina-note' }, over > 0 ? `Ausgeschlafen: ${over} extra` : refillText(st.hoursToFull)));
 }
 
 // The picture of a thing. Without one yet, the symbol of its slot.

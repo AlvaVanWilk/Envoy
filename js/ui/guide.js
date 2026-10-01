@@ -8,8 +8,9 @@ import { store } from '../store.js';
 import { talentsOpen } from './talents.js';
 import { BACKPACK_SIZE } from '../config.js';
 
-const ran = (game, kind) => Object.keys(game.state.world.quests)
-  .some((id) => game.catalog.questById.get(id)?.kind === kind);
+// The kind of a quest the Envoy has done; gathering and building at the camp are not in the table.
+const kindOf = (game, id) => (id.startsWith('gather:') ? 'sammeln' : id.startsWith('bau:') ? 'bauen' : game.catalog.questById.get(id)?.kind);
+const ran = (game, kind) => Object.keys(game.state.world.quests).some((id) => kindOf(game, id) === kind);
 
 // when(game): the chapter is there; without `when` it is there from the start.
 // text: paragraphs.
@@ -66,16 +67,24 @@ const CHAPTERS = [
     id: 'wirkung',
     title: 'Was die Werte bewirken',
     text: [
-      'In der Welt bestimmt Kraft den Schaden im Kampf. Ausdauer gibt Leben und eine längere Ausdauerleiste.',
-      'Beweglichkeit macht Treffer und Ausweichen wahrscheinlicher. Gelassenheit hilft, Geister zu beruhigen, und lässt die Ausdauerleiste schneller wieder voll werden.',
+      'In der Welt bestimmt Kraft den Schaden im Kampf. Ausdauer gibt Leben und mehr Energie: zehn Energie je Level.',
+      'Beweglichkeit macht Treffer und Ausweichen wahrscheinlicher. Gelassenheit hilft, Geister zu beruhigen, und lässt die Energie schneller wieder voll werden.',
+    ],
+  },
+  {
+    id: 'energie',
+    title: 'Energie',
+    text: [
+      'Alles, was dein Envoy tut, kostet Energie: eine Energie ist eine Minute. Wege, Sammeln, Bauen und Kämpfe zählen alle.',
+      'Je Level Ausdauer hat die Leiste zehn Energie. Sie füllt sich in etwa acht Stunden von selbst; die Aufgabe für Gelassenheit füllt sie zur Hälfte auf.',
     ],
   },
   {
     id: 'lager',
     title: 'Das Lager',
     text: [
-      'Das Lager ist der Ort, an dem jede Expedition beginnt und endet. Dort siehst du, ob der Envoy da ist, was er an Vorrat hat und welche Geister heute gesichtet wurden.',
-      'Die Ausdauerleiste zeigt, wie viel der Envoy noch unterwegs sein kann. Sie füllt sich mit der Zeit von selbst; die Aufgabe für Gelassenheit füllt sie zur Hälfte auf.',
+      'Das Lager liegt auf dem Trümmerfeld. Hier beginnt und endet jede Expedition, und hier sammelt der Envoy Stein und Pilzholz, ohne Weg.',
+      'Zuerst braucht es ein Lagerfeuer. Dafür sammelt der Envoy 8 Steine und 2 Pilzholz und hat danach noch etwas Energie übrig.',
     ],
   },
   {
@@ -83,7 +92,7 @@ const CHAPTERS = [
     title: 'Abenteuer',
     text: [
       'Unter Abenteuer liegt die Karte der Zwischenwelt. Jeder Ort hat seine Quests: sammeln, erkunden, bauen, kämpfen.',
-      'Eine Expedition dauert echte Zeit: Hinweg, vor Ort und Rückweg. Jeder Punkt Ausdauer ist eine Minute. Der Envoy ist immer nur auf einer Expedition zugleich.',
+      'Eine Expedition dauert echte Zeit: Hinweg, vor Ort und Rückweg. Jede Energie ist eine Minute. Der Envoy ist immer nur auf einer Expedition zugleich.',
     ],
   },
   {
@@ -98,13 +107,14 @@ const CHAPTERS = [
     title: 'Der Rucksack',
     text: [
       `Im Rucksack ist Platz für ${BACKPACK_SIZE} Dinge. Du findest ihn beim Envoy.`,
+      'Pilzholz und Stein belegen ebenfalls Plätze, zwei Stück je Platz. Was nicht mehr hineinpasst, lässt der Envoy liegen.',
     ],
   },
   {
     id: 'ausruestung',
     title: 'Ausrüstung',
     text: [
-      'Ausrüstung macht den Envoy nie stärker. Sie gibt Fähigkeiten, etwa mehr Schaden oder weniger Ausdauer für lange Wege. Dafür verlangt sie Mindestwerte.',
+      'Ausrüstung macht den Envoy nie stärker. Sie gibt Fähigkeiten, etwa mehr Schaden oder weniger Energie für lange Wege. Dafür verlangt sie Mindestwerte.',
       'Sinkt ein Wert unter die Voraussetzung, legt der Envoy das Teil ab. Es liegt dann wieder im Rucksack.',
     ],
   },
@@ -130,7 +140,8 @@ const CHAPTERS = [
     title: 'Sammeln',
     when: (game) => ran(game, 'sammeln'),
     text: [
-      'Pilzholz und Stein bringt der Envoy von Sammelquests mit. Je höher die Werte, die bei einer Quest zählen, desto schneller geht die Arbeit und desto mehr bringt sie.',
+      'Auf dem Trümmerfeld sammelt der Envoy Stein und Pilzholz, ohne Weg. Du wählst, bis zu welcher Menge er sammelt oder bis die Energie reicht.',
+      'Für jede Energie bringt er zwei bis vier Stück, im Schnitt zweieinhalb; wie viel es genau sind, bleibt dem Zufall überlassen. Weniger als zwei gibt es nie. Kraft hilft bei Stein, Beweglichkeit bei Pilzholz.',
     ],
   },
   {
@@ -144,10 +155,11 @@ const CHAPTERS = [
   },
   {
     id: 'lagerausbau',
-    title: 'Das Lager ausbauen',
-    when: (game) => game.unlocked('zuhause'),
+    title: 'Das Lager einrichten',
+    when: (game) => game.state.world.camp.stage >= 1,
     text: [
-      'Der Ausbau des Lagers ist freigeschaltet. Im Lager ist nun auch eine Kiste für Dinge, die nicht in den Rucksack passen. An sie kommt der Envoy nur, wenn er im Lager ist.',
+      'Mit dem Lagerfeuer hat das Lager Stufe 1. Jetzt lassen sich vier Einrichtungen errichten: Steinlager, Pilzlager, Aufbewahrung und Schlafplatz. Jede gibt Hygge. Hat das Lager genug davon, lässt es sich später ausbauen.',
+      'Die Aufbewahrung gibt Plätze für Gegenstände. Dort sieht der Envoy unterwegs nur nach, was liegt; herankommen kann er erst im Lager. Der Schlafplatz gibt dem Envoy am Morgen einmal Energie dazu, auch über das Ende der Leiste hinaus.',
     ],
   },
   {

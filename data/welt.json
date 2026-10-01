@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-30T18:13:18Z",
+ "generated": "2026-10-01T22:01:30Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -12,7 +12,7 @@
    "encounters": false,
    "monsters": [],
    "unlock": [],
-   "text": "Eine Feuerstelle zwischen umgestürzten Säulen. Hier beginnt jeder Weg."
+   "text": "Ein offener Platz auf dem Trümmerfeld, zwischen umgestürzten Säulen und hohen Pilzen. Hier beginnt und endet jeder Weg."
   },
   {
    "id": "pilzhain",
@@ -779,26 +779,24 @@
    "active": true
   },
   {
-   "id": "q-zuhause",
-   "name": "Ein Platz zum Bleiben",
+   "id": "q-lagerfeuer",
+   "name": "Ein Lagerfeuer errichten",
    "place": "lager",
    "kind": "bauen",
-   "text": "Am Feuer ist Platz für mehr. Mit Pilzholz und Stein lässt sich das Lager ausbauen.",
+   "text": "Dein Envoy braucht Steine und Pilzholz für das Lagerfeuer. Das kannst du immer in der Gegend sammeln.\nAber Achtung: Alle Aktivitäten kosten den Envoy Energie. Achte also darauf, dass dein Envoy noch Energie übrig hat, um das Lagerfeuer zu errichten.\nSteigt die Ausdauer deines Envoy, steigt auch seine Energie.\nSammle mit deinem Envoy 8 Steine und 2 Pilzholz, damit er ein Lagerfeuer errichten kann.",
    "monsters": [],
    "conditions": [],
-   "speedStats": [
-    "kraft"
-   ],
+   "speedStats": [],
    "yieldStats": [],
    "consumes": {
-    "pilzholz": 6,
-    "stein": 6
+    "stein": 8,
+    "pilzholz": 2
    },
-   "cost": 10,
+   "cost": 2,
    "reward": {
     "splitter": [
-     10,
-     10
+     0,
+     0
     ],
     "pilzholz": [
      0,
@@ -811,13 +809,13 @@
     "items": [],
     "furniture": [],
     "unlocks": [
-     "zuhause"
+     "lagerfeuer"
     ],
     "rest": false
    },
    "repeatable": false,
    "cooldown": 0,
-   "active": false
+   "active": true
   },
   {
    "id": "q-uferkies",
@@ -1542,78 +1540,78 @@
    "active": true
   }
  ],
- "home": [
-  {
-   "stufe": 1,
-   "name": "Zelt",
-   "cost": {
-    "pilzholz": 0,
-    "stein": 0,
-    "splitter": 0
+ "camp": {
+  "stages": [
+   {
+    "stufe": 1,
+    "name": "Lagerfeuer",
+    "hyggeBisNaechste": 30,
+    "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand."
+   }
+  ],
+  "facilities": [
+   {
+    "id": "steinlager",
+    "stufe": 1,
+    "name": "Steinlager",
+    "lagerstufe": 1,
+    "cost": {
+     "pilzholz": 4,
+     "stein": 0
+    },
+    "energie": 2,
+    "hygge": 10,
+    "kapazitaet": 20,
+    "bonus": 0,
+    "text": "Eine Mulde, mit Pilzholz eingefasst. Hier liegen die Steine, bis sie gebraucht werden."
    },
-   "erholung": 5,
-   "plaetze": 2,
-   "schrank": 12,
-   "text": "Eine Plane zwischen zwei Säulen, ein trockener Boden.",
-   "bild": "assets/zuhause/stufe_1.png"
-  },
-  {
-   "stufe": 2,
-   "name": "Steinhütte",
-   "cost": {
-    "pilzholz": 20,
-    "stein": 40,
-    "splitter": 60
+   {
+    "id": "pilzlager",
+    "stufe": 1,
+    "name": "Pilzlager",
+    "lagerstufe": 1,
+    "cost": {
+     "pilzholz": 4,
+     "stein": 0
+    },
+    "energie": 2,
+    "hygge": 10,
+    "kapazitaet": 20,
+    "bonus": 0,
+    "text": "Ein Stapelplatz auf Latten, damit nichts im Boden fault."
    },
-   "erholung": 10,
-   "plaetze": 3,
-   "schrank": 20,
-   "text": "Vier Wände aus gestapeltem Stein und eine Tür, die schließt.",
-   "bild": "assets/zuhause/stufe_2.png"
-  },
-  {
-   "stufe": 3,
-   "name": "Baracke",
-   "cost": {
-    "pilzholz": 50,
-    "stein": 100,
-    "splitter": 200
+   {
+    "id": "aufbewahrung",
+    "stufe": 1,
+    "name": "Aufbewahrung",
+    "lagerstufe": 1,
+    "cost": {
+     "pilzholz": 4,
+     "stein": 4
+    },
+    "energie": 3,
+    "hygge": 10,
+    "kapazitaet": 6,
+    "bonus": 0,
+    "text": "Ein paar Fächer zwischen den Steinen. Was der Envoy nicht trägt, liegt hier."
    },
-   "erholung": 15,
-   "plaetze": 5,
-   "schrank": 30,
-   "text": "Lang, niedrig, warm. Platz für mehr als nur Schlaf.",
-   "bild": "assets/zuhause/stufe_3.png"
-  },
-  {
-   "stufe": 4,
-   "name": "Steinhaus",
-   "cost": {
-    "pilzholz": 100,
-    "stein": 180,
-    "splitter": 450
-   },
-   "erholung": 22,
-   "plaetze": 6,
-   "schrank": 40,
-   "text": "Feste Mauern, Balken aus Pilzholz, ein Dach, das hält.",
-   "bild": "assets/zuhause/stufe_4.png"
-  },
-  {
-   "stufe": 5,
-   "name": "Turmhaus",
-   "cost": {
-    "pilzholz": 180,
-    "stein": 300,
-    "splitter": 900
-   },
-   "erholung": 30,
-   "plaetze": 8,
-   "schrank": 60,
-   "text": "Ein Zimmer über dem anderen, oben ein Fenster in alle Richtungen.",
-   "bild": "assets/zuhause/stufe_5.png"
-  }
- ],
+   {
+    "id": "schlafplatz",
+    "stufe": 1,
+    "name": "Schlafplatz",
+    "lagerstufe": 1,
+    "cost": {
+     "pilzholz": 6,
+     "stein": 0
+    },
+    "energie": 3,
+    "hygge": 10,
+    "kapazitaet": 0,
+    "bonus": 20,
+    "text": "Eine Fläche aus Pilzraspeln, weich genug für eine Nacht."
+   }
+  ]
+ },
  "furniture": [
   {
    "id": "schlafmatte",
@@ -1625,7 +1623,7 @@
     "haendler"
    ],
    "preis": 25,
-   "abStufe": 1,
+   "abStufe": 2,
    "text": "Dick genug, um den Boden zu vergessen.",
    "icon": "assets/icons/icon_einrichtung_schlafmatte.png"
   },
@@ -1640,7 +1638,7 @@
     "beute"
    ],
    "preis": 15,
-   "abStufe": 1,
+   "abStufe": 2,
    "text": "Immer kühl, immer gefüllt.",
    "icon": "assets/icons/icon_einrichtung_wasserkrug.png"
   },
@@ -1655,7 +1653,7 @@
     "beute"
    ],
    "preis": 20,
-   "abStufe": 1,
+   "abStufe": 2,
    "text": "Riecht nach einem Sommer, den es hier nie gab.",
    "icon": "assets/icons/icon_einrichtung_kraeuterbund.png"
   },
@@ -1669,7 +1667,7 @@
     "haendler"
    ],
    "preis": 30,
-   "abStufe": 1,
+   "abStufe": 2,
    "text": "Wirft ein ruhiges Licht.",
    "icon": "assets/icons/icon_einrichtung_laterne.png"
   },
@@ -1684,7 +1682,7 @@
     "quest"
    ],
    "preis": 0,
-   "abStufe": 1,
+   "abStufe": 2,
    "text": "Klingt, bevor sich das Wetter ändert.",
    "icon": "assets/icons/icon_einrichtung_windspiel.png"
   },
@@ -1698,7 +1696,7 @@
     "beute"
    ],
    "preis": 0,
-   "abStufe": 1,
+   "abStufe": 2,
    "text": "Schwer und warm.",
    "icon": "assets/icons/icon_einrichtung_wolldecke.png"
   },
@@ -1712,7 +1710,7 @@
     "haendler"
    ],
    "preis": 90,
-   "abStufe": 2,
+   "abStufe": 3,
    "text": "Schaukelt noch, wenn man längst schläft.",
    "icon": "assets/icons/icon_einrichtung_haengematte.png"
   },
@@ -1727,7 +1725,7 @@
     "haendler"
    ],
    "preis": 60,
-   "abStufe": 2,
+   "abStufe": 3,
    "text": "Muster, in denen man sich verlieren kann.",
    "icon": "assets/icons/icon_einrichtung_teppich.png"
   },
@@ -1741,7 +1739,7 @@
     "haendler"
    ],
    "preis": 50,
-   "abStufe": 2,
+   "abStufe": 3,
    "text": "Für alles, was man unterwegs findet.",
    "icon": "assets/icons/icon_einrichtung_regal.png"
   },
@@ -1755,7 +1753,7 @@
     "haendler"
    ],
    "preis": 150,
-   "abStufe": 3,
+   "abStufe": 4,
    "text": "Das Feuer zieht, der Rauch geht hinaus.",
    "icon": "assets/icons/icon_einrichtung_kamin.png"
   },
@@ -1769,7 +1767,7 @@
     "quest"
    ],
    "preis": 0,
-   "abStufe": 3,
+   "abStufe": 4,
    "text": "Eine Schale voller Bannsplitter, die nie ganz erlöschen.",
    "icon": "assets/icons/icon_einrichtung_splitterschale.png"
   }

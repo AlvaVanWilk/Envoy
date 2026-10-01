@@ -9,11 +9,12 @@ import { runQuest } from './run.js';
 import { overloaded } from './inventory.js';
 
 // Everything needed to start: minutes for each part, stamina, result.
-export function planExpedition(quest, ctx, seed) {
+// options: for gathering { mode, amount, energy } (see run.js)
+export function planExpedition(quest, ctx, seed, options = {}) {
   const home = camp(ctx.catalog);
   const place = ctx.catalog.placeById.get(quest.place);
   const way = wayStamina(home, place, ctx.stats, ctx.fx, overloaded(ctx.world));
-  const outcome = runQuest(quest, ctx, seed);
+  const outcome = runQuest(quest, ctx, seed, options);
   return {
     out: way * MINUTES_PER_STAMINA,
     act: outcome.minutes,

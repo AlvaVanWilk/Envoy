@@ -49,7 +49,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
-- Lager als Startansicht (Bild des Lagers, Vorrat, Expedition, gesichtete Geister)
+- Lager als Startansicht (Bild nach Lagerstufe und Tageszeit, Vorrat, Einrichtungen mit
+  Hygge, Expedition, gesichtete Geister)
 - Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben auf
   jeder Seite eine Leiste mit großem Portrait (vier Werte-Ringe, auch auf der
   Envoy-Seite), Tageswerk-Knopf und Einstellungen
@@ -62,11 +63,16 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
   Haut- und Haarfarbe, Name
 - Speicherung und Geräteabgleich pro Konto
-- Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Ausdauerleiste,
-  Expeditionen in echter Zeit (Hinweg, vor Ort, Rückweg), Kämpfe und Höhlen ohne
-  Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein
-- Rucksack (von Anfang an, 5 Plätze), Händler, Kompendium der getroffenen Geister
-  (die Kiste kommt mit dem Lagerausbau, siehe unten)
+- Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Energie (10 je Level
+  Ausdauer, eine Energie = eine Minute), Expeditionen in echter Zeit (Hinweg, vor Ort,
+  Rückweg), Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu
+  Pilzholz und Stein; Sammeln auf dem Trümmerfeld ohne Weg, mit Würfeln (2 bis 4 Stück
+  je Energie, nie weniger als 2)
+- Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); danach vier Einrichtungen
+  (Steinlager, Pilzlager, Aufbewahrung, Schlafplatz) auf ihrer Stufe 1, Hygge als Summe
+  der Einrichtungen; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
+- Rucksack (von Anfang an, 5 Plätze, am Start leer; Pilzholz und Stein belegen Plätze,
+  2 Stück je Platz), Händler, Kompendium der getroffenen Geister
 - Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
   15 Minuten nach dem Start)
 
@@ -82,10 +88,12 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 - Ernährungsmodul
 - Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem
   Konzept der Nutzerin; Erfolge für echte Übungen zählen nur Summen, nie Serien
-- Lagerausbau und Housing (Stufen, Einrichtung, Kiste): nach dem Konzept der Nutzerin.
-  Bis dahin gibt es keinen Knopf „Lager verbessern“, die Quest „Ein Platz zum Bleiben“ ist
-  mit `aktiv` = nein aus dem Spiel genommen (nicht löschen), Einrichtung wird nicht
-  gesammelt
+- Lagerausbau ab Stufe 2 und höhere Stufen der Einrichtungen, Deko: nach dem Konzept der
+  Nutzerin (Deko erst ab Lagerstufe 2). Bis dahin zeigt das Lager nur das Hygge und
+  keinen Knopf „Lager verbessern“; das Blatt `Deko` in `welt.xlsx` ist vorbereitet,
+  nichts wird gesammelt
+- Schlafplatz mit Bonus auf Werte: nie. Er gibt Energie (Punkt 4 der Nicht-verhandelbar-
+  Liste und das Konzept: Werte steigen nur durch echte Übungen)
 - Der Envoy im Bild des Lagers (sitzend, im eigenen Lager-Outfit)
 - Endgame: Inhalte reichen vorerst höchstens bis ins gute Midgame, damit Luft nach oben
   bleibt. Wo genau der jetzige Inhalt endet, ist noch offen.
@@ -98,7 +106,7 @@ solange nicht ausdrücklich danach gefragt wird.
 | Stat | Tagesaufgabe | Kampfrolle (Phase 2) |
 | --- | --- | --- |
 | Kraft | Tiefenmuskulatur | Schadenshöhe |
-| Ausdauer | Spazieren, Treppe, Rad | max. Leben, Ausdauerleiste |
+| Ausdauer | Spazieren, Treppe, Rad | max. Leben, Energieleiste |
 | Beweglichkeit | Stretching, Mobility | Treffer- und Ausweichchance |
 | Gelassenheit | Entspannung, Atemübung | verkürzt Ruhezeiten |
 
@@ -144,11 +152,20 @@ Stufenwechsel gefragt. Nach 7 ausgelassenen Tagen in Folge eine Stufe runter.
 **Krankheitsmodus:** Tagesaufgaben auf der niedrigsten Stufe, XP entsprechend dem
 kleineren Umfang, zählt nicht für die Intensität. Keine Pausenregel für den Malus.
 
+**Energie:** Größe der Leiste = 10 × Ausdauer. Alles, was der Envoy tut, kostet Energie,
+eine Energie ist eine Minute. Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) muss am
+ersten Tag mit den 10 Energie des Starts sicher zu schaffen sein, auch bei den schlechtesten
+Würfen: 8 Stein höchstens 4 Energie, 2 Pilzholz höchstens 1.
+
+**Sammeln auf dem Trümmerfeld:** je Energie 2 Stück und bis zu 2 weitere (zwei Würfel,
+Chance 25 % bei Level 1, +1,5 Punkte je Level von Kraft für Stein, von Beweglichkeit für
+Pilzholz, höchstens 90 %). Nie weniger als 2 je Energie, keine Fehlwürfe.
+
 ## Daten
 
 - `data/uebungen.xlsx` — Übungskatalog, von der Nutzerin gepflegt
 - `data/ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Effekten und Dateinamen
-- `data/welt.xlsx` — Orte, Monster, Quests, Zuhause-Stufen, Einrichtung
+- `data/welt.xlsx` — Orte, Monster, Quests, Lagerstufen, Einrichtungen (mit Hygge), Deko
 
 Alle drei Dateien sind Quelle, nicht Ziel. Nie hineinschreiben. Beim Bauen in ein Format
 einlesen, das die App zur Laufzeit nutzt, und die Konvertierung wiederholbar halten.
@@ -188,7 +205,9 @@ Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`).
 Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.
 
 Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Lager
-`assets/lager/stufe_<n>.jpg` (16:9, Stufe 0 = Lagerfeuer), Portrait des Envoy
+`assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672; Zeit = morgen, tag, abend, nacht; Stufe 0 =
+ohne Feuer, bisher nur tag, die anderen Zeiten tönt die App; Stufe 1 = Lagerfeuer),
+Portrait des Envoy
 `portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Einrichtung
 `assets/icons/icon_einrichtung_<id>.png` (256 × 256), Karte `assets/welt/karte.jpg` (3:2).
 

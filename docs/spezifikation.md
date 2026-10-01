@@ -39,9 +39,9 @@ Erfahrung: es gibt kein Helden-XP und kein Heldenlevel. XP existiert nur pro Sta
 | Stat | Reale Entsprechung | Rolle in der Welt |
 | --- | --- | --- |
 | Kraft | Tiefenmuskulatur, Rumpf | Schaden je Treffer, Zugang, schnelleres Arbeiten und mehr Ertrag beim Sammeln |
-| Ausdauer | Spazieren, Treppe, Rad | Leben im Kampf (tiefer in Höhlen), Größe der Ausdauerleiste, kürzere Wege |
+| Ausdauer | Spazieren, Treppe, Rad | Leben im Kampf (tiefer in Höhlen), Größe der Energieleiste (10 Energie je Level), kürzere Wege |
 | Beweglichkeit | Dehnen, Mobility | Treffer- und Ausweichchance, Zugang zu schwierigem Gelände |
-| Gelassenheit | Atemübungen, Entspannung | Füllgeschwindigkeit der Ausdauerleiste, Geister beruhigen, Zugang zu stillen Orten |
+| Gelassenheit | Atemübungen, Entspannung | Füllgeschwindigkeit der Energie, Geister beruhigen, Zugang zu stillen Orten |
 
 ## Tagesaufgaben
 
@@ -210,8 +210,8 @@ Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 | treffer | Trefferchance in Prozentpunkten |
 | ausweichen | Ausweichchance in Prozentpunkten |
 | beruhigen | Chance, einen Geist zu beruhigen |
-| reise | weniger Ausdauer je Weg (mindestens 1), damit auch kürzer unterwegs |
-| erholung | Ausdauerleiste füllt sich schneller |
+| reise | weniger Energie je Weg (mindestens 1), damit auch kürzer unterwegs |
+| erholung | Energie füllt sich schneller |
 | glueck | mehr Bannsplitter und öfter ein Fundstück |
 
 **Sechs Slots:** Kopf, Torso, Handwickel, Accessoire, Beinkleidung, Schuhe. Kein
@@ -243,40 +243,48 @@ Rückweg. Alle drei Teile dauern echte Minuten; eine dreiteilige Leiste zeigt, w
 Envoy gerade ist und wann die Expedition endet. Auf der Karte wandert seine Marke den Weg
 entlang. Es läuft immer nur eine Expedition.
 
-**Zeit folgt Ausdauer: Jeder Punkt Ausdauer ist eine Minute unterwegs.** Was lange
-dauert, kostet entsprechend viel Ausdauer; was wenig kostet, geht schnell. Die Spanne
-reicht von drei Minuten (etwas auflesen gleich neben dem Lager) bis weit über eine
-Stunde (eine Nacht am Mondsee, bis zum Horizont). Lange Quests brauchen eine lange
-Leiste und damit den Wert Ausdauer. Die Leiste begrenzt, wie viel an einem Stück geht;
-ist sie leer, ist Pause.
+**Zeit folgt Energie: Jede Energie ist eine Minute unterwegs.** Was lange dauert,
+kostet entsprechend viel Energie; was wenig kostet, geht schnell. Die Spanne reicht von
+drei Minuten (etwas auflesen gleich neben dem Lager) bis weit über eine Stunde (eine
+Nacht am Mondsee, bis zum Horizont). Lange Quests brauchen eine lange Leiste und damit
+den Wert Ausdauer. Die Leiste begrenzt, wie viel an einem Stück geht; ist sie leer, ist
+Pause. (Der Begriff „Energie“ steht für das, was verbraucht wird; „Ausdauer“ bleibt der
+Wert. Im Code heißt die Energie weiter `stamina`.)
 
-- **Weg** (je Richtung) = Entfernung ÷ 20 Ausdauer, gerundet, mindestens 1. Mit jedem
+- **Weg** (je Richtung) = Entfernung ÷ 20 Energie, gerundet, mindestens 1. Mit jedem
   Level Ausdauer 3 % kürzer, höchstens auf die Hälfte. Stiefel und Umhänge können ihn
   billiger machen, ein überfüllter Rucksack verteuert jeden Weg um 1. Die Karte ist
-  1,5-mal so breit wie hoch, das fließt in die Entfernung ein.
+  1,5-mal so breit wie hoch, das fließt in die Entfernung ein. Am Lager selbst gibt es
+  keinen Weg.
 - **Vor Ort** = die Kosten aus der Tabelle. Bei Sammeln, Erkunden und Bauen macht jedes
   Level der unter „Tempo“ genannten Stats die Arbeit 4 % kürzer und damit billiger,
   höchstens auf die Hälfte. Kämpfe dauern so lange, wie die Tabelle sagt, gleich wie
   viele Runden sie gehen.
-- **Ausdauer** der Expedition = 2 × Weg + vor Ort, **Dauer** = ebenso viele Minuten.
+- **Energie** der Expedition = 2 × Weg + vor Ort, **Dauer** = ebenso viele Minuten.
 - Das Ergebnis wird beim Aufbruch berechnet und als Ereignis gespeichert, zählt aber
   erst, wenn der Envoy zurück ist. Material zum Bauen wird gleich mitgenommen.
 - Zurück im Lager erscheint einmal ein Bericht: Kämpfe, Mitgebrachtes, Neues im
-  Kompendium.
+  Kompendium, bei zu wenig Platz auch, was liegen blieb.
 
 Vor dem Aufbruch zeigt jede Quest: Voraussetzung (erfüllt oder nicht), Dauer mit
-Hinweg, vor Ort und Rückweg, Ausdauer, welche Stats sie kürzer machen, welche den
-Ertrag erhöhen, und den möglichen Ertrag. Reicht die Ausdauer gerade nicht, steht dort,
+Hinweg, vor Ort und Rückweg, Energie, welche Stats sie kürzer machen, welche den
+Ertrag erhöhen, und den möglichen Ertrag. Reicht die Energie gerade nicht, steht dort,
 wann sie reicht. Ist die Leiste insgesamt zu kurz, steht dort, dass sie mit Ausdauer
 wächst.
 
-### Ausdauerleiste
+### Energie
 
-- Größe = 20 + 4 × Ausdauer (24 bei Level 1, 60 bei Level 10). Eine Kerbe je 5 Punkte,
-  auf einer langen Leiste je 10 oder 20.
+- Größe = 10 × Ausdauer (10 bei Level 1, 100 bei Level 10). Eine Kerbe je Punkt, auf
+  einer langen Leiste je 5, 10 oder 20.
 - Sie füllt sich in etwa 8 Stunden, schneller mit Gelassenheit (+3 % je Level) und
-  Erholung aus Zuhause, Einrichtung und Ausrüstung.
+  Erholung aus der Ausrüstung.
 - Die erledigte Gelassenheits-Aufgabe ist eine echte Rast: +50 % der Leiste.
+- Der **Schlafplatz** gibt dem Envoy jeden Morgen (ab 3 Uhr, mit dem neuen Tag) einmal
+  Energie dazu, über das Ende der Leiste hinaus: bei 10 Energie wären es 12 von 10. Der
+  Zusatz wird verbraucht, bevor die Leiste unter ihr Ende sinkt; während des Tages füllt
+  sich die Leiste nur bis zum normalen Ende. Erst am nächsten Morgen kommt er wieder. Die
+  Leiste zeigt den Zusatz als kupferfarbenes Ende. (Der Schlafplatz gibt Energie, keine
+  Werte: Werte steigen nur durch die echten Aufgaben.)
 
 ### Quests
 
@@ -297,19 +305,41 @@ wiederholbar, mit Abklingzeit in Tagen.
 Ein Bonus wird bei kleinen Mengen zufällig auf- oder abgerundet: 1 Stück mit +30 %
 ergibt in drei von zehn Fällen 2. So lohnt er sich auch bei kurzen Quests.
 
-**Sammeln in drei Größen.** Am Pilzhain und im Steinbruch gibt es je eine kurze Quest
-(1 Ausdauer vor Ort, 1 Stück), eine mittlere (6, 2 bis 3 Stücke) und eine lange
-(20, 7 bis 9 Stücke, mit Kraft-Voraussetzung). Kurze Quests sind zum Spielen zwischendurch,
-lange lohnen sich etwas mehr, weil der Weg nur einmal anfällt. Bannsplitter lassen sich
-im Uferkies am Stillen Ufer sammeln (1 Stück). Wiederholbare lange Quests (Wache an der
-Furt, Eine Nacht am Mondsee, Bis zum Horizont) bringen mehr Bannsplitter, dauern aber
-40 bis 90 Minuten vor Ort und haben eine Abklingzeit.
+**Sammeln auf dem Trümmerfeld.** Direkt am Lager, ohne Weg, kann der Envoy immer Steine
+und Pilzholz sammeln (zwei Quests, die es immer gibt). Man wählt, ob er bis zu einer
+Menge sammelt oder bis die Energie reicht; die Arbeit läuft in echter Zeit weiter, auch
+wenn die App zu ist. Was er mitbringt, wird gewürfelt, aber nie schlecht:
+
+- Je Energie (also je Minute) bringt er **2 Stück** und dazu bis zu **2 weitere**: zwei
+  Würfel, jeder gelingt mit einer Chance und bringt dann 1 Stück mehr. Bei Level 1 ist
+  die Chance 25 % (im Schnitt 2,5 Stück je Energie, selten 4), sie steigt mit jedem
+  Level um 1,5 Punkte, höchstens auf 90 %. Weniger als 2 Stück je Energie gibt es nie,
+  Fehlwürfe gibt es nicht.
+- **Stein** hängt an Kraft, **Pilzholz** an Beweglichkeit. Ein Erfolg-Bonus („Angekommen“)
+  erhöht die Chance.
+- „Bis zu einer Menge“ bringt genau diese Menge (was beim letzten Wurf übrig wäre,
+  bleibt liegen), „bis die Energie reicht“ so viel, wie in den Rucksack passt. Vor dem
+  Start steht: Vorrat („0 / 10 Stein“), Dauer („etwa 3 Min., höchstens 4“), Ertrag je
+  Energie. Ist kein Platz mehr, steht dort: „Dein Envoy kann nicht mehr als 10 Stein
+  tragen.“
+- **Sicher am ersten Tag:** Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) ist mit den
+  10 Energie des Starts immer zu schaffen: 8 Stein kosten höchstens 4 Energie (4 × 2
+  Stück), 2 Pilzholz höchstens 1, dazu 2 zum Bauen. Das sind höchstens 7 von 10, es
+  bleibt Luft, auch bei schlechtesten Würfen.
+
+**Weitere Sammelorte.** Am Pilzhain und im Steinbruch gibt es noch je drei Quests (1,
+6 und 20 Energie vor Ort, bei Kraft-Voraussetzung für die lange) mit festem Ertrag
+und Weg. Neben dem Trümmerfeld sind sie vorerst die schwächere Wahl; wie sie
+weiterwachsen, plant die Nutzerin. Bannsplitter lassen sich im Uferkies am Stillen Ufer
+sammeln (1 Stück). Wiederholbare lange Quests (Wache an der Furt, Eine Nacht am
+Mondsee, Bis zum Horizont) bringen mehr Bannsplitter, dauern aber 40 bis 90 Minuten vor
+Ort und haben eine Abklingzeit.
 
 **Tempo der Wirtschaft.** Die Erträge sind bewusst klein, damit schnelle Quests nicht
-alles in wenigen Tagen öffnen. Wer täglich alle vier Aufgaben macht und dreimal am Tag
-die ganze Leiste verbraucht, hat die Steinhütte nach etwa 5 Tagen, das Turmhaus nach
-etwa vier Wochen. Die Quests der Welt bleiben an die Werte und an echte Kilometer und
-Stockwerke gebunden.
+alles in wenigen Tagen öffnen. Die Quests der Welt bleiben an die Werte und an echte
+Kilometer und Stockwerke gebunden. Der Start ist bewusst eng (10 Energie, 10 Stück
+tragbar); es ist leichter, später etwas zu vereinfachen, als es nachträglich
+schwerer zu machen.
 
 **Begegnungen:** Jeden Tag erscheinen an wilden Orten Geister (je Ort 55 % Chance,
 mindestens eine an einem von Anfang an offenen Ort). Welcher Geist kommt, richtet sich
@@ -367,38 +397,73 @@ höchstens 3 Level darunter oder darüber). Preis in Bannsplittern = 12 + 4 × n
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
 alles für ein Drittel des Preises zurück.
 
-### Rucksack und Kiste
+### Rucksack, Material und Aufbewahrung
 
-Der Rucksack hat von Anfang an **5 Plätze**. Getragenes zählt nicht mit. Die **Kiste**
-kommt mit der Quest „Ein Platz zum Bleiben“ (12 Plätze) und steht im Lager, dem
-Ausgangspunkt jeder Expedition. Neues landet im Rucksack, ist der voll in der Kiste, ist
-auch die voll oder der Envoy unterwegs, wird der Rucksack überfüllt (nichts geht
-verloren, aber jeder Weg kostet 1 mehr).
+Der Rucksack hat von Anfang an **5 Plätze** und der Envoy hat ihn immer bei sich.
+Getragenes zählt nicht mit. Das Startoutfit (Leinenhemd, Leinenhose, Bastsandalen,
+Handwickel) trägt er von Anfang an, der Rucksack ist am Start leer.
 
-**Unterwegs** (solange eine Expedition läuft) lässt sich in die Kiste nur hineinschauen:
-ihre Teile sind ausgegraut. Nichts lässt sich daraus anlegen, hineinlegen,
-herausnehmen, verkaufen oder liegen lassen. Das geht erst, wenn der Envoy zurück im
-Lager ist. Was unterwegs abgelegt wird, kommt in den Rucksack.
+**Pilzholz und Stein belegen Plätze:** Ein Platz fasst **2 Stück einer Art**. Mit leerem
+Rucksack trägt der Envoy also 10 Stück, und genau das braucht das erste Lagerfeuer
+(8 Stein = 4 Plätze, 2 Pilzholz = 1 Platz). Bannsplitter belegen keinen Platz. Mehr, als
+er tragen kann, lässt der Envoy liegen; der Bericht nennt es. (Später kann Kraft die
+Platzgröße erhöhen; nicht gebaut.)
+
+**Das Lager nimmt ab:** Ein **Steinlager** oder **Pilzlager** (siehe Das Lager) nimmt
+auf, was der Envoy heimbringt, bis es voll ist (Stufe 1: je 20 Stück); erst was dort
+nicht mehr Platz hat, bleibt im Rucksack. Der Vorrat zeigt, wie viel von jeder Art
+insgesamt noch hineinpasst („8 / 10“, mit Lager z. B. „8 / 30“). Gebaut wird aus dem
+Vorrat insgesamt.
+
+Die **Aufbewahrung** ist eine Einrichtung des Lagers und gibt Plätze für Gegenstände und
+Kleidung (Stufe 1: 6), zusätzlich zum Rucksack. Sie steht im Lager, dem Ausgangspunkt
+jeder Expedition. Neues landet im Rucksack, ist der voll in der Aufbewahrung, ist auch
+die voll oder der Envoy unterwegs, wird der Rucksack überfüllt (nichts geht verloren,
+aber jeder Weg kostet 1 mehr).
+
+**Unterwegs** (solange eine Expedition läuft) lässt sich in die Aufbewahrung nur
+hineinschauen, als erinnere sich der Envoy: ihre Teile sind ausgegraut. Nichts lässt
+sich daraus anlegen, hineinlegen, herausnehmen, verkaufen oder liegen lassen. Das geht
+erst, wenn der Envoy zurück im Lager ist. Rucksackplätze dagegen sind immer nutzbar.
+Was unterwegs abgelegt wird, kommt in den Rucksack.
 
 Das Charakterblatt zeigt unter der Figur (auf dem iPad rechts oben) eine Inventar-Box:
-Reiter „Rucksack“ mit seinen fünf Plätzen und, sobald es sie gibt, Reiter „Kiste“.
-„Alle“ öffnet die Seite Inventar mit Suche, Filter nach Slot und Sortierung (Slot, Stufe,
-Name, Neueste) und dem Getragenen. Das Housing mit eigener Einteilung folgt.
+Reiter „Rucksack“ mit seinen fünf Plätzen (Material als Stapel mit Menge) und, sobald es
+sie gibt, Reiter „Aufbewahrung“. „Alle“ öffnet die Seite Inventar mit Suche, Filter nach
+Slot und Sortierung (Slot, Stufe, Name, Neueste) und dem Getragenen.
 
-### Lagerausbau
+### Das Lager
 
-Das Lager ist am Anfang nur ein Lagerfeuer. Die Quest „Ein Platz zum Bleiben“ (6 Pilzholz
-und 6 Stein) soll den Ausbau freischalten und die Kiste bringen. Sie ist **vorerst
-herausgenommen** (Spalte `aktiv` = nein in `welt.xlsx`; sie bleibt in der Tabelle und wird
-mit dem Housing wieder eingeschaltet). Solange sie nicht erledigt ist, gibt es im Lager
-keinen Knopf „Lager verbessern“ und keine Kiste. Wie das Lager wächst (Stufen,
-Unterstufen, Ausbau und Einrichtung, sichtbar wie eine Anziehpuppe), plant die
-Nutzerin. Da Pilzholz und Stein bis dahin nirgends verbraucht werden, sammeln sie sich
-nur an.
+Das Lager liegt auf dem Trümmerfeld. Es hat eine **Stufe**: Stufe 0 ist der offene
+Platz, **Stufe 1 „Lagerfeuer“**. Die erste Quest des Spiels ist „Ein Lagerfeuer
+errichten“ (8 Stein, 2 Pilzholz, 2 Energie). Sie ersetzt „Ein Platz zum Bleiben“. Sie ist
+zugleich der Schluss der Führung durch Abenteuer (siehe Rundgänge). Ist das Feuer
+errichtet, hat das Lager Stufe 1, das Bild zeigt das Feuer, und das Lager kann
+eingerichtet werden.
 
-**Einrichtung** wird vorerst nicht gesammelt: Sie kommt weder als Beute noch aus Quests
-noch beim Händler. Die alten Zuhause-Stufen (Zelt bis Turmhaus) und die Einrichtung
-stehen noch in `welt.xlsx`, werden aber nicht gezeigt.
+**Vier Einrichtungen**, jede in Stufen (Blatt `Einrichtungen` in `welt.xlsx`), jede ein
+Bauen-Quest am Lager aus Material und Energie. Auf Lagerstufe 1 lassen sich alle vier
+auf ihre Stufe 1 errichten, nicht weiter ausbauen; die nächste Stufe einer Einrichtung
+gibt es erst, wenn das ganze Lager die nächste Stufe hat.
+
+| Einrichtung | Kosten Stufe 1 | Wirkung Stufe 1 | Hygge |
+| --- | --- | --- | --- |
+| Steinlager | 4 Pilzholz, 2 Energie | fasst 20 Steine | 10 |
+| Pilzlager | 4 Pilzholz, 2 Energie | fasst 20 Pilzholz | 10 |
+| Aufbewahrung | 4 Pilzholz, 4 Stein, 3 Energie | 6 Plätze für Gegenstände und Kleidung | 10 |
+| Schlafplatz | 6 Pilzholz, 3 Energie | morgens 20 % der Energieleiste zusätzlich, einmal am Tag | 10 |
+
+**Hygge:** Jede Einrichtung hat einen Hyggewert, je höher ihre Stufe, desto höher. Das
+Lager hat die Summe. Das Lager kann erst auf die nächste Stufe ausgebaut werden, wenn
+sein Hygge reicht; für Stufe 1 auf 2 verlangt es 30, die Summe von drei der vier
+Einrichtungen auf Stufe 1. Die höchsten Hyggewerte bringt später die Deko (erst ab
+Lagerstufe 2). Spätere Stufen regelt die Nutzerin, wenn es so weit ist. Der Ausbau
+selbst ist **noch nicht gebaut**: Das Lager zeigt Hygge „20 / 30“ und, wenn es reicht,
+dass der Ausbau mit einem späteren Update folgt; einen Knopf „Lager verbessern“ gibt
+es nicht. Deko wird nicht gesammelt (das Blatt `Deko` in `welt.xlsx` ist vorbereitet).
+
+Der Schlafplatz wirkt auf die Energie (siehe Energie). Ein Bonus auf Kraft wäre ein Bonus
+auf einen Wert und widerspricht dem Konzept: Werte steigen nur durch echte Übungen.
 
 ### Kompendium
 
@@ -412,7 +477,7 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 | Was | Wann |
 | --- | --- |
 | Karte, Quests, Begegnungen, Rucksack, Handbuch | von Anfang an |
-| Lagerausbau, Kiste | Quest „Ein Platz zum Bleiben“ (vorerst nicht im Spiel) |
+| Lagerstufe 1, die vier Einrichtungen | Quest „Ein Lagerfeuer errichten“ (die erste Quest) |
 | Händler | Quest „Der Händler im Nebel“ |
 | Aschenhang, Turm der Stufen, lange Straße | Quest „Die Brücke über die Schlucht“ |
 | Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
@@ -449,11 +514,18 @@ des Envoy):
   Emblem, nur Schriftzug). Er führt immer zur Tageswerk-Seite.
 - rechts die **Einstellungen** (Zahnrad).
 
-- **Lager** (Startansicht): das Bild des Lagers (am Anfang ein Lagerfeuer, später je
-  Stufe ein eigenes; einmal soll dort der Envoy sitzen, wenn er da ist), ob der Envoy da
-  oder unterwegs ist, laufende Expedition oder Bericht, Vorrat mit Ausdauerleiste,
-  heute gesichtete Geister, Hinweise. Der Knopf „Lager verbessern“ erscheint erst, wenn
-  der Ausbau freigeschaltet ist.
+- **Lager** (Startansicht): das Bild des Lagers nach Stufe und Tageszeit (einmal soll dort
+  der Envoy sitzen, wenn er da ist), ob der Envoy da oder unterwegs ist, die Stufe
+  („Stufe 1 · Lagerfeuer“). Solange es kein Feuer gibt, steht oben „Als Erstes“: „Dein
+  Envoy wird eine Weile hier bleiben. Am besten errichtest du ein Lagerfeuer.“ mit einem
+  Knopf zur Quest. Dann laufende Expedition oder Bericht, Vorrat mit Energie, die
+  Einrichtungen mit Hygge (je Einrichtung: Wirkung, Kosten, „Errichten“, bei Mangel was
+  fehlt oder wann die Energie reicht) und heute gesichtete Geister, Hinweise.
+  **Tageszeit:** Das Bild folgt der Sonne am Ort des Lagers (Mitte Deutschlands, aus
+  Datum und Uhrzeit berechnet, auf Minuten genau genug): Sonnenaufgang (von 40 Minuten
+  vor bis 80 Minuten nach dem Aufgang), Tag, Sonnenuntergang (von 90 Minuten vor bis 40
+  nach dem Untergang), Nacht. Ohne Feuer gibt es bisher nur das Tagesbild; zu anderen
+  Zeiten wird es dunkler oder wärmer getönt, bis die Nutzerin Bilder dafür hat.
 - **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+15 Kraft“) und
   einem Haken zum Erledigen. Antippen klappt eine Aufgabe auf (Timer, Erledigt); die
   Anleitung erscheint nur auf Wunsch. Ein Fragezeichen klappt eine kurze Erklärung auf
@@ -527,9 +599,10 @@ Fingerspitzen in fingerlosen Handschuhen. Die gezeichneten Farben stehen in
 eingetragen.
 
 **Startoutfit:** Leinenhemd und Leinenhose, ohne Voraussetzung und ohne Fähigkeit. Der
-Envoy trägt sie von Anfang an (Herkunft `angezogen`). Handwickel und Bastsandalen liegen
-beim Start im Rucksack (Herkunft `start`). Die Griffhandschuhe sind die Belohnung für
-die Brücke über die Schlucht.
+Envoy trägt sie von Anfang an (Herkunft `angezogen`), ebenso Handwickel und
+Bastsandalen, damit der Rucksack am Start leer ist und Platz für 10 Stück Material hat
+(Herkunft `start` legt Dinge in den Rucksack; es gibt vorerst keine). Die
+Griffhandschuhe sind die Belohnung für die Brücke über die Schlucht.
 
 **Teile ohne Bild:** Fehlt die Ebene eines Teils noch, wird es getragen, aber nicht
 gezeichnet; fehlt sein Icon, zeigt die App das Symbol des Slots. Die Umwandlung listet
@@ -539,7 +612,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>.jpg` im Seitenverhältnis 16:9 (Stufe 0 = Lagerfeuer), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 
@@ -554,10 +627,15 @@ Blatt „Erklärung“ mit allen Spalten.
 - `data/ausruestung.xlsx`: id, slot, name, stufe, req_kraft, req_ausdauer,
   req_gelassenheit, req_beweglichkeit, faehigkeit, effekt, herkunft, preis,
   datei_figur, datei_icon, notiz
-- `data/welt.xlsx`: Blätter Orte, Monster, Quests, Zuhause, Einrichtung. Das Blatt
-  Quests hat: id, name, ort, art (sammeln, erkunden, bauen, kampf, hoehle), text,
-  monster, voraussetzung, tempo, ertrag, verbrauch, kosten (Ausdauer vor Ort, zugleich
-  Minuten), belohnung, wiederholbar, abklingzeit, aktiv (nein = vorerst nicht im Spiel)
+- `data/welt.xlsx`: Blätter Orte, Monster, Quests, Lagerstufen, Einrichtungen, Deko. Das
+  Blatt Quests hat: id, name, ort, art (sammeln, erkunden, bauen, kampf, hoehle), text
+  (mehrere Absätze durch Zeilenumbruch), monster, voraussetzung (auch `lager>=1`),
+  tempo, ertrag, verbrauch, kosten (Energie vor Ort, zugleich Minuten), belohnung
+  (auch `freischaltung:lagerfeuer`), wiederholbar, abklingzeit, aktiv (nein = vorerst
+  nicht im Spiel). Lagerstufen: stufe, name, hygge_bis_naechste, beschreibung.
+  Einrichtungen (eine Zeile je Stufe): id (steinlager, pilzlager, aufbewahrung,
+  schlafplatz), stufe, name, lagerstufe, pilzholz, stein, energie, hygge, kapazitaet,
+  bonus, beschreibung. Deko ist vorbereitet für Lagerstufe 2.
 
 ## Kleiderkammer
 
@@ -638,9 +716,23 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   Gegenstände.“ (der Rucksack), „Mit einem Tipp auf das Portrait kommst du jederzeit
   hierher zurück.“ (das Portrait). Jede Karte hat „Weiter“ und „Überspringen“ (auch die
   Esc-Taste), „1 von 4“ und beim letzten Schritt „Fertig“. Gesehen oder übersprungen
-  kommt er nicht wieder (je Profil gemerkt); in den Einstellungen unter „Envoy“ lässt er
-  sich mit „Rundgang ansehen“ wiederholen. Er ist kein Tutorial für die Übungen, nur ein
-  Rundgang durch die Oberfläche. Rundgänge für die anderen Seiten folgen später.
+  kommt er nicht wieder (je Profil gemerkt); in den Einstellungen unter „Envoy“ lassen
+  sich alle mit „Rundgänge ansehen“ wiederholen. Er ist kein Tutorial für die Übungen, nur ein
+  Rundgang durch die Oberfläche.
+- **Rundgang durch Abenteuer** beim ersten Öffnen der Karte, sechs Schritte: die Karte,
+  der Vorrat (Pilzholz und Stein belegen Plätze), die Energie („Alles, was er tut, kostet
+  Energie. Steigt seine Ausdauer, steigt auch seine Energie.“), die laufende Expedition,
+  die Legende und zuletzt das Lager: „Dein Envoy wird eine Weile hier bleiben. Am
+  besten errichtest du ein Lagerfeuer.“ Tippt man das Lager an, nennt die Quest „Ein
+  Lagerfeuer errichten“, was der Envoy braucht, dass alles Energie kostet, dass die
+  Energie mit der Ausdauer wächst, und was zu sammeln ist (8 Steine, 2 Pilzholz).
+- **Rundgang durch das Lager** beim ersten Öffnen, nachdem das Feuer brennt, drei
+  Schritte: „Dein Envoy hat das Lagerfeuer errichtet.“ (das Bild), „Ab jetzt kannst du
+  das Lager einrichten.“ (die Einrichtungen), „Wenn es genug Hygge hat, kannst du es
+  sogar ausbauen.“ (das Hygge). Die Ausrufezeichen der ersten Fassung sind weg
+  (Regel: keine Ausrufezeichen). Ist ein Bericht oder anderes Fenster offen, wartet
+  der Rundgang, bis es geschlossen ist. In den Einstellungen zeigt „Rundgänge ansehen“
+  alle wieder. Für die anderen Seiten (Händler, Handbuch, Tageswerk) folgen sie später.
 - **Einstellungen:** angemeldet als, Stand des Abgleichs, „Jetzt abgleichen“,
   „Abmelden“ (die Daten bleiben auf dem Gerät und auf dem Server); ohne Konto „Konto
   erstellen“ und „Profil wechseln“.
@@ -652,7 +744,7 @@ Liste der Profile teilt sich das Gerät.
 
 Gespeichert wird eine Liste von Ereignissen, nie ein fertiger Spielstand. Der Stand
 wird bei jedem Start aus dieser Liste neu berechnet, Tag für Tag, inklusive Malus,
-Bodensatz, Ausdauerleiste und Welt. Auch Name und Aussehen des Envoy sind ein Ereignis
+Bodensatz, Energie und Welt. Auch Name und Aussehen des Envoy sind ein Ereignis
 (`envoy`), damit sie auf allen Geräten gleich sind.
 
 `sync.php` hält für jedes Konto eine eigene Liste und gleicht sie zwischen den Geräten
@@ -691,7 +783,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Ebene je Teil | wählbar (Spalte `ebene`), sonst die Stelle des Slots |
 | Inhaltsumfang | vorerst höchstens bis ins gute Midgame; Luft nach oben |
 | Veröffentlichung | erst Testordner, echter Ordner nur nach Freigabe (Zweig `main`) |
-| Rucksack | 5 Plätze; das Lager (bisher Schrank) nur im Lager nutzbar |
+| Rucksack | 5 Plätze, am Start leer; Pilzholz und Stein belegen Plätze (2 Stück je Platz); die Aufbewahrung (Einrichtung des Lagers) unterwegs nur einsehbar |
 | Konten | Name und Passwort auf dem eigenen Server; ohne Konto nur auf einem Gerät |
 | Figuren | Frau und Mann zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |
 | Icons | aus den Zeichnungen der Ebenen freigestellt |
@@ -699,9 +791,14 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Menü | fünf Punkte: Abenteuer, Talentbaum, Lager (Mitte, Start), Händler, Handbuch |
 | Obere Leiste | Portrait mit vier Werte-Ringen (auch beim Envoy), Tageswerk-Knopf, Einstellungen |
 | Handbuch | Buch mit Reitern: Anleitung, Tageswerk, Quests, Kompendium, Erfolge; füllt das Fenster, ohne zu scrollen |
-| Einrichtung | vorerst nicht sammelbar; das Housing der Nutzerin folgt |
+| Einrichtungen | Steinlager, Pilzlager, Aufbewahrung, Schlafplatz; Stufe 1 auf Lagerstufe 1; Deko erst ab Lagerstufe 2 |
+| Energie | Name für die Leiste, 10 je Level Ausdauer, 1 Energie = 1 Minute |
+| Sammeln | auf dem Trümmerfeld ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2 |
+| Lagerfeuer | die erste Quest: 8 Stein, 2 Pilzholz, 2 Energie; macht Lagerstufe 1 |
+| Hygge | Summe der Einrichtungen; 30 für Stufe 2 (Ausbau noch nicht gebaut) |
+| Lagerbild | nach Stufe und Tageszeit (Sonnenstand) |
 | Erster Erfolg | „Angekommen“: +10 % Tageswerk und Sammeln, nur die ersten 15 Minuten |
-| Lager verbessern | Knopf erst, wenn der Ausbau freigeschaltet ist; die Quest ist vorerst heraus |
+| Lager verbessern | kein Knopf, bis Lagerstufe 2 gebaut wird |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |

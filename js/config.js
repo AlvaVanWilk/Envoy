@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '4.6.0';
+export const APP_VERSION = '4.7.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -150,10 +150,11 @@ export const MATERIALS = {
   stein: 'Stein',    // blocks from old ruins, for walls
 };
 
-// Ausdauerleiste: size from the Ausdauer stat, refills in about 8 hours,
-// faster with Gelassenheit and a comfortable home.
-export const STAMINA_BASE = 20;
-export const STAMINA_PER_AUSDAUER = 4;
+// Energie (called stamina in the code): what everything the Envoy does costs.
+// The bar is 10 per level of the Ausdauer stat, so a new Envoy has 10. It
+// refills in about 8 hours, faster with Gelassenheit.
+export const STAMINA_BASE = 0;
+export const STAMINA_PER_AUSDAUER = 10;
 export const STAMINA_REFILL_HOURS = 8;
 export const STAMINA_BONUS_PER_GELASSENHEIT = 0.03;   // +3 % speed per level
 export const STAMINA_REST_TASK_SHARE = 0.5;           // Gelassenheit task: half a bar
@@ -182,6 +183,25 @@ export const DRIVEN_LOOT_SHARE = 0.5;
 export const CAVE_RETREAT_SHARE = 0.35;
 
 export const BACKPACK_SIZE = 5;
+// Pilzholz and Stein take a place in the backpack like a thing does; a place
+// holds this many pieces of one kind. Stein- and Pilzlager at the camp hold more.
+export const MATERIAL_STACK = 2;
+
+// Gathering on the Trümmerfeld (see world/run.js): every point of Energie is a
+// minute of work and brings GATHER_BASE pieces, plus one more for every one of
+// GATHER_DICE dice that succeeds. The chance of a die is GATHER_CHANCE at level 1
+// of the stat (Kraft for Stein, Beweglichkeit for Pilzholz) and rises with it.
+// Never less than GATHER_BASE per Energie: nothing fails.
+export const GATHER_BASE = 2;
+export const GATHER_DICE = 2;
+export const GATHER_CHANCE = 0.25;
+export const GATHER_CHANCE_PER_LEVEL = 0.015;
+export const GATHER_CHANCE_MAX = 0.9;
+export const GATHER_STATS = { stein: 'kraft', pilzholz: 'beweglichkeit' };
+
+// Where the camp lies, for the time of day in its picture (middle of Germany).
+export const CAMP_LATITUDE = 51;
+export const CAMP_LONGITUDE = 10;
 export const ENCOUNTER_CHANCE = 0.55;                  // per wild place and day
 export const ENCOUNTER_COST = 3;                        // stamina on site
 export const TRADER_OFFERS = 5;

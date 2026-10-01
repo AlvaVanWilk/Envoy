@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-30T14:00:12Z",
+ "generated": "2026-10-01T22:01:30Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -51,7 +51,7 @@
    "faehigkeit": null,
    "effekt": {},
    "herkunft": [
-    "start",
+    "angezogen",
     "haendler"
    ],
    "preis": null,
@@ -71,7 +71,7 @@
     "schaden": 1
    },
    "herkunft": [
-    "start",
+    "angezogen",
     "haendler"
    ],
    "preis": null,

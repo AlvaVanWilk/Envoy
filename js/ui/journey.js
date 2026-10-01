@@ -8,6 +8,7 @@ import { openSheet, closeSheet, isSheetOpen } from './sheet.js';
 import { resource, itemIcon, formatMinutes, MATERIAL_KEYS } from './parts.js';
 import { progressAt, heroPosition } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
+import { facilityRow } from '../world/camp.js';
 
 const PHASES = [
   { id: 'out', name: 'Hinweg' },
@@ -16,9 +17,17 @@ const PHASES = [
 ];
 export const RESULT_TEXT = { won: 'besiegt', calmed: 'beruhigt', driven: 'vertrieben' };
 const UNLOCK_TEXT = {
-  zuhause: 'Der Ausbau des Lagers ist freigeschaltet.',
+  lagerfeuer: 'Das Lagerfeuer brennt. Das Lager hat jetzt Stufe 1.',
   haendler: 'Der Händler ist gerettet und handelt ab jetzt.',
 };
+
+// What a new feature says in the report: the Lagerfeuer, the Händler or a facility.
+function unlockText(feature, game) {
+  if (UNLOCK_TEXT[feature]) return UNLOCK_TEXT[feature];
+  const [id, level] = feature.split(':');
+  const row = facilityRow(game.catalog, id, Number(level));
+  return row ? `${row.name} steht. Hygge +${row.hygge}.` : feature;
+}
 
 const clockTime = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 
@@ -44,7 +53,7 @@ export function journeyPanel(exp, game) {
   const el = h('div', { class: 'journey', 'data-journey': exp.id },
     h('div', { class: 'journey-head' },
       h('span', { class: 'journey-title' }, exp.title),
-      h('span', { class: 'journey-place' }, `Das Lager – ${place ? place.name : ''} – Das Lager`)),
+      h('span', { class: 'journey-place' }, place && place.typ === 'lager' ? 'Auf dem Trümmerfeld' : `Das Lager – ${place ? place.name : ''} – Das Lager`)),
     progressBar(exp),
     h('div', { class: 'journey-foot' },
       h('span', { class: 'journey-phase' }, ''),
@@ -134,8 +143,11 @@ export function openReport(report, game) {
       o.fights.length > 0 ? h('ul', { class: 'report-fights' }, o.fights.map((f) => fightRow(f, game))) : null,
       loot.length > 0 ? h('div', {}, h('p', { class: 'label' }, 'Mitgebracht'), h('div', { class: 'loot' }, loot)) : null,
       consumed.length > 0 ? h('p', { class: 'muted' }, `Verbaut: ${consumed.map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}`) : null,
-      r.unlocks.map((f) => h('p', { class: 'report-unlock' }, UNLOCK_TEXT[f] || f)),
-      r.rest ? h('p', { class: 'report-unlock' }, 'Die Ausdauerleiste ist wieder voll.') : null,
+      Object.keys(report.leftBehind || {}).length > 0
+        ? h('p', { class: 'muted' }, `Zurückgelassen: ${Object.entries(report.leftBehind).map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}. Mehr konnte der Envoy nicht tragen.`)
+        : null,
+      r.unlocks.map((f) => h('p', { class: 'report-unlock' }, unlockText(f, game))),
+      r.rest ? h('p', { class: 'report-unlock' }, 'Die Energie ist wieder voll.') : null,
       fresh.length > 0 ? h('p', { class: 'muted' }, `Neu im Kompendium: ${fresh.join(', ')}`) : null,
       h('div', { class: 'sheet-actions' }, h('button', { class: 'btn primary', onclick: closeSheet }, 'Weiter')),
     ],
