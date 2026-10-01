@@ -1,28 +1,32 @@
 // The map of the Zwischenwelt. Every expedition starts at the camp, goes to
-// a place and comes back; it takes real time. Tapping a place shows what
-// can be done there, how long it takes and what it brings.
+// a place and comes back; it takes real time. A tap on a place fans out what
+// can be done there: a small seal for every quest, with its name; a tap on a
+// seal opens that quest (questsheet.js). A place with a single quest opens it
+// straight away, a place still closed says what opens it.
 
-import { h, icon, replaceChildren } from './dom.js';
-import { PLACE_ICONS, UI_ICONS, NAV_ICONS } from './icons.js';
-import { CURRENCY, MATERIALS, versioned } from '../config.js';
-import {
-  viewHead, sectionTitle, supplies, staminaBar, resource, formatMinutes, materialLimits, MATERIAL_KEYS,
-} from './parts.js';
-import { statEmblem, statInfo } from './stats.js';
-import { openSheet, closeSheet, toast } from './sheet.js';
-import { journeyPanel } from './journey.js';
-import { questsAt, questState, placeUnlocked, conditionMet, describeCondition, KIND_NAMES } from '../world/quests.js';
+import { h, icon } from './dom.js';
+import { PLACE_ICONS, UI_ICONS, SLOT_ICONS } from './icons.js';
+import { versioned } from '../config.js';
+import { viewHead, sectionTitle, supplies, staminaBar, materialLimits, resourceIcon } from './parts.js';
+import { journeyPanel, heroClass } from './journey.js';
+import { openQuest } from './questsheet.js';
+import { questsAt, questState, placeUnlocked, describeCondition } from '../world/quests.js';
 import { heroPosition } from '../world/expedition.js';
 import { camp } from '../world/map.js';
-import { rewardRange, gatherEstimate } from '../world/run.js';
-import { facilityRow, facilityEffect } from '../world/camp.js';
-import { formatDayShort } from '../days.js';
 
 let scrollToHero = true;
 let lastScroll = null;   // keeps the map where it was when the view is redrawn
+let fanNext = null;      // a place to fan out once the map is drawn (asked for from the Lager page)
+let closeFan = null;     // closes the fan that is open, if one is
 
 export function markMapForScroll() {
   scrollToHero = true;
+}
+
+// From another page: go to the map and show what there is at a place.
+export function showPlace(placeId) {
+  fanNext = placeId;
+  location.hash = '#abenteuer';
 }
 
 function placeMarker(place, game, c) {
@@ -38,7 +42,7 @@ function placeMarker(place, game, c) {
     style: { left: `${place.x}%`, top: `${place.y}%` },
     'data-place': place.id,
     'aria-label': `${place.name}${unlocked ? '' : ', verschlossen'}${spirit ? ', Geist gesichtet' : ''}`,
-    onclick: () => openPlace(place.id, game),
+    onclick: (e) => tapPlace(place, game, e.currentTarget),
   },
   h('span', { class: 'seal' },
     icon(PLACE_ICONS[place.typ] || PLACE_ICONS.ort),
@@ -47,11 +51,12 @@ function placeMarker(place, game, c) {
   h('span', { class: 'place-name' }, place.name));
 }
 
+// The way of the running expedition (none for the camp and the Trümmerfeld beside it).
 function route(exp, catalog) {
-  if (!exp) return null;
+  if (!exp || exp.out === 0) return null;
   const from = camp(catalog);
   const to = catalog.placeById.get(exp.place);
-  if (!to || to.id === from.id) return null;
+  if (!to) return null;
   return h('span', { class: 'map-route', html:
     `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" vector-effect="non-scaling-stroke"/></svg>` });
 }
@@ -62,7 +67,7 @@ function legend() {
   return h('section', { class: 'panel legend' },
     sectionTitle('Legende'),
     h('ul', { class: 'legend-list' },
-      row(seal('lager'), 'Lager auf dem Trümmerfeld. Hier beginnt und endet jede Expedition, und hier wird gesammelt, ohne Weg.'),
+      row(seal('lager'), 'Das Lager. Hier beginnt und endet jede Expedition.'),
       row(seal('sammeln'), 'Sammelort'),
       row(seal('wild'), 'Wilde Gegend'),
       row(seal('hoehle'), 'Höhle'),
@@ -85,26 +90,34 @@ function expeditionSide(game) {
 export function renderMap(game) {
   const c = game.ctx();
   const exp = c.world.expedition;
-  const pos = heroPosition(exp, Date.now(), game.catalog);
+  const now = Date.now();
+  const pos = heroPosition(exp, now, game.catalog);
+  const focus = fanNext ? game.catalog.placeById.get(fanNext) : null;
+  fanNext = null;
+  closeFan = null;
 
   const canvas = h('div', { class: 'map-canvas' },
     h('img', { class: 'map-image', src: versioned('assets/welt/karte.jpg'), alt: 'Karte der Zwischenwelt', draggable: 'false' }),
     route(exp, game.catalog),
     game.catalog.places.map((place) => placeMarker(place, game, c)),
-    h('span', { class: 'hero-token', style: { left: `${pos.x}%`, top: `${pos.y}%` }, html: UI_ICONS.hero, 'aria-hidden': 'true' }));
+    h('span', { class: `hero-token ${heroClass(exp, now)}`, style: { left: `${pos.x}%`, top: `${pos.y}%` }, html: UI_ICONS.hero, 'aria-hidden': 'true' }));
 
   const scroller = h('div', { class: 'map-scroll', onscroll: (e) => {
     lastScroll = { left: e.currentTarget.scrollLeft, top: e.currentTarget.scrollTop };
   } }, canvas);
-  const centre = scrollToHero || !lastScroll;
+  const centreOn = focus || (scrollToHero || !lastScroll ? pos : null);
   scrollToHero = false;
   requestAnimationFrame(() => {
-    if (centre) {
-      scroller.scrollLeft = Math.max(0, (canvas.offsetWidth * pos.x) / 100 - scroller.clientWidth / 2);
-      scroller.scrollTop = Math.max(0, (canvas.offsetHeight * pos.y) / 100 - scroller.clientHeight / 2);
+    if (centreOn) {
+      scroller.scrollLeft = Math.max(0, (canvas.offsetWidth * centreOn.x) / 100 - scroller.clientWidth / 2);
+      scroller.scrollTop = Math.max(0, (canvas.offsetHeight * centreOn.y) / 100 - scroller.clientHeight / 2);
     } else {
       scroller.scrollLeft = lastScroll.left;
       scroller.scrollTop = lastScroll.top;
+    }
+    if (focus) {
+      const marker = canvas.querySelector(`.place-marker[data-place="${focus.id}"]`);
+      if (marker) tapPlace(focus, game, marker);
     }
   });
 
@@ -120,234 +133,128 @@ export function renderMap(game) {
       h('div', { class: 'world-legend' }, legend())));
 }
 
-// --- a place and its quests ------------------------------------------------
+// --- the fan of a place ------------------------------------------------------------
 
-const range = ([a, b]) => (a === b ? String(a) : `${a}–${b}`);
-
-function rewardText(quest, c) {
-  const r = rewardRange(quest, c);
-  const parts = [];
-  if (r) {
-    for (const key of MATERIAL_KEYS) if (r[key][1] > 0) parts.push(resource(key, range(r[key])));
+// The seal of a quest in the fan: the spirit, the material, or the kind of quest.
+function questSeal(quest, c) {
+  if (quest.kind === 'kampf' && quest.monsters.length === 1) {
+    const monster = c.catalog.monsterById.get(quest.monsters[0]);
+    return h('span', { class: 'seal fan-seal is-portrait' }, h('img', { src: monster.bild, alt: '' }));
   }
-  const names = [
-    ...quest.reward?.items.map((id) => c.catalog.itemById.get(id)?.name) || [],
-    ...quest.reward?.furniture.map((id) => c.catalog.furnitureById.get(id)?.name) || [],
-  ].filter(Boolean);
-  for (const name of names) parts.push(h('span', { class: 'pill' }, name));
-  for (const f of quest.reward?.unlocks || []) parts.push(h('span', { class: 'pill' }, unlockName(f, c)));
-  if (quest.reward?.rest) parts.push(h('span', { class: 'pill' }, 'Energie voll'));
-  return parts;
+  if (quest.gather) return h('span', { class: 'seal fan-seal is-material' }, resourceIcon(quest.gather.material));
+  const glyph = quest.facility ? SLOT_ICONS.einrichtung
+    : PLACE_ICONS[{ hoehle: 'hoehle', sammeln: 'sammeln', bauen: 'lager' }[quest.kind] || 'ort'];
+  return h('span', { class: 'seal fan-seal' }, icon(glyph));
 }
 
-// What a feature is called in the list of rewards: Lagerfeuer, Händler or a facility.
-function unlockName(feature, c) {
-  if (feature === 'lagerfeuer') return 'Lagerfeuer';
-  if (feature === 'haendler') return 'Händler';
-  const [id, level] = feature.split(':');
-  return facilityRow(c.catalog, id, Number(level))?.name || feature;
-}
+const BADGES = { done: UI_ICONS.check, cooldown: UI_ICONS.check, locked: UI_ICONS.lock, running: UI_ICONS.hero };
 
-function statList(ids) {
-  return h('span', { class: 'stat-list' }, ids.map((id) => h('span', { class: 'stat-tag', 'data-stat': id }, statEmblem(id, 'tiny'), statInfo(id).name)));
-}
-
-function fact(label, ...value) {
-  return h('div', { class: 'fact' }, h('dt', {}, label), h('dd', {}, ...value));
-}
-
-function durationText(plan) {
-  const total = plan.out + plan.act + plan.back;
-  const parts = plan.out > 0
-    ? `${plan.out} hin · ${plan.act} vor Ort · ${plan.back} zurück`
-    : `${plan.act} vor Ort`;
-  return [h('strong', {}, formatMinutes(total)), h('span', { class: 'muted' }, ` · ${parts}`)];
-}
-
-// What the Envoy is told to gather, kept while the app is open.
-const gatherChoice = { stein: { mode: 'menge', amount: 8 }, pilzholz: { mode: 'menge', amount: 2 } };
-
-function startButton(quest, plan, game, state) {
-  const st = game.stamina();
-  const away = game.state.world.expedition;
-  if (state.status === 'running') return h('span', { class: 'quest-note' }, 'Der Envoy ist gerade dort.');
-  if (state.status === 'done') return h('span', { class: 'quest-note' }, quest.encounter ? 'Heute erledigt.' : 'Erledigt.');
-  if (state.status === 'cooldown') return h('span', { class: 'quest-note' }, `Wieder ab ${formatDayShort(state.again)}.`);
-  if (state.status === 'locked') return null;
-  if (away) return h('button', { class: 'btn ghost small', disabled: true }, 'Der Envoy ist unterwegs');
-  if (plan.cost > st.max) return h('span', { class: 'quest-note' }, 'Die Energie reicht dafür noch nicht. Sie wächst mit dem Wert Ausdauer.');
-  if (plan.cost > st.value) {
-    const hours = (plan.cost - st.value) / st.perHour;
-    return h('button', { class: 'btn ghost small', disabled: true }, `Genug Energie in ${formatMinutes(Math.ceil(hours * 60))}`);
+// What the fan of a place shows: its quests (not those done once and for
+// all; they are in the Handbuch), and at the camp the way to the Lager page.
+function fanEntries(place, game, c) {
+  const entries = questsAt(place.id, c).map((quest) => ({ quest, status: questState(quest, c).status }))
+    .filter(({ quest, status }) => status !== 'done' || quest.encounter)
+    .map(({ quest, status }) => ({
+      name: quest.name,
+      status,
+      seal: questSeal(quest, c),
+      badge: BADGES[status],
+      open: () => openQuest(quest, game),
+    }));
+  if (place.typ === 'lager') {
+    entries.push({ name: 'Zum Lager', status: 'link', seal: h('span', { class: 'seal fan-seal' }, icon(UI_ICONS.chevron)), open: () => { location.hash = '#lager'; } });
   }
-  const nearby = quest.place === camp(game.catalog).id;
-  return h('button', {
-    class: 'btn primary',
-    onclick: () => {
-      const event = game.startExpedition(quest.id);
-      if (!event) return;
-      closeSheet();
-      markMapForScroll();
-      toast(nearby ? `Der Envoy macht sich an die Arbeit: ${quest.name}` : `Aufgebrochen: ${quest.name}`);
-    },
-  }, nearby ? 'Anfangen' : 'Aufbrechen');
+  return entries;
 }
 
-const paragraphs = (text) => text.split('\n').filter(Boolean).map((p) => h('p', {}, p));
-
-// A quest of gathering on the Trümmerfeld: the Envoy gathers up to an amount or
-// until his Energie is used up, and carries what fits. What he gets for each
-// Energie is rolled, between 2 and 4 pieces (see run.js).
-function gatherCard(quest, game) {
-  const material = quest.gather.material;
-  const name = MATERIALS[material];
-  const box = h('article', { class: 'quest-card open gather-card' });
-
-  const draw = () => {
-    const c = game.ctx();
-    const choice = gatherChoice[material];
-    const state = questState(quest, c);
-    const st = game.stamina();
-    const energy = Math.floor(st.value);
-    const est = gatherEstimate(quest, c, { ...choice, energy });
-    const have = c.world.purse[material] || 0;
-    const limit = have + est.room;
-    const away = Boolean(c.world.expedition);
-    if (choice.amount > est.room) choice.amount = Math.max(1, est.room);
-
-    const modeButton = (id, label) => h('button', {
-      class: `chip ${choice.mode === id ? 'active' : ''}`, type: 'button',
-      onclick: () => { choice.mode = id; draw(); },
-    }, label);
-    const step = (delta) => () => { choice.amount = Math.min(Math.max(1, choice.amount + delta), Math.max(1, est.room)); draw(); };
-
-    const range = est.perEnergy;
-    const time = choice.mode === 'menge'
-      ? `etwa ${est.likely} Min., höchstens ${est.atMost}`
-      : `bis zu ${energy} Min.`;
-    const canStart = state.status === 'open' && !away && est.wanted >= 1 && energy >= 1;
-    let note = null;
-    if (est.room <= 0) note = `Dein Envoy kann nicht mehr als ${limit} ${name} tragen.`;
-    else if (choice.mode === 'menge' && choice.amount >= est.room) note = `Mehr als ${limit} ${name} kann dein Envoy gerade nicht tragen.`;
-    else if (choice.mode === 'menge' && !est.sure) note = 'Die Energie reicht vielleicht nicht für die ganze Menge.';
-
-    replaceChildren(box,
-      h('header', { class: 'quest-top' },
-        h('span', { class: 'seal mini' }, icon(PLACE_ICONS.sammeln)),
-        h('span', { class: 'quest-title' },
-          h('span', { class: 'quest-name' }, quest.name),
-          h('span', { class: 'quest-kind' }, 'Sammeln'))),
-      h('div', { class: 'quest-text' }, paragraphs(quest.text)),
-      h('div', { class: 'chips gather-mode', role: 'group', 'aria-label': 'Wie lange sammeln' },
-        modeButton('menge', 'Bis zu einer Menge'), modeButton('energie', 'Bis die Energie reicht')),
-      choice.mode === 'menge'
-        ? h('div', { class: 'stepper' },
-          h('button', { class: 'btn ghost small', type: 'button', 'aria-label': 'Weniger', disabled: choice.amount <= 1, onclick: step(-1) }, '−'),
-          h('span', { class: 'stepper-value' }, resource(material, String(choice.amount))),
-          h('button', { class: 'btn ghost small', type: 'button', 'aria-label': 'Mehr', disabled: choice.amount >= est.room, onclick: step(1) }, '+'))
-        : null,
-      h('dl', { class: 'quest-facts' },
-        fact('Im Vorrat', h('strong', {}, `${have} / ${limit}`), h('span', { class: 'muted' }, ` ${name}`)),
-        fact('Dauer', h('strong', {}, time)),
-        fact('Je Energie', h('strong', {}, `${range.min} bis ${range.max}`), h('span', { class: 'muted' }, ` ${name}, im Schnitt ${range.average.toFixed(1).replace('.', ',')}`)),
-        fact('Mehr Ertrag mit', statList(quest.yieldStats))),
-      note ? h('p', { class: 'quest-note gather-note' }, note) : null,
-      h('div', { class: 'quest-actions' },
-        state.status === 'running' ? h('span', { class: 'quest-note' }, 'Der Envoy ist gerade dort.')
-          : away ? h('button', { class: 'btn ghost small', disabled: true }, 'Der Envoy ist unterwegs')
-            : energy < 1 ? h('button', { class: 'btn ghost small', disabled: true }, 'Keine Energie übrig')
-              : est.wanted < 1 ? h('button', { class: 'btn ghost small', disabled: true }, 'Kein Platz zum Tragen')
-                : h('button', {
-                  class: 'btn primary', disabled: !canStart,
-                  onclick: () => {
-                    const event = game.startExpedition(quest.id, { mode: choice.mode, amount: choice.amount });
-                    if (!event) return;
-                    closeSheet();
-                    markMapForScroll();
-                    toast(`Der Envoy sammelt ${name}`);
-                  },
-                }, 'Sammeln')));
-  };
-  draw();
-  return box;
+// Positions on an arc beside the marker, in px from its centre: one row
+// for every entry, the middle ones a little further out, all inside the map.
+function arc(count, side, originY, height) {
+  const gap = 50;
+  const ys = Array.from({ length: count }, (_, i) => (i - (count - 1) / 2) * gap);
+  const radius = Math.max(56, Math.abs(ys[0]) + 34);
+  const top = originY + ys[0] - 28;
+  const bottom = originY + ys[count - 1] + 28;
+  const shift = top < 0 ? -top : bottom > height ? height - bottom : 0;
+  return ys.map((y) => ({ x: side * Math.sqrt(radius * radius - y * y), y: y + shift }));
 }
 
-function questCard(quest, game, c) {
-  if (quest.gather) return gatherCard(quest, game);
-  const state = questState(quest, c);
-  const plan = game.preview(quest.id);
-  const monsters = quest.monsters.map((id) => c.catalog.monsterById.get(id)).filter(Boolean);
-  const kind = quest.encounter ? 'Begegnung' : KIND_NAMES[quest.kind] || quest.kind;
-  const finished = state.status === 'done' || state.status === 'cooldown';
-
-  const facts = [];
-  if (!finished) {
-    const conditions = quest.conditions.map((cond) => h('span', { class: `cond ${conditionMet(cond, c) ? 'met' : 'unmet'}` },
-      conditionMet(cond, c) ? icon(UI_ICONS.check) : icon(UI_ICONS.lock), describeCondition(cond, c)));
-    if (conditions.length > 0) facts.push(fact('Voraussetzung', h('span', { class: 'cond-list' }, conditions)));
-    const needs = Object.entries(quest.consumes);
-    if (needs.length > 0) {
-      facts.push(fact('Braucht', h('span', { class: 'res-list' }, needs.map(([k, v]) =>
-        resource(k, `${Math.min(c.world.purse[k] || 0, v)}/${v}`, { lacking: (c.world.purse[k] || 0) < v })))));
-    }
-    if (quest.kind === 'kampf') {
-      const m = monsters[0];
-      facts.push(fact('Geist', h('span', { class: 'foe' }, h('span', { class: 'portrait small' }, h('img', { src: m.bild, alt: '' })), `${m.name} · Stufe ${m.stufe}`)));
-    }
-    if (quest.kind === 'hoehle') {
-      const reach = plan.outcome.fights.filter((f) => f.result !== 'driven').length;
-      facts.push(fact('Geister', h('span', {}, `${monsters.length} nacheinander. Mit den jetzigen Werten schafft der Envoy etwa ${reach} davon.`)));
-    }
-    facts.push(fact('Dauer', ...durationText(plan)));
-    facts.push(fact('Energie', h('strong', {}, String(plan.cost))));
-    if (monsters.length === 0 && quest.speedStats.length > 0) facts.push(fact('Kürzer mit', statList(quest.speedStats)));
-    if (quest.yieldStats.length > 0) facts.push(fact('Mehr Ertrag mit', statList(quest.yieldStats)));
-    if (monsters.length > 0) facts.push(fact('Im Kampf', h('span', { class: 'muted' }, 'Kraft trifft härter, Ausdauer hält länger, Beweglichkeit weicht aus, Gelassenheit beruhigt.')));
-    const reward = rewardText(quest, c);
-    if (quest.facility) {
-      const row = facilityRow(c.catalog, quest.facility, Number(quest.id.split(':')[2]));
-      facts.push(fact('Bringt', h('span', {}, `${facilityEffect(row)} · Hygge +${row.hygge}`)));
-    } else if (reward.length > 0) facts.push(fact(quest.kind === 'hoehle' ? 'Alle überwunden' : 'Ertrag', h('span', { class: 'res-list' }, reward)));
-    if (monsters.length > 0) facts.push(fact('Beute', h('span', { class: 'muted' }, `${CURRENCY} von jedem Geist, manchmal ein Fundstück.`)));
-  }
-
-  return h('article', { class: `quest-card ${state.status}` },
-    h('header', { class: 'quest-top' },
-      monsters.length === 1 && quest.kind === 'kampf'
-        ? h('span', { class: 'portrait' }, h('img', { src: monsters[0].bild, alt: '' }))
-        : h('span', { class: 'seal mini' }, icon(PLACE_ICONS[quest.kind === 'hoehle' ? 'hoehle' : quest.kind === 'sammeln' ? 'sammeln' : quest.kind === 'bauen' ? 'lager' : 'ort'])),
-      h('span', { class: 'quest-title' },
-        h('span', { class: 'quest-name' }, quest.name),
-        h('span', { class: 'quest-kind' }, kind))),
-    quest.text && !finished ? h('div', { class: 'quest-text' }, paragraphs(quest.text)) : null,
-    facts.length > 0 ? h('dl', { class: 'quest-facts' }, facts) : null,
-    h('div', { class: 'quest-actions' }, startButton(quest, plan, game, state)));
-}
-
-export function openPlace(placeId, game) {
+function tapPlace(place, game, marker) {
+  const wasOpen = marker.classList.contains('is-fanned');
+  closeFan?.();
+  if (wasOpen) return;
   const c = game.ctx();
-  const place = game.catalog.placeById.get(placeId);
-  const unlocked = placeUnlocked(place, c);
-  const quests = unlocked ? questsAt(placeId, c) : [];
 
-  const homeLink = place.typ === 'lager'
-    ? h('a', { class: 'btn ghost small', href: '#lager', onclick: closeSheet }, icon(NAV_ICONS.lager), 'Zum Lager')
-    : null;
+  let entries = [];
+  let message = null;
+  if (!placeUnlocked(place, c)) message = h('span', {}, icon(UI_ICONS.lock), `Öffnet sich mit: ${place.unlock.map((u) => describeCondition(u, c)).join(', ')}`);
+  else {
+    entries = fanEntries(place, game, c);
+    if (entries.length === 0) message = h('span', {}, questsAt(place.id, c).length > 0 ? 'Hier ist alles getan.' : 'Heute ist es hier still.');
+    if (entries.length === 1) { entries[0].open(); return; }
+  }
+  openFan(place, marker, entries, message);
+}
 
-  openSheet({
-    title: place.name,
-    eyebrow: place.region,
-    className: 'place-sheet',
-    content: [
-      h('p', { class: 'place-text' }, place.text),
-      !unlocked
-        ? h('p', { class: 'place-locked' }, icon(UI_ICONS.lock), `Öffnet sich mit: ${place.unlock.map((u) => describeCondition(u, c)).join(', ')}`)
-        : null,
-      homeLink,
-      quests.length > 0
-        ? h('div', { class: 'quest-list' }, quests.map((q) => questCard(q, game, c)))
-        : unlocked ? h('p', { class: 'muted' }, 'Heute ist es hier still.') : null,
-    ],
+function openFan(place, marker, entries, message) {
+  const canvas = marker.parentElement;
+  const scroller = canvas.parentElement;
+  const side = place.x > 58 ? -1 : 1;
+  const originX = (canvas.offsetWidth * place.x) / 100;
+  const originY = (canvas.offsetHeight * place.y) / 100;
+  const spots = arc(Math.max(1, entries.length), side, originY, canvas.offsetHeight);
+
+  const close = () => {
+    if (closeFan !== close) return;
+    closeFan = null;
+    document.removeEventListener('keydown', onKey);
+    marker.classList.remove('is-fanned');
+    veil.remove();
+    fan.remove();
+  };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  const veil = h('div', { class: 'map-veil', onclick: close });
+
+  const items = message
+    ? [h('p', { class: 'fan-note', style: { '--x': `${side * 40}px`, '--y': '0px', '--i': '0' } }, message)]
+    : entries.map((entry, i) => h('button', {
+      class: `fan-item ${entry.status}`,
+      type: 'button',
+      style: { '--x': `${spots[i].x}px`, '--y': `${spots[i].y}px`, '--i': String(i) },
+      onclick: () => { close(); entry.open(); },
+    }, entry.seal,
+    entry.badge ? h('span', { class: 'fan-badge', html: entry.badge }) : null,
+    h('span', { class: 'fan-label' }, entry.name)));
+  const fan = h('div', { class: 'fan', 'data-side': side > 0 ? 'right' : 'left', style: { left: `${place.x}%`, top: `${place.y}%` } }, items);
+
+  marker.classList.add('is-fanned');
+  canvas.append(veil, fan);
+  closeFan = close;
+  document.addEventListener('keydown', onKey);
+  requestAnimationFrame(() => {
+    fan.classList.add('open');
+    reveal(scroller, marker, originX, originY, items);
   });
 }
 
+// Scrolls the map so that the place and its whole fan can be seen.
+function reveal(scroller, marker, originX, originY, items) {
+  let left = originX - marker.offsetWidth / 2;
+  let right = originX + marker.offsetWidth / 2;
+  let top = originY - 30;
+  let bottom = originY + 30;
+  for (const item of items) {
+    const x = originX + parseFloat(item.style.getPropertyValue('--x'));
+    const y = originY + parseFloat(item.style.getPropertyValue('--y'));
+    const side = item.parentElement.dataset.side === 'left' ? -1 : 1;
+    left = Math.min(left, side > 0 ? x - 24 : x - item.offsetWidth);
+    right = Math.max(right, side > 0 ? x + item.offsetWidth : x + 24);
+    top = Math.min(top, y - 26);
+    bottom = Math.max(bottom, y + 26);
+  }
+  const dx = left < scroller.scrollLeft ? left - scroller.scrollLeft
+    : right > scroller.scrollLeft + scroller.clientWidth ? right - scroller.scrollLeft - scroller.clientWidth : 0;
+  const dy = top < scroller.scrollTop ? top - scroller.scrollTop
+    : bottom > scroller.scrollTop + scroller.clientHeight ? bottom - scroller.scrollTop - scroller.clientHeight : 0;
+  if (dx || dy) scroller.scrollBy({ left: dx, top: dy, behavior: 'smooth' });
+}

@@ -7,7 +7,8 @@
 import { ENCOUNTER_COST, ENCOUNTER_CHANCE, STATS, MATERIALS, GATHER_STATS } from '../config.js';
 import { seededRandom } from './rng.js';
 import { heroPower } from './hero.js';
-import { facilityQuests, facilityQuestById, stageRow, CAMP_PLACE } from './camp.js';
+import { facilityQuestById, stageRow } from './camp.js';
+import { gatherPlace } from './map.js';
 import { addDays } from '../days.js';
 
 const statName = (id) => STATS.find((s) => s.id === id).name;
@@ -90,18 +91,20 @@ export function encountersFor(day, ctx) {
     });
 }
 
-// Gathering on the Trümmerfeld: always on offer, at the camp itself, so the way costs nothing.
-// What it brings is rolled when the Envoy sets out (see run.js).
+// Gathering on the Trümmerfeld beside the camp: always on offer, and the way
+// costs nothing. What it brings is rolled when the Envoy sets out (see run.js).
 const GATHER = {
   stein: { name: 'Steine sammeln', text: 'Lose Steine liegen überall zwischen den Trümmern. Der Envoy hebt auf, was er tragen kann.' },
   pilzholz: { name: 'Pilzholz sammeln', text: 'Abgebrochene Pilzstiele, leicht und zäh. Der Envoy sammelt, was er tragen kann.' },
 };
 
-export function gatherQuests() {
+export function gatherQuests(catalog) {
+  const place = gatherPlace(catalog);
+  if (!place) return [];
   return Object.entries(GATHER).map(([material, g]) => ({
     id: `gather:${material}`,
     name: g.name,
-    place: CAMP_PLACE,
+    place: place.id,
     kind: 'sammeln',
     gather: { material, stat: GATHER_STATS[material] },
     text: g.text,
@@ -120,7 +123,7 @@ export function gatherQuests() {
 
 export function questById(id, ctx) {
   if (id.startsWith('enc:')) return encountersFor(ctx.day, ctx).find((q) => q.id === id) || null;
-  if (id.startsWith('gather:')) return gatherQuests().find((q) => q.id === id) || null;
+  if (id.startsWith('gather:')) return gatherQuests(ctx.catalog).find((q) => q.id === id) || null;
   if (id.startsWith('bau:')) return facilityQuestById(ctx.catalog, id);
   return ctx.catalog.questById.get(id) || null;
 }
@@ -149,11 +152,10 @@ export function questsAt(placeId, ctx) {
   // a quest set to `aktiv: nein` in the table is not offered for now
   const fixed = ctx.catalog.quests.filter((q) => q.place === placeId && q.active !== false);
   const encounters = encountersFor(ctx.day, ctx).filter((q) => q.place === placeId);
-  // the camp itself offers the building of its facilities (once it has a fire) and gathering
-  const atTheCamp = placeId === CAMP_PLACE;
-  const building = atTheCamp && ctx.world.camp.stage >= 1 ? facilityQuests(ctx.world, ctx.catalog) : [];
-  const gathering = atTheCamp ? gatherQuests() : [];
-  return [...encounters, ...fixed, ...building, ...gathering];
+  // the Trümmerfeld beside the camp offers the gathering; the facilities of
+  // the camp are no quests on the map, they are built on the Lager page
+  const gathering = placeId === gatherPlace(ctx.catalog)?.id ? gatherQuests(ctx.catalog) : [];
+  return [...encounters, ...fixed, ...gathering];
 }
 
 export const KIND_NAMES = {

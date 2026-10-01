@@ -171,7 +171,7 @@ export const game = {
 
   // What an expedition would take, for the display before starting.
   // Fights are rolled with a fixed seed, so the numbers are a fair guess.
-  // options: for gathering { mode: 'menge' | 'energie', amount }
+  // options: for gathering { amount }
   preview(questId, options = {}) {
     const c = this.ctx();
     const quest = questById(questId, c);

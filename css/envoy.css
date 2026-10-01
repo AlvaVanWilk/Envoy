@@ -771,7 +771,7 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
   background: #0c1417;
 }
-.camp-picture { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: 460px; object-fit: cover; object-position: 50% 78%; }
+.camp-picture { display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 460px; object-fit: cover; object-position: 50% 78%; }
 /* the day picture, darker or warmer, where the camp has no picture of its own for the time of day */
 .camp-picture.tint-morgen { filter: sepia(0.28) saturate(1.05) hue-rotate(-12deg) brightness(0.96); }
 .camp-picture.tint-abend { filter: sepia(0.45) saturate(1.35) hue-rotate(-22deg) brightness(0.78); }
@@ -789,6 +789,160 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 }
 .camp-status { margin-top: 2px; font-size: 14px; color: var(--text-2); }
 .camp-grid { display: grid; gap: 14px; align-items: start; }
+.camp-col { display: grid; gap: 14px; align-content: start; }
+.camp-scene { position: relative; }
+
+/* the Hygge on the picture: a ring that fills up to the next stage, and the facilities */
+.camp-hygge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 18px 7px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(246, 161, 82, 0.4);
+  background: rgba(8, 15, 17, 0.66);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.hygge-medal { position: relative; flex: none; display: grid; place-items: center; width: 66px; height: 66px; }
+.hygge-medal svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.hygge-track { fill: rgba(0, 0, 0, 0.4); stroke: rgba(246, 161, 82, 0.18); stroke-width: 9; }
+.hygge-arc { fill: none; stroke: #f6a152; stroke-width: 9; stroke-linecap: round; filter: drop-shadow(0 0 4px rgba(246, 161, 82, 0.8)); transition: stroke-dasharray 0.8s var(--ease); }
+.hygge-num { position: relative; font-family: var(--font-display); font-size: 26px; font-weight: 700; line-height: 1; color: #ffe4c6; text-shadow: 0 0 12px rgba(246, 161, 82, 0.7); }
+.hygge-side { display: grid; gap: 3px; }
+.hygge-word { font-family: var(--font-display); font-size: 16px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #ffd9b0; }
+.hygge-goal { font-size: 12px; color: var(--text-2); }
+.camp-hygge.is-ready .hygge-goal { color: var(--ok); }
+.facility-pips { display: flex; gap: 5px; margin-top: 3px; }
+.pip { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(240, 230, 211, 0.05); border: 1px solid rgba(240, 230, 211, 0.2); color: rgba(240, 230, 211, 0.32); }
+.pip .icon { width: 15px; height: 15px; }
+.pip.is-built { background: radial-gradient(circle at 40% 32%, #f8b06a, #b8530f 78%); border-color: #ffd9b0; color: #241205; --engrave: rgba(255, 226, 190, 0.6); box-shadow: 0 0 8px rgba(246, 161, 82, 0.6); }
+
+/* the buttons on the picture */
+.camp-actions { position: absolute; right: 12px; bottom: 12px; left: 12px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; pointer-events: none; }
+.camp-actions > * { pointer-events: auto; }
+.camp-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 16px 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(240, 230, 211, 0.3);
+  background: rgba(8, 15, 17, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #f3e9d8;
+  cursor: pointer;
+}
+.camp-action .icon { width: 20px; height: 20px; }
+.camp-action:hover { border-color: rgba(246, 161, 82, 0.7); }
+.camp-action.is-locked { color: rgba(243, 233, 216, 0.6); }
+.camp-action.is-locked .icon { width: 16px; height: 16px; color: var(--muted); }
+.camp-build.is-glowing { border-color: #f6a152; color: #ffe4c6; animation: camp-glow 2s ease-in-out infinite; }
+.camp-build.is-glowing .icon { color: #f6a152; }
+@keyframes camp-glow {
+  0%, 100% { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), 0 0 0 0 rgba(246, 161, 82, 0); }
+  50% { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), 0 0 0 3px rgba(246, 161, 82, 0.35), 0 0 22px rgba(246, 161, 82, 0.6); }
+}
+.camp-upgrade { position: relative; display: inline-flex; }
+.camp-hint {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  width: max-content;
+  max-width: 240px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(240, 230, 211, 0.28);
+  background: #111b1d;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-2);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+.camp-upgrade.show-hint .camp-hint { opacity: 1; transform: none; }
+@media (hover: hover) { .camp-upgrade:hover .camp-hint { opacity: 1; transform: none; } }
+
+/* „Lager einrichten“: the facilities as tiles, lit when built, glowing when they can be built now */
+.facility-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.facility-tile {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 8px;
+  padding: 18px 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #05090d;
+  background: linear-gradient(180deg, #182427, #10191b);
+  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.06), 0 2px 6px rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.facility-tile:hover { border-color: rgba(246, 161, 82, 0.55); }
+.facility-tile:active { transform: scale(0.98); }
+.ft-emblem { position: relative; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: radial-gradient(circle at 40% 32%, #2b454b, #0f1c1f 72%); border: 2px solid rgba(240, 230, 211, 0.22); color: rgba(240, 230, 211, 0.42); }
+.ft-emblem .icon { width: 36px; height: 36px; }
+.ft-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+.ft-level { font-size: 13px; color: var(--copper-bright); }
+.ft-costs { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ft-cost { display: inline-flex; align-items: center; gap: 4px; }
+.ft-cost .res-icon { width: 20px; height: 20px; }
+.ft-cost.lacking { color: var(--warn); }
+.ft-badge { position: absolute; right: -4px; bottom: -2px; width: 24px; height: 24px; padding: 3.5px; border-radius: 50%; background: #1d2d31; border: 1px solid #f0e6d3; color: var(--ok); }
+.ft-badge svg { width: 100%; height: 100%; display: block; }
+.facility-tile.is-built { border-color: rgba(246, 161, 82, 0.4); background: linear-gradient(180deg, #24373b, #162528); }
+.ft-emblem.is-built, .facility-tile.is-built .ft-emblem { background: radial-gradient(circle at 40% 32%, #f8b06a, #b8530f 78%); border-color: #ffd9b0; color: #241205; --engrave: rgba(255, 226, 190, 0.6); box-shadow: 0 0 18px rgba(246, 161, 82, 0.55); }
+.facility-tile.is-ready { border-color: rgba(246, 161, 82, 0.75); animation: tile-glow 2.2s ease-in-out infinite; }
+.ft-emblem.is-ready, .facility-tile.is-ready .ft-emblem { border-color: #f3e9d8; color: #f3e9d8; }
+.facility-tile.is-lacking { filter: saturate(0.55) brightness(0.78); }
+.facility-tile.is-running .ft-emblem { border-color: var(--copper-bright); color: #f3e9d8; }
+.facility-tile.is-running .ft-badge { color: var(--copper-bright); }
+@keyframes tile-glow { 50% { box-shadow: 0 0 0 1px rgba(246, 161, 82, 0.5), 0 0 20px rgba(246, 161, 82, 0.45); } }
+.facility-head { display: flex; align-items: center; gap: 14px; }
+.facility-head .ft-emblem { flex: none; }
+.facility-head .quest-text { margin: 0; }
+.facility-sheet .facility-effect { color: var(--copper-bright); }
+.facility-sheet .quest-actions .btn.ghost:first-child { margin-right: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .camp-build.is-glowing, .facility-tile.is-ready { animation: none; }
+}
+/* on the phone the picture is small: everything on it a size smaller, the buttons side by side */
+@media (max-width: 639px) {
+  .camp-hygge { top: 10px; right: 10px; gap: 9px; padding: 5px 14px 5px 5px; }
+  .hygge-medal { width: 54px; height: 54px; }
+  .hygge-num { font-size: 22px; }
+  .hygge-word { font-size: 14px; }
+  .hygge-goal { font-size: 11px; }
+  .pip { width: 21px; height: 21px; }
+  .pip .icon { width: 13px; height: 13px; }
+  .camp-actions { right: 10px; bottom: 10px; left: 10px; flex-wrap: nowrap; }
+  .camp-actions > * { flex: 1 1 auto; min-width: 0; }
+  .camp-action { justify-content: center; min-height: 40px; padding: 6px 9px; gap: 5px; font-size: 11.5px; letter-spacing: 0; white-space: nowrap; }
+  .camp-upgrade .camp-action { width: 100%; }
+  .camp-action .icon { width: 16px; height: 16px; }
+}
 .sheet-text { color: var(--text-2); }
 
 .sick-note { margin-bottom: 10px; font-size: 13px; color: var(--warn); }
@@ -1238,6 +1392,84 @@ button.task-check:hover { color: var(--stat); }
   transition: left 1s linear, top 1s linear;
 }
 .hero-token svg { width: 100%; height: 100%; display: block; }
+/* while gathering, the Envoy walks about on the Trümmerfeld */
+.hero-token.is-gathering { animation: wander 11s ease-in-out infinite; }
+@keyframes wander {
+  0%, 100% { translate: 0 0; }
+  18% { translate: 16px -7px; }
+  34% { translate: 22px 8px; }
+  50% { translate: 4px 15px; }
+  68% { translate: -15px 9px; }
+  84% { translate: -19px -6px; }
+}
+
+/* the fan of a place: one seal for each quest, with its name */
+.map-veil { position: absolute; inset: 0; z-index: 4; background: rgba(8, 15, 17, 0.45); animation: veil-in 0.2s ease; }
+@keyframes veil-in { from { opacity: 0; } }
+.place-marker.is-fanned { z-index: 5; }
+.place-marker.is-fanned .seal { border-color: var(--copper-bright); box-shadow: 0 0 0 1px #141e21, 0 0 0 4px rgba(246, 161, 82, 0.45), 0 3px 8px rgba(0, 0, 0, 0.5); }
+.place-marker.is-fanned .place-name { color: #f3e9d8; text-shadow: 0 1px 2px #000, 0 0 6px #000; }
+.fan { position: absolute; z-index: 6; width: 0; height: 0; }
+.fan-item, .fan-note {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  opacity: 0;
+  transform: translate(-18px, -50%) scale(0.3);
+  transform-origin: 18px 50%;
+  transition: transform 0.32s var(--ease) calc(var(--i) * 45ms), opacity 0.2s ease calc(var(--i) * 45ms);
+}
+.fan.open .fan-item, .fan.open .fan-note { opacity: 1; transform: translate(calc(var(--x) - 18px), calc(var(--y) - 50%)); }
+.fan[data-side="left"] .fan-item, .fan[data-side="left"] .fan-note { left: auto; right: 0; flex-direction: row-reverse; transform: translate(18px, -50%) scale(0.3); transform-origin: calc(100% - 18px) 50%; }
+.fan.open[data-side="left"] .fan-item, .fan.open[data-side="left"] .fan-note { transform: translate(calc(var(--x) + 18px), calc(var(--y) - 50%)); }
+.fan-item { padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; text-align: left; }
+.seal.fan-seal { flex: none; width: 36px; height: 36px; overflow: hidden; }
+.seal.fan-seal .icon { width: 20px; height: 20px; }
+.seal.fan-seal .res-icon { width: 24px; height: 24px; }
+.seal.fan-seal.is-portrait img { width: 100%; height: 100%; object-fit: cover; }
+.fan-label {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #1c2b2e, #111b1d);
+  border: 1px solid rgba(240, 230, 211, 0.32);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #f3e9d8;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.fan-item:hover .fan-label, .fan-item:focus-visible .fan-label { border-color: var(--copper-bright); background: linear-gradient(180deg, #24373a, #152225); }
+.fan-item:hover .seal, .fan-item:focus-visible .seal { border-color: var(--copper-bright); }
+.fan-item.done .fan-label, .fan-item.cooldown .fan-label, .fan-item.locked .fan-label { color: var(--text-2); border-color: rgba(240, 230, 211, 0.16); }
+.fan-item.done .seal, .fan-item.cooldown .seal { opacity: 0.7; }
+.fan-item.running .fan-label { border-color: var(--copper); }
+.fan-badge { position: absolute; top: 21px; left: 22px; width: 17px; height: 17px; padding: 2.5px; border-radius: 50%; background: #1d2d31; border: 1px solid #f0e6d3; color: #ebdfc7; pointer-events: none; }
+.fan[data-side="left"] .fan-badge { left: auto; right: -4px; }
+.fan-badge svg { width: 100%; height: 100%; display: block; }
+.fan-item.running .fan-badge { color: var(--copper-bright); }
+.fan-note {
+  width: max-content;
+  max-width: 220px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #1c2b2e, #111b1d);
+  border: 1px solid rgba(240, 230, 211, 0.28);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-2);
+}
+.fan-note .icon { display: inline-block; width: 14px; height: 14px; margin-right: 6px; vertical-align: -2px; color: var(--warn); }
+@media (prefers-reduced-motion: reduce) {
+  .hero-token.is-gathering { animation: none; }
+  .fan-item, .fan-note { transition: none; }
+}
 @keyframes target-pulse { 50% { box-shadow: 0 0 0 1px #141e21, 0 0 0 7px rgba(250, 244, 232, 0.35), 0 3px 8px rgba(0, 0, 0, 0.5); } }
 @keyframes spirit-glow { 50% { box-shadow: 0 0 16px rgba(190, 236, 238, 1); } }
 
@@ -1267,60 +1499,31 @@ button.task-check:hover { color: var(--stat); }
 .journey-phase { font-weight: 700; }
 .journey-until { color: var(--muted); }
 
-.place-text { color: var(--text-2); }
-.place-locked { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--warn); }
-.place-locked .icon { width: 16px; height: 16px; }
-.quest-list { display: grid; gap: 12px; }
-.quest-card {
-  display: grid;
-  gap: 10px;
-  padding: 14px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, #182427, #10191b);
-  border: 1px solid #05090d;
-  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.06), 0 2px 6px rgba(0, 0, 0, 0.35);
-}
-.quest-card.done, .quest-card.cooldown { opacity: 0.72; }
-.quest-top { display: flex; align-items: center; gap: 12px; }
-.quest-title { display: grid; gap: 1px; min-width: 0; }
-.quest-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
-.quest-kind { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+/* the window of a quest */
+.quest-sheet .sheet-body { display: grid; gap: 14px; }
 .quest-text { display: grid; gap: 8px; font-size: 14px; color: var(--text-2); }
 .quest-text p { margin: 0; }
-.gather-mode { flex-wrap: wrap; }
-.stepper { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 4px 0; }
+.gather { display: grid; gap: 12px; }
+.stepper { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 2px 0; }
 .stepper .btn { min-width: 52px; font-size: 20px; }
+.stepper .btn.at-limit { opacity: 0.45; }
 .stepper-value { min-width: 96px; text-align: center; font-size: 22px; }
 .stepper-value .res-icon { width: 28px; height: 28px; }
-.gather-note { color: var(--warn); }
+.gather-note { margin: -4px 0 0; text-align: center; font-size: 14px; color: var(--warn); }
+.gather-stock { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
 
-/* the camp: first task, facilities, Hygge */
+/* Energie before setting out: stays for sure, maybe used, used for sure */
+.energy-preview .stamina-value strong { color: var(--copper-bright); }
+.ep-keep, .ep-maybe, .ep-used { position: absolute; top: 0; bottom: 0; left: 0; transition: left 0.35s var(--ease), width 0.35s var(--ease); }
+.ep-keep { background: linear-gradient(180deg, #dcefee 0%, #7ea3a4 55%, #3f6c73 100%); box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.4); }
+.ep-maybe { background: repeating-linear-gradient(-45deg, rgba(126, 163, 164, 0.85) 0 4px, rgba(63, 108, 115, 0.35) 4px 8px); }
+.ep-used { background: rgba(126, 163, 164, 0.14); box-shadow: inset 0 0 0 1px rgba(220, 239, 238, 0.28); }
+.energy-preview.short .ep-used { background: rgba(234, 183, 92, 0.2); box-shadow: inset 0 0 0 1px rgba(234, 183, 92, 0.6); }
+
+/* the camp: first task */
 .camp-first { display: grid; gap: 10px; }
 .camp-first p { margin: 0; color: var(--text-2); }
 .camp-first .btn { justify-self: start; }
-.facilities { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.facility { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #05090d; border-radius: 8px; background: linear-gradient(180deg, #172326, #10181a); box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.05); }
-.facility.built { border-color: rgba(143, 192, 156, 0.35); }
-.facility-main { display: grid; gap: 3px; min-width: 0; }
-.facility-name { display: flex; align-items: baseline; gap: 8px; font-family: var(--font-display); font-size: 16px; font-weight: 700; }
-.facility-level { font-family: var(--font-body); font-size: 12px; font-weight: 400; color: var(--ok); }
-.facility-text { font-size: 13px; color: var(--text-2); }
-.facility-effect { font-size: 13px; color: var(--copper-bright); }
-.facility-costs { margin-top: 2px; font-size: 13px; }
-.facility-action { display: grid; justify-items: end; max-width: 220px; text-align: right; }
-@media (max-width: 520px) {
-  .facility { grid-template-columns: 1fr; }
-  .facility-action { justify-items: start; max-width: none; text-align: left; }
-}
-.hygge { display: grid; gap: 6px; margin-bottom: 14px; }
-.hygge-top { display: flex; justify-content: space-between; align-items: baseline; }
-.hygge-label { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
-.hygge-value { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.hygge-value strong { font-family: var(--font-display); font-size: 17px; color: var(--text); }
-.hygge-bar { position: relative; height: 12px; overflow: hidden; border-radius: 3px; background: #090c11; border: 1px solid #04070a; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8); }
-.hygge-fill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(180deg, #ffd9b0 0%, #f6a152 55%, #b8530f 100%); box-shadow: inset 0 1px 0 rgba(255, 236, 214, 0.45); transition: width 0.6s var(--ease); }
-.hygge-note { margin: 0; font-size: 12px; color: var(--muted); }
-.hygge[data-ready="true"] .hygge-note { color: var(--ok); }
 .quest-facts { margin: 0; display: grid; gap: 7px; padding-top: 10px; border-top: 1px solid var(--line); }
 .fact { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: baseline; gap: 10px; font-size: 14px; }
 .fact dt { font-size: 12px; letter-spacing: 0.03em; color: var(--muted); }
@@ -1491,6 +1694,12 @@ button.task-check:hover { color: var(--stat); }
 .spirit-chips dt { font-size: 13px; color: #5b5448; }
 .spirit-chips dd { margin: 0; font-family: var(--font-display); font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .spirit-line { font-size: 14px; color: #5b5448; }
+/* a short phone: a smaller picture, so the text runs wider and the page still fits */
+@media (max-height: 700px) {
+  .page-picture { width: 72px; }
+  .spirit-chips { gap: 4px; }
+  .spirit-chips div { padding: 2px 8px; }
+}
 .book-spirits { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
 .book-spirit { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 12px; padding: 6px 12px 6px 7px; border: 1px solid rgba(22, 38, 43, 0.14); border-radius: 999px; background: rgba(255, 250, 238, 0.4); color: var(--ink); text-align: left; cursor: pointer; }
 .book-spirit img { width: 44px; height: 44px; object-fit: cover; border-radius: 50%; border: 2px solid #b8a584; }
@@ -1727,6 +1936,15 @@ body.creating .dock { display: none; }
 
 @media (min-width: 640px) {
   .camp-picture { aspect-ratio: 8 / 3; object-position: 50% 70%; }
+  .camp-hygge { top: 18px; right: 18px; gap: 16px; padding: 9px 24px 9px 9px; }
+  .hygge-medal { width: 88px; height: 88px; }
+  .hygge-num { font-size: 36px; }
+  .hygge-word { font-size: 19px; }
+  .hygge-goal { font-size: 13px; }
+  .pip { width: 28px; height: 28px; }
+  .pip .icon { width: 17px; height: 17px; }
+  .camp-actions { right: 18px; bottom: 18px; left: 18px; gap: 10px; }
+  .camp-action { min-height: 48px; font-size: 15px; padding: 9px 20px 9px 14px; }
   :root { --shield-w: 52px; --bar-h: calc(52px / 2 + 24px); --ring-w: 140px; --top-h: 60px; }
   .handbook { --page-px: 34px; --page-pb: 8px; }
   .book-page { padding-top: 20px; font-size: 17px; }

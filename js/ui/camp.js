@@ -1,24 +1,27 @@
 // "Lager": the first view. The camp as a picture (its stage and the time of
-// day), where the Envoy is, the supplies, the facilities that can be built
-// and which spirits were seen today.
+// day) with its Hygge, the facilities that stand, and the buttons to furnish
+// it („Lager einrichten“, see facilities.js) and to raise it to the next stage
+// („Lager aufwerten“, not built yet: it says why). Below: where the Envoy is,
+// the supplies and which spirits were seen today.
 // The picture belongs to the stage of the camp and to the time of day at
 // the camp (see daylight.js). Without a fire there is only the picture of the
 // day so far; the other times of day show it darker or warmer until there
 // are pictures of their own. (Later the Envoy is to sit there while at the camp.)
 
 import { h, icon } from './dom.js';
-import { PLACE_ICONS } from './icons.js';
+import { PLACE_ICONS, UI_ICONS, SLOT_ICONS, FACILITY_ICONS } from './icons.js';
 import { versioned } from '../config.js';
 import { formatDayLong } from '../days.js';
-import { sectionTitle, supplies, staminaBar, resource, materialLimits, formatMinutes } from './parts.js';
+import { sectionTitle, supplies, staminaBar, materialLimits } from './parts.js';
 import { journeyPanel, openReport } from './journey.js';
-import { encountersFor, questState, placeUnlocked, questsAt } from '../world/quests.js';
-import { openPlace, markMapForScroll } from './worldmap.js';
+import { encountersFor, questState, placeUnlocked } from '../world/quests.js';
+import { showPlace } from './worldmap.js';
+import { openQuest } from './questsheet.js';
+import { openFacilities, canBuildSomething } from './facilities.js';
 import { unseenDropCount } from './character.js';
-import { toast } from './sheet.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
-import { campStatus, facilityEffect, facilityRow, facilityLevel, FACILITY_IDS, CAMP_PLACE } from '../world/camp.js';
+import { campStatus, facilityRow, facilityLevel, FACILITY_IDS } from '../world/camp.js';
 
 // The pictures of the camp, by stage and time of day.
 const PICTURES = {
@@ -54,9 +57,58 @@ function stageLine(game) {
   return status.stage === 0 ? 'Noch kein Lagerfeuer' : `Stufe ${status.stage} · ${status.name}`;
 }
 
+// The Hygge of the camp, large on the picture: a ring that fills up to the
+// Hygge the next stage needs, and the four facilities, lit once they stand.
+function hyggePlaque(game) {
+  const { world } = game.state;
+  const status = campStatus(world, game.catalog);
+  const share = status.need ? Math.min(1, status.hygge / status.need) : 1;
+  const length = 2 * Math.PI * 42;
+  let goal = '';
+  if (status.need !== null) goal = status.ready ? `Genug für Stufe ${status.stage + 1}` : `${status.need} für Stufe ${status.stage + 1}`;
+  return h('button', {
+    class: `camp-hygge ${status.ready ? 'is-ready' : ''}`, type: 'button',
+    'aria-label': `Hygge ${status.hygge}${status.need !== null ? ` von ${status.need}` : ''}`,
+    onclick: () => openFacilities(game),
+  },
+  h('span', { class: 'hygge-medal', html: `<svg viewBox="0 0 100 100" aria-hidden="true"><circle class="hygge-track" cx="50" cy="50" r="42"/><circle class="hygge-arc" cx="50" cy="50" r="42" stroke-dasharray="${(share * length).toFixed(1)} ${length.toFixed(1)}"/></svg>` },
+    h('span', { class: 'hygge-num' }, String(status.hygge))),
+  h('span', { class: 'hygge-side' },
+    h('span', { class: 'hygge-word' }, 'Hygge'),
+    goal ? h('span', { class: 'hygge-goal' }, goal) : null,
+    h('span', { class: 'facility-pips' }, FACILITY_IDS.map((id) => {
+      const level = facilityLevel(world, id);
+      const name = facilityRow(game.catalog, id, Math.max(1, level))?.name || id;
+      return h('span', { class: `pip ${level > 0 ? 'is-built' : ''}`, title: level > 0 ? `${name}, Stufe ${level}` : name }, icon(FACILITY_ICONS[id]));
+    }))));
+}
+
+// The two buttons on the picture. „Lager einrichten“ glows while something
+// can be built right now; „Lager aufwerten“ is not there yet and says why.
+function campActions(game) {
+  const status = campStatus(game.state.world, game.catalog);
+  let why = 'Weitere Stufen folgen später.';
+  if (status.need !== null) why = status.ready ? 'Genug Hygge. Das Aufwerten folgt mit einem späteren Update.' : `Dafür braucht das Lager ${status.need} Hygge.`;
+  const wrap = h('span', { class: 'camp-upgrade' });
+  let timer = null;
+  const showWhy = () => {
+    wrap.classList.add('show-hint');
+    clearTimeout(timer);
+    timer = setTimeout(() => wrap.classList.remove('show-hint'), 3500);
+  };
+  wrap.append(
+    h('button', { class: 'camp-action is-locked', type: 'button', title: why, 'aria-label': `Lager aufwerten. ${why}`, onclick: showWhy },
+      icon(UI_ICONS.lock), h('span', {}, 'Lager aufwerten')),
+    h('span', { class: 'camp-hint', role: 'status' }, why));
+  return h('div', { class: 'camp-actions' },
+    h('button', { class: `camp-action camp-build ${canBuildSomething(game) ? 'is-glowing' : ''}`, type: 'button', onclick: () => openFacilities(game) },
+      icon(SLOT_ICONS.einrichtung), h('span', {}, 'Lager einrichten')),
+    wrap);
+}
+
 function hero(game) {
-  const stage = Math.min(game.state.world.camp.stage, 1);
-  const picture = h('img', { class: 'camp-picture', alt: ALT[stage] });
+  const stage = game.state.world.camp.stage;
+  const picture = h('img', { class: 'camp-picture', alt: ALT[Math.min(stage, 1)] });
   const show = () => {
     const { src, tint } = campPicture(game.state.world.camp.stage, dayPhase());
     picture.className = `camp-picture ${tint ? `tint-${tint}` : ''}`;
@@ -66,7 +118,10 @@ function hero(game) {
   // the day moves on while the page stays open
   const timer = setInterval(() => (picture.isConnected ? show() : clearInterval(timer)), 60000);
   return h('section', { class: 'camp-hero' },
-    picture,
+    h('div', { class: 'camp-scene' },
+      picture,
+      stage >= 1 ? hyggePlaque(game) : null,
+      stage >= 1 ? campActions(game) : null),
     h('div', { class: 'camp-caption' },
       h('div', {},
         h('p', { class: 'eyebrow' }, formatDayLong(game.state.today)),
@@ -78,10 +133,11 @@ function hero(game) {
 // Before there is a fire: what the Envoy is to do first.
 function firstTaskPanel(game) {
   if (game.state.world.camp.stage > 0) return null;
+  const fire = game.catalog.quests.find((q) => q.reward.unlocks.includes('lagerfeuer'));
   return h('section', { class: 'panel camp-first' },
     sectionTitle('Als Erstes'),
     h('p', {}, 'Dein Envoy wird eine Weile hier bleiben. Am besten errichtest du ein Lagerfeuer.'),
-    h('button', { class: 'btn primary small', onclick: () => openPlace(CAMP_PLACE, game) }, 'Zur Quest'));
+    fire ? h('button', { class: 'btn primary small', onclick: () => openQuest(fire, game) }, 'Zur Quest') : null);
 }
 
 // While the Envoy is away: the journey; once back: the report.
@@ -108,7 +164,7 @@ function sightingsPanel(game) {
       const monster = game.catalog.monsterById.get(q.monsters[0]);
       const place = game.catalog.placeById.get(q.place);
       return h('li', {},
-        h('button', { class: 'sighting', onclick: () => openPlace(place.id, game) },
+        h('button', { class: 'sighting', onclick: () => openQuest(q, game) },
           h('span', { class: 'portrait small' }, h('img', { src: monster.bild, alt: '' })),
           h('span', { class: 'sighting-text' },
             h('span', { class: 'sighting-name' }, monster.name),
@@ -125,75 +181,6 @@ function suppliesPanel(game) {
     staminaBar(game.stamina()));
 }
 
-// --- the facilities --------------------------------------------------------------
-
-// One facility: what it is and does, what it takes to build, and the button.
-function facilityRowView(id, game, c) {
-  const level = facilityLevel(c.world, id);
-  const built = level > 0;
-  const now = built ? facilityRow(game.catalog, id, level) : null;
-  const next = facilityRow(game.catalog, id, level + 1);
-  const shown = now || next;
-  const quest = next ? questsAt(CAMP_PLACE, c).find((q) => q.facility === id) : null;
-
-  let action = null;
-  if (next && quest) {
-    const state = questState(quest, c);
-    const st = game.stamina();
-    const away = Boolean(c.world.expedition);
-    if (state.status === 'running') action = h('span', { class: 'quest-note' }, 'Der Envoy baut gerade.');
-    else if (state.status === 'locked') action = h('span', { class: 'quest-note' }, `Es fehlt: ${state.missing.join(', ')}`);
-    else if (away) action = h('button', { class: 'btn ghost small', disabled: true }, 'Der Envoy ist unterwegs');
-    else if (st.value < quest.cost) action = h('button', { class: 'btn ghost small', disabled: true }, `Genug Energie in ${formatMinutes(Math.ceil(((quest.cost - st.value) / st.perHour) * 60))}`);
-    else {
-      action = h('button', {
-        class: 'btn primary small',
-        onclick: () => {
-          if (!game.startExpedition(quest.id)) return;
-          markMapForScroll();
-          toast(`Der Envoy macht sich an die Arbeit: ${quest.name}`);
-        },
-      }, level === 0 ? 'Errichten' : 'Ausbauen');
-    }
-  }
-
-  const costs = next ? [
-    ...Object.entries(next.cost).filter(([, n]) => n > 0).map(([k, n]) => resource(k, String(n), { lacking: (c.world.purse[k] || 0) < n })),
-    h('span', { class: 'res' }, h('span', { class: 'res-amount' }, String(next.energie)), h('span', { class: 'res-name' }, 'Energie')),
-  ] : [];
-
-  return h('li', { class: `facility ${built ? 'built' : ''}`, 'data-facility': id },
-    h('div', { class: 'facility-main' },
-      h('span', { class: 'facility-name' }, shown.name, built ? h('span', { class: 'facility-level' }, `Stufe ${level}`) : null),
-      h('span', { class: 'facility-text' }, built ? facilityEffect(now) : next.text),
-      !built ? h('span', { class: 'facility-effect' }, facilityEffect(next)) : null,
-      !built && costs.length > 0 ? h('span', { class: 'res-list facility-costs' }, costs) : null),
-    action ? h('div', { class: 'facility-action' }, action) : null);
-}
-
-function hyggeBlock(game) {
-  const status = campStatus(game.state.world, game.catalog);
-  if (status.need === null) return null;
-  const share = Math.min(100, Math.round((100 * status.hygge) / status.need));
-  return h('div', { class: 'hygge', 'data-ready': String(status.ready) },
-    h('div', { class: 'hygge-top' },
-      h('span', { class: 'hygge-label' }, 'Hygge'),
-      h('span', { class: 'hygge-value' }, h('strong', {}, String(status.hygge)), ` / ${status.need}`)),
-    h('div', { class: 'hygge-bar' }, h('span', { class: 'hygge-fill', style: { width: `${share}%` } })),
-    h('p', { class: 'hygge-note' }, status.ready
-      ? 'Genug Hygge für die nächste Stufe. Der Ausbau folgt mit einem späteren Update.'
-      : `Mit mehr Hygge lässt sich das Lager später ausbauen. Jede Einrichtung gibt ${facilityRow(game.catalog, FACILITY_IDS[0], 1).hygge}.`));
-}
-
-function facilitiesPanel(game) {
-  if (game.state.world.camp.stage < 1) return null;
-  const c = game.ctx();
-  return h('section', { class: 'panel camp-facilities' },
-    sectionTitle('Einrichtungen'),
-    hyggeBlock(game),
-    h('ul', { class: 'facilities' }, FACILITY_IDS.map((id) => facilityRowView(id, game, c))));
-}
-
 // Things worth knowing, each with a way to act on it.
 function noticesPanel(game) {
   const notes = [];
@@ -201,7 +188,7 @@ function noticesPanel(game) {
   if (dropped > 0) notes.push(h('a', { class: 'notice-line', href: '#envoy' }, `${dropped === 1 ? 'Ein Teil wurde' : `${dropped} Teile wurden`} abgelegt. Mehr beim Envoy.`));
   const c = game.ctx();
   const newPlaces = game.catalog.places.filter((p) => p.unlock.length > 0 && placeUnlocked(p, c) && !seenPlace(p.id));
-  for (const p of newPlaces) notes.push(h('button', { class: 'notice-line', onclick: () => { markPlaceSeen(p.id); openPlace(p.id, game); } }, `Neu auf der Karte: ${p.name}`));
+  for (const p of newPlaces) notes.push(h('button', { class: 'notice-line', onclick: () => { markPlaceSeen(p.id); showPlace(p.id); } }, `Neu auf der Karte: ${p.name}`));
   if (notes.length === 0) return null;
   return h('section', { class: 'panel dash-notices' }, sectionTitle('Hinweise'), notes);
 }
@@ -220,10 +207,11 @@ export function renderCamp(game) {
   return h('section', { class: 'view camp' },
     hero(game),
     h('div', { class: 'camp-grid' },
-      firstTaskPanel(game),
-      expeditionPanel(game),
-      suppliesPanel(game),
-      facilitiesPanel(game),
-      sightingsPanel(game),
-      noticesPanel(game)));
+      h('div', { class: 'camp-col' },
+        firstTaskPanel(game),
+        expeditionPanel(game),
+        suppliesPanel(game)),
+      h('div', { class: 'camp-col' },
+        sightingsPanel(game),
+        noticesPanel(game))));
 }

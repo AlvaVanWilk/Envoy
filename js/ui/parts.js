@@ -85,6 +85,28 @@ export function staminaBar(st) {
     h('p', { class: 'stamina-note' }, over > 0 ? `Ausgeschlafen: ${over} extra` : refillText(st.hoursToFull)));
 }
 
+// The Energie bar before setting out, with what a quest would use: the part
+// that stays for sure (full), the part the dice may use or leave (striped)
+// and the part that is used for sure (faint). min = max for a fixed cost.
+export function energyPreview(st, min, max) {
+  const value = Math.floor(st.value);
+  const total = Math.max(st.max, value);
+  const used = Math.min(value, min);
+  const maybe = Math.min(value, max) - used;
+  const keep = value - used - maybe;
+  const share = (n) => `${(100 * n) / total}%`;
+  const step = st.max <= 30 ? 1 : st.max <= 60 ? 5 : st.max <= 120 ? 10 : 20;
+  const cost = min === max ? String(min) : `${min}–${max}`;
+  return h('div', { class: `stamina energy-preview ${max > value ? 'short' : ''}`, 'aria-label': `Energie: kostet ${cost} von ${value}` },
+    h('div', { class: 'stamina-top' },
+      h('span', { class: 'stamina-label' }, 'Energie'),
+      h('span', { class: 'stamina-value' }, 'kostet ', h('strong', {}, cost), ` von ${value}`)),
+    h('div', { class: 'stamina-bar', style: { '--notches': String(total / step) } },
+      h('span', { class: 'ep-keep', style: { width: share(keep) } }),
+      h('span', { class: 'ep-maybe', style: { left: share(keep), width: share(maybe) } }),
+      h('span', { class: 'ep-used', style: { left: share(keep + maybe), width: share(used) } })));
+}
+
 // The picture of a thing. Without one yet, the symbol of its slot.
 export function itemIcon(thing, className = 'item-icon') {
   if (!thing.icon) return thing.slot ? icon(SLOT_ICONS[thing.slot], `${className} item-glyph`) : h('span', { class: className });

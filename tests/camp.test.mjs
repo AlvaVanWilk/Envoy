@@ -102,11 +102,15 @@ test('things go into the backpack only while it has places left', () => {
 
 const GATHER = (material) => questById(`gather:${material}`, ctxOf(replay([], catalog, DAY, T0)));
 
-test('gathering is offered at the camp from the start and costs no way', () => {
+test('gathering is offered on the Trümmerfeld beside the camp from the start and costs no way', () => {
   const s = replay([], catalog, DAY, T0);
-  const ids = questsAt('lager', ctxOf(s)).map((q) => q.id);
-  assert.ok(ids.includes('gather:stein') && ids.includes('gather:pilzholz') && ids.includes('q-lagerfeuer'));
-  const plan = planExpedition(GATHER('stein'), ctxOf(s), 'x', { mode: 'menge', amount: 6, energy: 10 });
+  const field = catalog.places.find((p) => p.typ === 'truemmerfeld');
+  const ids = questsAt(field.id, ctxOf(s)).map((q) => q.id);
+  assert.deepEqual(ids.sort(), ['gather:pilzholz', 'gather:stein']);
+  // the Lagerfeuer is a quest of its own, at the camp
+  assert.deepEqual(questsAt('lager', ctxOf(s)).map((q) => q.id), ['q-lagerfeuer']);
+  assert.equal(GATHER('stein').place, field.id);
+  const plan = planExpedition(GATHER('stein'), ctxOf(s), 'x', { amount: 6, energy: 10 });
   assert.equal(plan.out, 0);
   assert.equal(plan.back, 0);
   assert.equal(plan.act, plan.outcome.stamina);
@@ -133,8 +137,8 @@ test('a higher stat raises the chance of the dice, not the minimum', () => {
   assert.ok(gatherChance(100) <= 0.9);
   const s = replay([], catalog, DAY, T0);
   const strong = { ...s.stats, kraft: { ...s.stats.kraft, level: 20 } };
-  assert.ok(gatherEstimate(GATHER('stein'), ctxOf(s, { stats: strong }), { amount: 8, energy: 10 }).perEnergy.average
-    > gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 8, energy: 10 }).perEnergy.average);
+  assert.ok(gatherEstimate(GATHER('stein'), ctxOf(s, { stats: strong }), { amount: 8, energy: 10 }).average
+    > gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 8, energy: 10 }).average);
 });
 
 test('Stein follows Kraft, Pilzholz follows Beweglichkeit', () => {
@@ -142,25 +146,30 @@ test('Stein follows Kraft, Pilzholz follows Beweglichkeit', () => {
   assert.equal(GATHER('pilzholz').gather.stat, 'beweglichkeit');
 });
 
-test('to a set amount: exactly that many, never more; with the energy as the limit: as much as fits', () => {
+test('to a set amount: exactly that many, never more', () => {
   const s = replay([], catalog, DAY, T0);
   for (let i = 0; i < 50; i += 1) {
-    const exact = runQuest(GATHER('stein'), ctxOf(s), `menge${i}`, { mode: 'menge', amount: 7, energy: 10 });
+    const exact = runQuest(GATHER('stein'), ctxOf(s), `menge${i}`, { amount: 7, energy: 10 });
     assert.equal(exact.reward.stein, 7);
     assert.ok(exact.stamina >= 2 && exact.stamina <= 4, `energy ${exact.stamina}`);
     assert.equal(exact.minutes, exact.stamina * 1);
   }
-  const all = runQuest(GATHER('pilzholz'), ctxOf(s), 'alles', { mode: 'energie', energy: 3 });
-  assert.equal(all.stamina, 3);
-  assert.ok(all.reward.pilzholz >= 6 && all.reward.pilzholz <= 10);      // 3 Energie, 2 to 4 each, and room for 10
-  const filled = runQuest(GATHER('pilzholz'), ctxOf(s), 'voll', { mode: 'energie', energy: 100 });
-  assert.equal(filled.reward.pilzholz, 10);                              // the empty backpack is full
-  assert.ok(filled.stamina <= 5);
+});
+
+test('the most to choose: what he can carry and what his Energie surely brings in', () => {
+  const s = replay([], catalog, DAY, T0);
+  const c = ctxOf(s);
+  assert.equal(gatherEstimate(GATHER('stein'), c, { energy: 10 }).most, 10);    // the backpack: 5 places of 2
+  assert.equal(gatherEstimate(GATHER('stein'), c, { energy: 3.7 }).most, 6);    // 3 whole Energie, 2 each for sure
+  assert.equal(gatherEstimate(GATHER('stein'), c, { energy: 0.5 }).most, 0);
+  // the Energie an amount takes: at least with the best dice, at most with the worst
+  assert.deepEqual(gatherEstimate(GATHER('stein'), c, { amount: 7, energy: 10 }).energy, { min: 2, max: 4 });
+  assert.deepEqual(gatherEstimate(GATHER('stein'), c, { amount: 1, energy: 10 }).energy, { min: 1, max: 1 });
 });
 
 test('he cannot gather more than he can carry', () => {
   const s = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
-  const out = runQuest(GATHER('stein'), ctxOf(s), 'x', { mode: 'menge', amount: 5, energy: 10 });
+  const out = runQuest(GATHER('stein'), ctxOf(s), 'x', { amount: 5, energy: 10 });
   assert.equal(out.reward.stein, 0);
   assert.equal(out.stamina, 0);
   assert.equal(gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 5, energy: 10 }).room, 0);
@@ -169,19 +178,19 @@ test('he cannot gather more than he can carry', () => {
 test('the first day: the Lagerfeuer is sure to be built with the 10 Energie of the start, whatever the dice do', () => {
   const s = replay([], catalog, DAY, T0);
   assert.equal(maxStamina(s.stats), 10);
-  const est = gatherEstimate(GATHER('stein'), ctxOf(s), { mode: 'menge', amount: 8, energy: 10 });
-  const estPilz = gatherEstimate(GATHER('pilzholz'), ctxOf(s), { mode: 'menge', amount: 2, energy: 10 });
-  assert.equal(est.atMost, 4);        // 8 Stein: four Energie at the very most
-  assert.equal(estPilz.atMost, 1);    // 2 Pilzholz: one Energie at the very most
+  const est = gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 8, energy: 10 });
+  const estPilz = gatherEstimate(GATHER('pilzholz'), ctxOf(s), { amount: 2, energy: 10 });
+  assert.equal(est.energy.max, 4);        // 8 Stein: four Energie at the very most
+  assert.equal(estPilz.energy.max, 1);    // 2 Pilzholz: one Energie at the very most
   const fire = catalog.questById.get('q-lagerfeuer');
-  assert.ok(est.atMost + estPilz.atMost + fire.cost <= 10);
+  assert.ok(est.energy.max + estPilz.energy.max + fire.cost <= 10);
   // and in play, with many different dice
   for (let i = 0; i < 300; i += 1) {
-    const stone = runQuest(GATHER('stein'), ctxOf(s), `stein${i}`, { mode: 'menge', amount: 8, energy: 10 });
+    const stone = runQuest(GATHER('stein'), ctxOf(s), `stein${i}`, { amount: 8, energy: 10 });
     assert.equal(stone.reward.stein, 8);
     assert.ok(stone.stamina <= 4);
     const afterStone = replay([gift({ stein: 8 })], catalog, DAY, T0 + H);
-    const wood = runQuest(GATHER('pilzholz'), ctxOf(afterStone), `holz${i}`, { mode: 'menge', amount: 2, energy: 10 });
+    const wood = runQuest(GATHER('pilzholz'), ctxOf(afterStone), `holz${i}`, { amount: 2, energy: 10 });
     assert.equal(wood.reward.pilzholz, 2);
     assert.ok(wood.stamina <= 1);
     assert.ok(stone.stamina + wood.stamina + fire.cost <= 7);
@@ -191,10 +200,10 @@ test('the first day: the Lagerfeuer is sure to be built with the 10 Energie of t
 test('gathering and building in play: from the empty start to the Lagerfeuer in one day', () => {
   let events = [];
   let hours = 0.1;
-  const stone = expeditionEvent(events, 'gather:stein', hours, { mode: 'menge', amount: 8 });
+  const stone = expeditionEvent(events, 'gather:stein', hours, { amount: 8 });
   events = [...events, stone];
   hours += total(stone) / 60 + 0.01;
-  const wood = expeditionEvent(events, 'gather:pilzholz', hours, { mode: 'menge', amount: 2 });
+  const wood = expeditionEvent(events, 'gather:pilzholz', hours, { amount: 2 });
   events = [...events, wood];
   hours += total(wood) / 60 + 0.01;
   const mid = replay(events, catalog, DAY, T0 + hours * H);

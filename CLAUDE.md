@@ -49,8 +49,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
-- Lager als Startansicht (Bild nach Lagerstufe und Tageszeit, Vorrat, Einrichtungen mit
-  Hygge, Expedition, gesichtete Geister)
+- Lager als Startansicht (Bild nach Lagerstufe und Tageszeit, darauf groß das Hygge und
+  die Knöpfe „Lager einrichten“ und „Lager aufwerten“; Vorrat, Expedition, gesichtete
+  Geister)
 - Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben auf
   jeder Seite eine Leiste mit großem Portrait (vier Werte-Ringe, auch auf der
   Envoy-Seite), Tageswerk-Knopf und Einstellungen
@@ -63,14 +64,17 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
   Haut- und Haarfarbe, Name
 - Speicherung und Geräteabgleich pro Konto
-- Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen, Energie (10 je Level
+- Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen (ein Tipp auf einen Ort
+  fächert seine Quests auf; das Fenster einer Quest zeigt Text, Voraussetzung, Belohnung
+  und die Energie als Leiste, keine Dauer), Energie (10 je Level
   Ausdauer, eine Energie = eine Minute), Expeditionen in echter Zeit (Hinweg, vor Ort,
   Rückweg), Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu
-  Pilzholz und Stein; Sammeln auf dem Trümmerfeld ohne Weg, mit Würfeln (2 bis 4 Stück
-  je Energie, nie weniger als 2)
+  Pilzholz und Stein; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
+  Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)
 - Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); danach vier Einrichtungen
-  (Steinlager, Pilzlager, Aufbewahrung, Schlafplatz) auf ihrer Stufe 1, Hygge als Summe
-  der Einrichtungen; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
+  (Steinlager, Pilzlager, Aufbewahrung, Schlafplatz) auf ihrer Stufe 1, keine Quests und
+  nicht auf der Karte, nur über „Lager einrichten“ (Kacheln); Hygge als Summe der
+  Einrichtungen; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer; Pilzholz und Stein belegen Plätze,
   2 Stück je Platz), Händler, Kompendium der getroffenen Geister
 - Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
@@ -89,9 +93,9 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 - Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem
   Konzept der Nutzerin; Erfolge für echte Übungen zählen nur Summen, nie Serien
 - Lagerausbau ab Stufe 2 und höhere Stufen der Einrichtungen, Deko: nach dem Konzept der
-  Nutzerin (Deko erst ab Lagerstufe 2). Bis dahin zeigt das Lager nur das Hygge und
-  keinen Knopf „Lager verbessern“; das Blatt `Deko` in `welt.xlsx` ist vorbereitet,
-  nichts wird gesammelt
+  Nutzerin (Deko erst ab Lagerstufe 2). Bis dahin zeigt das Lager das Hygge und einen
+  verschlossenen Knopf „Lager aufwerten“, der beim Antippen sagt, warum; das Blatt `Deko`
+  in `welt.xlsx` ist vorbereitet, nichts wird gesammelt
 - Schlafplatz mit Bonus auf Werte: nie. Er gibt Energie (Punkt 4 der Nicht-verhandelbar-
   Liste und das Konzept: Werte steigen nur durch echte Übungen)
 - Der Envoy im Bild des Lagers (sitzend, im eigenen Lager-Outfit)

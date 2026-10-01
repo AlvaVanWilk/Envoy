@@ -2,7 +2,7 @@
 // the first time the page is opened (for the Lager only once it has its fire):
 //   Envoy      right after the Envoy has been created: the figure, clothes, backpack, portrait
 //   Abenteuer  the first visit of the map: what is on the page, and the first task
-//   Lager      the first visit after the Lagerfeuer stands: the facilities and the Hygge
+//   Lager      the first visit after the Lagerfeuer stands: furnishing the camp, and the Hygge
 // Once a tour has been seen or skipped it stays away; the settings can show them again.
 
 import { store } from '../store.js';
@@ -29,14 +29,14 @@ const TOURS = {
       round: true,
       text: game.state.world.camp.stage === 0
         ? 'Dein Envoy wird eine Weile hier bleiben. Am besten errichtest du ein Lagerfeuer.'
-        : 'Das ist das Lager. Von hier bricht dein Envoy auf, und hier kann er auch sammeln.',
+        : 'Das ist das Lager. Von hier bricht dein Envoy auf.',
     },
   ],
 
   lager: () => [
     { selector: '.camp-hero', text: 'Dein Envoy hat das Lagerfeuer errichtet.' },
-    { selector: '.camp-facilities .facilities', text: 'Ab jetzt kannst du das Lager einrichten.' },
-    { selector: '.camp-facilities .hygge', text: 'Wenn es genug Hygge hat, kannst du es sogar ausbauen.' },
+    { selector: '.camp-build', text: 'Ab jetzt kannst du das Lager einrichten.' },
+    { selector: '.camp-hygge', text: 'Wenn es genug Hygge hat, kannst du es sogar ausbauen.' },
   ],
 };
 

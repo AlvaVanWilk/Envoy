@@ -1,6 +1,8 @@
 // Expeditions on screen: the progress bar while the Envoy is away,
 // and the report when it is back. The bar is updated every second by
 // updateJourneys(); nothing else of the view has to be redrawn for that.
+// Work beside the camp has no way: building at the camp is „fertig“ at a
+// time, gathering on the Trümmerfeld is back at a time.
 
 import { h } from './dom.js';
 import { MATERIALS } from '../config.js';
@@ -15,6 +17,18 @@ const PHASES = [
   { id: 'act', name: 'Vor Ort' },
   { id: 'back', name: 'Rückweg' },
 ];
+// Without a way the work itself is named.
+const WORK_NAMES = { bauen: 'Bauen', sammeln: 'Sammeln' };
+
+const kindOf = (exp) => exp.outcome?.kind;
+const phaseName = (exp, id) => (id === 'act' && exp.out === 0 && WORK_NAMES[kindOf(exp)]) || PHASES.find((x) => x.id === id).name;
+// Building at the camp itself: the Envoy does not go anywhere.
+const buildingAtCamp = (exp, place) => kindOf(exp) === 'bauen' && place?.typ === 'lager';
+
+// The Envoy's token on the map walks about while he gathers.
+export function heroClass(exp, t) {
+  return exp && kindOf(exp) === 'sammeln' && progressAt(exp, t).phase === 'act' ? 'is-gathering' : '';
+}
 export const RESULT_TEXT = { won: 'besiegt', calmed: 'beruhigt', driven: 'vertrieben' };
 const UNLOCK_TEXT = {
   lagerfeuer: 'Das Lagerfeuer brennt. Das Lager hat jetzt Stufe 1.',
@@ -31,9 +45,9 @@ function unlockText(feature, game) {
 
 const clockTime = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 
-function phaseLine(exp, p) {
-  if (p.phase === 'done') return 'Zurück im Lager';
-  const name = PHASES.find((x) => x.id === p.phase).name;
+function phaseLine(exp, p, atCamp) {
+  if (p.phase === 'done') return atCamp ? 'Fertig' : 'Zurück im Lager';
+  const name = phaseName(exp, p.phase);
   // the last minute in seconds, so a short trip visibly moves
   const seconds = Math.ceil(p.remaining * 60);
   return `${name} · noch ${seconds < 60 ? `${seconds} Sek.` : formatMinutes(Math.ceil(p.remaining))}`;
@@ -44,20 +58,24 @@ function progressBar(exp) {
   return h('div', { class: 'journey-bar' }, PHASES.filter((ph) => exp[ph.id] > 0).map((ph) =>
     h('div', { class: 'journey-part', 'data-phase': ph.id, style: { 'flex-grow': String(exp[ph.id]) } },
       h('span', { class: 'journey-track' }, h('span', { class: 'journey-fill' })),
-      h('span', { class: 'journey-part-name' }, h('span', {}, ph.name), h('span', {}, formatMinutes(exp[ph.id]))))));
+      h('span', { class: 'journey-part-name' }, h('span', {}, phaseName(exp, ph.id)), h('span', {}, formatMinutes(exp[ph.id]))))));
 }
 
 // A panel for a running expedition; updateJourneys() keeps it current.
 export function journeyPanel(exp, game) {
   const place = game.catalog.placeById.get(exp.place);
-  const el = h('div', { class: 'journey', 'data-journey': exp.id },
+  let where = `Das Lager – ${place ? place.name : ''} – Das Lager`;
+  if (place?.typ === 'lager') where = 'Im Lager';
+  else if (exp.out === 0 && place) where = place.name;
+  const atCamp = buildingAtCamp(exp, place);
+  const el = h('div', { class: 'journey', 'data-journey': exp.id, 'data-at-camp': atCamp ? 'true' : null },
     h('div', { class: 'journey-head' },
       h('span', { class: 'journey-title' }, exp.title),
-      h('span', { class: 'journey-place' }, place && place.typ === 'lager' ? 'Auf dem Trümmerfeld' : `Das Lager – ${place ? place.name : ''} – Das Lager`)),
+      h('span', { class: 'journey-place' }, where)),
     progressBar(exp),
     h('div', { class: 'journey-foot' },
       h('span', { class: 'journey-phase' }, ''),
-      h('span', { class: 'journey-until' }, `zurück um ${clockTime(exp.end)}`)));
+      h('span', { class: 'journey-until' }, `${atCamp ? 'fertig um' : 'zurück um'} ${clockTime(exp.end)}`)));
   updateJourney(el, exp, Date.now());
   return el;
 }
@@ -74,7 +92,7 @@ function updateJourney(el, exp, t) {
     part.querySelector('.journey-fill').style.width = `${(share * 100).toFixed(2)}%`;
     part.classList.toggle('current', index === current);
   });
-  el.querySelector('.journey-phase').textContent = phaseLine(exp, p);
+  el.querySelector('.journey-phase').textContent = phaseLine(exp, p, el.dataset.atCamp === 'true');
 }
 
 // Called every second by the app. Returns true once an expedition has
@@ -85,9 +103,11 @@ export function updateJourneys(game) {
   const t = Date.now();
   document.querySelectorAll(`[data-journey="${exp.id}"]`).forEach((el) => updateJourney(el, exp, t));
   const pos = heroPosition(exp, t, game.catalog);
+  const gathering = heroClass(exp, t) !== '';
   document.querySelectorAll('.hero-token').forEach((el) => {
     el.style.left = `${pos.x}%`;
     el.style.top = `${pos.y}%`;
+    el.classList.toggle('is-gathering', gathering);
   });
   return t >= exp.end;
 }
@@ -136,7 +156,7 @@ export function openReport(report, game) {
 
   openSheet({
     title: report.title,
-    eyebrow: 'Zurück im Lager',
+    eyebrow: buildingAtCamp(report, game.catalog.placeById.get(report.place)) ? 'Im Lager' : 'Zurück im Lager',
     className: 'report-sheet',
     content: [
       summary,

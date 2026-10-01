@@ -49,7 +49,7 @@ MEASUREMENTS = ["strecke_km", "stockwerke", "haltezeit_s", "wiederholungen", "da
 EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
 FURNITURE_EFFECTS = ["erholung", "glueck"]
 ORIGINS = ["start", "angezogen", "haendler", "beute", "quest"]
-PLACE_TYPES = ["lager", "wild", "sammeln", "ort", "hoehle"]
+PLACE_TYPES = ["lager", "truemmerfeld", "wild", "sammeln", "ort", "hoehle"]
 QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
 FEATURES = ["lagerfeuer", "haendler"]
 # the facilities of the camp, each in levels (sheet Einrichtungen)
@@ -491,6 +491,8 @@ def convert_world(path, item_ids):
         })
     if sum(1 for p in places if p["typ"] == "lager") != 1:
         report.error("-", "es muss genau einen Ort vom typ lager geben")
+    if sum(1 for p in places if p["typ"] == "truemmerfeld") > 1:
+        report.error("-", "es darf höchstens einen Ort vom typ truemmerfeld geben")
 
     monsters = []
     for row, r in records(path, "Monster"):

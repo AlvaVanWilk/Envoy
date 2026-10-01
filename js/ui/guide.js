@@ -83,15 +83,15 @@ const CHAPTERS = [
     id: 'lager',
     title: 'Das Lager',
     text: [
-      'Das Lager liegt auf dem Trümmerfeld. Hier beginnt und endet jede Expedition, und hier sammelt der Envoy Stein und Pilzholz, ohne Weg.',
-      'Zuerst braucht es ein Lagerfeuer. Dafür sammelt der Envoy 8 Steine und 2 Pilzholz und hat danach noch etwas Energie übrig.',
+      'Das Lager liegt auf der Trümmerebene. Hier beginnt und endet jede Expedition.',
+      'Zuerst braucht es ein Lagerfeuer. Danach lässt sich das Lager einrichten.',
     ],
   },
   {
     id: 'abenteuer',
     title: 'Abenteuer',
     text: [
-      'Unter Abenteuer liegt die Karte der Zwischenwelt. Jeder Ort hat seine Quests: sammeln, erkunden, bauen, kämpfen.',
+      'Unter Abenteuer liegt die Karte der Zwischenwelt. Jeder Ort hat seine Quests: sammeln, erkunden, bauen, kämpfen. Ein Tipp auf den Ort zeigt sie.',
       'Eine Expedition dauert echte Zeit: Hinweg, vor Ort und Rückweg. Jede Energie ist eine Minute. Der Envoy ist immer nur auf einer Expedition zugleich.',
     ],
   },
@@ -140,8 +140,8 @@ const CHAPTERS = [
     title: 'Sammeln',
     when: (game) => ran(game, 'sammeln'),
     text: [
-      'Auf dem Trümmerfeld sammelt der Envoy Stein und Pilzholz, ohne Weg. Du wählst, bis zu welcher Menge er sammelt oder bis die Energie reicht.',
-      'Für jede Energie bringt er zwei bis vier Stück, im Schnitt zweieinhalb; wie viel es genau sind, bleibt dem Zufall überlassen. Weniger als zwei gibt es nie. Kraft hilft bei Stein, Beweglichkeit bei Pilzholz.',
+      'Gleich beim Lager, auf dem Trümmerfeld, sammelt der Envoy Stein und Pilzholz, ohne Weg. Du wählst, wie viel er sammelt, höchstens so viel, wie er tragen kann.',
+      'Für jede Energie bringt er zwei bis vier Stück; wie viele genau, entscheidet der Zufall. Kraft hilft bei Stein, Beweglichkeit bei Pilzholz.',
     ],
   },
   {

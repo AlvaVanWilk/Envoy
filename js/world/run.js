@@ -127,30 +127,28 @@ export function gatherRoll(rng, chance) {
   return pieces;
 }
 
-// What the Envoy can expect, for the display before he sets out.
-// options: { mode: 'menge' | 'energie', amount, energy }
-export function gatherEstimate(quest, ctx, { mode = 'menge', amount = 1, energy = 0 } = {}) {
+// What the Envoy can do, for the display before he sets out: the most he can
+// gather now (as much as he can carry, and as much as his Energie surely
+// brings in even with the worst dice), and the Energie an amount takes: at
+// least (the best dice) and at most (the worst).
+export function gatherEstimate(quest, ctx, { amount = 1, energy = 0 } = {}) {
   const chance = gatherChance(ctx.stats[quest.gather.stat].level, ctx.bonus?.sammeln || 0);
-  const average = GATHER_BASE + GATHER_DICE * chance;
   const room = roomFor(ctx.world, ctx.catalog, quest.gather.material);
-  const wanted = mode === 'energie' ? room : Math.min(Math.max(1, amount), room);
-  const budget = Math.floor(energy);
+  const most = Math.min(room, GATHER_BASE * Math.floor(energy));
+  const wanted = Math.max(1, amount);
   return {
     room,
-    wanted,
-    perEnergy: { min: GATHER_BASE, max: GATHER_BASE + GATHER_DICE, average },
-    // Energie it takes: usually, and at most (the worst the dice can do)
-    likely: Math.min(budget, Math.ceil(wanted / average)),
-    atMost: Math.min(budget, Math.ceil(wanted / GATHER_BASE)),
-    sure: Math.ceil(wanted / GATHER_BASE) <= budget,
+    most,
+    average: GATHER_BASE + GATHER_DICE * chance,
+    energy: { min: Math.ceil(wanted / (GATHER_BASE + GATHER_DICE)), max: Math.ceil(wanted / GATHER_BASE) },
   };
 }
 
-function runGather(quest, ctx, rng, { mode = 'menge', amount = 1, energy = Infinity } = {}) {
+function runGather(quest, ctx, rng, { amount = 1, energy = Infinity } = {}) {
   const { material, stat } = quest.gather;
   const chance = gatherChance(ctx.stats[stat].level, ctx.bonus?.sammeln || 0);
   const room = roomFor(ctx.world, ctx.catalog, material);
-  const wanted = mode === 'energie' ? room : Math.min(Math.max(1, amount), room);
+  const wanted = Math.min(Math.max(1, amount), room);
   const budget = Math.max(0, Math.floor(energy));
   let units = 0;
   let got = 0;
@@ -169,11 +167,11 @@ function runGather(quest, ctx, rng, { mode = 'menge', amount = 1, energy = Infin
     minutes: units * MINUTES_PER_STAMINA,
     reward: { splitter: 0, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], unlocks: [], rest: false },
     consumed: {},
-    gather: { material, mode, wanted, units },
+    gather: { material, wanted, units },
   };
 }
 
-// options: for gathering { mode, amount, energy }
+// options: for gathering { amount, energy }
 export function runQuest(quest, ctx, seed, options = {}) {
   const rng = seededRandom(seed);
   if (quest.gather) return runGather(quest, ctx, rng, options);

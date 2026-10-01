@@ -133,7 +133,7 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/planner.js` | wählt die Übungen des Tages |
 | `js/world/` | Karte, Expeditionen, Energie, Kampf, Quests, Händler, Inventar, Lager |
 | `js/achievements.js` | die Erfolge und ihre Belohnungen |
-| `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager, `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge; `js/world/camp.js` das Lager (Stufe, Einrichtungen, Hygge), `js/daylight.js` die Tageszeit |
+| `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager, `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“; `js/world/camp.js` das Lager (Stufe, Einrichtungen, Hygge), `js/daylight.js` die Tageszeit |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
 | `tools/` | Umwandlung der Tabellen |

@@ -81,6 +81,23 @@ export const PLACE_ICONS = {
   ort: emblem(`<path d="M9 20.4V6.2l1.5-2.6L12 5l1.5-2.6L15 5.4v15Z"/><path d="M6.8 20h10.4v2.3H6.8Z"/>${eng('M10.9 7.4v12M13.1 7.4v12', 0.8)}`),
   hoehle: emblem('<path fill-rule="evenodd" d="M1.8 21.6C2.8 14 6 8.2 12 6.6c6 1.6 9.2 7.4 10.2 15ZM8 21.6c0-5 1.8-8 4-8s4 3 4 8Z"/><path d="M10.4 3.8l1.6-1.6l1.6 1.6l-1.6 1.6Z" opacity="0.7"/>'),
 };
+// the Trümmerfeld beside the camp is a place of gathering too
+PLACE_ICONS.truemmerfeld = PLACE_ICONS.sammeln;
+
+// The four facilities of the camp.
+export const FACILITY_ICONS = {
+  // three stones on top of each other
+  steinlager: emblem(`<ellipse cx="7" cy="18.8" rx="4.2" ry="2.8"/><ellipse cx="17" cy="18.8" rx="4.2" ry="2.8"/><ellipse cx="12" cy="12.8" rx="4.6" ry="2.7"/><ellipse cx="12" cy="7.3" rx="3" ry="2.1"/>${eng('M4.4 18.2l2.2 1M15.2 17.6l2 1.6M10 12.4l2.4.9M11 6.9l1.4.6', 0.9)}`),
+  // a pile of mushroom wood, a small cap on top
+  pilzlager: emblem(`<circle cx="6.6" cy="18.8" r="2.6"/><circle cx="12" cy="18.8" r="2.6"/><circle cx="17.4" cy="18.8" r="2.6"/><circle cx="9.3" cy="14" r="2.6"/><circle cx="14.7" cy="14" r="2.6"/><path d="M8 9.4C8 6.4 9.8 4.6 12 4.6s4 1.8 4 4.8Z"/><path d="M11.3 9.2h1.4v2.2h-1.4Z"/>${eng('M5.5 18.8a1.1 1.1 0 1 0 2.2 0a1.1 1.1 0 1 0 -2.2 0M10.9 18.8a1.1 1.1 0 1 0 2.2 0a1.1 1.1 0 1 0 -2.2 0M16.3 18.8a1.1 1.1 0 1 0 2.2 0a1.1 1.1 0 1 0 -2.2 0M8.2 14a1.1 1.1 0 1 0 2.2 0a1.1 1.1 0 1 0 -2.2 0M13.6 14a1.1 1.1 0 1 0 2.2 0a1.1 1.1 0 1 0 -2.2 0', 0.8)}`),
+  // a chest with a lid and a lock
+  aufbewahrung: emblem(`<path d="M4.6 4.4h14.8a1.6 1.6 0 0 1 1.6 1.6v3.2H3V6a1.6 1.6 0 0 1 1.6-1.6Z"/><path d="M3.4 10.2h17.2v9.6a1.4 1.4 0 0 1-1.4 1.4H4.8a1.4 1.4 0 0 1-1.4-1.4Z"/>${engFill('M10.5 8.2h3v4.6h-3Z')}${eng('M3.8 15.6h6.4M13.8 15.6h6.4M7 10.6v10.2M17 10.6v10.2', 0.9)}`),
+  // a rolled-up bed under the moon
+  schlafplatz: emblem(`<path d="M6.4 13h11.4c2.2 0 3.6 1.5 3.6 3.6s-1.4 3.6-3.6 3.6H6.4Z"/><circle cx="6.4" cy="16.6" r="3.8"/><path d="M15.4 2.6a4.6 4.6 0 1 0 5 6a3.7 3.7 0 0 1-5-6Z"/>${eng('M6.4 14.6a2 2 0 1 1-1.9 2.5a1.1 1.1 0 0 1 2-.6', 1)}${eng('M11 13.4v6.6M15 13.4v6.6', 0.8)}`),
+};
+
+// Energie, as a small picture for costs: a spark in the colour of the bar.
+export const ENERGY_ICON = '<svg viewBox="0 0 24 24" stroke="#0e1c20" stroke-width="0.9" stroke-linejoin="round"><path d="M14 2.2L5 13.4h5.8l-1.8 8.4l9.4-11.6h-6Z" fill="#9cc7c8"/><path d="M14 2.2l-1.6 8h6" fill="none" stroke="#eaf7f6" stroke-width="0.8" opacity="0.75"/></svg>';
 
 // Currency and materials, as small coloured pictures.
 export const RESOURCE_ICONS = {

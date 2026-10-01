@@ -254,8 +254,8 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
 - **Weg** (je Richtung) = Entfernung ÷ 20 Energie, gerundet, mindestens 1. Mit jedem
   Level Ausdauer 3 % kürzer, höchstens auf die Hälfte. Stiefel und Umhänge können ihn
   billiger machen, ein überfüllter Rucksack verteuert jeden Weg um 1. Die Karte ist
-  1,5-mal so breit wie hoch, das fließt in die Entfernung ein. Am Lager selbst gibt es
-  keinen Weg.
+  1,5-mal so breit wie hoch, das fließt in die Entfernung ein. Am Lager selbst und auf
+  dem Trümmerfeld gleich daneben gibt es keinen Weg.
 - **Vor Ort** = die Kosten aus der Tabelle. Bei Sammeln, Erkunden und Bauen macht jedes
   Level der unter „Tempo“ genannten Stats die Arbeit 4 % kürzer und damit billiger,
   höchstens auf die Hälfte. Kämpfe dauern so lange, wie die Tabelle sagt, gleich wie
@@ -266,11 +266,26 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
 - Zurück im Lager erscheint einmal ein Bericht: Kämpfe, Mitgebrachtes, Neues im
   Kompendium, bei zu wenig Platz auch, was liegen blieb.
 
-Vor dem Aufbruch zeigt jede Quest: Voraussetzung (erfüllt oder nicht), Dauer mit
-Hinweg, vor Ort und Rückweg, Energie, welche Stats sie kürzer machen, welche den
-Ertrag erhöhen, und den möglichen Ertrag. Reicht die Energie gerade nicht, steht dort,
-wann sie reicht. Ist die Leiste insgesamt zu kurz, steht dort, dass sie mit Ausdauer
-wächst.
+**Quests auf der Karte.** Ein Tipp auf einen Ort fächert seine Quests auf: neben dem
+Ort ein Bogen aus kleinen Siegeln, je Quest eines mit ihrem Namen daneben (ein Geist mit
+seinem Bild, Sammeln mit dem Material, verschlossene mit Schloss), die Karte dahinter
+abgedunkelt. Ein Tipp auf ein Siegel öffnet das Fenster der Quest; ein Tipp daneben, auf
+den Ort oder Esc schließt den Fächer. Die Namen stehen gleich da (statt erst beim
+Antippen), damit ein Tipp zum Öffnen reicht. Hat ein Ort nur eine Quest, öffnet sie sich
+sofort; ein verschlossener Ort sagt in einer kleinen Notiz, was ihn öffnet. Einmalige
+Quests, die erledigt sind, stehen nicht mehr im Fächer (der Rückblick steht im Handbuch).
+
+**Das Fenster einer Quest** zeigt nur, was man zum Entscheiden braucht: den Text, die
+Voraussetzung (erfüllt oder nicht; Material, das die Quest verbraucht, gehört dazu, etwa
+„8 Stein, 2 Pilzholz“ beim Lagerfeuer), den Geist, die Belohnung und die Energie als
+Leiste: was sicher bleibt (voll), was die Würfel vielleicht brauchen (gestreift) und was
+sicher verbraucht wird (blass), dazu „kostet 2 von 10“. Keine Dauer, kein „etwa“ oder
+„höchstens“, keine Stats für Tempo oder Ertrag: Energie und Minuten sind dasselbe, und
+die Stats wirken auch ungesagt. Reicht die Energie gerade nicht, steht auf dem Knopf,
+wann sie reicht; ist die Leiste insgesamt zu kurz, steht dort, dass sie mit Ausdauer
+wächst. Der Knopf heißt „Aufbrechen“, beim Bauen am Lager „Errichten“, beim Sammeln
+„Sammeln“. Während am Lager gebaut wird, steht in der Leiste „Bauen“ und „fertig um“
+(statt „zurück um“).
 
 ### Energie
 
@@ -305,10 +320,13 @@ wiederholbar, mit Abklingzeit in Tagen.
 Ein Bonus wird bei kleinen Mengen zufällig auf- oder abgerundet: 1 Stück mit +30 %
 ergibt in drei von zehn Fällen 2. So lohnt er sich auch bei kurzen Quests.
 
-**Sammeln auf dem Trümmerfeld.** Direkt am Lager, ohne Weg, kann der Envoy immer Steine
-und Pilzholz sammeln (zwei Quests, die es immer gibt). Man wählt, ob er bis zu einer
-Menge sammelt oder bis die Energie reicht; die Arbeit läuft in echter Zeit weiter, auch
-wenn die App zu ist. Was er mitbringt, wird gewürfelt, aber nie schlecht:
+**Sammeln auf dem Trümmerfeld.** Gleich neben dem Lager liegt das Trümmerfeld, ein
+eigener Ort auf der Karte (Typ `truemmerfeld`, ohne Weg). Dort kann der Envoy immer
+Steine und Pilzholz sammeln (zwei Quests, die es immer gibt). Das Lagerfeuer verrät nicht,
+wo; es sagt nur, dass man es in der Gegend sammeln kann. Man wählt die Menge; die
+Arbeit läuft in echter Zeit weiter, auch wenn die App zu ist, und die Marke des Envoy
+läuft solange auf dem Trümmerfeld umher. Was er mitbringt, wird gewürfelt, aber nie
+schlecht:
 
 - Je Energie (also je Minute) bringt er **2 Stück** und dazu bis zu **2 weitere**: zwei
   Würfel, jeder gelingt mit einer Chance und bringt dann 1 Stück mehr. Bei Level 1 ist
@@ -317,11 +335,15 @@ wenn die App zu ist. Was er mitbringt, wird gewürfelt, aber nie schlecht:
   Fehlwürfe gibt es nicht.
 - **Stein** hängt an Kraft, **Pilzholz** an Beweglichkeit. Ein Erfolg-Bonus („Angekommen“)
   erhöht die Chance.
-- „Bis zu einer Menge“ bringt genau diese Menge (was beim letzten Wurf übrig wäre,
-  bleibt liegen), „bis die Energie reicht“ so viel, wie in den Rucksack passt. Vor dem
-  Start steht: Vorrat („0 / 10 Stein“), Dauer („etwa 3 Min., höchstens 4“), Ertrag je
-  Energie. Ist kein Platz mehr, steht dort: „Dein Envoy kann nicht mehr als 10 Stein
-  tragen.“
+- Die Menge wird mit − und + gewählt und beginnt bei 1 (nichts ist vorausgewählt). Sie
+  geht höchstens so weit, wie der Envoy tragen kann und wie seine Energie auch bei den
+  schlechtesten Würfen sicher bringt (2 Stück je Energie). Ein Tipp auf + darüber hinaus
+  (oder darauf zeigen) sagt, warum nicht: „Mehr kann dein Envoy nicht tragen.“ oder „Für
+  mehr reicht die Energie nicht.“ Gesammelt wird genau diese Menge (was beim letzten Wurf
+  übrig wäre, bleibt liegen). So muss nach der Rückkehr nichts liegen gelassen werden;
+  Platz schafft man vorher im Rucksack. Unter der Menge steht der Vorrat („Im Vorrat
+  0 / 10 Stein“), darunter die Energie-Leiste mit dem, was die Menge kostet (bei 8 Stein
+  „kostet 2–4 von 10“). „Bis die Energie reicht“ gibt es nicht mehr.
 - **Sicher am ersten Tag:** Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) ist mit den
   10 Energie des Starts immer zu schaffen: 8 Stein kosten höchstens 4 Energie (4 × 2
   Stück), 2 Pilzholz höchstens 1, dazu 2 zum Bauen. Das sind höchstens 7 von 10, es
@@ -441,10 +463,20 @@ zugleich der Schluss der Führung durch Abenteuer (siehe Rundgänge). Ist das Fe
 errichtet, hat das Lager Stufe 1, das Bild zeigt das Feuer, und das Lager kann
 eingerichtet werden.
 
-**Vier Einrichtungen**, jede in Stufen (Blatt `Einrichtungen` in `welt.xlsx`), jede ein
-Bauen-Quest am Lager aus Material und Energie. Auf Lagerstufe 1 lassen sich alle vier
-auf ihre Stufe 1 errichten, nicht weiter ausbauen; die nächste Stufe einer Einrichtung
-gibt es erst, wenn das ganze Lager die nächste Stufe hat.
+**Vier Einrichtungen**, jede in Stufen (Blatt `Einrichtungen` in `welt.xlsx`). Sie sind
+keine Quests und stehen nicht auf der Karte, nur auf der Lager-Seite. Gebaut wird wie
+eine Quest am Lager: aus Material und Energie, in echter Zeit („fertig um“). Auf
+Lagerstufe 1 lassen sich alle vier auf ihre Stufe 1 errichten, nicht weiter ausbauen; die
+nächste Stufe einer Einrichtung gibt es erst, wenn das ganze Lager die nächste Stufe hat.
+
+**„Lager einrichten“** (Knopf auf dem Bild des Lagers, auch ein Tipp auf das Hygge)
+öffnet die vier Einrichtungen als Kacheln: ein großes Zeichen, der Name und darunter die
+Kosten als kleine Bilder (Pilzholz, Stein, Energie mit Zahl; was fehlt, orange).
+Gebaute Kacheln leuchten (das Zeichen kupfern mit Haken, „Stufe 1“), solche, die gerade
+gebaut werden können, glimmen, die anderen sind dunkler. Ein Tipp auf eine Kachel zeigt
+mehr: Text, was sie bringt, Hygge, Kosten, die Energie-Leiste und „Errichten“. Der Knopf
+„Lager einrichten“ glimmt, solange gerade etwas gebaut werden kann (Material, Energie und
+der Envoy im Lager).
 
 | Einrichtung | Kosten Stufe 1 | Wirkung Stufe 1 | Hygge |
 | --- | --- | --- | --- |
@@ -457,10 +489,15 @@ gibt es erst, wenn das ganze Lager die nächste Stufe hat.
 Lager hat die Summe. Das Lager kann erst auf die nächste Stufe ausgebaut werden, wenn
 sein Hygge reicht; für Stufe 1 auf 2 verlangt es 30, die Summe von drei der vier
 Einrichtungen auf Stufe 1. Die höchsten Hyggewerte bringt später die Deko (erst ab
-Lagerstufe 2). Spätere Stufen regelt die Nutzerin, wenn es so weit ist. Der Ausbau
-selbst ist **noch nicht gebaut**: Das Lager zeigt Hygge „20 / 30“ und, wenn es reicht,
-dass der Ausbau mit einem späteren Update folgt; einen Knopf „Lager verbessern“ gibt
-es nicht. Deko wird nicht gesammelt (das Blatt `Deko` in `welt.xlsx` ist vorbereitet).
+Lagerstufe 2). Spätere Stufen regelt die Nutzerin, wenn es so weit ist.
+
+Das **Hygge steht groß auf dem Bild des Lagers**: ein Ring, der sich bis zum Hygge der
+nächsten Stufe füllt, mit der Zahl darin, daneben „Hygge“ und „30 für Stufe 2“ (oder
+„Genug für Stufe 2“) und die vier Einrichtungen als kleine Zeichen, hell, sobald sie
+stehen. Der Ausbau selbst ist **noch nicht gebaut**: Der Knopf „Lager aufwerten“ auf dem
+Bild trägt ein Schloss; antippen oder darauf zeigen sagt, warum („Dafür braucht das
+Lager 30 Hygge.“ oder „Genug Hygge. Das Aufwerten folgt mit einem späteren Update.“).
+Deko wird nicht gesammelt (das Blatt `Deko` in `welt.xlsx` ist vorbereitet).
 
 Der Schlafplatz wirkt auf die Energie (siehe Energie). Ein Bonus auf Kraft wäre ein Bonus
 auf einen Wert und widerspricht dem Konzept: Werte steigen nur durch echte Übungen.
@@ -515,12 +552,14 @@ des Envoy):
 - rechts die **Einstellungen** (Zahnrad).
 
 - **Lager** (Startansicht): das Bild des Lagers nach Stufe und Tageszeit (einmal soll dort
-  der Envoy sitzen, wenn er da ist), ob der Envoy da oder unterwegs ist, die Stufe
-  („Stufe 1 · Lagerfeuer“). Solange es kein Feuer gibt, steht oben „Als Erstes“: „Dein
-  Envoy wird eine Weile hier bleiben. Am besten errichtest du ein Lagerfeuer.“ mit einem
-  Knopf zur Quest. Dann laufende Expedition oder Bericht, Vorrat mit Energie, die
-  Einrichtungen mit Hygge (je Einrichtung: Wirkung, Kosten, „Errichten“, bei Mangel was
-  fehlt oder wann die Energie reicht) und heute gesichtete Geister, Hinweise.
+  der Envoy sitzen, wenn er da ist); sobald das Feuer brennt, darauf das Hygge (groß, mit
+  den vier Einrichtungen) und die Knöpfe „Lager einrichten“ und „Lager aufwerten“ (siehe
+  Das Lager). Darunter Datum, ob der Envoy da oder unterwegs ist, und die Stufe („Stufe
+  1 · Lagerfeuer“). Solange es kein Feuer gibt, steht oben „Als Erstes“: „Dein Envoy
+  wird eine Weile hier bleiben. Am besten errichtest du ein Lagerfeuer.“ mit einem Knopf
+  zur Quest. Dann laufende Expedition oder Bericht, Vorrat mit Energie und, auf dem iPad
+  daneben, heute gesichtete Geister und Hinweise. Auf dem Telefon ist das Bild 4:3, damit
+  Hygge und Knöpfe Platz haben, auf dem iPad 8:3.
   **Tageszeit:** Das Bild folgt der Sonne am Ort des Lagers (Mitte Deutschlands, aus
   Datum und Uhrzeit berechnet, auf Minuten genau genug): Sonnenaufgang (von 40 Minuten
   vor bis 80 Minuten nach dem Aufgang), Tag, Sonnenuntergang (von 90 Minuten vor bis 40
@@ -540,7 +579,8 @@ des Envoy):
   Zeit um ist. Der Klang lässt sich im Timer abschalten; die Wahl bleibt gespeichert.
   Alles wird im Browser erzeugt, es gibt keine Tondateien.
 - **Abenteuer**: gezeichnete Landkarte mit Tintensiegeln für die Orte, Legende, Vorrat
-  und Expedition. Keine unerklärten Zahlen auf der Karte.
+  und Expedition. Keine unerklärten Zahlen auf der Karte. Ein Tipp auf einen Ort fächert
+  seine Quests auf (siehe Quests auf der Karte).
 - **Envoy**: das Charakterblatt (siehe unten), mit Rucksack und oberer Leiste. Nach dem
   ersten Erstellen eines Envoy beginnt das Spiel hier, nicht im Lager; dort läuft der
   Rundgang (siehe unten). Jeder spätere Start ist im Lager.
@@ -627,8 +667,9 @@ Blatt „Erklärung“ mit allen Spalten.
 - `data/ausruestung.xlsx`: id, slot, name, stufe, req_kraft, req_ausdauer,
   req_gelassenheit, req_beweglichkeit, faehigkeit, effekt, herkunft, preis,
   datei_figur, datei_icon, notiz
-- `data/welt.xlsx`: Blätter Orte, Monster, Quests, Lagerstufen, Einrichtungen, Deko. Das
-  Blatt Quests hat: id, name, ort, art (sammeln, erkunden, bauen, kampf, hoehle), text
+- `data/welt.xlsx`: Blätter Orte, Monster, Quests, Lagerstufen, Einrichtungen, Deko. Orte
+  haben einen typ: lager (genau einer), truemmerfeld (höchstens einer: gleich beim Lager,
+  dort wird ohne Weg gesammelt), wild, sammeln, ort, hoehle. Das Blatt Quests hat: id, name, ort, art (sammeln, erkunden, bauen, kampf, hoehle), text
   (mehrere Absätze durch Zeilenumbruch), monster, voraussetzung (auch `lager>=1`),
   tempo, ertrag, verbrauch, kosten (Energie vor Ort, zugleich Minuten), belohnung
   (auch `freischaltung:lagerfeuer`), wiederholbar, abklingzeit, aktiv (nein = vorerst
@@ -728,8 +769,8 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   Energie mit der Ausdauer wächst, und was zu sammeln ist (8 Steine, 2 Pilzholz).
 - **Rundgang durch das Lager** beim ersten Öffnen, nachdem das Feuer brennt, drei
   Schritte: „Dein Envoy hat das Lagerfeuer errichtet.“ (das Bild), „Ab jetzt kannst du
-  das Lager einrichten.“ (die Einrichtungen), „Wenn es genug Hygge hat, kannst du es
-  sogar ausbauen.“ (das Hygge). Die Ausrufezeichen der ersten Fassung sind weg
+  das Lager einrichten.“ (der Knopf „Lager einrichten“), „Wenn es genug Hygge hat, kannst
+  du es sogar ausbauen.“ (das Hygge auf dem Bild). Die Ausrufezeichen der ersten Fassung sind weg
   (Regel: keine Ausrufezeichen). Ist ein Bericht oder anderes Fenster offen, wartet
   der Rundgang, bis es geschlossen ist. In den Einstellungen zeigt „Rundgänge ansehen“
   alle wieder. Für die anderen Seiten (Händler, Handbuch, Tageswerk) folgen sie später.
@@ -791,14 +832,17 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Menü | fünf Punkte: Abenteuer, Talentbaum, Lager (Mitte, Start), Händler, Handbuch |
 | Obere Leiste | Portrait mit vier Werte-Ringen (auch beim Envoy), Tageswerk-Knopf, Einstellungen |
 | Handbuch | Buch mit Reitern: Anleitung, Tageswerk, Quests, Kompendium, Erfolge; füllt das Fenster, ohne zu scrollen |
-| Einrichtungen | Steinlager, Pilzlager, Aufbewahrung, Schlafplatz; Stufe 1 auf Lagerstufe 1; Deko erst ab Lagerstufe 2 |
+| Einrichtungen | Steinlager, Pilzlager, Aufbewahrung, Schlafplatz; Stufe 1 auf Lagerstufe 1; Deko erst ab Lagerstufe 2; keine Quests, nur auf der Lager-Seite („Lager einrichten“, Kacheln) |
+| Quests auf der Karte | Ort antippen fächert seine Quests auf (Siegel mit Namen), ein Tipp öffnet eine; nur eine Quest: sofort offen |
+| Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste; keine Dauer, keine Tempo- und Ertrag-Stats |
 | Energie | Name für die Leiste, 10 je Level Ausdauer, 1 Energie = 1 Minute |
-| Sammeln | auf dem Trümmerfeld ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2 |
+| Sammeln | auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2; Menge wählen, beginnt bei 1 |
+| Mehr sammeln als tragbar | geht nicht: + stoppt an der Grenze und sagt warum (statt hinterher etwas liegen lassen zu müssen) |
 | Lagerfeuer | die erste Quest: 8 Stein, 2 Pilzholz, 2 Energie; macht Lagerstufe 1 |
-| Hygge | Summe der Einrichtungen; 30 für Stufe 2 (Ausbau noch nicht gebaut) |
+| Hygge | Summe der Einrichtungen; 30 für Stufe 2 (Ausbau noch nicht gebaut); groß auf dem Bild des Lagers |
 | Lagerbild | nach Stufe und Tageszeit (Sonnenstand) |
 | Erster Erfolg | „Angekommen“: +10 % Tageswerk und Sammeln, nur die ersten 15 Minuten |
-| Lager verbessern | kein Knopf, bis Lagerstufe 2 gebaut wird |
+| Lager aufwerten | Knopf auf dem Bild mit Schloss; sagt beim Antippen, warum es noch nicht geht, bis Lagerstufe 2 gebaut wird |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |

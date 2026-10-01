@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01T22:01:30Z",
+ "generated": "2026-10-01T23:08:50Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -13,6 +13,18 @@
    "monsters": [],
    "unlock": [],
    "text": "Ein offener Platz auf dem Trümmerfeld, zwischen umgestürzten Säulen und hohen Pilzen. Hier beginnt und endet jeder Weg."
+  },
+  {
+   "id": "truemmerfeld",
+   "name": "Trümmerfeld",
+   "region": "Trümmerebene",
+   "x": 14.0,
+   "y": 49.0,
+   "typ": "truemmerfeld",
+   "encounters": false,
+   "monsters": [],
+   "unlock": [],
+   "text": "Zwischen den umgestürzten Säulen liegen lose Steine und abgebrochene Pilzstiele, gleich beim Lager."
   },
   {
    "id": "pilzhain",
