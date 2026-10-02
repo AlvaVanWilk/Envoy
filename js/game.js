@@ -10,8 +10,11 @@ import { store } from './store.js';
 import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour } from './world/hero.js';
 import { hasSpace, atCamp, reachable } from './world/inventory.js';
 import { questById, questState } from './world/quests.js';
-import { planExpedition, planRoute, routeParts, mostOf, leastOf, progressAt } from './world/expedition.js';
-import { besideTheCamp } from './world/map.js';
+import { addition, legStamina, progressAt } from './world/expedition.js';
+import { camp } from './world/map.js';
+import { runQuest, siteStamina, gatherEstimate } from './world/run.js';
+import { projectedWorld } from './world/worldstate.js';
+import { MINUTES_PER_STAMINA } from './config.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
 import { bonusOf, withBonus, runningBonuses } from './achievements.js';
@@ -25,9 +28,6 @@ export const game = {
   events: [],
   state: null,
   deviceId: null,
-  // The quests lined up for the next expedition, in order: [{ q, amount? }].
-  // Kept on this device until the Envoy sets out or the route is dropped.
-  route: [],
 
   init(catalog) {
     this.catalog = catalog;
@@ -37,7 +37,6 @@ export const game = {
       store.saveDeviceId(this.deviceId);
     }
     this.events = store.loadEvents().filter(isValidEvent);
-    this.route = Array.isArray(store.loadUi().route) ? store.loadUi().route : [];
     this.refresh();
   },
 
@@ -174,15 +173,47 @@ export const game = {
 
   // --- world: expeditions ---------------------------------------------------
 
-  // What an expedition would take, for the display before starting.
-  // Fights are rolled with a fixed seed, so the numbers are a fair guess.
-  // options: for gathering { amount }
-  preview(questId, options = {}) {
+  // What doing a quest (gathering, building) now would take, for its window.
+  // With nothing to do the Envoy sets out for it; while he is away it joins
+  // the row of what he does, and he goes there straight from the last place.
+  //   busy   it would join the row
+  //   state  the quest as it will be once the row is done (see projectedWorld)
+  //   cost   Energie set aside now: { least, most, way, alone }
+  //          least/most: gathering takes as much as the dice want
+  //          way: the part of it that is way (in a row the way home before is given back)
+  //          alone: the way there and back for this quest on its own
+  //   block  why not, or null: 'closed' (the quest is not open then),
+  //          'energy' (not enough Energie now), 'never' (the bar is too short for it)
+  // Something that begins right away must surely fit into the Energie; for
+  // something that joins the row the best dice count (see worldstate.js).
+  plan(questId, options = {}) {
     const c = this.ctx();
     const quest = questById(questId, c);
     if (!quest) return null;
-    const energy = this.stamina().value;
-    return { quest, ...planExpedition(quest, c, `vorschau:${questId}:${c.day}`, { ...options, energy }) };
+    const busy = Boolean(c.world.expedition);
+    const after = busy ? { ...c, world: projectedWorld(c.world, c) } : c;
+    const state = questState(quest, after);
+    const place = this.catalog.placeById.get(quest.place);
+    const home = camp(this.catalog);
+    const add = addition(c.world, place, Date.now(), c);
+    const way = (add.way + add.home) / MINUTES_PER_STAMINA - add.credit;
+    const work = quest.gather
+      ? gatherEstimate(quest, after, { amount: options.amount }).energy
+      : { min: siteStamina(quest, c.stats), max: siteStamina(quest, c.stats) };
+    const cost = {
+      least: way + work.min,
+      most: way + work.max,
+      way,
+      alone: legStamina(home, place, c) + legStamina(place, home, c),
+      work,
+    };
+    const st = this.stamina();
+    const needed = Math.ceil(busy ? cost.least : cost.most);
+    let block = null;
+    if (state.status !== 'open') block = 'closed';
+    else if (needed > Math.max(st.max, Math.floor(st.value))) block = 'never';
+    else if (needed > Math.floor(st.value)) block = 'energy';
+    return { quest, busy, state, ctx: after, cost, block };
   },
 
   // The running expedition, with its progress right now.
@@ -191,105 +222,35 @@ export const game = {
     return exp ? { ...exp, progress: progressAt(exp, Date.now()) } : null;
   },
 
+  // Where a quest is in the row of the running expedition, if it is there and
+  // not done yet: { index, count, action, removable } (only the last one,
+  // while it has not begun, can be taken out).
+  queued(questId) {
+    const exp = this.state.world.expedition;
+    const index = exp ? exp.actions.findIndex((a) => a.q === questId && a.stage < 3) : -1;
+    if (index < 0) return null;
+    const action = exp.actions[index];
+    return { index, count: exp.actions.length, action, removable: index === exp.actions.length - 1 && action.stage === 0 };
+  },
+
+  // Sets out for a quest, or adds it to the row. The result is rolled now.
   startExpedition(questId, options = {}) {
-    const c = this.ctx();
-    if (c.world.expedition) return null;
-    const quest = questById(questId, c);
-    if (!quest || questState(quest, c).status !== 'open') return null;
+    const plan = this.plan(questId, options);
+    if (!plan || plan.block) return null;
+    const { quest } = plan;
     const event = this.event('expedition', { q: quest.id, place: quest.place, title: quest.name });
-    const energy = this.stamina().value;
-    const plan = planExpedition(quest, c, event.id, { ...options, energy });
-    if (plan.cost > energy || (quest.gather && plan.cost < 1)) return null;
-    Object.assign(event, { out: plan.out, act: plan.act, back: plan.back, cost: plan.cost, outcome: plan.outcome });
+    const outcome = runQuest(quest, plan.ctx, event.id, { amount: options.amount });
+    if (quest.gather && outcome.stamina < 1) return null;
+    Object.assign(event, { least: Math.min(plan.cost.work.min, outcome.stamina), outcome });
     this.add([event]);
     return event;
   },
 
-  // --- world: a route of several quests --------------------------------------
-
-  // The quests of the route that can still be done, ready to plan.
-  routeEntries() {
-    const c = this.ctx();
-    return this.route
-      .map((r) => ({ quest: questById(r.q, c), options: r.amount ? { amount: r.amount } : {} }))
-      .filter(({ quest }) => quest && questState(quest, c).status === 'open');
-  },
-
-  // What the route takes, part by part (see routeParts), with one more quest
-  // if it is given: { entries, parts, most, least }.
-  routePlan(extra = null) {
-    const entries = [...this.routeEntries(), ...(extra ? [extra] : [])];
-    const parts = routeParts(entries, this.ctx());
-    return { entries, parts, most: mostOf(parts), least: leastOf(parts) };
-  },
-
-  // Where a quest is in the route (-1: not in it).
-  inRoute(questId) {
-    return this.routeEntries().findIndex(({ quest }) => quest.id === questId);
-  },
-
-  // Why a quest cannot be added to the route, or null if it can:
-  //   'away' the Envoy is on an expedition, 'closed' the quest cannot be done,
-  //   'camp' building at the camp is no part of a route, 'twice' it is in already,
-  //   'material' the material for all of it is lacking,
-  //   'energy' the Energie would not reach back to the camp from there.
-  routeBlock(questId, options = {}) {
-    const c = this.ctx();
-    const quest = questById(questId, c);
-    if (c.world.expedition) return 'away';
-    if (!quest || questState(quest, c).status !== 'open') return 'closed';
-    if (quest.kind === 'bauen' && besideTheCamp(c.catalog.placeById.get(quest.place))) return 'camp';
-    if (this.inRoute(questId) >= 0) return 'twice';
-    const plan = this.routePlan({ quest, options });
-    const needs = {};
-    for (const { quest: q } of plan.entries) for (const [k, v] of Object.entries(q.consumes)) needs[k] = (needs[k] || 0) + v;
-    if (Object.entries(needs).some(([k, v]) => (c.world.purse[k] || 0) < v)) return 'material';
-    if (plan.most > Math.floor(this.stamina().value)) return 'energy';
-    return null;
-  },
-
-  addToRoute(questId, options = {}) {
-    if (this.routeBlock(questId, options)) return false;
-    this.route = [...this.route, { q: questId, ...(options.amount ? { amount: options.amount } : {}) }];
-    this.saveRoute();
-    return true;
-  },
-
-  removeFromRoute(questId) {
-    this.route = this.route.filter((r) => r.q !== questId);
-    this.saveRoute();
-  },
-
-  clearRoute() {
-    this.route = [];
-    this.saveRoute();
-  },
-
-  saveRoute() {
-    const ui = store.loadUi();
-    ui.route = this.route;
-    store.saveUi(ui);
-    for (const fn of listeners) fn(this.state);
-  },
-
-  // Sets out on the route: one event with every stop, rolled now.
-  startRoute() {
-    const c = this.ctx();
-    if (c.world.expedition) return null;
-    const { entries, most } = this.routePlan();
-    const energy = this.stamina().value;
-    if (entries.length === 0 || most > energy) return null;
-    let event;
-    if (entries.length === 1) {
-      event = this.startExpedition(entries[0].quest.id, entries[0].options);
-    } else {
-      event = this.event('expedition', {});
-      const plan = planRoute(entries, c, event.id, energy);
-      Object.assign(event, { stops: plan.stops, back: plan.back, cost: plan.cost });
-      this.add([event]);
-    }
-    if (event) this.clearRoute();
-    return event;
+  // Takes the last action out of the row again, while it has not begun.
+  unqueue(actionId) {
+    const exp = this.state.world.expedition;
+    const last = exp?.actions[exp.actions.length - 1];
+    if (last && last.id === actionId && last.stage === 0) this.add([this.event('unqueue', { ref: actionId })]);
   },
 
   // Finished expeditions of the last two days this device has not shown yet.

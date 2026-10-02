@@ -13,7 +13,7 @@ import { PLACE_ICONS, UI_ICONS, SLOT_ICONS } from './icons.js';
 import { versioned } from '../config.js';
 import { formatDayLong } from '../days.js';
 import { sectionTitle, supplies, staminaBar, materialLimits } from './parts.js';
-import { journeyPanel, openReport, expeditionTitle } from './journey.js';
+import { journeyPanel, openReport, expeditionTitle, currentTitle } from './journey.js';
 import { encountersFor, questState, placeUnlocked } from '../world/quests.js';
 import { showPlace } from './worldmap.js';
 import { openQuest } from './questsheet.js';
@@ -48,7 +48,7 @@ export function campPicture(stage, phase) {
 
 function statusLine(game) {
   const exp = game.state.world.expedition;
-  if (exp) return `Der Envoy ist unterwegs: ${expeditionTitle(exp)}.`;
+  if (exp) return `Der Envoy ist unterwegs: ${currentTitle(exp)}.`;
   return 'Der Envoy ist im Lager.';
 }
 

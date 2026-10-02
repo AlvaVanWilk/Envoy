@@ -899,6 +899,16 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .ft-cost.lacking { color: var(--warn); }
 .ft-badge { position: absolute; right: -4px; bottom: -2px; width: 24px; height: 24px; padding: 3.5px; border-radius: 50%; background: #1d2d31; border: 1px solid #f0e6d3; color: var(--ok); }
 .ft-badge svg { width: 100%; height: 100%; display: block; }
+/* the Hygge of a facility: a small medal like the one on the camp picture */
+.hygge-medal {
+  position: absolute; left: -6px; top: -4px;
+  display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  border: 1.5px solid rgba(246, 161, 82, 0.8);
+  background: radial-gradient(circle at 50% 38%, #30221a, #080f11 72%);
+  box-shadow: 0 0 0 1px rgba(8, 15, 17, 0.8), 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 10px rgba(246, 161, 82, 0.3);
+  font-family: var(--font-display); font-size: 13px; font-weight: 700; line-height: 1;
+  color: #ffe4c6; text-shadow: 0 0 8px rgba(246, 161, 82, 0.7);
+}
 .facility-tile.is-built { border-color: rgba(246, 161, 82, 0.4); background: linear-gradient(180deg, #24373b, #162528); }
 .ft-emblem.is-built, .facility-tile.is-built .ft-emblem { background: radial-gradient(circle at 40% 32%, #f8b06a, #b8530f 78%); border-color: #ffd9b0; color: #241205; --engrave: rgba(255, 226, 190, 0.6); box-shadow: 0 0 18px rgba(246, 161, 82, 0.55); }
 .facility-tile.is-ready { border-color: rgba(246, 161, 82, 0.75); animation: tile-glow 2.2s ease-in-out infinite; }
@@ -1305,7 +1315,6 @@ button.task-check:hover { color: var(--stat); }
 .map-route svg { width: 100%; height: 100%; display: block; }
 .map-route polyline { fill: none; stroke: #1a282c; stroke-width: 3; stroke-dasharray: 1 8; stroke-linecap: round; stroke-linejoin: round; opacity: 0.85; }
 /* a planned route: the same path in copper, so it stands out before setting out */
-.map-route.is-planned polyline { stroke: var(--copper-dark); stroke-width: 3.5; stroke-dasharray: 2 7; opacity: 0.95; }
 .route-step {
   position: absolute; left: -7px; top: -7px; z-index: 2;
   display: grid; place-items: center; min-width: 19px; height: 19px; padding: 0 4px;
@@ -1499,25 +1508,32 @@ button.task-check:hover { color: var(--stat); }
 .journey-part { display: grid; gap: 4px; flex-basis: 0; min-width: 44px; }
 .journey-track { position: relative; height: 12px; overflow: hidden; border-radius: 2px; background: #090c11; border: 1px solid #04070a; box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(244, 236, 222, 0.05); }
 .journey-fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(180deg, #f8b06a, #e8791f 55%, #8f370c); transition: width 1s linear; }
-.journey-part[data-phase="act"] .journey-fill { background: linear-gradient(180deg, #e3f4f4, #8fbfc3 55%, #4f7f86); }
+.journey-track[data-kind="work"] .journey-fill { background: linear-gradient(180deg, #e3f4f4, #8fbfc3 55%, #4f7f86); }
 .journey-part-name { display: grid; font-size: 11px; line-height: 1.3; color: var(--muted); white-space: nowrap; }
-.journey-part[data-phase="back"] .journey-part-name { justify-items: end; }
+.journey-part[data-phase="home"] .journey-part-name { justify-items: end; }
 .journey-part.current .journey-part-name { color: var(--text); }
-.journey-bar.is-route .journey-part { min-width: 6px; }
+/* several actions: one block for each (its way part and its work part together) and the way home */
+.journey-block { display: flex; flex-basis: 0; min-width: 10px; height: 14px; overflow: hidden; border-radius: 3px; background: #090c11; border: 1px solid #04070a; box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.7), 0 1px 0 rgba(244, 236, 222, 0.05); }
+.journey-block .journey-track { flex-basis: 0; min-width: 2px; height: auto; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.journey-block .journey-track + .journey-track { box-shadow: inset 1px 0 0 rgba(4, 7, 10, 0.9); }
+.journey-block.current { border-color: rgba(246, 161, 82, 0.7); }
 .journey-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; font-size: 14px; }
 .journey-phase { font-weight: 700; }
-
-/* a planned route: the stops in order, the Energie it takes, set out or drop */
-.route { display: grid; gap: 12px; }
-.route-stops { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.route-stop { display: flex; align-items: center; gap: 10px; }
-.route-n { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--copper); border: 1px solid #f3e9d8; color: #10181a; font: 700 12px/1 var(--font-body); }
-.route-stop-text { flex: 1; min-width: 0; display: grid; padding: 4px 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
-.route-stop-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; }
-.route-stop-place { font-size: 12px; color: var(--muted); }
-.route-remove { flex: none; display: grid; place-items: center; width: 34px; height: 34px; padding: 9px; border: 1px solid var(--line-strong); border-radius: 6px; background: transparent; color: var(--text-2); cursor: pointer; }
-.route-remove .icon, .route-remove svg { width: 100%; height: 100%; display: block; }
-.route-actions { display: flex; justify-content: flex-end; gap: 8px; }
+/* the row of what the Envoy does: done, now, waiting */
+.journey-row { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.journey-stop { display: flex; align-items: center; gap: 10px; min-height: 38px; }
+.journey-mark { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line-strong); color: var(--text-2); font: 700 12px/1 var(--font-body); }
+.journey-check { display: none; width: 14px; height: 14px; }
+.journey-check svg { width: 100%; height: 100%; display: block; }
+.journey-stop[data-state="done"] .journey-n { display: none; }
+.journey-stop[data-state="done"] .journey-check { display: block; color: var(--ok); }
+.journey-stop[data-state="done"] .journey-stop-text { opacity: 0.6; }
+.journey-stop[data-state="now"] .journey-mark { background: var(--copper); border-color: #f3e9d8; color: #10181a; }
+.journey-stop-text { flex: 1; min-width: 0; display: grid; }
+.journey-stop-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; }
+.journey-stop-place { font-size: 12px; color: var(--muted); }
+.journey-remove { flex: none; display: grid; place-items: center; width: 34px; height: 34px; padding: 9px; border: 1px solid var(--line-strong); border-radius: 6px; background: transparent; color: var(--text-2); cursor: pointer; }
+.journey-remove .icon, .journey-remove svg { width: 100%; height: 100%; display: block; }
 .journey-until { color: var(--muted); }
 
 /* the window of a quest */
@@ -1534,25 +1550,18 @@ button.task-check:hover { color: var(--stat); }
 .carry-note { margin: 0; color: var(--warn); }
 .gather-stock { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
 
-/* Energie before setting out: stays for sure, then what it takes: what the
-   dice may take (striped), the ways (a path in them) and the work (faint) */
+/* Energie before setting out: stays for sure (full), what the dice may take
+   (striped), what it takes as one block with its way part tinted */
 .energy-preview .stamina-value strong { color: var(--copper-bright); }
-.ep-keep, .ep-part { position: absolute; top: 0; bottom: 0; left: 0; }
+.ep-keep, .ep-maybe, .ep-block { position: absolute; top: 0; bottom: 0; left: 0; }
 .ep-keep { background: linear-gradient(180deg, #dcefee 0%, #7ea3a4 55%, #3f6c73 100%); box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.4); }
 .ep-maybe { background: repeating-linear-gradient(-45deg, rgba(126, 163, 164, 0.85) 0 4px, rgba(63, 108, 115, 0.35) 4px 8px); }
-.ep-work { background: rgba(126, 163, 164, 0.24); box-shadow: inset 0 0 0 1px rgba(220, 239, 238, 0.42); }
-.ep-way {
-  background:
-    repeating-linear-gradient(90deg, var(--copper-bright) 0 4px, transparent 4px 7px) center / 100% 2px no-repeat,
-    rgba(232, 121, 31, 0.16);
-  box-shadow: inset 0 0 0 1px rgba(246, 161, 82, 0.55);
-}
-.ep-part.is-planned { opacity: 0.55; filter: saturate(0.4); }
-.energy-preview.short .ep-part { box-shadow: inset 0 0 0 1px var(--loss); }
+.ep-block { overflow: hidden; background: rgba(126, 163, 164, 0.14); box-shadow: inset 0 0 0 1px rgba(220, 239, 238, 0.32); }
+.ep-way { position: absolute; top: 0; bottom: 0; left: 0; background: linear-gradient(180deg, rgba(246, 161, 82, 0.42), rgba(232, 121, 31, 0.26)); box-shadow: inset -1px 0 0 rgba(4, 7, 10, 0.55); }
+.energy-preview.short .ep-block { box-shadow: inset 0 0 0 1px var(--loss); }
 .energy-preview.short .stamina-value strong { color: var(--loss); }
-.ep-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.ep-key { display: inline-flex; align-items: center; gap: 6px; }
-.ep-swatch { position: relative; display: inline-block; width: 18px; height: 10px; border-radius: 2px; }
+.ep-legend { display: flex; align-items: center; gap: 7px; margin: 0; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ep-swatch { display: inline-block; width: 16px; height: 9px; border-radius: 2px; background: linear-gradient(180deg, rgba(246, 161, 82, 0.55), rgba(232, 121, 31, 0.35)); box-shadow: inset 0 0 0 1px rgba(246, 161, 82, 0.5); }
 
 /* the camp: first task */
 .camp-first { display: grid; gap: 10px; }

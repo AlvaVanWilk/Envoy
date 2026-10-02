@@ -85,46 +85,36 @@ export function staminaBar(st) {
     h('p', { class: 'stamina-note' }, over > 0 ? `Ausgeschlafen: ${over} extra` : refillText(st.hoursToFull)));
 }
 
-// The Energie bar before setting out, with what a quest or a route would use.
-// Full: what stays for sure. Then what it takes, at the end of the bar:
-// first what the dice of gathering may take or leave (striped), then the
-// parts in the order of the trip, every way with a path drawn in it, the
-// work at a place faint. parts: [{ kind: 'way' | 'work' | 'maybe', n, planned? }]
-// (see routeParts); planned parts belong to the route already and are paler.
-// Below the bar, once there is a way: how much is way and how much work.
-export function energyPreview(st, parts, { title = 'Energie' } = {}) {
+// The Energie bar before setting out: full, what stays for sure; striped,
+// what the dice of gathering may take or leave; at the end of the bar what it
+// takes, as one block, its way part tinted. Below, how much of it is way
+// („davon Weg 2“), and in a row, how much it would be on its own („statt 4“).
+// cost: { least, most, way, alone } (see game.plan)
+export function energyPreview(st, cost) {
   const value = Math.floor(st.value);
   const total = Math.max(st.max, value);
-  const sum = (list) => list.reduce((n, p) => n + p.n, 0);
-  const maybe = parts.filter((p) => p.kind === 'maybe');
-  const sure = parts.filter((p) => p.kind !== 'maybe');
-  const least = sum(sure);
-  const most = least + sum(maybe);
+  const least = Math.max(0, Math.ceil(cost.least));
+  const most = Math.max(least, Math.ceil(cost.most));
+  const way = Math.min(least, Math.max(0, Math.round(cost.way || 0)));
+  const alone = Math.round(cost.alone || 0);
   const share = (n) => `${(100 * n) / total}%`;
   const step = st.max <= 30 ? 1 : st.max <= 60 ? 5 : st.max <= 120 ? 10 : 20;
-  const span = (a, b) => (a === b ? String(a) : `${a}–${b}`);
-  const cost = span(least, most);
-  let at = Math.max(0, value - most);
-  const keep = at;
-  const drawn = [...maybe, ...sure].map((p) => {
-    const width = Math.max(0, Math.min(p.n, value - at));
-    const el = h('span', { class: `ep-part ep-${p.kind}${p.planned ? ' is-planned' : ''}`, style: { left: share(at), width: share(width) } });
-    at += width;
-    return el;
-  });
-  const way = sum(parts.filter((p) => p.kind === 'way'));
-  const work = parts.filter((p) => p.kind !== 'way');
-  const workLeast = sum(work.filter((p) => p.kind === 'work'));
-  return h('div', { class: `stamina energy-preview ${most > value ? 'short' : ''}`, 'aria-label': `${title}: kostet ${cost} von ${value}` },
+  const amount = least === most ? String(least) : `${least}–${most}`;
+  const start = Math.max(0, value - most);
+  const maybe = Math.max(0, Math.min(most - least, value - start));
+  const block = Math.max(0, value - start - maybe);
+  return h('div', { class: `stamina energy-preview ${most > value ? 'short' : ''}`, 'aria-label': `Energie: kostet ${amount} von ${value}` },
     h('div', { class: 'stamina-top' },
-      h('span', { class: 'stamina-label' }, title),
-      h('span', { class: 'stamina-value' }, 'kostet ', h('strong', {}, cost), ` von ${value}`)),
+      h('span', { class: 'stamina-label' }, 'Energie'),
+      h('span', { class: 'stamina-value' }, 'kostet ', h('strong', {}, amount), ` von ${value}`)),
     h('div', { class: 'stamina-bar', style: { '--notches': String(total / step) } },
-      h('span', { class: 'ep-keep', style: { width: share(keep) } }),
-      drawn),
-    way > 0 ? h('p', { class: 'ep-legend' },
-      h('span', { class: 'ep-key' }, h('span', { class: 'ep-swatch ep-way' }), `Weg ${way}`),
-      h('span', { class: 'ep-key' }, h('span', { class: 'ep-swatch ep-work' }), `vor Ort ${span(workLeast, workLeast + sum(maybe))}`)) : null);
+      h('span', { class: 'ep-keep', style: { width: share(start) } }),
+      maybe > 0 ? h('span', { class: 'ep-maybe', style: { left: share(start), width: share(maybe) } }) : null,
+      block > 0 ? h('span', { class: 'ep-block', style: { left: share(start + maybe), width: share(block) } },
+        way > 0 ? h('span', { class: 'ep-way', style: { width: `${(100 * Math.min(way, block)) / block}%` } }) : null) : null),
+    way > 0 || alone > way ? h('p', { class: 'ep-legend' },
+      h('span', { class: 'ep-swatch' }),
+      `davon Weg ${way}${alone > way ? ` statt ${alone}` : ''}`) : null);
 }
 
 // The picture of a thing. Without one yet, the symbol of its slot.

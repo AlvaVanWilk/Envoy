@@ -83,7 +83,7 @@ const CHAPTERS = [
     id: 'lager',
     title: 'Das Lager',
     text: [
-      'Das Lager liegt auf der Trümmerebene. Hier beginnt und endet jede Expedition.',
+      'Das Lager liegt auf der Trümmerebene.',
       'Zuerst braucht es ein Lagerfeuer. Danach lässt sich das Lager einrichten.',
     ],
   },
@@ -96,12 +96,12 @@ const CHAPTERS = [
     ],
   },
   {
-    id: 'routen',
-    title: 'Routen',
+    id: 'reihe',
+    title: 'In Reihe',
     when: (game) => game.state.world.journal.length > 0,
     text: [
-      'Mehrere Quests lassen sich zu einer Route verbinden: Der Envoy geht dann von Ort zu Ort und erst am Ende zurück ins Lager. Das spart Wege.',
-      'Im Fenster einer Quest beginnt „Route planen“ eine Route, „Anhängen“ setzt eine Quest dahinter. Das geht, solange die Energie von dort noch zurück ins Lager reicht.',
+      'Solange der Envoy unterwegs ist, kannst du ihm mehr aufgeben: Der Knopf heißt dann „Anhängen“. Er geht von Ort zu Ort und erst am Ende zurück ins Lager. Das spart Wege.',
+      'Beim Sammeln rechnet die Reihe mit den besten Würfeln. Brauchen sie mehr, als die Energie hergibt, fällt das Letzte aus der Reihe.',
     ],
   },
   {

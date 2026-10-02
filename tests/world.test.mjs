@@ -93,12 +93,12 @@ test('the Energie bar: 10 per level of Ausdauer', () => {
   assert.equal(maxStamina(statsAt(10)), 100);
 });
 
-test('an expedition takes real time and pays out only when back', () => {
+test('an expedition takes real time and pays out once the work is done', () => {
   const e = expeditionEvent([], 'q-pilzholz', 0.1);
   assert.ok(e.out >= 1 && e.back === e.out && e.act > 0);
   const during = replay([e], catalog, DAY, e.t + (e.out + 1) * 60000);
   assert.equal(during.world.purse.pilzholz, 0);
-  assert.equal(progressAt(during.world.expedition, e.t + (e.out + 1) * 60000).phase, 'act');
+  assert.equal(progressAt(during.world.expedition, e.t + (e.out + 1) * 60000).phase, 'work');
   assert.equal(during.world.stamina.value < maxStamina(during.stats), true);
 
   const after = replay([e], catalog, DAY, e.t + total(e) * 60000 + 1000);
@@ -107,11 +107,11 @@ test('an expedition takes real time and pays out only when back', () => {
   assert.equal(after.world.reports.length, 1);
 });
 
-test('only one expedition at a time', () => {
+test('events from before actions could be added: a second one while away is left out', () => {
   const a = expeditionEvent([], 'q-pilzholz', 0.1);
   const b = expeditionEvent([], 'q-stein', 0.15);
   const s = replay([a, b], catalog, DAY, T0 + 0.2 * H);
-  assert.equal(s.world.expedition.stops[0].q, 'q-pilzholz');
+  assert.deepEqual(s.world.expedition.actions.map((x) => x.q), ['q-pilzholz']);
 });
 
 test('the hero moves along the way', () => {

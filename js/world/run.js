@@ -152,9 +152,11 @@ function runGather(quest, ctx, rng, { amount = 1, energy = Infinity } = {}) {
   const budget = Math.max(0, Math.floor(energy));
   let units = 0;
   let got = 0;
+  const rolls = [];
   while (got < wanted && units < budget) {
     units += 1;
-    got += gatherRoll(rng, chance);
+    rolls.push(gatherRoll(rng, chance));
+    got += rolls[rolls.length - 1];
   }
   got = Math.min(got, wanted);
   return {
@@ -167,7 +169,7 @@ function runGather(quest, ctx, rng, { amount = 1, energy = Infinity } = {}) {
     minutes: units * MINUTES_PER_STAMINA,
     reward: { splitter: 0, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], unlocks: [], rest: false },
     consumed: {},
-    gather: { material, wanted, units },
+    gather: { material, wanted, units, rolls },
   };
 }
 

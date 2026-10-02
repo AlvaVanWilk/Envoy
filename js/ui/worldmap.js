@@ -1,7 +1,8 @@
 // The map of the Zwischenwelt. Every expedition starts at the camp, goes to
-// a place (or, as a route, to several one after the other) and comes back;
-// it takes real time. A planned route is drawn on the map with the number of
-// every stop, and listed beside it to set out or drop. A tap on a place fans out what
+// a place and comes back; it takes real time. While the Envoy is away more can
+// be added to the row of what he does: he goes from place to place, and the
+// way is drawn on the map, every place still to come with its number in the
+// row. A tap on a place fans out what
 // can be done there: a small seal for every quest, with its name; a tap on a
 // seal opens that quest (questsheet.js). At the same time a cartouche on the
 // edge of the map, in the style of the map itself, tells about the place: its
@@ -10,10 +11,9 @@
 import { h, icon } from './dom.js';
 import { PLACE_ICONS, UI_ICONS, SLOT_ICONS } from './icons.js';
 import { versioned } from '../config.js';
-import { viewHead, sectionTitle, supplies, staminaBar, materialLimits, resourceIcon, energyPreview } from './parts.js';
-import { journeyPanel, heroClass, expeditionTitle } from './journey.js';
+import { viewHead, sectionTitle, supplies, staminaBar, materialLimits, resourceIcon } from './parts.js';
+import { journeyPanel, heroClass } from './journey.js';
 import { openQuest } from './questsheet.js';
-import { toast } from './sheet.js';
 import { questsAt, questState, placeUnlocked, describeCondition } from '../world/quests.js';
 import { heroPosition } from '../world/expedition.js';
 import { camp, besideTheCamp } from '../world/map.js';
@@ -39,13 +39,13 @@ function placeMarker(place, game, c, steps) {
   const states = quests.map((q) => questState(q, c).status);
   const somethingToDo = states.includes('open');
   const spirit = quests.some((q, i) => q.encounter && states[i] === 'open');
-  const target = c.world.expedition?.stops.some((s) => s.place === place.id);
+  const target = c.world.expedition?.actions.some((a) => a.place === place.id && a.stage < 3);
   const classes = ['place-marker', unlocked ? '' : 'is-locked', somethingToDo ? 'is-open' : '', target ? 'is-target' : ''];
   return h('button', {
     class: classes.join(' '),
     style: { left: `${place.x}%`, top: `${place.y}%` },
     'data-place': place.id,
-    'aria-label': `${place.name}${unlocked ? '' : ', verschlossen'}${spirit ? ', Geist gesichtet' : ''}${steps ? `, Station ${steps.join(' und ')} der Route` : ''}`,
+    'aria-label': `${place.name}${unlocked ? '' : ', verschlossen'}${spirit ? ', Geist gesichtet' : ''}${steps ? `, Station ${steps.join(' und ')}` : ''}`,
     onclick: (e) => tapPlace(place, game, e.currentTarget),
   },
   h('span', { class: 'seal' },
@@ -56,26 +56,30 @@ function placeMarker(place, game, c, steps) {
   h('span', { class: 'place-name' }, place.name));
 }
 
-// The way of an expedition or of a planned route, from the camp through its
-// places and back (none for the camp and the Trümmerfeld beside it).
-function routeLine(placeIds, catalog, planned) {
+// The way of the running expedition, from the camp through its places and
+// back (none for the camp and the Trümmerfeld beside it).
+function routeLine(exp, catalog) {
+  if (!exp) return null;
   const home = camp(catalog);
   const points = [home];
-  for (const id of placeIds) {
-    const place = catalog.placeById.get(id);
+  for (const a of exp.actions) {
+    const place = catalog.placeById.get(a.place);
     if (place && !besideTheCamp(place) && place !== points[points.length - 1]) points.push(place);
   }
   if (points.length < 2) return null;
   points.push(home);
   const coords = points.map((p) => `${p.x},${p.y}`).join(' ');
-  return h('span', { class: `map-route ${planned ? 'is-planned' : ''}`, html:
+  return h('span', { class: 'map-route', html:
     `<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="${coords}" vector-effect="non-scaling-stroke"/></svg>` });
 }
 
-// For every place of the planned route, the numbers of its stops.
-function routeSteps(planned) {
+// With several actions in the row: for every place still to come, its numbers.
+function routeSteps(exp) {
   const steps = new Map();
-  planned.forEach(({ quest }, i) => steps.set(quest.place, [...(steps.get(quest.place) || []), i + 1]));
+  if (!exp || exp.actions.length < 2) return steps;
+  exp.actions.forEach((a, i) => {
+    if (a.stage < 3) steps.set(a.place, [...(steps.get(a.place) || []), i + 1]);
+  });
   return steps;
 }
 
@@ -85,7 +89,7 @@ function legend() {
   return h('section', { class: 'panel legend' },
     sectionTitle('Legende'),
     h('ul', { class: 'legend-list' },
-      row(seal('lager'), 'Das Lager. Hier beginnt und endet jede Expedition.'),
+      row(seal('lager'), 'Das Lager'),
       row(seal('sammeln'), 'Sammelort'),
       row(seal('wild'), 'Wilde Gegend'),
       row(seal('hoehle'), 'Höhle'),
@@ -96,45 +100,13 @@ function legend() {
       row(h('span', { class: 'legend-hero', html: UI_ICONS.hero }), 'Der Envoy')));
 }
 
-// The planned route: its stops (a tap opens the quest, × takes it out),
-// what it takes of the Energie, and the buttons to set out or drop it.
-function routePanel(game, planned) {
-  const plan = game.routePlan();
-  const st = game.stamina();
-  const enough = plan.most <= Math.floor(st.value);
-  const setOut = () => {
-    const event = game.startRoute();
-    if (!event) return;
-    markMapForScroll();
-    toast(`Aufgebrochen: ${expeditionTitle(game.state.world.expedition)}`);
-  };
-  return h('div', { class: 'route' },
-    h('ol', { class: 'route-stops' }, planned.map(({ quest, options }, i) =>
-      h('li', { class: 'route-stop' },
-        h('span', { class: 'route-n' }, String(i + 1)),
-        h('button', { class: 'route-stop-text', type: 'button', onclick: () => openQuest(quest, game) },
-          h('span', { class: 'route-stop-title' }, quest.name, quest.gather ? ` · ${options.amount}` : ''),
-          h('span', { class: 'route-stop-place' }, game.catalog.placeById.get(quest.place)?.name || '')),
-        h('button', {
-          class: 'route-remove', type: 'button', 'aria-label': `${quest.name} aus der Route nehmen`,
-          onclick: () => game.removeFromRoute(quest.id),
-        }, icon(UI_ICONS.close))))),
-    energyPreview(st, plan.parts, { title: 'Route' }),
-    enough ? null : h('p', { class: 'quest-note' }, 'Die Energie reicht gerade nicht für die ganze Route.'),
-    h('div', { class: 'route-actions' },
-      h('button', { class: 'btn ghost small', type: 'button', onclick: () => { game.clearRoute(); toast('Route verworfen'); } }, 'Verwerfen'),
-      h('button', { class: 'btn primary small', type: 'button', disabled: !enough, onclick: setOut }, 'Aufbrechen')));
-}
-
 function expeditionSide(game) {
   const exp = game.state.world.expedition;
-  const planned = exp ? [] : game.routeEntries();
-  let body = h('p', { class: 'muted' }, 'Der Envoy ist im Lager. Einen Ort antippen, um aufzubrechen.');
-  if (exp) body = journeyPanel(exp, game);
-  else if (planned.length > 0) body = routePanel(game, planned);
   return h('section', { class: 'panel' },
-    sectionTitle(planned.length > 0 ? 'Route' : 'Expedition'),
-    body);
+    sectionTitle('Expedition'),
+    exp
+      ? journeyPanel(exp, game)
+      : h('p', { class: 'muted' }, 'Der Envoy ist im Lager. Einen Ort antippen, um aufzubrechen.'));
 }
 
 export function renderMap(game) {
@@ -146,11 +118,10 @@ export function renderMap(game) {
   fanNext = null;
   closeFan = null;
 
-  const planned = exp ? [] : game.routeEntries();
-  const steps = routeSteps(planned);
+  const steps = routeSteps(exp);
   const canvas = h('div', { class: 'map-canvas' },
     h('img', { class: 'map-image', src: versioned('assets/welt/karte.jpg'), alt: 'Karte der Zwischenwelt', draggable: 'false' }),
-    exp ? routeLine(exp.stops.map((st) => st.place), game.catalog, false) : routeLine(planned.map((e) => e.quest.place), game.catalog, true),
+    routeLine(exp, game.catalog),
     game.catalog.places.map((place) => placeMarker(place, game, c, steps.get(place.id))),
     h('span', { class: `hero-token ${heroClass(exp, now)}`, style: { left: `${pos.x}%`, top: `${pos.y}%` }, html: UI_ICONS.hero, 'aria-hidden': 'true' }));
 
@@ -207,7 +178,8 @@ function fanEntries(place, game, c) {
   const entries = questsAt(place.id, c).map((quest) => ({ quest, status: questState(quest, c).status }))
     .filter(({ quest, status }) => status !== 'done' || quest.encounter)
     .map(({ quest, status }) => {
-      const step = game.inRoute(quest.id) + 1;
+      const queued = game.queued(quest.id);
+      const step = queued && game.state.world.expedition.actions.length > 1 ? queued.index + 1 : 0;
       return {
         name: quest.name,
         status,

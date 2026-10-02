@@ -12,10 +12,14 @@
 //   mode     { sick }                         Krankheitsmodus on or off
 //
 // Event types of the world (see world/worldstate.js):
-//   expedition { q, place, title, out, act, back, cost, outcome }   one quest
-//              { stops: [{ q, place, title, out, act, outcome }], back, cost }   a route
-//                                             from the camp to a place and back; minutes for each
-//                                             part and the full result, known from the start
+//   expedition { q, place, title, least, outcome }
+//                                             the Envoy sets out for a quest (gathering, building),
+//                                             or it joins the row while he is away; the result is
+//                                             known from the start, `least` Energie is set aside
+//                                             for the work (see world/expedition.js)
+//              from before: { q, place, title, out, act, back, cost, outcome } (one quest, all
+//                                             parts and the cost fixed) or { stops: […], back, cost }
+//   unqueue  { ref }                          the last action of the row taken out again
 //   buy      { offer, kind, thing, price }    bought at the trader (thing = item or furniture id)
 //   sell     { inst, price }                  sold to the trader
 //   drop     { inst }                         left behind
@@ -79,7 +83,7 @@ export function mergeEvents(listA, listB) {
 
 export const KNOWN_TYPES = new Set([
   'plan', 'done', 'undo', 'mode',
-  'expedition', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
+  'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
   'envoy', 'travel', 'quest', 'test',
 ]);
 

@@ -241,9 +241,9 @@ Quest beginnen kann, bringt immer etwas zurück.
 Jede Unternehmung ist eine Expedition vom Lager aus: Hinweg, die Arbeit vor Ort,
 Rückweg. Alle drei Teile dauern echte Minuten; eine dreiteilige Leiste zeigt, wo der
 Envoy gerade ist und wann die Expedition endet. Auf der Karte wandert seine Marke den Weg
-entlang. Es läuft immer nur eine Expedition. Mehrere Quests lassen sich zu einer
-**Route** hintereinander schalten (siehe unten): dann geht der Envoy von Ort zu Ort und
-erst am Ende zurück ins Lager.
+entlang. Es läuft immer nur eine Expedition; solange sie läuft, lässt sich ihr aber mehr
+**anhängen** (siehe „In Reihe“ unten): dann geht der Envoy von Ort zu Ort und erst am
+Ende zurück ins Lager.
 
 **Zeit folgt Energie: Jede Energie ist eine Minute unterwegs.** Was lange dauert,
 kostet entsprechend viel Energie; was wenig kostet, geht schnell. Die Spanne reicht von
@@ -264,40 +264,45 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
   höchstens auf die Hälfte. Kämpfe dauern so lange, wie die Tabelle sagt, gleich wie
   viele Runden sie gehen.
 - **Energie** der Expedition = 2 × Weg + vor Ort, **Dauer** = ebenso viele Minuten.
-  Auf einer Route: alle Wege (Lager → 1. Ort → 2. Ort → … → Lager) + alles vor Ort.
-- Das Ergebnis wird beim Aufbruch berechnet und als Ereignis gespeichert, zählt aber
-  erst, wenn der Envoy zurück ist. Material zum Bauen wird gleich mitgenommen.
+  Die Energie wird beim Aufbruch beiseitegelegt (beim Sammeln, was die besten Würfel
+  brauchen; den Rest nimmt sich der Envoy, wenn er dort ankommt).
+- Das Ergebnis wird beim Aufbruch berechnet und als Ereignis gespeichert und zählt,
+  sobald die Arbeit dort getan ist: Material liegt dann schon im Vorrat, auch wenn der
+  Envoy noch unterwegs ist. Material zum Bauen nimmt er mit, wenn er dafür aufbricht.
 - Zurück im Lager erscheint einmal ein Bericht: Kämpfe, Mitgebrachtes, Neues im
-  Kompendium, bei zu wenig Platz auch, was liegen blieb. Nach einer Route ein Bericht
-  mit einem Abschnitt je Station; im Handbuch steht jede Quest der Route einzeln.
+  Kompendium, bei zu wenig Platz auch, was liegen blieb. Nach mehreren Stationen ein
+  Bericht mit einem Abschnitt je Station; im Handbuch steht jede Quest einzeln.
 
-**Routen.** Quests in Reihe sparen Wege: Wer vom Stillen Ufer gleich zur Nebelfurt
-weitergeht, spart den Rückweg dazwischen und einen Hinweg. Und eine lange Route füllt
-eine lange Zeit ohne App, etwa eine Nacht.
+**In Reihe.** Solange der Envoy unterwegs ist, lässt sich ihm alles anhängen, was er tun
+kann: Quests, Begegnungen, Sammeln auf dem Trümmerfeld, das Lagerfeuer und die
+Einrichtungen. Er geht dann vom letzten Ort direkt zum nächsten statt zwischendurch ins
+Lager; das spart Wege, und eine lange Reihe füllt eine lange Zeit ohne App.
 
-- Im Fenster einer Quest steht neben „Aufbrechen“ der Knopf „Route planen“: die Quest
-  wird die erste Station. Ist eine Route geplant, heißt der Knopf jeder weiteren Quest
-  „Anhängen“, und die Energie-Leiste zeigt die ganze Route mit dieser Quest (was schon
-  geplant ist, blasser). Eine Quest der Route zeigt „In der Route, Station 2 von 3“ und
-  „Herausnehmen“.
-- **Anhängen geht nur, wenn die Energie von dort noch zurück ins Lager reicht**: die
-  ganze Route mit ihrem Rückweg vom neuen letzten Ort darf nicht mehr kosten, als jetzt
-  in der Leiste ist. Sonst steht dort „Von dort reicht die Energie nicht mehr zurück ins
-  Lager.“ Beim Sammeln auf dem Trümmerfeld zählt die schlechteste Würfelreihe.
-- Was die Stationen davor höchstens bringen, zählt beim Tragen schon mit: die Menge
-  beim Sammeln und der Hinweis „Tragen kann der Envoy davon nur …“ richten sich danach.
-- Eine Quest steht nur einmal in einer Route. Bauen am Lager (das Lagerfeuer) gehört in
-  keine Route; Bauen an einem fernen Ort (die Brücke) schon, das Material wird beim
-  Aufbruch mitgenommen.
-- Unter Abenteuer steht statt „Expedition“ die geplante Route: die Stationen der Reihe
-  nach (ein Tipp öffnet die Quest, × nimmt sie heraus), die Energie-Leiste der Route,
-  „Verwerfen“ und „Aufbrechen“. Auf der Karte ist die Route als Kupferlinie gezeichnet,
-  jede Station trägt ihre Nummer, auch im Fächer.
-- Unterwegs zeigt die Leiste einen Teil je Weg und je Quest (ohne Beschriftung), darüber
-  den Weg „Das Lager – Stilles Ufer – Pilzhain – Das Lager“ und darunter, was gerade
-  dran ist: „Weg zu Station 2“, der Name der Quest oder „Rückweg“.
-- Die Route merkt sich das Gerät, bis der Envoy aufbricht oder sie verworfen wird. Was
-  inzwischen nicht mehr geht (etwa eine Begegnung von gestern), fällt heraus.
+- Der erste Schritt ist ein ganz normaler Aufbruch. Während der Envoy unterwegs ist,
+  heißt derselbe Knopf in jedem Fenster „Anhängen“ (im Quest-Fenster, beim Sammeln und
+  bei den Einrichtungen).
+- **Der Weg** zur angehängten Aktion beginnt am Ort der letzten; die Energie für den
+  Rückweg von dort, die er nun nicht mehr geht, kommt zurück. Ist er schon auf dem
+  Rückweg, kehrt er dort um, wo er gerade ist (für etwas am Lager geht er einfach weiter).
+- **Anhängen geht, solange die Energie jetzt dafür reicht, mit dem Rückweg vom neuen
+  letzten Ort.** Beim Sammeln zählt dabei, was die besten Würfel brauchen. Brauchen die
+  Würfel dort mehr, als die Leiste dann hergibt, fällt die letzte Aktion der Reihe heraus
+  (ihre Energie kommt zurück), so dass eingeplantes Material sicher gesammelt wird; erst
+  wenn nichts mehr herausfallen kann, sammelt der Envoy, solange die Energie reicht. Was
+  sofort beginnt (ein Aufbruch aus dem Lager), muss auch mit den schlechtesten Würfeln
+  passen.
+- **Was die Reihe bringt, zählt für das Spätere schon mit**: Material, das sie sammelt,
+  erfüllt die Voraussetzung einer späteren Quest (Stein, Pilzholz, dann das Lagerfeuer),
+  und beim Tragen zählt, was vorher hinzukommt. Fehlt beim Aufbruch zu einem Bau doch
+  Material, fällt der Bau heraus und die Energie kommt zurück. Das Fenster zeigt die Welt,
+  wie sie nach der Reihe sein wird („Nach der Reihe im Vorrat …“).
+- Unterwegs zeigt die Leiste einen Block je Aktion (Weg kupfern, Arbeit hell) und den
+  Rückweg, darüber die gerade laufende Aktion und den Weg „Das Lager – Stilles Ufer –
+  Pilzhain – Das Lager“, darunter die Reihe: erledigt (Haken), jetzt (kupfern), wartend.
+  Die letzte wartende lässt sich mit × herausnehmen, ihre Energie kommt zurück. Auf der
+  Karte trägt jeder Ort, der noch dran ist, seine Nummer in der Reihe, auch im Fächer.
+- Nach der Rückkehr ein Bericht mit einem Abschnitt je Station; was herausgefallen ist,
+  steht dort („Ausgelassen: … Dafür reichte die Energie nicht mehr.“).
 
 **Quests auf der Karte.** Ein Tipp auf einen Ort fächert seine Quests auf: neben dem
 Ort ein Bogen aus kleinen Siegeln, je Quest eines mit ihrem Namen daneben (ein Geist mit
@@ -318,10 +323,10 @@ ein Ort ohne offene Quest „Hier ist alles getan.“ oder „Heute ist es hier 
 **Das Fenster einer Quest** zeigt nur, was man zum Entscheiden braucht: den Text, die
 Voraussetzung (erfüllt oder nicht; Material, das die Quest verbraucht, gehört dazu, etwa
 „8 Stein, 2 Pilzholz“ beim Lagerfeuer), den Geist, die Belohnung und die Energie als
-Leiste: was sicher bleibt (voll), was die Würfel vielleicht brauchen (gestreift), dann in
-der Reihenfolge der Expedition jeder Weg (kupfern, mit einem gestrichelten Pfad wie auf
-der Karte) und die Arbeit vor Ort (blass), dazu „kostet 5 von 10“ und darunter „Weg 2 ·
-vor Ort 3“. So sind die Wege zu sehen, und auf einer Route, was sie spart. Passt die
+Leiste: was sicher bleibt (voll), was die Würfel vielleicht brauchen (gestreift) und was
+die Quest kostet als ein Block, darin ihr Weg kupfern getönt, dazu „kostet 5 von 10“
+und darunter „davon Weg 2“. In der Reihe steht dort, wie viel Weg es allein wäre („davon
+Weg 2 statt 4“), so dass das Verrechnen der Wege zu sehen ist. Passt die
 Belohnung nicht mehr ganz in den Rucksack, steht dort „Tragen kann der Envoy davon nur
 6 Stein.“ Keine Dauer, kein „etwa“ oder
 „höchstens“, keine Stats für Tempo oder Ertrag: Energie und Minuten sind dasselbe, und
@@ -522,7 +527,8 @@ eine Quest am Lager: aus Material und Energie, in echter Zeit („fertig um“).
 Lagerstufe 1 lassen sich alle vier auf ihre Stufe 1 errichten, nicht weiter ausbauen; die
 nächste Stufe einer Einrichtung gibt es erst, wenn das ganze Lager die nächste Stufe hat.
 
-**„Lager einrichten“** (Knopf auf dem Bild des Lagers) öffnet die vier Einrichtungen als Kacheln: ein großes Zeichen, der Name und darunter die
+**„Lager einrichten“** (Knopf auf dem Bild des Lagers) öffnet die vier Einrichtungen als Kacheln: ein großes Zeichen, am Zeichen eine kleine
+Medaille mit dem Hygge, das sie gibt (wie die große auf dem Bild), der Name und darunter die
 Kosten als kleine Bilder (Pilzholz, Stein, Energie mit Zahl; was fehlt, orange).
 Gebaute Kacheln leuchten (das Zeichen kupfern mit Haken, „Stufe 1“), solche, die gerade
 gebaut werden können, glimmen, die anderen sind dunkler. Ein Tipp auf eine Kachel zeigt
@@ -654,13 +660,13 @@ des Envoy):
   Kurze Kapitel stehen je Seite, nicht mehrere untereinander.
   - **Anleitung**: ein Kapitel je Seite. Die Grundkapitel sind von Anfang an da; weitere
     erscheinen erst, wenn man das Erklärte trifft (erster Geist, erste Höhle, erste
-    Sammelquest, Routen nach der ersten Rückkehr, Erfolge, Lagerausbau, Händler,
+    Sammelquest, „In Reihe“ nach der ersten Rückkehr, Erfolge, Lagerausbau, Händler,
     Talentbaum) und tragen „Neu“, bis sie
     gelesen sind. Das Handbuch im Menü glüht, bis man es geöffnet hat.
   - **Tageswerk**: zuerst heute, dann alle früheren Tage, so viele je Seite, wie passen:
     welche Übung, erledigt oder nicht, mit Gewinn.
   - **Quests**: jede beendete Quest, neueste zuerst, mit Ort, Zeit und Ausgang (die
-    Quests einer Route einzeln).
+    Quests einer Reihe einzeln).
   - **Kompendium**: siehe oben.
   - **Erfolge**: was erreicht ist, wann und mit welcher Belohnung.
 
@@ -900,8 +906,9 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Einrichtungen | Steinlager, Pilzlager, Aufbewahrung, Schlafplatz; Stufe 1 auf Lagerstufe 1; Deko erst ab Lagerstufe 2; keine Quests, nur auf der Lager-Seite („Lager einrichten“, Kacheln) |
 | Quests auf der Karte | Ort antippen fächert seine Quests auf (Siegel mit Namen), ein Tipp öffnet eine; der Fächer auch bei nur einer Quest |
 | Ortsbeschreibung | Kartusche am Kartenrand zusammen mit dem Fächer: Region, Name, Text, bei verschlossenen Orten, was sie öffnet |
-| Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste mit Wegen (kupfern gestrichelt) und Arbeit getrennt; keine Dauer, keine Tempo- und Ertrag-Stats |
-| Routen | Quests in Reihe („Route planen“, „Anhängen“), nur solange die Energie vom letzten Ort zurück ins Lager reicht; eine Expedition mit Station je Quest, ein Bericht |
+| Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste: die Kosten als ein Block, der Weg darin kupfern getönt, „davon Weg 2“ (in der Reihe „statt 4“); keine Dauer, keine Tempo- und Ertrag-Stats |
+| Einrichtungen-Kacheln | Hygge als kleine Medaille am Zeichen |
+| In Reihe | während der Envoy unterwegs ist, alles anhängen (Quests, Sammeln, Bauen); er geht direkt weiter, der Rückweg dazwischen wird verrechnet; nur solange die Energie mit dem Rückweg reicht; Sammeln plant mit den besten Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus |
 | Energie | Name für die Leiste, 10 je Level Ausdauer, 1 Energie = 1 Minute |
 | Sammeln | auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2; Menge wählen, beginnt bei 1 |
 | Mehr sammeln als tragbar | geht nicht: + stoppt an der Grenze und sagt warum (statt hinterher etwas liegen lassen zu müssen) |
@@ -917,7 +924,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |
 | Scheitern | gibt es nicht; Stats bestimmen Zugang, Dauer und Ertrag |
-| Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit; als Route über mehrere Orte |
+| Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit, beliebig verlängerbar; das Ergebnis zählt, sobald die Arbeit getan ist |
 | Kampfergebnis | beim Aufbruch berechnet und gespeichert, zählt bei der Rückkehr |
 | Startansicht | Lager; nur direkt nach dem ersten Erstellen eines Envoy die Envoy-Seite mit Rundgang |
 | Wortwahl | „XP“ und „Level“ gibt es nur je Stat, nie für den Helden; Gewinne heißen „+14 Kraft“ |

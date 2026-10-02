@@ -71,14 +71,17 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   fächert seine Quests auf; das Fenster einer Quest zeigt Text, Voraussetzung, Belohnung
   und die Energie als Leiste, keine Dauer), Energie (10 je Level
   Ausdauer, eine Energie = eine Minute), Expeditionen in echter Zeit (Hinweg, vor Ort,
-  Rückweg; mehrere Quests als Route in Reihe, anhängen nur, solange die Energie vom
-  letzten Ort zurück ins Lager reicht; die Wege getrennt in der Energie-Leiste),
+  Rückweg; solange der Envoy unterwegs ist, lässt sich alles anhängen, er geht direkt
+  weiter, nur solange die Energie mit dem Rückweg reicht; Sammeln plant mit den besten
+  Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus; die Kosten als ein Block
+  mit Weg-Anteil in der Energie-Leiste),
   Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
   Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)
 - Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); danach vier Einrichtungen
   (Steinlager, Pilzlager, Aufbewahrung, Schlafplatz) auf ihrer Stufe 1, keine Quests und
   nicht auf der Karte, nur über „Lager einrichten“ (Kacheln); Hygge als Summe der
-  Einrichtungen (1, 1, 2, 3; die Aufbewahrung heißt auf Stufe 1 Krempelplatz), ab 5 kann
+  Einrichtungen (1, 1, 2, 3, als kleine Medaille an jeder Kachel; die Aufbewahrung heißt
+  auf Stufe 1 Krempelplatz), ab 5 kann
   das Lager aufgewertet werden, muss aber nicht; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer; Pilzholz und Stein belegen Plätze,
   2 Stück je Platz), Händler, Kompendium der getroffenen Geister

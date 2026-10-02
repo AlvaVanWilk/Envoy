@@ -131,7 +131,7 @@ export function questById(id, ctx) {
 // status: 'open' | 'locked' | 'cooldown' | 'done' | 'running'
 // missing: what is lacking, as short texts
 export function questState(quest, ctx) {
-  if (ctx.world.expedition?.stops.some((s) => s.q === quest.id)) return { status: 'running', missing: [] };
+  if (ctx.world.expedition?.actions.some((a) => a.q === quest.id && a.stage < 3)) return { status: 'running', missing: [] };
   if (quest.encounter) {
     return ctx.world.encountersDone[quest.id] ? { status: 'done', missing: [] } : { status: 'open', missing: [] };
   }

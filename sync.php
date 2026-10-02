@@ -40,7 +40,7 @@ const MAX_BODY_BYTES = 2000000;
 const MAX_EVENT_BYTES = 16000;
 const EVENT_TYPES = [
     'plan', 'done', 'undo', 'mode',
-    'expedition', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
+    'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
     'envoy', 'travel', 'quest', 'test',
 ];
 

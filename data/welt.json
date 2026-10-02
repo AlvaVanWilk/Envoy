@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-02T00:56:37Z",
+ "generated": "2026-10-02T12:03:36Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -12,7 +12,7 @@
    "encounters": false,
    "monsters": [],
    "unlock": [],
-   "text": "Ein offener Platz auf dem Trümmerfeld, zwischen umgestürzten Säulen und hohen Pilzen. Hier beginnt und endet jeder Weg."
+   "text": "Ein offener Platz auf dem Trümmerfeld, zwischen umgestürzten Säulen und hohen Pilzen."
   },
   {
    "id": "truemmerfeld",
