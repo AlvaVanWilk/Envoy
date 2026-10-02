@@ -9,6 +9,7 @@ import { gatherChance, gatherEstimate, gatherRoll, runQuest } from '../js/world/
 import { planExpedition } from '../js/world/expedition.js';
 import { roomFor, storeCapacity, materialLimit, hasSpace, stow } from '../js/world/inventory.js';
 import { seededRandom } from '../js/world/rng.js';
+import { addDays } from '../js/days.js';
 import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE, GATHER_BASE, GATHER_DICE } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
@@ -228,6 +229,18 @@ test('the Schlafplatz adds Energie each morning, once, beyond the end of the bar
   assert.equal(Math.round(s3.world.stamina.value), 6);
   const evening = replay([built, work], catalog, NEXT, morning + 20 * H);
   assert.equal(staminaAt(evening.world, morning + 20 * H, evening.stats, effects(evening.world, catalog)), 10);
+});
+
+test('the morning adds the bonus once, at most up to the end of the bar and the bonus, and takes nothing away', () => {
+  const built = gift({ unlocks: ['lagerfeuer', 'schlafplatz:1'] }, 0);
+  const morning = Date.parse(`${NEXT}T09:00:00`);
+  // two nights in a row: still 12, not 14
+  const twoNights = replay([built], catalog, addDays(NEXT, 1), Date.parse(`${addDays(NEXT, 1)}T09:00:00`));
+  assert.equal(twoNights.world.stamina.value, 12);
+  // 50 more from the test menu in the evening: the morning does not cut it down
+  const extra = ev('test', { mehrEnergie: 50 }, 10);
+  const s = replay([built, extra], catalog, NEXT, morning);
+  assert.equal(s.world.stamina.value, 60);
 });
 
 test('the bonus of the Schlafplatz grows with the bar', () => {

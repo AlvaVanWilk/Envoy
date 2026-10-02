@@ -7,7 +7,7 @@ import { replay, unmetRequirements } from './replay.js';
 import { missingPlans, replans } from './planner.js';
 import { dayKey } from './days.js';
 import { store } from './store.js';
-import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour } from './world/hero.js';
+import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour, sleepBonus } from './world/hero.js';
 import { hasSpace, atCamp, reachable } from './world/inventory.js';
 import { questById, questState } from './world/quests.js';
 import { addition, legStamina, progressAt } from './world/expedition.js';
@@ -164,6 +164,7 @@ export const game = {
       max: maxStamina(c.stats),
       hoursToFull: hoursUntilFull(c.world, now, c.stats, c.fx),
       perHour: staminaPerHour(c.stats, c.fx),
+      rested: sleepBonus(c.world, c.catalog, c.stats),   // what the Schlafplatz gives each morning
     };
   },
 

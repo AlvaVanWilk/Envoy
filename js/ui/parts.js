@@ -62,6 +62,10 @@ export function formatMinutes(minutes) {
   return rest ? `${hours} Std. ${rest} Min.` : `${hours} Std.`;
 }
 
+function overNote(over, rested) {
+  return over <= (rested || 0) ? `Ausgeschlafen: ${over} extra` : `${over} über der Leiste`;
+}
+
 function refillText(hours) {
   if (hours <= 0) return 'voll';
   return `voll in ${formatMinutes(Math.ceil(hours * 60))}`;
@@ -69,7 +73,8 @@ function refillText(hours) {
 
 // The Energie bar with a notch for every point (every 5, 10 or 20 on a long bar).
 // After a night at the Schlafplatz it holds more than its normal length: the
-// extra is shown as a copper end of the bar.
+// extra is shown as a copper end of the bar. Only what the Schlafplatz can
+// give is called „Ausgeschlafen“; more than that comes from the test menu.
 export function staminaBar(st) {
   const value = Math.floor(st.value);
   const over = Math.max(0, value - st.max);
@@ -82,7 +87,7 @@ export function staminaBar(st) {
     h('div', { class: 'stamina-bar', style: { '--notches': String(total / step) } },
       h('span', { class: 'stamina-fill', style: { width: `${(100 * Math.min(st.value, st.max)) / total}%` } }),
       over > 0 ? h('span', { class: 'stamina-extra', style: { left: `${(100 * st.max) / total}%` } }) : null),
-    h('p', { class: 'stamina-note' }, over > 0 ? `Ausgeschlafen: ${over} extra` : refillText(st.hoursToFull)));
+    h('p', { class: 'stamina-note' }, over > 0 ? overNote(over, st.rested) : refillText(st.hoursToFull)));
 }
 
 // The Energie bar before setting out: full, what stays for sure; striped,

@@ -436,12 +436,15 @@ export function restFromTask(world, t, ctx) {
 }
 
 // A new day: with a Schlafplatz the Envoy starts it with extra Energie, once,
-// even beyond the end of the bar. Spent, it does not come back until the next morning.
+// even beyond the end of the bar (up to the end of the bar and the bonus).
+// Spent, it does not come back until the next morning. It never takes Energie
+// away that is already beyond that (from the test menu).
 export function startOfDay(world, t, ctx) {
   advance(world, t, ctx);
   settle(world, t, ctx);
   const bonus = sleepBonus(world, ctx.catalog, ctx.stats);
-  if (bonus > 0) world.stamina.value = Math.min(maxStamina(ctx.stats) + bonus, world.stamina.value + bonus);
+  const value = world.stamina.value;
+  if (bonus > 0) world.stamina.value = Math.max(value, Math.min(maxStamina(ctx.stats) + bonus, value + bonus));
 }
 
 // After a day: equipment whose requirements are no longer met comes off.

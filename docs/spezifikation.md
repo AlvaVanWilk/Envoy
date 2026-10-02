@@ -347,9 +347,11 @@ wächst. Der Knopf heißt „Aufbrechen“, beim Bauen am Lager „Errichten“,
   Energie dazu, über das Ende der Leiste hinaus, je nach Stufe 20 bis 40 % der Leiste:
   beim Raspelnest und 10 Energie wären es 12 von 10. Der
   Zusatz wird verbraucht, bevor die Leiste unter ihr Ende sinkt; während des Tages füllt
-  sich die Leiste nur bis zum normalen Ende. Erst am nächsten Morgen kommt er wieder. Die
-  Leiste zeigt den Zusatz als kupferfarbenes Ende. (Der Schlafplatz gibt Energie, keine
-  Werte: Werte steigen nur durch die echten Aufgaben.)
+  sich die Leiste nur bis zum normalen Ende. Erst am nächsten Morgen kommt er wieder; er
+  sammelt sich nicht über mehrere Nächte. Die Leiste zeigt den Zusatz als kupferfarbenes
+  Ende und darunter „Ausgeschlafen: 2 extra“. Was in der Testfassung über die Test-Knöpfe
+  darüber hinausgeht, heißt dort „32 über der Leiste“ und wird morgens nicht gekürzt.
+  (Der Schlafplatz gibt Energie, keine Werte: Werte steigen nur durch die echten Aufgaben.)
 
 ### Quests
 
