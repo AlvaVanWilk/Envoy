@@ -39,10 +39,11 @@ export function canBuildSomething(game) {
   return FACILITY_IDS.some((id) => facilityView(id, game).state === 'ready');
 }
 
-function costs(quest, c) {
+// The costs as small pictures; what is lacking right now (material or Energie) in orange.
+function costs(quest, c, energy) {
   const items = Object.entries(quest.consumes).map(([key, n]) =>
     h('span', { class: `ft-cost ${(c.world.purse[key] || 0) < n ? 'lacking' : ''}`, title: `${n} ${MATERIALS[key]}` }, resourceIcon(key), String(n)));
-  items.push(h('span', { class: 'ft-cost', title: `${quest.cost} Energie` }, icon(ENERGY_ICON, 'icon res-icon'), String(quest.cost)));
+  items.push(h('span', { class: `ft-cost ${energy < quest.cost ? 'lacking' : ''}`, title: `${quest.cost} Energie` }, icon(ENERGY_ICON, 'icon res-icon'), String(quest.cost)));
   return h('span', { class: 'ft-costs' }, items);
 }
 
@@ -55,7 +56,7 @@ function tile(id, game) {
   let below;
   if (v.state === 'running') below = h('span', { class: 'ft-level' }, 'Wird gebaut');
   else if (v.level > 0) below = h('span', { class: 'ft-level' }, `Stufe ${v.level}`);
-  else below = costs(v.quest, c);
+  else below = costs(v.quest, c, game.stamina().value);
   return h('button', { class: `facility-tile is-${v.state}`, type: 'button', 'data-facility': id, onclick: () => openFacility(id, game) },
     h('span', { class: 'ft-emblem' }, icon(FACILITY_ICONS[id]), BADGES[v.state] ? h('span', { class: 'ft-badge', html: BADGES[v.state] }) : null),
     h('span', { class: 'ft-name' }, row.name),
