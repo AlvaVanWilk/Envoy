@@ -28,7 +28,7 @@ import { openPicture } from './sheet.js';
 import { unseenDropCount } from './character.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
-import { campStatus, facilityRow, facilityLevel, nextUpgrade, FACILITY_IDS, dekoBuilt } from '../world/camp.js';
+import { campStatus, facilityRow, facilityLevel, nextUpgrade, dekoBuilt } from '../world/camp.js';
 
 const ALT = [
   'Das Lager auf dem Trümmerfeld: Steine, schwarze Säulen und hohe Pilze, noch ohne Feuer.',
@@ -49,11 +49,16 @@ export function campPicture(stage, phase, catalog) {
   return { src: versioned(`assets/lager/stufe_${shown}_${time}.jpg`), tint: time === phase ? null : phase, front };
 }
 
+// The order in which the facilities lie on the picture, back to front (not
+// the order of the tiles): the Pilzlager behind the Steinlager, the
+// Aufbewahrung in front at the bottom.
+const LAYER_ORDER = ['pilzlager', 'steinlager', 'schlafplatz', 'aufbewahrung'];
+
 // The drawings of what is built, to lie on the picture: each facility at its
 // level (or the highest level below it with a drawing), then each Deko.
 export function campLayers(world, catalog) {
   const layers = [];
-  for (const id of FACILITY_IDS) {
+  for (const id of LAYER_ORDER) {
     for (let level = facilityLevel(world, id); level > 0; level -= 1) {
       const row = facilityRow(catalog, id, level);
       if (row?.bild) { layers.push(row.bild); break; }

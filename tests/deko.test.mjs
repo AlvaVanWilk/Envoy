@@ -257,15 +257,15 @@ test('the camp picture: the picture, what is built on it, then what of the pictu
   // stage 2 has no picture of its own yet: the one of stage 1
   assert.deepEqual(scene(catalog, 'tag'), [
     ['assets/lager/stufe_1_tag.jpg', ''],
+    ['assets/lager/einrichtung_pilzlager_1.png', ''],   // behind the Steinlager
     ['assets/lager/einrichtung_steinlager_1.png', ''],
-    ['assets/lager/einrichtung_pilzlager_1.png', ''],
     ['assets/lager/stufe_1_tag_vorn.png', ''],
   ]);
   // at night: the night picture with its own front layer; the drawings get its light
   assert.deepEqual(scene(catalog, 'nacht'), [
     ['assets/lager/stufe_1_nacht.jpg', ''],
+    ['assets/lager/einrichtung_pilzlager_1.png', 'light-nacht'],   // behind the Steinlager
     ['assets/lager/einrichtung_steinlager_1.png', 'light-nacht'],
-    ['assets/lager/einrichtung_pilzlager_1.png', 'light-nacht'],
     ['assets/lager/stufe_1_nacht_vorn.png', ''],
   ]);
   // where there is only a day picture, it stands in, tinted, and all on it with it
