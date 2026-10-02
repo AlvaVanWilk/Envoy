@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-02T12:03:36Z",
+ "generated": "2026-10-02T14:46:51Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1626,20 +1626,6 @@
  },
  "furniture": [
   {
-   "id": "schlafmatte",
-   "name": "Schlafmatte",
-   "effekt": {
-    "erholung": 8
-   },
-   "herkunft": [
-    "haendler"
-   ],
-   "preis": 25,
-   "abStufe": 2,
-   "text": "Dick genug, um den Boden zu vergessen.",
-   "icon": "assets/icons/icon_einrichtung_schlafmatte.png"
-  },
-  {
    "id": "wasserkrug",
    "name": "Wasserkrug",
    "effekt": {
@@ -1711,20 +1697,6 @@
    "abStufe": 2,
    "text": "Schwer und warm.",
    "icon": "assets/icons/icon_einrichtung_wolldecke.png"
-  },
-  {
-   "id": "haengematte",
-   "name": "Hängematte",
-   "effekt": {
-    "erholung": 10
-   },
-   "herkunft": [
-    "haendler"
-   ],
-   "preis": 90,
-   "abStufe": 3,
-   "text": "Schaukelt noch, wenn man längst schläft.",
-   "icon": "assets/icons/icon_einrichtung_haengematte.png"
   },
   {
    "id": "teppich",
