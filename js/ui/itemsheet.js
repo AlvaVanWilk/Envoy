@@ -80,7 +80,7 @@ export function openEntry(inst, game) {
     eyebrow: `${thingSubtitle(entry, thing)} · ${WHERE[entry.where]}`,
     className: 'item-sheet',
     content: [
-      h('div', { class: 'item-hero' }, itemIcon(thing, 'item-hero-icon')),
+      h('div', { class: 'item-hero' }, itemIcon(thing, game, 'item-hero-icon')),
       entry.kind === 'item' ? requirementList(thing, stats) : null,
       thing.faehigkeit || thing.text ? h('p', { class: 'item-ability' }, thing.faehigkeit || thing.text) : null,
       effectList(thing.effekt),
@@ -107,7 +107,7 @@ export function openSlot(slotId, game) {
     else if (unmet.length === 0) action = h('button', { class: 'btn primary small', onclick: () => { game.equip(slotId, entry.inst); closeSheet(); } }, 'Anlegen');
     else action = h('span', { class: 'locked-label' }, icon(UI_ICONS.lock), 'Gesperrt');
     return h('div', { class: `item-row ${unmet.length && !worn ? 'locked' : ''} ${reachable(world, entry) ? '' : 'away'}` },
-      h('span', { class: 'item-frame' }, itemIcon(item)),
+      h('span', { class: 'item-frame' }, itemIcon(item, game)),
       h('span', { class: 'item-row-main' },
         h('span', { class: 'item-name' }, item.name),
         h('span', { class: 'item-sub' }, `Stufe ${item.stufe} · ${WHERE[entry.where]}`),

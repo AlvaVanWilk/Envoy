@@ -112,6 +112,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Zweite Figur (Mann) | `assets/figur/zweite/basisfigur.png` | seine eigene Kleidung mit gleichem Namen in diesen Ordner |
 | Ausrüstung auf der Figur | `assets/figur/slot_name_stufe.png` | 1024 × 1536, transparent, nie zuschneiden |
 | Icons | `assets/icons/icon_slot_name_stufe.png` | 256 × 256, transparent, aus der Zeichnung freigestellt |
+| Icons der zweiten Figur | `assets/icons/zweite/icon_slot_name_stufe.png` | wie oben; nur für Teile mit eigener Fassung |
 | Deko (ab Lagerstufe 2) | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent |
 | Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
 | Lager | `assets/lager/stufe_<n>_<zeit>.jpg` | 1792 × 672; Zeit morgen, tag, abend, nacht; Stufe 0 ohne Feuer (bisher nur tag), Stufe 1 mit Lagerfeuer |

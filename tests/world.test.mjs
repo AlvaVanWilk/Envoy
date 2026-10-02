@@ -13,6 +13,7 @@ import { itemLevel } from '../js/world/items.js';
 import { countIn, roomFor, stow } from '../js/world/inventory.js';
 import { campStatus, hygge, facilityQuests } from '../js/world/camp.js';
 import { MINUTES_PER_STAMINA, BACKPACK_SIZE, GATHER_BASE, GATHER_DICE } from '../js/config.js';
+import { resolveLook, layerSrc, iconSrc } from '../js/ui/look.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -351,4 +352,18 @@ test('an achievement bonus on gathering adds to the pieces, not to the Bannsplit
   assert.equal(boosted.splitter, plain.splitter);
   const explore = catalog.questById.get('q-uferkies');
   assert.equal(yieldBonus(explore, { ...ctxOf(s), bonus: { sammeln: 0.1 } }).pieces, 1);
+});
+
+test('the second figure wears its own layers and shows its own icons', () => {
+  const shirt = catalog.itemById.get('torso_leinenhemd_1');
+  const first = resolveLook({ figur: 'erste' });
+  const second = resolveLook({ figur: 'zweite' });
+  assert.match(layerSrc(shirt, first), /^assets\/figur\/torso_leinenhemd_1\.png/);
+  assert.match(layerSrc(shirt, second), /^assets\/figur\/zweite\/torso_leinenhemd_1\.png/);
+  assert.match(iconSrc(shirt, first), /^assets\/icons\/icon_torso_leinenhemd_1\.png/);
+  assert.match(iconSrc(shirt, second), /^assets\/icons\/zweite\/icon_torso_leinenhemd_1\.png/);
+  // every own layer of the second figure comes with its own icon
+  for (const item of catalog.equipment) {
+    if (item.figuren?.zweite) assert.ok(item.icons?.zweite, `${item.id}: Icon der zweiten Figur fehlt`);
+  }
 });

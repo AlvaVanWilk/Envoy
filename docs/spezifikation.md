@@ -689,8 +689,9 @@ Mann mit kurzem, aschblondem Haar, beide in grauer Unterwäsche als Grundkleidun
 Figur hat einen eigenen Ordner mit `basisfigur.png` (die Frau `assets/figur/`, der Mann
 `assets/figur/zweite/`). Kleidung liegt im Ordner der ersten Figur; braucht eine andere
 Figur eine eigene Fassung, kommt sie mit gleichem Dateinamen in deren Ordner, sonst trägt
-sie die der ersten. Der Mann hat eigene Fassungen von Leinenhemd, Leinenhose und
-Griffhandschuhen.
+sie die der ersten. Für Icons gilt dasselbe: eine eigene Fassung mit gleichem Namen in
+`assets/icons/<Ordner der Figur>/`, sonst das Icon der ersten Figur. Der Mann hat eigene
+Fassungen von Leinenhemd, Leinenhose und Griffhandschuhen, jeweils mit eigenem Icon.
 
 **Haut- und Haarfarbe** wählt man bei der Erstellung (6 Hauttöne, 7 Haarfarben). Jede
 Figur ist in einer Haut- und einer Haarfarbe gezeichnet; die App färbt diese Stellen im

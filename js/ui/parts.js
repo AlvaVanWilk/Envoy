@@ -6,6 +6,7 @@ import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
 import { materialLimit, LIMITED_MATERIALS } from '../world/inventory.js';
+import { resolveLook, iconSrc } from './look.js';
 
 export const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 
@@ -116,10 +117,12 @@ export function energyPreview(st, cost) {
       `davon Weg ${way}${alone > way ? ` statt ${alone}` : ''}`) : null);
 }
 
-// The picture of a thing. Without one yet, the symbol of its slot.
-export function itemIcon(thing, className = 'item-icon') {
-  if (!thing.icon) return thing.slot ? icon(SLOT_ICONS[thing.slot], `${className} item-glyph`) : h('span', { class: className });
-  return h('img', { class: className, src: thing.icon, alt: '', decoding: 'async', onerror: (e) => { e.currentTarget.hidden = true; } });
+// The picture of a thing, as drawn for the figure of this Envoy.
+// Without one yet, the symbol of its slot.
+export function itemIcon(thing, game, className = 'item-icon') {
+  const src = iconSrc(thing, resolveLook(game.state.world.envoy));
+  if (!src) return thing.slot ? icon(SLOT_ICONS[thing.slot], `${className} item-glyph`) : h('span', { class: className });
+  return h('img', { class: className, src, alt: '', decoding: 'async', onerror: (e) => { e.currentTarget.hidden = true; } });
 }
 
 export function reqChips(item, stats) {

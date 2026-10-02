@@ -10,7 +10,10 @@ function withVersions(list, fields) {
   return list.map((entry) => {
     const copy = { ...entry };
     for (const field of fields) if (copy[field]) copy[field] = versioned(copy[field]);
-    if (copy.figuren) copy.figuren = Object.fromEntries(Object.entries(copy.figuren).map(([f, path]) => [f, versioned(path)]));
+    // the other figures' own versions: { zweite: path }
+    for (const field of ['figuren', 'icons']) {
+      if (copy[field]) copy[field] = Object.fromEntries(Object.entries(copy[field]).map(([f, path]) => [f, versioned(path)]));
+    }
     return copy;
   });
 }

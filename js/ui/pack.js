@@ -27,7 +27,7 @@ function cell(entry, game, { over = false } = {}) {
     'aria-label': thing.name,
     title: thing.name,
     onclick: () => openEntry(entry.inst, game),
-  }, itemIcon(thing), locked ? icon(UI_ICONS.lock, 'item-lock') : null);
+  }, itemIcon(thing, game), locked ? icon(UI_ICONS.lock, 'item-lock') : null);
 }
 
 const emptyCell = () => h('span', { class: 'pack-cell', 'aria-hidden': 'true' });

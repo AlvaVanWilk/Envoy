@@ -37,6 +37,11 @@ export function layerSrc(item, look) {
   return item.figuren?.[look.figure.id] || item.figur;
 }
 
+// The same for the icon of an item.
+export function iconSrc(item, look) {
+  return item.icons?.[look.figure.id] || item.icon;
+}
+
 const same = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
 
 // Shows a layer in an <img>. Painted first when the colours differ from

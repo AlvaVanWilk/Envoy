@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01T22:01:30Z",
+ "generated": "2026-10-02T17:56:37Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -20,6 +20,9 @@
     "zweite": "assets/figur/zweite/torso_leinenhemd_1.png"
    },
    "icon": "assets/icons/icon_torso_leinenhemd_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_leinenhemd_1.png"
+   },
    "ebene": null
   },
   {
@@ -40,6 +43,9 @@
     "zweite": "assets/figur/zweite/beine_leinenhose_1.png"
    },
    "icon": "assets/icons/icon_beine_leinenhose_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_beine_leinenhose_1.png"
+   },
    "ebene": null
   },
   {
@@ -58,6 +64,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -78,6 +85,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -100,6 +108,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -122,6 +131,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -145,6 +155,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -167,6 +178,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -188,6 +200,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -211,6 +224,9 @@
     "zweite": "assets/figur/zweite/handschuhe_griffhandschuhe_2.png"
    },
    "icon": "assets/icons/icon_handschuhe_griffhandschuhe_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_handschuhe_griffhandschuhe_2.png"
+   },
    "ebene": null
   },
   {
@@ -234,6 +250,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -256,6 +273,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -278,6 +296,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -302,6 +321,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -325,6 +345,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -347,6 +368,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -370,6 +392,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -391,6 +414,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -415,6 +439,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   },
   {
@@ -438,6 +463,7 @@
    "figur": "",
    "figuren": {},
    "icon": "",
+   "icons": {},
    "ebene": null
   }
  ]

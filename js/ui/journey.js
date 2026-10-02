@@ -212,7 +212,7 @@ function stopReport(stop, game, onward = false) {
   for (const key of MATERIAL_KEYS) if (gained[key]) loot.push(resource(key, gained[key], { sign: '+' }));
   for (const thing of r.things) {
     const t = thing.kind === 'furniture' ? game.catalog.furnitureById.get(thing.id) : game.catalog.itemById.get(thing.id);
-    if (t) loot.push(h('span', { class: 'loot-thing' }, itemIcon(t, 'loot-icon'), t.name));
+    if (t) loot.push(h('span', { class: 'loot-thing' }, itemIcon(t, game, 'loot-icon'), t.name));
   }
   let summary = null;
   if (o.kind === 'hoehle') {

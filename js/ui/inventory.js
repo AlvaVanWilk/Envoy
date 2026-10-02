@@ -52,7 +52,7 @@ function tile({ entry, thing }, game) {
   const locked = entry.kind === 'item' && unmetRequirements(thing, game.state.stats).length > 0;
   const away = !reachable(game.state.world, entry);
   return h('button', { class: `item-tile ${locked ? 'locked' : ''} ${away ? 'away' : ''}`, onclick: () => openEntry(entry.inst, game) },
-    h('span', { class: 'item-frame' }, itemIcon(thing), locked ? icon(UI_ICONS.lock, 'item-lock') : null),
+    h('span', { class: 'item-frame' }, itemIcon(thing, game), locked ? icon(UI_ICONS.lock, 'item-lock') : null),
     h('span', { class: 'item-name' }, thing.name),
     h('span', { class: 'item-sub' }, thingSubtitle(entry, thing)),
     entry.kind === 'item' ? reqChips(thing, game.state.stats) : null);

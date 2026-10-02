@@ -152,6 +152,23 @@ def check_picture(report, row, kind, filename):
     return f"{folder}/{filename}"
 
 
+def own_versions(report, row, kind, filename):
+    """Other figures (sub folders, e.g. assets/figur/zweite) may have their
+    own version of a picture; without one they use the first figure's.
+    -> {'zweite': 'assets/figur/zweite/<filename>'}"""
+    folder, size = PICTURES[kind]
+    own = {}
+    for sub in sorted(p for p in (ROOT / folder).iterdir() if p.is_dir()):
+        path = sub / filename
+        if not path.exists():
+            continue
+        actual = png_size(path) if path.suffix.lower() == ".png" else size
+        if actual != size:
+            report.warn(row, f"{sub.name}/{filename} ist {actual[0]} × {actual[1]}, erwartet {size[0]} × {size[1]}")
+        own[sub.name] = f"{folder}/{sub.name}/{filename}"
+    return own
+
+
 # --- small languages used in cells -----------------------------------------
 # All of them are comma separated lists like "holz:2-4, glimmer:10".
 
@@ -438,12 +455,6 @@ def convert_equipment(path):
         icon = text(r.get("datei_icon", "")) or f"icon_{figure}"
         figure_path = check_picture(report, row, "figur", figure)
         icon_path = check_picture(report, row, "icon", icon)
-        # Other figures (sub folders of assets/figur) may have their own
-        # version of the layer; without one they wear the first figure's.
-        own = {}
-        for folder in sorted(p for p in (ROOT / PICTURES["figur"][0]).iterdir() if p.is_dir()):
-            if (folder / figure).exists():
-                own[folder.name] = f"{PICTURES['figur'][0]}/{folder.name}/{figure}"
 
         items.append({
             "id": item_id,
@@ -456,8 +467,9 @@ def convert_equipment(path):
             "herkunft": parse_origin(report, row, r.get("herkunft", "")),
             "preis": price,
             "figur": figure_path,
-            "figuren": own,
+            "figuren": own_versions(report, row, "figur", figure),
             "icon": icon_path,
+            "icons": own_versions(report, row, "icon", icon),
             "ebene": layer,
         })
     return {"equipment": items}, report
