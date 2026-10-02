@@ -31,7 +31,13 @@ Arbeitszweig im Testordner, der Zweig `main` im echten Ordner.
 
 IONOS-Konto → Hosting → dein Webspace → **SFTP & SSH** → Zugang anlegen. Notieren:
 Server (z. B. `access-5012345678.webspace-host.com`), Benutzername, Passwort.
-Im IONOS-Explorer den Ordner anlegen, in dem Envoy liegen soll, z. B. `envoy`.
+
+Wichtig: Der Ordner muss in dem Ordner liegen, auf den die Domain zeigt. Welcher das
+ist, steht bei IONOS unter **Domains & SSL** → die Domain → Ziel (zum Beispiel
+`/wordpress`). Läuft auf der Domain WordPress, ist es der Ordner, in dem `wp-admin` und
+`wp-content` liegen. Envoy kommt dann dort hinein, z. B. `/wordpress/envoy`, und ist
+unter `https://deine-domain.de/envoy` zu erreichen (WordPress lässt echte Ordner in Ruhe).
+Ein Ordner daneben, ganz oben im Webspace, ist über die Domain nicht zu erreichen.
 
 **2. Die Daten bei GitHub hinterlegen**
 
@@ -43,7 +49,7 @@ repository secret**. Vier Einträge:
 | `IONOS_SFTP_HOST` | der Server aus Schritt 1 |
 | `IONOS_SFTP_USER` | der Benutzername |
 | `IONOS_SFTP_PASSWORD` | das Passwort |
-| `IONOS_SFTP_PATH` | der Ordner, z. B. `/envoy` |
+| `IONOS_SFTP_PATH` | der Ordner, z. B. `/wordpress/envoy` (der Testordner wird daraus `/wordpress/envoy-test`) |
 
 GitHub zeigt die Werte danach nie wieder an, auch nicht in Protokollen.
 
