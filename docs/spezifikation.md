@@ -648,10 +648,9 @@ der Krempelplatz, rechts vom Feuer das Raspelnest. Die Teile des Vordergrunds li
 dieselben Umrisse aus den Bildern der anderen Tageszeiten aus, damit der Vordergrund deren
 Licht hat (die Funken nur am Tag, sie fliegen in jedem Bild anders).
 
-Die höheren Stufen der Einrichtungen (2 bis 5) sind noch die freigestellten
-Midjourney-Zeichnungen aus `tools/lager-ebenen/`, gesetzt von `tools/lager_ebenen.py`
-(Tabelle `PLACES`) nach dem Vorschlag in `tools/vorlagen/lager-schablone.png`. Sie passen
-nicht zu den Plätzen der Stufe 1 und werden ersetzt, sobald es gezeichnete Ebenen gibt.
+Die höheren Stufen der Einrichtungen (2 bis 5) und die Deko zeichnet die Nutzerin auf
+dieselbe Weise. Bis es eine Ebene gibt, steht im Bild die Zeichnung der Stufe davor (eine
+Deko ohne Ebene erscheint nicht).
 
 Am Telefon zeigt das Lager nur die Mitte des Bilds, und die Knöpfe liegen unten darüber.
 **Ein Tipp auf das Bild zeigt es groß**, ganz, ohne Knöpfe: so hoch, wie der Bildschirm

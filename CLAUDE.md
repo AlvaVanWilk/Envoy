@@ -234,8 +234,8 @@ Portrait des Envoy
 Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
 Ebenen des Lagerbilds `assets/lager/einrichtung_<id>_<stufe>.png` und
 `assets/lager/deko_<id>.png` (1792 × 672, transparent, von der Nutzerin auf dem Tagesbild an
-ihrem Platz gezeichnet und unverändert übernommen; Stufe 2 bis 5 der Einrichtungen sind
-noch die alten Ausschnitte aus `tools/lager_ebenen.py`), darüber der Vordergrund
+ihrem Platz gezeichnet und unverändert übernommen; die höheren Stufen der Einrichtungen
+macht sie ebenso, bis dahin steht die Zeichnung der Stufe davor), darüber der Vordergrund
 `assets/lager/stufe_<n>_<zeit>_vorn.png` (Säulen, Felsen, Feuer: was vor den Einrichtungen
 steht; `tools/lager_vorn.py` macht ihn aus ihren Teilen in `tools/lager-vorn/stufe_<n>/`, für
 die anderen Tageszeiten mit denselben Umrissen aus deren Bild), Karte
