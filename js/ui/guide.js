@@ -158,8 +158,8 @@ const CHAPTERS = [
     title: 'Das Lager einrichten',
     when: (game) => game.state.world.camp.stage >= 1,
     text: [
-      'Mit dem Lagerfeuer hat das Lager Stufe 1. Jetzt lassen sich vier Einrichtungen errichten: Steinlager, Pilzlager, Aufbewahrung und Schlafplatz. Jede gibt Hygge. Hat das Lager genug davon, lässt es sich später ausbauen.',
-      'Die Aufbewahrung gibt Plätze für Gegenstände. Dort sieht der Envoy unterwegs nur nach, was liegt; herankommen kann er erst im Lager. Der Schlafplatz gibt dem Envoy am Morgen einmal Energie dazu, auch über das Ende der Leiste hinaus.',
+      'Mit dem Lagerfeuer hat das Lager Stufe 1. Jetzt lassen sich vier Einrichtungen errichten: Steinlager, Pilzlager, Krempelplatz und Schlafplatz. Jede gibt Hygge. Hat das Lager genug davon, lässt es sich aufwerten.',
+      'Der Krempelplatz gibt Plätze in der Aufbewahrung, für Gegenstände und Kleidung. Dort sieht der Envoy unterwegs nur nach, was liegt; herankommen kann er erst im Lager. Der Schlafplatz gibt dem Envoy am Morgen einmal Energie dazu, auch über das Ende der Leiste hinaus.',
     ],
   },
   {

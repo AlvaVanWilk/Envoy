@@ -1,7 +1,8 @@
 // The camp: its stage and its four facilities.
 //   stage 0   a bare place on the Trümmerfeld
 //   stage 1   Lagerfeuer (built by the first quest)
-// The facilities Steinlager, Pilzlager, Aufbewahrung and Schlafplatz are
+// The facilities Steinlager, Pilzlager, Aufbewahrung (on its first level
+// called Krempelplatz) and Schlafplatz are
 // built in levels. What a level costs and gives stands in the table
 // (data/welt.xlsx, sheet Einrichtungen); a level of a facility can only be
 // built once the camp has reached the stage the table names. Each level adds
@@ -46,7 +47,7 @@ export function campStatus(world, catalog) {
 export function facilityEffect(row) {
   if (row.id === 'steinlager') return `Fasst ${row.kapazitaet} Steine`;
   if (row.id === 'pilzlager') return `Fasst ${row.kapazitaet} Pilzholz`;
-  if (row.id === 'aufbewahrung') return `${row.kapazitaet} Plätze für Gegenstände und Kleidung`;
+  if (row.id === 'aufbewahrung') return `${row.kapazitaet} Plätze in der Aufbewahrung, für Gegenstände und Kleidung`;
   if (row.id === 'schlafplatz') return `Morgens ${row.bonus} % mehr Energie, einmal am Tag`;
   return '';
 }

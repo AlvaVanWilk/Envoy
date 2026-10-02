@@ -10,6 +10,7 @@ import { versioned } from '../config.js';
 import { viewHead, sectionTitle, supplies, staminaBar, materialLimits, resourceIcon } from './parts.js';
 import { journeyPanel, heroClass } from './journey.js';
 import { openQuest } from './questsheet.js';
+import { testTools } from './testtools.js';
 import { questsAt, questState, placeUnlocked, describeCondition } from '../world/quests.js';
 import { heroPosition } from '../world/expedition.js';
 import { camp } from '../world/map.js';
@@ -127,7 +128,8 @@ export function renderMap(game) {
       h('div', { class: 'world-supplies panel' },
         sectionTitle('Vorrat'),
         supplies(c.world.purse, materialLimits(c.world, game.catalog)),
-        staminaBar(game.stamina())),
+        staminaBar(game.stamina()),
+        testTools(game)),
       h('div', { class: 'world-expedition' }, expeditionSide(game)),
       h('div', { class: 'map-frame' }, scroller),
       h('div', { class: 'world-legend' }, legend())));

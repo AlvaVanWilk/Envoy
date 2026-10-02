@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01T23:08:50Z",
+ "generated": "2026-10-01T23:51:57Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1557,7 +1557,7 @@
    {
     "stufe": 1,
     "name": "Lagerfeuer",
-    "hyggeBisNaechste": 30,
+    "hyggeBisNaechste": 5,
     "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand."
    }
   ],
@@ -1572,7 +1572,7 @@
      "stein": 0
     },
     "energie": 2,
-    "hygge": 10,
+    "hygge": 1,
     "kapazitaet": 20,
     "bonus": 0,
     "text": "Eine Mulde, mit Pilzholz eingefasst. Hier liegen die Steine, bis sie gebraucht werden."
@@ -1587,7 +1587,7 @@
      "stein": 0
     },
     "energie": 2,
-    "hygge": 10,
+    "hygge": 1,
     "kapazitaet": 20,
     "bonus": 0,
     "text": "Ein Stapelplatz auf Latten, damit nichts im Boden fault."
@@ -1595,14 +1595,14 @@
    {
     "id": "aufbewahrung",
     "stufe": 1,
-    "name": "Aufbewahrung",
+    "name": "Krempelplatz",
     "lagerstufe": 1,
     "cost": {
      "pilzholz": 4,
      "stein": 4
     },
     "energie": 3,
-    "hygge": 10,
+    "hygge": 2,
     "kapazitaet": 6,
     "bonus": 0,
     "text": "Ein paar Fächer zwischen den Steinen. Was der Envoy nicht trägt, liegt hier."
@@ -1617,7 +1617,7 @@
      "stein": 0
     },
     "energie": 3,
-    "hygge": 10,
+    "hygge": 3,
     "kapazitaet": 0,
     "bonus": 20,
     "text": "Eine Fläche aus Pilzraspeln, weich genug für eine Nacht."

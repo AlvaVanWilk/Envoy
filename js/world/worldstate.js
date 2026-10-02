@@ -222,6 +222,9 @@ export function applyWorldEvent(world, e, ctx) {
       if (worn) putAway(world, ctx, worn);
       break;
     }
+    case 'test':
+      testHelp(world, e, ctx);
+      break;
     case 'envoy': {
       const name = String(e.name || '').trim().slice(0, NAME_MAX);
       if (name) world.envoy = { name, figur: String(e.figur || ''), haut: String(e.haut || ''), haar: String(e.haar || '') };
@@ -229,6 +232,16 @@ export function applyWorldEvent(world, e, ctx) {
     }
     default:
       break;
+  }
+}
+
+// Help while trying things out, only offered in the test copy (see ui/testtools.js):
+// the bar full again, or material added, as much as fits like after a trip.
+function testHelp(world, e, ctx) {
+  if (e.energie) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
+  for (const key of CARRIED_MATERIALS) {
+    const amount = Math.max(0, Math.floor(Number(e[key]) || 0));
+    if (amount > 0) world.purse[key] += Math.min(amount, roomFor(world, ctx.catalog, key));
   }
 }
 

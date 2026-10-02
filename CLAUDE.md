@@ -39,7 +39,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   „Envoy Test“ gekennzeichnet, mit eigenem Speicher, siehe `js/stage.js`), den Zweig
   `main` in den echten Ordner. Auf `main` kommt nur, was die Nutzerin im Testordner
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
-  unverändert auf `main` bringen.
+  unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (Energie
+  auffüllen, Stein und Pilzholz dazu, `js/ui/testtools.js`); die echte Fassung nie.
+- Formen der Oberfläche: kreisrund oder rechteckig, nicht oval.
 - **Kein Zugriff auf Apple Health oder die Apple Watch.** Eine Webapp kann das nicht.
   Gemessene Werte (Strecke, Tempo, Haltezeit) werden von Hand eingetragen.
 - UI-Texte auf Deutsch. Bezeichner und Kommentare im Code auf Englisch.
@@ -49,9 +51,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung, Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
-- Lager als Startansicht (Bild nach Lagerstufe und Tageszeit, darauf groß das Hygge und
-  die Knöpfe „Lager einrichten“ und „Lager aufwerten“; Vorrat, Expedition, gesichtete
-  Geister)
+- Lager als Startansicht (Bild nach Lagerstufe und Tageszeit, darauf das Hygge als Zahl,
+  ohne Fortschrittsanzeige, und die Knöpfe „Lager einrichten“ und „Lager aufwerten“;
+  Vorrat, Expedition, gesichtete Geister)
 - Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben auf
   jeder Seite eine Leiste mit großem Portrait (vier Werte-Ringe, auch auf der
   Envoy-Seite), Tageswerk-Knopf und Einstellungen
@@ -74,7 +76,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); danach vier Einrichtungen
   (Steinlager, Pilzlager, Aufbewahrung, Schlafplatz) auf ihrer Stufe 1, keine Quests und
   nicht auf der Karte, nur über „Lager einrichten“ (Kacheln); Hygge als Summe der
-  Einrichtungen; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
+  Einrichtungen (1, 1, 2, 3; die Aufbewahrung heißt auf Stufe 1 Krempelplatz), ab 5 kann
+  das Lager aufgewertet werden, muss aber nicht; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer; Pilzholz und Stein belegen Plätze,
   2 Stück je Platz), Händler, Kompendium der getroffenen Geister
 - Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
@@ -94,7 +97,8 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
   Konzept der Nutzerin; Erfolge für echte Übungen zählen nur Summen, nie Serien
 - Lagerausbau ab Stufe 2 und höhere Stufen der Einrichtungen, Deko: nach dem Konzept der
   Nutzerin (Deko erst ab Lagerstufe 2). Bis dahin zeigt das Lager das Hygge und einen
-  verschlossenen Knopf „Lager aufwerten“, der beim Antippen sagt, warum; das Blatt `Deko`
+  Knopf „Lager aufwerten“ (glimmt, sobald das Hygge reicht), der beim Antippen sagt, warum
+  es noch nicht geht; das Blatt `Deko`
   in `welt.xlsx` ist vorbereitet, nichts wird gesammelt
 - Schlafplatz mit Bonus auf Werte: nie. Er gibt Energie (Punkt 4 der Nicht-verhandelbar-
   Liste und das Konzept: Werte steigen nur durch echte Übungen)

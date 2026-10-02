@@ -41,7 +41,7 @@ const MAX_EVENT_BYTES = 16000;
 const EVENT_TYPES = [
     'plan', 'done', 'undo', 'mode',
     'expedition', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
-    'envoy', 'travel', 'quest',
+    'envoy', 'travel', 'quest', 'test',
 ];
 
 header('Content-Type: application/json; charset=utf-8');

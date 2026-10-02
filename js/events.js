@@ -23,6 +23,9 @@
 //   unequip  { slot }                         slot emptied by hand
 //   place, unplace, build                     from earlier versions (furniture, extending the home); ignored now
 //
+// Only from the test copy of the app (see stage.js), to try things out:
+//   test     { energie?, stein?, pilzholz? }   Energie full; material added, as much as fits
+//
 // The Envoy itself:
 //   envoy    { name, figur, haut, haar }      name, figure, skin and hair colour (the latest counts)
 // (travel and quest from version 2 are still accepted and ignored)
@@ -74,7 +77,7 @@ export function mergeEvents(listA, listB) {
 export const KNOWN_TYPES = new Set([
   'plan', 'done', 'undo', 'mode',
   'expedition', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
-  'envoy', 'travel', 'quest',
+  'envoy', 'travel', 'quest', 'test',
 ]);
 
 // Minimal shape check for events coming from outside (sync, backup file).

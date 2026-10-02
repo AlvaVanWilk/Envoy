@@ -247,3 +247,28 @@ test('the bonus of the Schlafplatz grows with the bar', () => {
   const strong = { ...s.stats, ausdauer: { ...s.stats.ausdauer, level: 10 } };
   assert.equal(sleepBonus(s.world, catalog, strong), 20);
 });
+
+// --- help in the test copy ------------------------------------------------------
+
+test('the test buttons: Energie full, material as much as fits', () => {
+  const work = Object.assign(gift({ stein: 4 }, 0), { cost: 8 });
+  const tired = replay([work], catalog, DAY, T0 + 0.1 * H);
+  assert.ok(tired.world.stamina.value < 4, `left ${tired.world.stamina.value}`);
+  const full = ev('test', { energie: true }, 0.1);
+  const s = replay([work, full], catalog, DAY, T0 + 0.1 * H + 1000);
+  assert.equal(Math.round(s.world.stamina.value), maxStamina(s.stats));
+  // 10 Stein more: only 6 fit next to the 4 (five places of two)
+  const stone = ev('test', { stein: 10 }, 0.7);
+  const s2 = replay([work, full, stone], catalog, DAY, T0 + H);
+  assert.equal(s2.world.purse.stein, 10);
+});
+
+test('material goes into a store of the camp by itself, the backpack keeps only the rest', () => {
+  const carrying = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
+  assert.equal(carried(carrying.world, catalog).stein, 8);
+  assert.equal(materialPlaces(carrying.world, catalog), 5);
+  const stored = replay([gift({ stein: 8, pilzholz: 2 }), gift({ unlocks: ['lagerfeuer', 'steinlager:1'] }, 0.5)], catalog, DAY, T0 + H);
+  assert.equal(stored.world.purse.stein, 8);
+  assert.equal(carried(stored.world, catalog).stein, 0);
+  assert.equal(materialPlaces(stored.world, catalog), 1);
+});

@@ -262,7 +262,7 @@ test('trader offers lie around the hero\'s strength; buying needs enough Bannspl
   assert.equal(s2.world.purse.splitter, 10);
 });
 
-test('the camp: facilities need the fire, each adds Hygge, ten of 30 per facility', () => {
+test('the camp: facilities need the fire, each adds its own Hygge, 5 open the next stage', () => {
   const noFire = replay([gift({ pilzholz: 6, stein: 4 })], catalog, DAY, T0 + H);
   const waiting = facilityQuests(noFire.world, catalog);
   assert.ok(waiting.every((q) => questState(q, ctxOf(noFire)).status === 'locked'));
@@ -272,14 +272,17 @@ test('the camp: facilities need the fire, each adds Hygge, ten of 30 per facilit
   // they are built on the Lager page, not offered on the map
   assert.equal(questsAt('lager', ctxOf(fire)).filter((q) => q.facility).length, 0);
   assert.equal(campStatus(fire.world, catalog).hygge, 0);
-  assert.equal(campStatus(fire.world, catalog).need, 30);
+  assert.equal(campStatus(fire.world, catalog).need, 5);
 
+  // Steinlager and Pilzlager 1 each, Krempelplatz 2, Schlafplatz 3
   const two = replay([gift({ unlocks: ['lagerfeuer', 'steinlager:1', 'pilzlager:1'] })], catalog, DAY, T0 + H);
-  assert.equal(hygge(two.world, catalog), 20);
+  assert.equal(hygge(two.world, catalog), 2);
   assert.equal(campStatus(two.world, catalog).ready, false);
   const three = replay([gift({ unlocks: ['lagerfeuer', 'steinlager:1', 'pilzlager:1', 'schlafplatz:1'] })], catalog, DAY, T0 + H);
-  assert.equal(campStatus(three.world, catalog).hygge, 30);
+  assert.equal(campStatus(three.world, catalog).hygge, 5);
   assert.equal(campStatus(three.world, catalog).ready, true);
+  const cosy = replay([gift({ unlocks: ['lagerfeuer', 'aufbewahrung:1', 'schlafplatz:1'] })], catalog, DAY, T0 + H);
+  assert.equal(campStatus(cosy.world, catalog).ready, true);
   // a built facility is not offered again
   assert.ok(!facilityQuests(three.world, catalog).some((q) => q.id === 'bau:steinlager:1'));
 });
