@@ -293,7 +293,7 @@ Lager; das spart Wege, und eine lange Reihe füllt eine lange Zeit ohne App.
   passen.
 - **Was die Reihe bringt, zählt für das Spätere schon mit**: Material, das sie sammelt,
   erfüllt die Voraussetzung einer späteren Quest (Stein, Pilzholz, dann das Lagerfeuer),
-  und beim Tragen zählt, was vorher hinzukommt. Fehlt beim Aufbruch zu einem Bau doch
+  und beim Platz im Vorrat zählt, was vorher hinzukommt. Fehlt beim Aufbruch zu einem Bau doch
   Material, fällt der Bau heraus und die Energie kommt zurück. Das Fenster zeigt die Welt,
   wie sie nach der Reihe sein wird („Nach der Reihe im Vorrat …“).
 - Unterwegs zeigt die Leiste einen Block je Aktion (Weg kupfern, Arbeit hell) und den
@@ -327,7 +327,7 @@ Leiste: was sicher bleibt (voll), was die Würfel vielleicht brauchen (gestreift
 die Quest kostet als ein Block, darin ihr Weg kupfern getönt, dazu „kostet 5 von 10“
 und darunter „davon Weg 2“. In der Reihe steht dort, wie viel Weg es allein wäre („davon
 Weg 2 statt 4“), so dass das Verrechnen der Wege zu sehen ist. Passt die
-Belohnung nicht mehr ganz in den Rucksack, steht dort „Tragen kann der Envoy davon nur
+Belohnung nicht mehr ganz in den Vorrat, steht dort „In den Vorrat passen davon nur
 6 Stein.“ Keine Dauer, kein „etwa“ oder
 „höchstens“, keine Stats für Tempo oder Ertrag: Energie und Minuten sind dasselbe, und
 die Stats wirken auch ungesagt. Reicht die Energie gerade nicht, steht auf dem Knopf,
@@ -385,13 +385,12 @@ schlecht:
 - **Stein** hängt an Kraft, **Pilzholz** an Beweglichkeit. Ein Erfolg-Bonus („Angekommen“)
   erhöht die Chance.
 - Die Menge wird mit − und + gewählt und beginnt bei 1 (nichts ist vorausgewählt). Sie
-  geht höchstens so weit, wie der Envoy tragen kann und wie seine Energie auch bei den
+  geht höchstens so weit, wie in den Vorrat passt und wie seine Energie auch bei den
   schlechtesten Würfen sicher bringt (2 Stück je Energie). Ein Tipp auf + darüber hinaus
-  (oder darauf zeigen) sagt, warum nicht: „Mehr kann dein Envoy nicht tragen.“ oder „Für
+  (oder darauf zeigen) sagt, warum nicht: „Mehr passt nicht in den Vorrat.“ oder „Für
   mehr reicht die Energie nicht.“ Gesammelt wird genau diese Menge (was beim letzten Wurf
-  übrig wäre, bleibt liegen). So muss nach der Rückkehr nichts liegen gelassen werden;
-  Platz schafft man vorher im Rucksack. Unter der Menge steht der Vorrat („Im Vorrat
-  0 / 10 Stein“), darunter die Energie-Leiste mit dem, was die Menge kostet (bei 8 Stein
+  übrig wäre, bleibt liegen). So muss hinterher nichts liegen gelassen werden. Unter der
+  Menge steht der Vorrat („Im Vorrat 0 / 10 Stein“), darunter die Energie-Leiste mit dem, was die Menge kostet (bei 8 Stein
   „kostet 2–4 von 10“). „Bis die Energie reicht“ gibt es nicht mehr.
 - **Sicher am ersten Tag:** Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) ist mit den
   10 Energie des Starts immer zu schaffen: 8 Stein kosten höchstens 4 Energie (4 × 2
@@ -409,8 +408,8 @@ große Mengen aufnimmt:
 | Pilzholz schlagen / Steine brechen | 4 | 16–20 | 6 Energie |
 | große Quest (Kraft 4 für Pilzholz, Kraft 5 für Stein) | 10 | 38–44 | 12 Energie |
 
-Ohne Stein- und Pilzlager passt nur ein Teil davon in den Rucksack; das sagt das
-Fenster der Quest vorher. Wie die Orte weiterwachsen, plant die Nutzerin. Bannsplitter lassen sich im Uferkies am Stillen Ufer
+Ohne Stein- und Pilzlager passt nur ein Teil davon in den Vorrat; das sagt das Fenster
+der Quest vorher („In den Vorrat passen davon nur 6 Stein.“). Wie die Orte weiterwachsen, plant die Nutzerin. Bannsplitter lassen sich im Uferkies am Stillen Ufer
 sammeln (1 Stück). Wiederholbare lange Quests (Wache an der Furt, Eine Nacht am
 Mondsee, Bis zum Horizont) bringen mehr Bannsplitter, dauern aber 40 bis 90 Minuten vor
 Ort und haben eine Abklingzeit.
@@ -477,23 +476,21 @@ höchstens 3 Level darunter oder darüber). Preis in Bannsplittern = 12 + 4 × n
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
 alles für ein Drittel des Preises zurück.
 
-### Rucksack, Material und Aufbewahrung
+### Rucksack, Vorrat und Aufbewahrung
 
-Der Rucksack hat von Anfang an **5 Plätze** und der Envoy hat ihn immer bei sich.
-Getragenes zählt nicht mit. Das Startoutfit (Leinenhemd, Leinenhose, Bastsandalen,
-Handwickel) trägt er von Anfang an, der Rucksack ist am Start leer.
+Der Rucksack hat von Anfang an **5 Plätze** und der Envoy hat ihn immer bei sich. Er ist
+nur für Dinge (Kleidung, Fundstücke). Getragenes zählt nicht mit. Das Startoutfit
+(Leinenhemd, Leinenhose, Bastsandalen, Handwickel) trägt er von Anfang an, der Rucksack
+ist am Start leer.
 
-**Pilzholz und Stein belegen Plätze:** Ein Platz fasst **2 Stück einer Art**. Mit leerem
-Rucksack trägt der Envoy also 10 Stück, und genau das braucht das erste Lagerfeuer
-(8 Stein = 4 Plätze, 2 Pilzholz = 1 Platz). Bannsplitter belegen keinen Platz. Mehr, als
-er tragen kann, lässt der Envoy liegen; der Bericht nennt es. (Später kann Kraft die
-Platzgröße erhöhen; nicht gebaut.)
-
-**Das Lager nimmt ab:** Ein **Steinlager** oder **Pilzlager** (siehe Das Lager) nimmt
-auf, was der Envoy heimbringt, bis es voll ist (Stufe 1: je 20 Stück); erst was dort
-nicht mehr Platz hat, bleibt im Rucksack. Der Vorrat zeigt, wie viel von jeder Art
-insgesamt noch hineinpasst („8 / 10“, mit Lager z. B. „8 / 30“). Gebaut wird aus dem
-Vorrat insgesamt.
+**Pilzholz und Stein liegen im Vorrat**, nicht im Rucksack: was der Envoy sammelt oder
+findet, ist dort, sobald die Arbeit getan ist, auch wenn er noch unterwegs ist. Das wird
+nicht erklärt (die Lager sind sozusagen magisch; man merkt es einfach). Ohne Lager fasst
+der Vorrat **10 Stück je Art**, genug für das erste Lagerfeuer (8 Stein, 2 Pilzholz). Mit
+**Steinlager** bzw. **Pilzlager** fasst er so viel, wie das Lager hält (Stufe 1: 20), mit
+höheren Stufen später mehr. Der Vorrat zeigt es als „8 / 10“ bzw. „8 / 20“. Was nicht
+mehr hineinpasst, bleibt liegen; das Fenster sagt es vorher, der Bericht nennt es.
+Bannsplitter haben keine Grenze. Gebaut wird aus dem Vorrat.
 
 Die **Aufbewahrung** ist eine Einrichtung des Lagers und gibt Plätze für Gegenstände und
 Kleidung (Stufe 1: 6), zusätzlich zum Rucksack. Sie steht im Lager, dem Ausgangspunkt
@@ -508,7 +505,7 @@ erst, wenn der Envoy zurück im Lager ist. Rucksackplätze dagegen sind immer nu
 Was unterwegs abgelegt wird, kommt in den Rucksack.
 
 Das Charakterblatt zeigt unter der Figur (auf dem iPad rechts oben) eine Inventar-Box:
-Reiter „Rucksack“ mit seinen fünf Plätzen (Material als Stapel mit Menge) und, sobald es
+Reiter „Rucksack“ mit seinen fünf Plätzen und, sobald es
 sie gibt, Reiter „Aufbewahrung“. „Alle“ öffnet die Seite Inventar mit Suche, Filter nach
 Slot und Sortierung (Slot, Stufe, Name, Neueste) und dem Getragenen.
 
@@ -828,7 +825,7 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   sich alle mit „Rundgänge ansehen“ wiederholen. Er ist kein Tutorial für die Übungen, nur ein
   Rundgang durch die Oberfläche.
 - **Rundgang durch Abenteuer** beim ersten Öffnen der Karte, sechs Schritte: die Karte,
-  der Vorrat (Pilzholz und Stein belegen Plätze), die Energie („Alles, was er tut, kostet
+  der Vorrat, die Energie („Alles, was er tut, kostet
   Energie. Steigt seine Ausdauer, steigt auch seine Energie.“), die laufende Expedition,
   die Legende und zuletzt das Lager: „Dein Envoy wird eine Weile hier bleiben. Am
   besten errichtest du ein Lagerfeuer.“ Tippt man das Lager an, nennt die Quest „Ein
@@ -895,7 +892,8 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Ebene je Teil | wählbar (Spalte `ebene`), sonst die Stelle des Slots |
 | Inhaltsumfang | vorerst höchstens bis ins gute Midgame; Luft nach oben |
 | Veröffentlichung | erst Testordner, echter Ordner nur nach Freigabe (Zweig `main`) |
-| Rucksack | 5 Plätze, am Start leer; Pilzholz und Stein belegen Plätze (2 Stück je Platz); die Aufbewahrung (Einrichtung des Lagers) unterwegs nur einsehbar |
+| Rucksack | 5 Plätze, am Start leer, nur für Dinge; die Aufbewahrung (Einrichtung des Lagers) unterwegs nur einsehbar |
+| Vorrat | Pilzholz und Stein nicht im Rucksack, sondern im Vorrat: ohne Lager 10 je Art, mit Stein- bzw. Pilzlager dessen Fassungsvermögen; gesammeltes ist sofort dort, ohne Erklärung |
 | Konten | Name und Passwort auf dem eigenen Server; ohne Konto nur auf einem Gerät |
 | Figuren | Frau und Mann zur Wahl, Haut- und Haarfarbe werden im Browser umgefärbt |
 | Icons | aus den Zeichnungen der Ebenen freigestellt |

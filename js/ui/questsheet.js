@@ -15,7 +15,7 @@ import { openSheet, closeSheet, toast } from './sheet.js';
 import { markMapForScroll } from './worldmap.js';
 import { conditionMet, describeCondition, KIND_NAMES } from '../world/quests.js';
 import { besideTheCamp } from '../world/map.js';
-import { roomFor, CARRIED_MATERIALS } from '../world/inventory.js';
+import { roomFor, LIMITED_MATERIALS } from '../world/inventory.js';
 import { rewardRange, gatherEstimate } from '../world/run.js';
 import { facilityRow, facilityEffect } from '../world/camp.js';
 import { formatDayShort } from '../days.js';
@@ -132,15 +132,15 @@ export function questAction(quest, plan, game, place, options = {}, message = nu
   return [...parts, main];
 }
 
-// A reward larger than what still fits: said before setting out (while the
-// Envoy is away, after what the row brings).
+// A reward larger than what still fits into the Vorrat: said before setting
+// out (while the Envoy is away, after what the row brings).
 function carryNote(quest, c) {
   const r = rewardRange(quest, c);
   if (!r) return null;
-  const notes = CARRIED_MATERIALS
+  const notes = LIMITED_MATERIALS
     .map((key) => [key, roomFor(c.world, c.catalog, key)])
     .filter(([key, room]) => r[key][1] > room)
-    .map(([key, room]) => `Tragen kann der Envoy davon nur ${room} ${MATERIALS[key]}.`);
+    .map(([key, room]) => (room > 0 ? `In den Vorrat passen davon nur ${room} ${MATERIALS[key]}.` : `Der Vorrat an ${MATERIALS[key]} ist voll.`));
   return notes.length > 0 ? h('p', { class: 'quest-note carry-note' }, notes.join(' ')) : null;
 }
 
@@ -178,8 +178,8 @@ function questBody(quest, game, place) {
 // How much the Envoy is told to gather, kept while the app is open.
 const gatherChoice = { stein: 1, pilzholz: 1 };
 
-// He gathers as much as is chosen: at most what he can carry (after what the
-// row brings), and what the Energie allows: right away, even with the worst
+// He gathers as much as is chosen: at most what fits into the Vorrat (after
+// what the row brings), and what the Energie allows: right away, even with the worst
 // dice; in the row, with the best (see game.plan). A tap on + beyond that
 // says why there is no more.
 function gatherBody(quest, game) {
@@ -203,7 +203,7 @@ function gatherBody(quest, game) {
     const have = shown.world.purse[material] || 0;
     const canGather = most >= 1 && plan.state.status === 'open';
     const atLimit = amount >= most;
-    const limitText = amount >= room ? 'Mehr kann dein Envoy nicht tragen.' : 'Für mehr reicht die Energie nicht.';
+    const limitText = amount >= room ? 'Mehr passt nicht in den Vorrat.' : 'Für mehr reicht die Energie nicht.';
 
     const change = (next) => () => {
       if (next > most) blocked = limitText;
@@ -212,7 +212,7 @@ function gatherBody(quest, game) {
     };
 
     let act;
-    if (room <= 0) act = note('Mehr kann dein Envoy nicht tragen.');
+    if (room <= 0) act = note('Der Vorrat ist voll.');
     else if (most < 1) act = waitButton(1 + Math.ceil(Math.max(0, first.cost.way)), st);
     else act = questAction(quest, plan, game, place, { amount }, plan.busy ? `Angehängt: ${quest.name}` : `Der Envoy sammelt ${name}`);
     if (game.queued(quest.id) && !canGather) act = questAction(quest, plan, game, place);

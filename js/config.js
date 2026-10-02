@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '4.11.0';
+export const APP_VERSION = '4.12.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -183,9 +183,9 @@ export const DRIVEN_LOOT_SHARE = 0.5;
 export const CAVE_RETREAT_SHARE = 0.35;
 
 export const BACKPACK_SIZE = 5;
-// Pilzholz and Stein take a place in the backpack like a thing does; a place
-// holds this many pieces of one kind. Stein- and Pilzlager at the camp hold more.
-export const MATERIAL_STACK = 2;
+// Pilzholz and Stein lie in the Vorrat, not in the backpack: this many of
+// each while the camp has no Steinlager or Pilzlager, then what the store holds.
+export const MATERIAL_WITHOUT_STORE = 10;
 
 // Gathering on the Trümmerfeld (see world/run.js): every point of Energie is a
 // minute of work and brings GATHER_BASE pieces, plus one more for every one of

@@ -10,9 +10,9 @@ import { runQuest, speedShare, yieldBonus, gatherChance, gatherEstimate } from '
 import { planExpedition, progressAt, heroPosition } from '../js/world/expedition.js';
 import { offersFor } from '../js/world/trader.js';
 import { itemLevel } from '../js/world/items.js';
-import { countIn, roomFor, carried, materialPlaces, freePlaces, stow } from '../js/world/inventory.js';
+import { countIn, roomFor, stow } from '../js/world/inventory.js';
 import { campStatus, hygge, facilityQuests } from '../js/world/camp.js';
-import { MINUTES_PER_STAMINA, BACKPACK_SIZE, MATERIAL_STACK, GATHER_BASE, GATHER_DICE } from '../js/config.js';
+import { MINUTES_PER_STAMINA, BACKPACK_SIZE, GATHER_BASE, GATHER_DICE } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));

@@ -5,7 +5,7 @@ import { RESOURCE_ICONS, SLOT_ICONS } from './icons.js';
 import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
-import { roomFor, CARRIED_MATERIALS } from '../world/inventory.js';
+import { materialLimit, LIMITED_MATERIALS } from '../world/inventory.js';
 
 export const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 
@@ -30,11 +30,10 @@ export function resource(key, amount, { lacking = false, sign = '' } = {}) {
     resourceIcon(key), h('span', { class: 'res-amount' }, `${sign}${amount}`), h('span', { class: 'res-name' }, MATERIALS[key]));
 }
 
-// How much of Stein and Pilzholz the Envoy can have in all right now: what he
-// has plus what still fits (his backpack and the stores of the camp).
+// How much of Stein and Pilzholz the Vorrat holds (more with the stores of the camp).
 export function materialLimits(world, catalog) {
   const limits = {};
-  for (const key of CARRIED_MATERIALS) limits[key] = (world.purse[key] || 0) + roomFor(world, catalog, key);
+  for (const key of LIMITED_MATERIALS) limits[key] = materialLimit(world, catalog, key);
   return limits;
 }
 

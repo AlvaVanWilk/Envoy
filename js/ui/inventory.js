@@ -8,8 +8,7 @@ import { SLOTS, BACKPACK_SIZE } from '../config.js';
 import { viewHead, itemIcon, reqChips } from './parts.js';
 import { openEntry, thingSubtitle } from './itemsheet.js';
 import { lookup, unmetRequirements } from '../world/items.js';
-import { countIn, capacity, reachable, materialPlaces, carried } from '../world/inventory.js';
-import { MATERIALS } from '../config.js';
+import { countIn, capacity, reachable } from '../world/inventory.js';
 
 const FILTERS = [{ id: 'alle', name: 'Alle' }, ...SLOTS.map((s) => ({ id: s.id, name: s.name })), { id: 'einrichtung', name: 'Einrichtung' }];
 const SORTS = [
@@ -71,7 +70,7 @@ export function renderInventory(game) {
   const hasStorage = capacity(world, game.catalog, 'schrank') > 0;
   if (!hasStorage && view.tab === 'schrank') view.tab = 'rucksack';
 
-  const packCount = countIn(world, 'rucksack') + materialPlaces(world, game.catalog);
+  const packCount = countIn(world, 'rucksack');
   const tabs = h('div', { class: 'tabs', role: 'tablist' },
     h('button', { class: `tab ${view.tab === 'rucksack' ? 'active' : ''}`, role: 'tab', onclick: () => { view.tab = 'rucksack'; game.refresh(); } },
       `Rucksack · ${packCount}/${BACKPACK_SIZE}`),
@@ -101,14 +100,10 @@ export function renderInventory(game) {
   fillGrid(grid, game);
 
   const over = packCount > BACKPACK_SIZE;
-  const loaded = Object.entries(carried(world, game.catalog)).filter(([, n]) => n > 0);
   return h('section', { class: 'view inventory' },
     viewHead('Inventar', { rucksack: 'Rucksack', schrank: 'Aufbewahrung', body: 'Getragen' }[view.tab]),
     tabs,
     view.tab === 'schrank' && !game.atCamp() ? h('p', { class: 'capacity' }, 'Der Envoy ist unterwegs. Er erinnert sich nur, was in der Aufbewahrung liegt; erreichbar wird sie im Lager.') : null,
-    view.tab === 'rucksack' && loaded.length > 0
-      ? h('p', { class: 'capacity' }, `Dabei: ${loaded.map(([k, n]) => `${n} ${MATERIALS[k]}`).join(', ')}. Zwei Stück teilen sich einen Platz.`)
-      : null,
     over ? h('p', { class: 'capacity over' }, 'Der Rucksack ist überfüllt. Jeder Weg kostet 1 Energie mehr.') : null,
     h('div', { class: 'toolbar' }, h('div', { class: 'toolbar-row' }, search, sort), chips),
     h('div', { class: 'panel' }, grid));

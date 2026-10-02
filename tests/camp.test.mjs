@@ -7,9 +7,9 @@ import { effects, maxStamina, staminaAt, sleepBonus } from '../js/world/hero.js'
 import { questById, questsAt } from '../js/world/quests.js';
 import { gatherChance, gatherEstimate, gatherRoll, runQuest } from '../js/world/run.js';
 import { planExpedition } from '../js/world/expedition.js';
-import { carried, materialPlaces, freePlaces, roomFor, storeCapacity, hasSpace, stow } from '../js/world/inventory.js';
+import { roomFor, storeCapacity, materialLimit, hasSpace, stow } from '../js/world/inventory.js';
 import { seededRandom } from '../js/world/rng.js';
-import { BACKPACK_SIZE, MATERIAL_STACK, GATHER_BASE, GATHER_DICE } from '../js/config.js';
+import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE, GATHER_BASE, GATHER_DICE } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -46,56 +46,44 @@ function expeditionEvent(events, questId, hoursAfter, options = {}) {
 }
 const total = (e) => e.out + e.act + e.back;
 
-// --- carrying -----------------------------------------------------------------
+// --- the Vorrat -----------------------------------------------------------------
 
-test('pilzholz and stein take places in the backpack, two pieces to a place', () => {
-  assert.equal(MATERIAL_STACK, 2);
-  const s = replay([gift({ stein: 5, pilzholz: 1 })], catalog, DAY, T0 + H);
-  assert.deepEqual(carried(s.world, catalog), { stein: 5, pilzholz: 1 });
-  assert.equal(materialPlaces(s.world, catalog), 3 + 1);
-  assert.equal(freePlaces(s.world, catalog), BACKPACK_SIZE - 4);
-  // one place left for two more pieces, and one more piece fits into the half-full place of Stein
-  assert.equal(roomFor(s.world, catalog, 'stein'), 1 + 2);
-  assert.equal(roomFor(s.world, catalog, 'pilzholz'), 1 + 2);
-});
-
-test('an empty backpack carries ten pieces: eight Stein and two Pilzholz fill it', () => {
+test('Pilzholz and Stein lie in the Vorrat, not in the backpack: ten of each without a store', () => {
+  assert.equal(MATERIAL_WITHOUT_STORE, 10);
   const s = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
-  assert.equal(materialPlaces(s.world, catalog), 5);
-  assert.equal(freePlaces(s.world, catalog), 0);
-  assert.equal(roomFor(s.world, catalog, 'stein'), 0);
-  assert.equal(roomFor(s.world, catalog, 'pilzholz'), 0);
-  assert.equal(hasSpace(s.world, catalog, 'rucksack'), false);
+  assert.equal(materialLimit(s.world, catalog, 'stein'), 10);
+  assert.equal(roomFor(s.world, catalog, 'stein'), 2);
+  assert.equal(roomFor(s.world, catalog, 'pilzholz'), 8);
+  assert.equal(hasSpace(s.world, catalog, 'rucksack'), true);   // the backpack is for things
 });
 
-test('more than he can carry stays behind and is noted in the report', () => {
+test('more than fits stays behind and is noted in the report', () => {
   const s = replay([gift({ stein: 14 })], catalog, DAY, T0 + H);
   assert.equal(s.world.purse.stein, 10);
   assert.deepEqual(s.world.reports.at(-1).leftBehind, { stein: 4 });
 });
 
-test('Steinlager and Pilzlager take what the Envoy brings home', () => {
+test('a Steinlager holds more: what it holds is the limit for Stein', () => {
   const camp1 = gift({ unlocks: ['lagerfeuer', 'steinlager:1'] }, 0);
-  const load = gift({ stein: 10 }, 0.2);
-  const s = replay([camp1, load], catalog, DAY, T0 + H);
+  const s = replay([camp1, gift({ stein: 10 }, 0.2)], catalog, DAY, T0 + H);
   assert.equal(storeCapacity(s.world, catalog, 'stein'), 20);
-  assert.equal(s.world.purse.stein, 10);
-  assert.equal(materialPlaces(s.world, catalog), 0);                    // all of it lies in the store
-  assert.equal(roomFor(s.world, catalog, 'stein'), 10 + 10);            // the rest of the store and a whole backpack
-  assert.equal(roomFor(s.world, catalog, 'stein', { atTheCamp: false }), 10);   // on the way only what he can carry
+  assert.equal(materialLimit(s.world, catalog, 'stein'), 20);
+  assert.equal(roomFor(s.world, catalog, 'stein'), 10);
+  assert.equal(materialLimit(s.world, catalog, 'pilzholz'), 10);   // no Pilzlager yet
   const full = replay([camp1, gift({ stein: 20 }, 0.2), gift({ stein: 6 }, 0.4)], catalog, DAY, T0 + H);
-  assert.equal(full.world.purse.stein, 26);
-  assert.deepEqual(carried(full.world, catalog), { stein: 6, pilzholz: 0 });
-  assert.equal(materialPlaces(full.world, catalog), 3);
+  assert.equal(full.world.purse.stein, 20);
+  assert.deepEqual(full.world.reports.at(-1).leftBehind, { stein: 6 });
 });
 
-test('things go into the backpack only while it has places left', () => {
-  const s = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
+test('things go into the backpack while it has places left, material does not take any', () => {
+  const s = replay([gift({ stein: 10, pilzholz: 10 })], catalog, DAY, T0 + H);
   const world = structuredClone(s.world);
-  assert.equal(stow(world, catalog, { inst: 'x', kind: 'item', id: 'kopf_kapuze_2', got: 0 }), 'rucksack');   // over-full, no storage yet
-  assert.equal(world.items.x.where, 'rucksack');
-  const free = replay([gift({ stein: 2 })], catalog, DAY, T0 + H);
-  assert.equal(hasSpace(free.world, catalog, 'rucksack'), true);
+  for (let i = 0; i < BACKPACK_SIZE; i += 1) {
+    assert.equal(hasSpace(world, catalog, 'rucksack'), true);
+    stow(world, catalog, { inst: `t${i}`, kind: 'item', id: 'kopf_kapuze_2', got: i });
+  }
+  assert.equal(hasSpace(world, catalog, 'rucksack'), false);
+  assert.equal(stow(world, catalog, { inst: 'x', kind: 'item', id: 'kopf_kapuze_2', got: 9 }), 'rucksack');   // over-full, no storage yet
 });
 
 // --- gathering ------------------------------------------------------------------
@@ -156,10 +144,10 @@ test('to a set amount: exactly that many, never more', () => {
   }
 });
 
-test('the most to choose: what he can carry and what his Energie surely brings in', () => {
+test('the most to choose: what fits into the Vorrat and what his Energie surely brings in', () => {
   const s = replay([], catalog, DAY, T0);
   const c = ctxOf(s);
-  assert.equal(gatherEstimate(GATHER('stein'), c, { energy: 10 }).most, 10);    // the backpack: 5 places of 2
+  assert.equal(gatherEstimate(GATHER('stein'), c, { energy: 10 }).most, 10);    // ten without a Steinlager
   assert.equal(gatherEstimate(GATHER('stein'), c, { energy: 3.7 }).most, 6);    // 3 whole Energie, 2 each for sure
   assert.equal(gatherEstimate(GATHER('stein'), c, { energy: 0.5 }).most, 0);
   // the Energie an amount takes: at least with the best dice, at most with the worst
@@ -167,12 +155,13 @@ test('the most to choose: what he can carry and what his Energie surely brings i
   assert.deepEqual(gatherEstimate(GATHER('stein'), c, { amount: 1, energy: 10 }).energy, { min: 1, max: 1 });
 });
 
-test('he cannot gather more than he can carry', () => {
-  const s = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
+test('he gathers no more than fits into the Vorrat', () => {
+  const s = replay([gift({ stein: 10, pilzholz: 2 })], catalog, DAY, T0 + H);
   const out = runQuest(GATHER('stein'), ctxOf(s), 'x', { amount: 5, energy: 10 });
   assert.equal(out.reward.stein, 0);
   assert.equal(out.stamina, 0);
   assert.equal(gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 5, energy: 10 }).room, 0);
+  assert.equal(gatherEstimate(GATHER('pilzholz'), ctxOf(s), { amount: 5, energy: 10 }).room, 8);   // the other kind has its own room
 });
 
 test('the first day: the Lagerfeuer is sure to be built with the 10 Energie of the start, whatever the dice do', () => {
@@ -257,20 +246,18 @@ test('the test buttons: Energie full, material as much as fits', () => {
   const full = ev('test', { energie: true }, 0.1);
   const s = replay([work, full], catalog, DAY, T0 + 0.1 * H + 1000);
   assert.equal(Math.round(s.world.stamina.value), maxStamina(s.stats));
-  // 10 Stein more: only 6 fit next to the 4 (five places of two)
+  // 10 Stein more: only 6 fit next to the 4 (ten without a Steinlager)
   const stone = ev('test', { stein: 10 }, 0.7);
   const s2 = replay([work, full, stone], catalog, DAY, T0 + H);
   assert.equal(s2.world.purse.stein, 10);
 });
 
-test('material goes into a store of the camp by itself, the backpack keeps only the rest', () => {
-  const carrying = replay([gift({ stein: 8, pilzholz: 2 })], catalog, DAY, T0 + H);
-  assert.equal(carried(carrying.world, catalog).stein, 8);
-  assert.equal(materialPlaces(carrying.world, catalog), 5);
-  const stored = replay([gift({ stein: 8, pilzholz: 2 }), gift({ unlocks: ['lagerfeuer', 'steinlager:1'] }, 0.5)], catalog, DAY, T0 + H);
-  assert.equal(stored.world.purse.stein, 8);
-  assert.equal(carried(stored.world, catalog).stein, 0);
-  assert.equal(materialPlaces(stored.world, catalog), 1);
+test('with a store built later, the Vorrat holds more', () => {
+  const before = replay([gift({ stein: 8 })], catalog, DAY, T0 + H);
+  assert.equal(roomFor(before.world, catalog, 'stein'), 2);
+  const after = replay([gift({ stein: 8 }), gift({ unlocks: ['lagerfeuer', 'steinlager:1'] }, 0.5)], catalog, DAY, T0 + H);
+  assert.equal(after.world.purse.stein, 8);
+  assert.equal(roomFor(after.world, catalog, 'stein'), 12);
 });
 
 test('the test menu: Bannsplitter added, a running expedition back at once', () => {

@@ -254,7 +254,7 @@ export function openReport(report, game) {
       (report.dropped || []).map((d) => h('p', { class: 'muted' }, `Ausgelassen: ${d.title}. ${DROPPED_TEXT[d.reason] || ''}`)),
       Object.keys(consumed).length > 0 ? h('p', { class: 'muted' }, `Verbaut: ${Object.entries(consumed).map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}`) : null,
       Object.keys(report.leftBehind || {}).length > 0
-        ? h('p', { class: 'muted' }, `Zurückgelassen: ${Object.entries(report.leftBehind).map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}. Mehr konnte der Envoy nicht tragen.`)
+        ? h('p', { class: 'muted' }, `Zurückgelassen: ${Object.entries(report.leftBehind).map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}. Mehr passte nicht in den Vorrat.`)
         : null,
       unlocks.map((f) => h('p', { class: 'report-unlock' }, unlockText(f, game))),
       rest ? h('p', { class: 'report-unlock' }, 'Die Energie ist wieder voll.') : null,

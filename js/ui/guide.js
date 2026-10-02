@@ -116,7 +116,6 @@ const CHAPTERS = [
     title: 'Der Rucksack',
     text: [
       `Im Rucksack ist Platz für ${BACKPACK_SIZE} Dinge. Du findest ihn beim Envoy.`,
-      'Pilzholz und Stein belegen ebenfalls Plätze, zwei Stück je Platz. Was nicht mehr hineinpasst, lässt der Envoy liegen.',
     ],
   },
   {
@@ -149,7 +148,7 @@ const CHAPTERS = [
     title: 'Sammeln',
     when: (game) => ran(game, 'sammeln'),
     text: [
-      'Gleich beim Lager, auf dem Trümmerfeld, sammelt der Envoy Stein und Pilzholz, ohne Weg. Du wählst, wie viel er sammelt, höchstens so viel, wie er tragen kann.',
+      'Gleich beim Lager, auf dem Trümmerfeld, sammelt der Envoy Stein und Pilzholz, ohne Weg. Du wählst, wie viel er sammelt, höchstens so viel, wie in den Vorrat passt.',
       'Für jede Energie bringt er zwei bis vier Stück; wie viele genau, entscheidet der Zufall. Kraft hilft bei Stein, Beweglichkeit bei Pilzholz.',
     ],
   },

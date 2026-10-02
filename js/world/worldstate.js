@@ -26,7 +26,7 @@
 import { STAMINA_REST_TASK_SHARE, NAME_MAX, OLD_SLOT_NAMES, MINUTES_PER_STAMINA } from '../config.js';
 import { effects, maxStamina, staminaAt, sleepBonus } from './hero.js';
 import {
-  stow, removeEntry, hasSpace, atCamp, reachable, roomFor, overloaded, entriesIn, CARRIED_MATERIALS,
+  stow, removeEntry, hasSpace, atCamp, reachable, roomFor, overloaded, entriesIn, LIMITED_MATERIALS,
 } from './inventory.js';
 import { emptyCamp, FACILITY_IDS } from './camp.js';
 import { unmetRequirements } from './items.js';
@@ -124,7 +124,7 @@ function bringHome(world, ctx, action, leftBehind, t) {
   for (const [key, amount] of Object.entries(r)) {
     const name = materialKey(key);
     if (!MATERIAL_KEYS.includes(name) || !amount) continue;
-    const room = CARRIED_MATERIALS.includes(name) ? roomFor(world, ctx.catalog, name) : Infinity;
+    const room = LIMITED_MATERIALS.includes(name) ? roomFor(world, ctx.catalog, name) : Infinity;
     const taken = Math.min(amount, room);
     world.purse[name] += taken;
     if (taken < amount) leftBehind[name] = (leftBehind[name] || 0) + amount - taken;
@@ -392,7 +392,7 @@ export function applyWorldEvent(world, e, ctx) {
 // Bannsplitter added, or the running expedition over at once, every action done.
 function testHelp(world, e, ctx) {
   if (e.energie) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
-  for (const key of CARRIED_MATERIALS) {
+  for (const key of LIMITED_MATERIALS) {
     const amount = Math.max(0, Math.floor(Number(e[key]) || 0));
     if (amount > 0) world.purse[key] += Math.min(amount, roomFor(world, ctx.catalog, key));
   }

@@ -1,4 +1,4 @@
-// Backpack and storage. Every owned thing is an entry in world.items:
+// Backpack, storage and the Vorrat. Every owned thing is an entry in world.items:
 //   { inst, kind: 'item' | 'furniture', id, where, got }
 // where = 'rucksack' | 'schrank' | 'body' (worn)
 // The backpack has a few places from the start; the Envoy has it with him.
@@ -6,15 +6,14 @@
 // and stays there: while the Envoy is away it can be looked at, but nothing
 // can be taken out of it or put into it.
 //
-// Pilzholz and Stein are carried too: every place of the backpack holds
-// MATERIAL_STACK pieces of one kind. The Steinlager and Pilzlager of the camp
-// take what the Envoy brings home (up to what they hold); only what does not
-// fit there stays in the backpack. world.purse keeps the total.
+// Pilzholz and Stein are no things: they lie in the Vorrat (world.purse), up
+// to MATERIAL_WITHOUT_STORE of each, or once the camp has a Steinlager or
+// Pilzlager, up to what it holds. What the Envoy gathers is there at once.
 
-import { BACKPACK_SIZE, MATERIAL_STACK } from '../config.js';
+import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE } from '../config.js';
 import { facilityNow } from './camp.js';
 
-export const CARRIED_MATERIALS = ['stein', 'pilzholz'];
+export const LIMITED_MATERIALS = ['stein', 'pilzholz'];
 const STORE_OF = { stein: 'steinlager', pilzholz: 'pilzlager' };
 
 // How many pieces the store of the camp holds (0 while it is not built).
@@ -22,30 +21,14 @@ export function storeCapacity(world, catalog, key) {
   return facilityNow(world, catalog, STORE_OF[key])?.kapazitaet || 0;
 }
 
-// What the Envoy carries himself: the part of the total that is not in a store.
-export function carried(world, catalog) {
-  const out = {};
-  for (const key of CARRIED_MATERIALS) out[key] = Math.max(0, (world.purse[key] || 0) - storeCapacity(world, catalog, key));
-  return out;
+// How much of a material the Vorrat holds.
+export function materialLimit(world, catalog, key) {
+  return Math.max(MATERIAL_WITHOUT_STORE, storeCapacity(world, catalog, key));
 }
 
-export function materialPlaces(world, catalog) {
-  const c = carried(world, catalog);
-  return CARRIED_MATERIALS.reduce((sum, key) => sum + Math.ceil(c[key] / MATERIAL_STACK), 0);
-}
-
-// Places of the backpack that are not taken by things or material.
-export function freePlaces(world, catalog) {
-  return Math.max(0, BACKPACK_SIZE - countIn(world, 'rucksack') - materialPlaces(world, catalog));
-}
-
-// How many more pieces of a material the Envoy can take, on the way
-// (only what he can carry) or at the camp (the store counts too).
-export function roomFor(world, catalog, key, { atTheCamp = true } = {}) {
-  const have = carried(world, catalog)[key];
-  const spare = Math.ceil(have / MATERIAL_STACK) * MATERIAL_STACK - have;
-  const storeFree = atTheCamp ? Math.max(0, storeCapacity(world, catalog, key) - (world.purse[key] || 0)) : 0;
-  return storeFree + spare + freePlaces(world, catalog) * MATERIAL_STACK;
+// How many more pieces of a material fit into the Vorrat.
+export function roomFor(world, catalog, key) {
+  return Math.max(0, materialLimit(world, catalog, key) - (world.purse[key] || 0));
 }
 
 export function countIn(world, where) {
@@ -61,8 +44,7 @@ export function capacity(world, catalog, where) {
 }
 
 export function hasSpace(world, catalog, where) {
-  const taken = where === 'rucksack' ? materialPlaces(world, catalog) : 0;
-  return countIn(world, where) + taken < capacity(world, catalog, where);
+  return countIn(world, where) < capacity(world, catalog, where);
 }
 
 export function overloaded(world) {

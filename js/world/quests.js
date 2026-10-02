@@ -94,8 +94,8 @@ export function encountersFor(day, ctx) {
 // Gathering on the Trümmerfeld beside the camp: always on offer, and the way
 // costs nothing. What it brings is rolled when the Envoy sets out (see run.js).
 const GATHER = {
-  stein: { name: 'Steine sammeln', text: 'Lose Steine liegen überall zwischen den Trümmern. Der Envoy hebt auf, was er tragen kann.' },
-  pilzholz: { name: 'Pilzholz sammeln', text: 'Abgebrochene Pilzstiele, leicht und zäh. Der Envoy sammelt, was er tragen kann.' },
+  stein: { name: 'Steine sammeln', text: 'Lose Steine liegen überall zwischen den Trümmern.' },
+  pilzholz: { name: 'Pilzholz sammeln', text: 'Abgebrochene Pilzstiele, leicht und zäh.' },
 };
 
 export function gatherQuests(catalog) {

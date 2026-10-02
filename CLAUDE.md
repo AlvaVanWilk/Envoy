@@ -83,8 +83,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Einrichtungen (1, 1, 2, 3, als kleine Medaille an jeder Kachel; die Aufbewahrung heißt
   auf Stufe 1 Krempelplatz), ab 5 kann
   das Lager aufgewertet werden, muss aber nicht; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
-- Rucksack (von Anfang an, 5 Plätze, am Start leer; Pilzholz und Stein belegen Plätze,
-  2 Stück je Platz), Händler, Kompendium der getroffenen Geister
+- Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
+  liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
+  (gesammeltes ist sofort dort, ohne Erklärung); Händler, Kompendium der getroffenen Geister
 - Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
   15 Minuten nach dem Start)
 

@@ -20,7 +20,7 @@ const TOURS = {
 
   abenteuer: (game) => [
     { selector: '.map-frame', text: 'Das ist die Karte der Zwischenwelt. Tippe auf einen Ort, um zu sehen, was es dort zu tun gibt.' },
-    { selector: '.world-supplies .supplies', text: 'Das ist der Vorrat deines Envoy. Pilzholz und Stein belegen Plätze im Rucksack, zwei Stück je Platz.' },
+    { selector: '.world-supplies .supplies', text: 'Das ist der Vorrat deines Envoy: was er gesammelt hat.' },
     { selector: '.world-supplies .stamina', text: 'Das ist die Energie deines Envoy. Alles, was er tut, kostet Energie. Steigt seine Ausdauer, steigt auch seine Energie.' },
     { selector: '.world-expedition', text: 'Hier siehst du, was dein Envoy gerade tut. Das geht auch weiter, wenn du die App schließt.' },
     { selector: '.world-legend', text: 'Die Legende erklärt die Zeichen auf der Karte.' },
