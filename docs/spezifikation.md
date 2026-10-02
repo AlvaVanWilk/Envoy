@@ -639,6 +639,15 @@ Vorderseite: Der Boden liegt auf jeder Stufe an derselben Stelle, nur Wände und
 wachsen; das Feuer bleibt vor dem Haus, die Schuppen stehen daneben, jede Deko hat einen
 festen Platz (Vorschlag in `tools/vorlagen/lager-schablone.png`).
 
+Die Zeichnungen der Einrichtungen (von der Nutzerin mit Midjourney erzeugt, alle 15
+Stufen) liegen freigestellt in `tools/lager-ebenen/` (`steinlager_2.png` usw.).
+`tools/lager_ebenen.py` setzt jede an ihren Platz und in ihre Größe (Tabelle `PLACES`:
+Mitte, Bodenlinie, Breite in Pixeln des Lagerbilds), legt einen weichen Schatten darunter
+und schreibt die Ebene nach `assets/lager/`. Solange es nur das Bild des offenen Lagers
+gibt, stehen alle in der hinteren Reihe hinter Felsen und Feuer: links das Steinlager,
+in der Mitte Schlafplatz und Aufbewahrung, rechts das Pilzlager. Gibt es das Haus, werden
+nur die Zahlen der Tabelle angepasst.
+
 Der Schlafplatz wirkt auf die Energie (siehe Energie). Ein Bonus auf Kraft wäre ein Bonus
 auf einen Wert und widerspricht dem Konzept: Werte steigen nur durch echte Übungen.
 

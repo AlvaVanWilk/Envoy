@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-02T18:57:54Z",
+ "generated": "2026-10-02T19:41:08Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1629,7 +1629,7 @@
     "kapazitaet": 20,
     "bonus": 0,
     "text": "Eine Mulde, mit Pilzholz eingefasst. Hier liegen die Steine, bis sie gebraucht werden.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_steinlager_1.png"
    },
    {
     "id": "steinlager",
@@ -1645,7 +1645,7 @@
     "kapazitaet": 50,
     "bonus": 0,
     "text": "Eine Kiste aus Pilzholz, mit Steinen beschwert, damit der Deckel hält.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_steinlager_2.png"
    },
    {
     "id": "steinlager",
@@ -1661,7 +1661,7 @@
     "kapazitaet": 100,
     "bonus": 0,
     "text": "Ein Schuppen neben dem Haus. Die Steine liegen trocken und sortiert.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_steinlager_3.png"
    },
    {
     "id": "pilzlager",
@@ -1677,7 +1677,7 @@
     "kapazitaet": 20,
     "bonus": 0,
     "text": "Ein Stapelplatz auf Latten, damit nichts im Boden fault.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_pilzlager_1.png"
    },
    {
     "id": "pilzlager",
@@ -1693,7 +1693,7 @@
     "kapazitaet": 50,
     "bonus": 0,
     "text": "Ein Gestell aus Stielen, luftig, damit das Pilzholz trocknet.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_pilzlager_2.png"
    },
    {
     "id": "pilzlager",
@@ -1709,7 +1709,7 @@
     "kapazitaet": 100,
     "bonus": 0,
     "text": "Ein Schuppen neben dem Haus, mit einem Dach aus Pilzhut.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_pilzlager_3.png"
    },
    {
     "id": "aufbewahrung",
@@ -1725,7 +1725,7 @@
     "kapazitaet": 6,
     "bonus": 0,
     "text": "Ein paar Fächer zwischen den Steinen. Was der Envoy nicht trägt, liegt hier.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_aufbewahrung_1.png"
    },
    {
     "id": "aufbewahrung",
@@ -1741,7 +1741,7 @@
     "kapazitaet": 10,
     "bonus": 0,
     "text": "Eine Kiste mit Deckel. Was darin liegt, bleibt sauber.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_aufbewahrung_2.png"
    },
    {
     "id": "aufbewahrung",
@@ -1757,7 +1757,7 @@
     "kapazitaet": 15,
     "bonus": 0,
     "text": "Eine schwere Truhe mit Beschlägen aus Stein.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_aufbewahrung_3.png"
    },
    {
     "id": "aufbewahrung",
@@ -1773,7 +1773,7 @@
     "kapazitaet": 24,
     "bonus": 0,
     "text": "Ein Schrank mit Türen und Fächern, für Kleidung und alles, was der Envoy findet.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_aufbewahrung_4.png"
    },
    {
     "id": "schlafplatz",
@@ -1789,7 +1789,7 @@
     "kapazitaet": 0,
     "bonus": 20,
     "text": "Eine Fläche aus Pilzraspeln, weich genug für eine Nacht.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_schlafplatz_1.png"
    },
    {
     "id": "schlafplatz",
@@ -1805,7 +1805,7 @@
     "kapazitaet": 0,
     "bonus": 25,
     "text": "Eine Matte aus geflochtenen Pilzfasern, weicher als der Boden.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_schlafplatz_2.png"
    },
    {
     "id": "schlafplatz",
@@ -1821,7 +1821,7 @@
     "kapazitaet": 0,
     "bonus": 30,
     "text": "Die Matte auf einem Sockel aus Steinen. Von unten wird es nicht mehr kalt.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_schlafplatz_3.png"
    },
    {
     "id": "schlafplatz",
@@ -1837,7 +1837,7 @@
     "kapazitaet": 0,
     "bonus": 35,
     "text": "Ein Bett aus Pilzholz, mit einer Decke.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_schlafplatz_4.png"
    },
    {
     "id": "schlafplatz",
@@ -1853,7 +1853,7 @@
     "kapazitaet": 0,
     "bonus": 40,
     "text": "Ein Bett mit einem Dach aus Stoff. Darunter ist es still.",
-    "bild": null
+    "bild": "assets/lager/einrichtung_schlafplatz_5.png"
    }
   ],
   "pictures": {

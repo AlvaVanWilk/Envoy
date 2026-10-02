@@ -234,7 +234,9 @@ Portrait des Envoy
 Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
 Ebenen des Lagerbilds `assets/lager/einrichtung_<id>_<stufe>.png` und
 `assets/lager/deko_<id>.png` (1792 × 672, transparent, an ihrem Platz gezeichnet; Vorschlag
-für die Plätze in `tools/vorlagen/lager-schablone.png`), Karte `assets/welt/karte.jpg` (3:2).
+für die Plätze in `tools/vorlagen/lager-schablone.png`; die Ebenen der Einrichtungen
+entstehen mit `tools/lager_ebenen.py` aus den freigestellten Zeichnungen in
+`tools/lager-ebenen/`, Plätze und Größen in dessen Tabelle), Karte `assets/welt/karte.jpg` (3:2).
 
 ## Kleiderkammer
 
