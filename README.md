@@ -144,5 +144,5 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager, `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“, `testtools.js` das Menü am Schild „Test“, das nur die Testfassung zeigt; `journey.js` die Leiste einer laufenden Expedition mit ihrer Reihe und den Bericht; `js/world/expedition.js` Expeditionen als Reihe von Aktionen (Wege, Zeiten, Fortschritt), der Ablauf unterwegs steht in `js/world/worldstate.js`; `js/world/camp.js` das Lager (Stufe, Einrichtungen, Hygge), `js/daylight.js` die Tageszeit |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
-| `tools/` | Umwandlung der Tabellen |
+| `tools/` | Umwandlung der Tabellen; `tools/vorlagen/lager-schablone.png` zeigt, was vom Lagerbild am Telefon und am iPad zu sehen ist |
 | `tests/` | Prüfungen der Spielregeln, `npm test` mit Node.js |
