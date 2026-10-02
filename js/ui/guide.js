@@ -96,6 +96,15 @@ const CHAPTERS = [
     ],
   },
   {
+    id: 'routen',
+    title: 'Routen',
+    when: (game) => game.state.world.journal.length > 0,
+    text: [
+      'Mehrere Quests lassen sich zu einer Route verbinden: Der Envoy geht dann von Ort zu Ort und erst am Ende zurück ins Lager. Das spart Wege.',
+      'Im Fenster einer Quest beginnt „Route planen“ eine Route, „Anhängen“ setzt eine Quest dahinter. Das geht, solange die Energie von dort noch zurück ins Lager reicht.',
+    ],
+  },
+  {
     id: 'nichts-scheitert',
     title: 'Nichts scheitert',
     text: [

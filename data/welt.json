@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01T23:51:57Z",
+ "generated": "2026-10-02T00:56:37Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -572,8 +572,8 @@
      0
     ],
     "pilzholz": [
-     1,
-     1
+     7,
+     9
     ],
     "stein": [
      0,
@@ -604,15 +604,15 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 6,
+   "cost": 4,
    "reward": {
     "splitter": [
      0,
      0
     ],
     "pilzholz": [
-     2,
-     3
+     16,
+     20
     ],
     "stein": [
      0,
@@ -649,15 +649,15 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 20,
+   "cost": 10,
    "reward": {
     "splitter": [
      0,
      0
     ],
     "pilzholz": [
-     7,
-     9
+     38,
+     44
     ],
     "stein": [
      0,
@@ -696,8 +696,8 @@
      0
     ],
     "stein": [
-     1,
-     1
+     7,
+     9
     ],
     "items": [],
     "furniture": [],
@@ -723,7 +723,7 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 6,
+   "cost": 4,
    "reward": {
     "splitter": [
      0,
@@ -734,8 +734,8 @@
      0
     ],
     "stein": [
-     2,
-     3
+     16,
+     20
     ],
     "items": [],
     "furniture": [],
@@ -767,7 +767,7 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 20,
+   "cost": 10,
    "reward": {
     "splitter": [
      0,
@@ -778,8 +778,8 @@
      0
     ],
     "stein": [
-     7,
-     9
+     38,
+     44
     ],
     "items": [],
     "furniture": [],

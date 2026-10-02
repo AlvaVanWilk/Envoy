@@ -4,7 +4,7 @@
 //
 // world = {
 //   envoy       { name, figur, haut, haar } or null while the Envoy has not been created
-//   expedition  the running expedition or null: { id, q, place, title, start, out, act, back, end, outcome }
+//   expedition  the running expedition or null: { id, day, start, end, stops, back }, see expedition.js
 //   stamina     { value, at }: bar of Energie at time `at`, refills from there
 //   purse       { splitter, pilzholz, stein }: the totals; what the Envoy carries and
 //               what lies in the stores of the camp follows from them (see inventory.js)
@@ -16,8 +16,9 @@
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
 //   bought      { offerId: true }
-//   reports     finished expeditions, newest last (the latest 30, with all details)
-//   journal     every finished expedition in short, oldest first (for the Handbuch)
+//   reports     finished expeditions, newest last (the latest 30, with all details):
+//               { id, start, end, stops: [{ q, place, title, outcome }], leftBehind }
+//   journal     every finished quest in short, oldest first (for the Handbuch)
 //   dropped     equipment taken off because a stat fell below its requirement
 // }
 
@@ -100,49 +101,61 @@ function recordMonsters(world, fights, day) {
   }
 }
 
-// The expedition is back: now its result counts.
-function finishExpedition(world, ctx) {
-  const exp = world.expedition;
-  world.expedition = null;
-  settle(world, exp.end, ctx);
-  const outcome = exp.outcome;
+// What the Envoy brought from one stop: it goes into the stores of the camp,
+// what does not fit anywhere stays behind. Things get the next free number.
+function bringHome(world, ctx, exp, stop, leftBehind, numbering) {
+  const { outcome } = stop;
   const r = outcome.reward;
-  // Back at the camp: what he brought goes into the stores, what does not
-  // fit anywhere stays behind.
-  const leftBehind = {};
   for (const [key, amount] of Object.entries(r)) {
     const name = materialKey(key);
     if (!MATERIAL_KEYS.includes(name) || !amount) continue;
     const room = CARRIED_MATERIALS.includes(name) ? roomFor(world, ctx.catalog, name) : Infinity;
     const taken = Math.min(amount, room);
     world.purse[name] += taken;
-    if (taken < amount) leftBehind[name] = amount - taken;
+    if (taken < amount) leftBehind[name] = (leftBehind[name] || 0) + amount - taken;
   }
-  r.things.forEach((thing, n) => {
-    stow(world, ctx.catalog, { inst: `${exp.id}:${n}`, kind: thing.kind, id: thing.id, got: exp.end });
-  });
+  for (const thing of r.things) {
+    stow(world, ctx.catalog, { inst: `${exp.id}:${numbering.next}`, kind: thing.kind, id: thing.id, got: exp.end });
+    numbering.next += 1;
+  }
   for (const feature of r.unlocks) unlock(world, feature);
   if (r.rest) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
   recordMonsters(world, outcome.fights, exp.day);
 
-  if (exp.q.startsWith('enc:')) {
-    world.encountersDone[exp.q] = true;
+  if (stop.q.startsWith('enc:')) {
+    world.encountersDone[stop.q] = true;
   } else {
-    const record = world.quests[exp.q] || { done: 0, runs: 0, last: null };
-    world.quests[exp.q] = {
+    const record = world.quests[stop.q] || { done: 0, runs: 0, last: null };
+    world.quests[stop.q] = {
       done: record.done + (outcome.cleared ? 1 : 0),
       runs: record.runs + 1,
       last: exp.day,
     };
   }
-  world.reports.push({ id: exp.id, q: exp.q, place: exp.place, title: exp.title, start: exp.start, end: exp.end, outcome, leftBehind });
-  if (world.reports.length > KEEP_REPORTS) world.reports.shift();
-  world.journal.push({
-    id: exp.id, q: exp.q, place: exp.place, title: exp.title, day: exp.day, end: exp.end,
-    kind: outcome.kind, cleared: outcome.cleared,
-    fights: (outcome.fights || []).map((f) => ({ monster: f.monster, result: f.result })),
-    reward: { splitter: r.splitter || 0, pilzholz: r.pilzholz || 0, stein: r.stein || 0, things: r.things.length },
+}
+
+// The expedition is back: now its result counts, stop by stop.
+function finishExpedition(world, ctx) {
+  const exp = world.expedition;
+  world.expedition = null;
+  settle(world, exp.end, ctx);
+  const leftBehind = {};
+  const numbering = { next: 0 };
+  exp.stops.forEach((stop, i) => {
+    bringHome(world, ctx, exp, stop, leftBehind, numbering);
+    const r = stop.outcome.reward;
+    world.journal.push({
+      id: i === 0 ? exp.id : `${exp.id}:${i}`, q: stop.q, place: stop.place, title: stop.title, day: exp.day, end: exp.end,
+      kind: stop.outcome.kind, cleared: stop.outcome.cleared,
+      fights: (stop.outcome.fights || []).map((f) => ({ monster: f.monster, result: f.result })),
+      reward: { splitter: r.splitter || 0, pilzholz: r.pilzholz || 0, stein: r.stein || 0, things: r.things.length },
+    });
   });
+  world.reports.push({
+    id: exp.id, start: exp.start, end: exp.end, leftBehind,
+    stops: exp.stops.map(({ q, place, title, outcome }) => ({ q, place, title, outcome })),
+  });
+  if (world.reports.length > KEEP_REPORTS) world.reports.shift();
 }
 
 // Lets time pass up to t: an expedition that is back by then is finished.
@@ -150,18 +163,31 @@ export function advance(world, t, ctx) {
   if (world.expedition && t >= world.expedition.end) finishExpedition(world, ctx);
 }
 
+// The stops of an expedition event: a route lists them, an event for a
+// single quest (and every event from before routes) names its one quest.
+export function expeditionStops(e) {
+  const stops = Array.isArray(e.stops) ? e.stops : e.outcome ? [e] : [];
+  return stops.filter((s) => s && typeof s.q === 'string' && s.outcome?.reward).map((s) => ({
+    q: s.q, place: s.place, title: s.title, out: Number(s.out) || 0, act: Number(s.act) || 0, outcome: s.outcome,
+  }));
+}
+
 function startExpedition(world, e, ctx) {
   if (world.expedition) return; // one at a time
-  const consumed = Object.entries(e.outcome.consumed || {}).map(([k, v]) => [materialKey(k), v]);
-  if (consumed.some(([k, v]) => (world.purse[k] || 0) < v)) return;
+  const stops = expeditionStops(e);
+  if (stops.length === 0) return;
   // Material for building is taken along right away.
-  for (const [k, v] of consumed) world.purse[k] -= v;
+  const consumed = {};
+  for (const stop of stops) {
+    for (const [k, v] of Object.entries(stop.outcome.consumed || {})) consumed[materialKey(k)] = (consumed[materialKey(k)] || 0) + v;
+  }
+  if (Object.entries(consumed).some(([k, v]) => (world.purse[k] || 0) < v)) return;
+  for (const [k, v] of Object.entries(consumed)) world.purse[k] -= v;
   spend(world, e.cost);
+  const back = Number(e.back) || 0;
   world.expedition = {
-    id: e.id, q: e.q, place: e.place, title: e.title, day: e.d,
-    start: e.t, out: e.out, act: e.act, back: e.back,
-    end: e.t + totalMinutes(e) * 60000,
-    outcome: e.outcome,
+    id: e.id, day: e.d, start: e.t, stops, back,
+    end: e.t + totalMinutes({ stops, back }) * 60000,
   };
 }
 
@@ -187,7 +213,7 @@ export function applyWorldEvent(world, e, ctx) {
   const entry = world.items[e.inst];
   switch (e.type) {
     case 'expedition':
-      if (e.outcome) startExpedition(world, e, ctx);
+      startExpedition(world, e, ctx);
       break;
     case 'buy':
       if (!world.bought[e.offer] && world.purse.splitter >= e.price) {
@@ -236,12 +262,18 @@ export function applyWorldEvent(world, e, ctx) {
 }
 
 // Help while trying things out, only offered in the test copy (see ui/testtools.js):
-// the bar full again, or material added, as much as fits like after a trip.
+// the bar full again, material added (as much as fits, like after a trip),
+// Bannsplitter added, or the running expedition back at once.
 function testHelp(world, e, ctx) {
   if (e.energie) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
   for (const key of CARRIED_MATERIALS) {
     const amount = Math.max(0, Math.floor(Number(e[key]) || 0));
     if (amount > 0) world.purse[key] += Math.min(amount, roomFor(world, ctx.catalog, key));
+  }
+  world.purse.splitter += Math.max(0, Math.floor(Number(e.splitter) || 0));
+  if (e.fertig && world.expedition) {
+    world.expedition.end = Math.min(world.expedition.end, e.t);
+    advance(world, e.t, ctx);
   }
 }
 

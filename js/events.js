@@ -12,7 +12,8 @@
 //   mode     { sick }                         Krankheitsmodus on or off
 //
 // Event types of the world (see world/worldstate.js):
-//   expedition { q, place, title, out, act, back, cost, outcome }
+//   expedition { q, place, title, out, act, back, cost, outcome }   one quest
+//              { stops: [{ q, place, title, out, act, outcome }], back, cost }   a route
 //                                             from the camp to a place and back; minutes for each
 //                                             part and the full result, known from the start
 //   buy      { offer, kind, thing, price }    bought at the trader (thing = item or furniture id)
@@ -24,7 +25,9 @@
 //   place, unplace, build                     from earlier versions (furniture, extending the home); ignored now
 //
 // Only from the test copy of the app (see stage.js), to try things out:
-//   test     { energie?, stein?, pilzholz? }   Energie full; material added, as much as fits
+//   test     { energie?, stein?, pilzholz?, splitter?, fertig? }
+//                                             Energie full; material added, as much as fits;
+//                                             Bannsplitter added; the running expedition back at once
 //
 // The Envoy itself:
 //   envoy    { name, figur, haut, haar }      name, figure, skin and hair colour (the latest counts)

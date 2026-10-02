@@ -272,3 +272,15 @@ test('material goes into a store of the camp by itself, the backpack keeps only 
   assert.equal(carried(stored.world, catalog).stein, 0);
   assert.equal(materialPlaces(stored.world, catalog), 1);
 });
+
+test('the test menu: Bannsplitter added, a running expedition back at once', () => {
+  const trip = Object.assign(gift({ stein: 2 }, 0), { out: 10, act: 10, back: 10, cost: 5 });
+  const away = replay([trip], catalog, DAY, T0 + 0.1 * H);
+  assert.ok(away.world.expedition);
+  const back = ev('test', { fertig: true, splitter: 50 }, 0.1);
+  const s = replay([trip, back], catalog, DAY, T0 + 0.1 * H + 1000);
+  assert.equal(s.world.expedition, null);
+  assert.equal(s.world.purse.stein, 2);
+  assert.equal(s.world.purse.splitter, 50);
+  assert.equal(s.world.reports.length, 1);
+});

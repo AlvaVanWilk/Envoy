@@ -10,7 +10,8 @@ import { store } from './store.js';
 import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour } from './world/hero.js';
 import { hasSpace, atCamp, reachable } from './world/inventory.js';
 import { questById, questState } from './world/quests.js';
-import { planExpedition, progressAt } from './world/expedition.js';
+import { planExpedition, planRoute, routeParts, mostOf, leastOf, progressAt } from './world/expedition.js';
+import { besideTheCamp } from './world/map.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
 import { bonusOf, withBonus, runningBonuses } from './achievements.js';
@@ -24,6 +25,9 @@ export const game = {
   events: [],
   state: null,
   deviceId: null,
+  // The quests lined up for the next expedition, in order: [{ q, amount? }].
+  // Kept on this device until the Envoy sets out or the route is dropped.
+  route: [],
 
   init(catalog) {
     this.catalog = catalog;
@@ -33,6 +37,7 @@ export const game = {
       store.saveDeviceId(this.deviceId);
     }
     this.events = store.loadEvents().filter(isValidEvent);
+    this.route = Array.isArray(store.loadUi().route) ? store.loadUi().route : [];
     this.refresh();
   },
 
@@ -197,6 +202,93 @@ export const game = {
     if (plan.cost > energy || (quest.gather && plan.cost < 1)) return null;
     Object.assign(event, { out: plan.out, act: plan.act, back: plan.back, cost: plan.cost, outcome: plan.outcome });
     this.add([event]);
+    return event;
+  },
+
+  // --- world: a route of several quests --------------------------------------
+
+  // The quests of the route that can still be done, ready to plan.
+  routeEntries() {
+    const c = this.ctx();
+    return this.route
+      .map((r) => ({ quest: questById(r.q, c), options: r.amount ? { amount: r.amount } : {} }))
+      .filter(({ quest }) => quest && questState(quest, c).status === 'open');
+  },
+
+  // What the route takes, part by part (see routeParts), with one more quest
+  // if it is given: { entries, parts, most, least }.
+  routePlan(extra = null) {
+    const entries = [...this.routeEntries(), ...(extra ? [extra] : [])];
+    const parts = routeParts(entries, this.ctx());
+    return { entries, parts, most: mostOf(parts), least: leastOf(parts) };
+  },
+
+  // Where a quest is in the route (-1: not in it).
+  inRoute(questId) {
+    return this.routeEntries().findIndex(({ quest }) => quest.id === questId);
+  },
+
+  // Why a quest cannot be added to the route, or null if it can:
+  //   'away' the Envoy is on an expedition, 'closed' the quest cannot be done,
+  //   'camp' building at the camp is no part of a route, 'twice' it is in already,
+  //   'material' the material for all of it is lacking,
+  //   'energy' the Energie would not reach back to the camp from there.
+  routeBlock(questId, options = {}) {
+    const c = this.ctx();
+    const quest = questById(questId, c);
+    if (c.world.expedition) return 'away';
+    if (!quest || questState(quest, c).status !== 'open') return 'closed';
+    if (quest.kind === 'bauen' && besideTheCamp(c.catalog.placeById.get(quest.place))) return 'camp';
+    if (this.inRoute(questId) >= 0) return 'twice';
+    const plan = this.routePlan({ quest, options });
+    const needs = {};
+    for (const { quest: q } of plan.entries) for (const [k, v] of Object.entries(q.consumes)) needs[k] = (needs[k] || 0) + v;
+    if (Object.entries(needs).some(([k, v]) => (c.world.purse[k] || 0) < v)) return 'material';
+    if (plan.most > Math.floor(this.stamina().value)) return 'energy';
+    return null;
+  },
+
+  addToRoute(questId, options = {}) {
+    if (this.routeBlock(questId, options)) return false;
+    this.route = [...this.route, { q: questId, ...(options.amount ? { amount: options.amount } : {}) }];
+    this.saveRoute();
+    return true;
+  },
+
+  removeFromRoute(questId) {
+    this.route = this.route.filter((r) => r.q !== questId);
+    this.saveRoute();
+  },
+
+  clearRoute() {
+    this.route = [];
+    this.saveRoute();
+  },
+
+  saveRoute() {
+    const ui = store.loadUi();
+    ui.route = this.route;
+    store.saveUi(ui);
+    for (const fn of listeners) fn(this.state);
+  },
+
+  // Sets out on the route: one event with every stop, rolled now.
+  startRoute() {
+    const c = this.ctx();
+    if (c.world.expedition) return null;
+    const { entries, most } = this.routePlan();
+    const energy = this.stamina().value;
+    if (entries.length === 0 || most > energy) return null;
+    let event;
+    if (entries.length === 1) {
+      event = this.startExpedition(entries[0].quest.id, entries[0].options);
+    } else {
+      event = this.event('expedition', {});
+      const plan = planRoute(entries, c, event.id, energy);
+      Object.assign(event, { stops: plan.stops, back: plan.back, cost: plan.cost });
+      this.add([event]);
+    }
+    if (event) this.clearRoute();
     return event;
   },
 

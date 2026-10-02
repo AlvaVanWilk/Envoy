@@ -2,13 +2,14 @@
 // and the report when it is back. The bar is updated every second by
 // updateJourneys(); nothing else of the view has to be redrawn for that.
 // Work beside the camp has no way: building at the camp is „fertig“ at a
-// time, gathering on the Trümmerfeld is back at a time.
+// time, gathering on the Trümmerfeld is back at a time. A route has a part
+// for every way and every work, and its report tells of every stop.
 
 import { h } from './dom.js';
 import { MATERIALS } from '../config.js';
 import { openSheet, closeSheet, isSheetOpen } from './sheet.js';
 import { resource, itemIcon, formatMinutes, MATERIAL_KEYS } from './parts.js';
-import { progressAt, heroPosition } from '../world/expedition.js';
+import { progressAt, heroPosition, timeline } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
 import { facilityRow } from '../world/camp.js';
 
@@ -20,14 +21,33 @@ const PHASES = [
 // Without a way the work itself is named.
 const WORK_NAMES = { bauen: 'Bauen', sammeln: 'Sammeln' };
 
-const kindOf = (exp) => exp.outcome?.kind;
-const phaseName = (exp, id) => (id === 'act' && exp.out === 0 && WORK_NAMES[kindOf(exp)]) || PHASES.find((x) => x.id === id).name;
+const single = (exp) => exp.stops.length === 1;
+const kindOf = (exp) => (single(exp) ? exp.stops[0].outcome?.kind : null);
 // Building at the camp itself: the Envoy does not go anywhere.
-const buildingAtCamp = (exp, place) => kindOf(exp) === 'bauen' && place?.typ === 'lager';
+const buildingAtCamp = (exp, game) => kindOf(exp) === 'bauen' && game.catalog.placeById.get(exp.stops[0].place)?.typ === 'lager';
+
+// What a part of the time is called: for one quest the way there, the work
+// (named after it where there is no way) and the way back; on a route the
+// way to a stop, the quest there, and the way back.
+function partName(exp, part) {
+  if (!single(exp)) {
+    if (part.phase === 'out') return `Weg zu Station ${part.stop + 1}`;
+    if (part.phase === 'act') return exp.stops[part.stop].title;
+  }
+  if (part.phase === 'act' && exp.stops[0].out === 0 && WORK_NAMES[kindOf(exp)]) return WORK_NAMES[kindOf(exp)];
+  return PHASES.find((x) => x.id === part.phase).name;
+}
+
+// What an expedition or its report is called: its quest, or for a route how many.
+export function expeditionTitle(x) {
+  return x.stops.length === 1 ? x.stops[0].title : `Route mit ${x.stops.length} Quests`;
+}
 
 // The Envoy's token on the map walks about while he gathers.
 export function heroClass(exp, t) {
-  return exp && kindOf(exp) === 'sammeln' && progressAt(exp, t).phase === 'act' ? 'is-gathering' : '';
+  if (!exp) return '';
+  const p = progressAt(exp, t);
+  return p.phase === 'act' && exp.stops[p.stop]?.outcome?.kind === 'sammeln' ? 'is-gathering' : '';
 }
 export const RESULT_TEXT = { won: 'besiegt', calmed: 'beruhigt', driven: 'vertrieben' };
 const UNLOCK_TEXT = {
@@ -47,31 +67,39 @@ const clockTime = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-di
 
 function phaseLine(exp, p, atCamp) {
   if (p.phase === 'done') return atCamp ? 'Fertig' : 'Zurück im Lager';
-  const name = phaseName(exp, p.phase);
+  const name = partName(exp, p);
   // the last minute in seconds, so a short trip visibly moves
   const seconds = Math.ceil(p.remaining * 60);
   return `${name} · noch ${seconds < 60 ? `${seconds} Sek.` : formatMinutes(Math.ceil(p.remaining))}`;
 }
 
-// The bar in three parts, as wide as their share of the time.
+// The bar in parts, as wide as their share of the time; for one quest with
+// the name and minutes of each part below it.
 function progressBar(exp) {
-  return h('div', { class: 'journey-bar' }, PHASES.filter((ph) => exp[ph.id] > 0).map((ph) =>
-    h('div', { class: 'journey-part', 'data-phase': ph.id, style: { 'flex-grow': String(exp[ph.id]) } },
+  const named = single(exp);
+  return h('div', { class: `journey-bar ${named ? '' : 'is-route'}` }, timeline(exp).map((part, index) =>
+    h('div', { class: 'journey-part', 'data-phase': part.phase, 'data-index': String(index), style: { 'flex-grow': String(part.minutes) } },
       h('span', { class: 'journey-track' }, h('span', { class: 'journey-fill' })),
-      h('span', { class: 'journey-part-name' }, h('span', {}, phaseName(exp, ph.id)), h('span', {}, formatMinutes(exp[ph.id]))))));
+      named ? h('span', { class: 'journey-part-name' }, h('span', {}, partName(exp, part)), h('span', {}, formatMinutes(part.minutes))) : null)));
+}
+
+// Where the expedition leads: from the camp to its places and back.
+function wayLine(exp, game) {
+  const names = exp.stops.map((s) => game.catalog.placeById.get(s.place)?.name || '')
+    .filter((name, i, all) => name && name !== all[i - 1]);
+  const place = game.catalog.placeById.get(exp.stops[0].place);
+  if (single(exp) && place?.typ === 'lager') return 'Im Lager';
+  if (single(exp) && exp.stops[0].out === 0 && place) return place.name;
+  return ['Das Lager', ...names, 'Das Lager'].join(' – ');
 }
 
 // A panel for a running expedition; updateJourneys() keeps it current.
 export function journeyPanel(exp, game) {
-  const place = game.catalog.placeById.get(exp.place);
-  let where = `Das Lager – ${place ? place.name : ''} – Das Lager`;
-  if (place?.typ === 'lager') where = 'Im Lager';
-  else if (exp.out === 0 && place) where = place.name;
-  const atCamp = buildingAtCamp(exp, place);
+  const atCamp = buildingAtCamp(exp, game);
   const el = h('div', { class: 'journey', 'data-journey': exp.id, 'data-at-camp': atCamp ? 'true' : null },
     h('div', { class: 'journey-head' },
-      h('span', { class: 'journey-title' }, exp.title),
-      h('span', { class: 'journey-place' }, where)),
+      h('span', { class: 'journey-title' }, expeditionTitle(exp)),
+      h('span', { class: 'journey-place' }, wayLine(exp, game))),
     progressBar(exp),
     h('div', { class: 'journey-foot' },
       h('span', { class: 'journey-phase' }, ''),
@@ -82,15 +110,13 @@ export function journeyPanel(exp, game) {
 
 function updateJourney(el, exp, t) {
   const p = progressAt(exp, t);
-  const order = PHASES.map((x) => x.id);
-  const current = order.indexOf(p.phase);
   el.querySelectorAll('.journey-part').forEach((part) => {
-    const index = order.indexOf(part.dataset.phase);
+    const index = Number(part.dataset.index);
     let share = 0;
-    if (p.phase === 'done' || index < current) share = 1;
-    else if (index === current) share = p.phaseShare;
+    if (index < p.index) share = 1;
+    else if (index === p.index) share = p.phaseShare;
     part.querySelector('.journey-fill').style.width = `${(share * 100).toFixed(2)}%`;
-    part.classList.toggle('current', index === current);
+    part.classList.toggle('current', index === p.index);
   });
   el.querySelector('.journey-phase').textContent = phaseLine(exp, p, el.dataset.atCamp === 'true');
 }
@@ -124,15 +150,17 @@ function fightRow(f, game) {
 
 function newInCompendium(report, game) {
   const count = {};
-  for (const f of report.outcome.fights) count[f.monster] = (count[f.monster] || 0) + 1;
+  for (const stop of report.stops) for (const f of stop.outcome.fights) count[f.monster] = (count[f.monster] || 0) + 1;
   return Object.keys(count)
     .filter((id) => game.state.world.bestiary[id]?.seen === count[id])
     .map((id) => game.catalog.monsterById.get(id)?.name)
     .filter(Boolean);
 }
 
-export function openReport(report, game) {
-  const o = report.outcome;
+// What one stop brought: the spirits met there and what the Envoy found.
+// From a cave not cleared he goes back, or on a route on to the next place.
+function stopReport(stop, game, onward = false) {
+  const o = stop.outcome;
   const r = o.reward;
   const gained = {};
   for (const [key, amount] of Object.entries(r)) {
@@ -144,30 +172,45 @@ export function openReport(report, game) {
     const t = thing.kind === 'furniture' ? game.catalog.furnitureById.get(thing.id) : game.catalog.itemById.get(thing.id);
     if (t) loot.push(h('span', { class: 'loot-thing' }, itemIcon(t, 'loot-icon'), t.name));
   }
-  const consumed = Object.entries(o.consumed || {}).filter(([, v]) => v > 0).map(([k, v]) => [materialKey(k), v]);
-  const fresh = newInCompendium(report, game);
-
   let summary = null;
   if (o.kind === 'hoehle') {
     summary = h('p', { class: 'report-summary' }, o.cleared
       ? `Alle ${o.total} Geister überwunden.`
-      : `${o.fights.filter((f) => f.result !== 'driven').length} von ${o.total} Geistern überwunden, dann zurück ins Lager.`);
+      : `${o.fights.filter((f) => f.result !== 'driven').length} von ${o.total} Geistern überwunden, dann ${onward ? 'weiter' : 'zurück ins Lager'}.`);
   }
+  return [
+    summary,
+    o.fights.length > 0 ? h('ul', { class: 'report-fights' }, o.fights.map((f) => fightRow(f, game))) : null,
+    loot.length > 0 ? h('div', {}, h('p', { class: 'label' }, 'Mitgebracht'), h('div', { class: 'loot' }, loot)) : null,
+  ];
+}
+
+export function openReport(report, game) {
+  const outcomes = report.stops.map((s) => s.outcome);
+  const consumed = {};
+  for (const o of outcomes) for (const [k, v] of Object.entries(o.consumed || {})) if (v > 0) consumed[materialKey(k)] = (consumed[materialKey(k)] || 0) + v;
+  const unlocks = outcomes.flatMap((o) => o.reward.unlocks);
+  const rest = outcomes.some((o) => o.reward.rest);
+  const fresh = newInCompendium(report, game);
+  const route = report.stops.length > 1;
 
   openSheet({
-    title: report.title,
-    eyebrow: buildingAtCamp(report, game.catalog.placeById.get(report.place)) ? 'Im Lager' : 'Zurück im Lager',
+    title: expeditionTitle(report),
+    eyebrow: buildingAtCamp(report, game) ? 'Im Lager' : 'Zurück im Lager',
     className: 'report-sheet',
     content: [
-      summary,
-      o.fights.length > 0 ? h('ul', { class: 'report-fights' }, o.fights.map((f) => fightRow(f, game))) : null,
-      loot.length > 0 ? h('div', {}, h('p', { class: 'label' }, 'Mitgebracht'), h('div', { class: 'loot' }, loot)) : null,
-      consumed.length > 0 ? h('p', { class: 'muted' }, `Verbaut: ${consumed.map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}`) : null,
+      route
+        ? report.stops.map((stop, i) => h('section', { class: 'report-stop' },
+          h('p', { class: 'report-stop-title' }, h('span', { class: 'report-stop-n' }, String(i + 1)), stop.title,
+            h('span', { class: 'report-stop-place' }, game.catalog.placeById.get(stop.place)?.name || '')),
+          stopReport(stop, game, i < report.stops.length - 1)))
+        : stopReport(report.stops[0], game),
+      Object.keys(consumed).length > 0 ? h('p', { class: 'muted' }, `Verbaut: ${Object.entries(consumed).map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}`) : null,
       Object.keys(report.leftBehind || {}).length > 0
         ? h('p', { class: 'muted' }, `Zurückgelassen: ${Object.entries(report.leftBehind).map(([k, v]) => `${v} ${MATERIALS[k]}`).join(', ')}. Mehr konnte der Envoy nicht tragen.`)
         : null,
-      r.unlocks.map((f) => h('p', { class: 'report-unlock' }, unlockText(f, game))),
-      r.rest ? h('p', { class: 'report-unlock' }, 'Die Energie ist wieder voll.') : null,
+      unlocks.map((f) => h('p', { class: 'report-unlock' }, unlockText(f, game))),
+      rest ? h('p', { class: 'report-unlock' }, 'Die Energie ist wieder voll.') : null,
       fresh.length > 0 ? h('p', { class: 'muted' }, `Neu im Kompendium: ${fresh.join(', ')}`) : null,
       h('div', { class: 'sheet-actions' }, h('button', { class: 'btn primary', onclick: closeSheet }, 'Weiter')),
     ],

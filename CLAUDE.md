@@ -39,8 +39,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   „Envoy Test“ gekennzeichnet, mit eigenem Speicher, siehe `js/stage.js`), den Zweig
   `main` in den echten Ordner. Auf `main` kommt nur, was die Nutzerin im Testordner
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
-  unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (Energie
-  auffüllen, Stein und Pilzholz dazu, `js/ui/testtools.js`); die echte Fassung nie.
+  unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
+  „Test“, schwebend über der Seite: Energie auffüllen, Stein, Pilzholz und Bannsplitter
+  dazu, Expedition beenden, `js/ui/testtools.js`); die echte Fassung nie.
 - Formen der Oberfläche: kreisrund oder rechteckig, nicht oval.
 - **Kein Zugriff auf Apple Health oder die Apple Watch.** Eine Webapp kann das nicht.
   Gemessene Werte (Strecke, Tempo, Haltezeit) werden von Hand eingetragen.
@@ -70,8 +71,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   fächert seine Quests auf; das Fenster einer Quest zeigt Text, Voraussetzung, Belohnung
   und die Energie als Leiste, keine Dauer), Energie (10 je Level
   Ausdauer, eine Energie = eine Minute), Expeditionen in echter Zeit (Hinweg, vor Ort,
-  Rückweg), Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu
-  Pilzholz und Stein; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
+  Rückweg; mehrere Quests als Route in Reihe, anhängen nur, solange die Energie vom
+  letzten Ort zurück ins Lager reicht; die Wege getrennt in der Energie-Leiste),
+  Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
   Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)
 - Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); danach vier Einrichtungen
   (Steinlager, Pilzlager, Aufbewahrung, Schlafplatz) auf ihrer Stufe 1, keine Quests und

@@ -99,7 +99,7 @@ export function openFacility(id, game) {
       h('div', { class: 'facility-head' }, h('span', { class: `ft-emblem is-${v.state}` }, icon(FACILITY_ICONS[id])), h('p', { class: 'quest-text' }, shown.text)),
       h('dl', { class: 'quest-facts' }, facts),
       v.state === 'built' ? h('p', { class: 'quest-note' }, 'Ausbauen lässt es sich mit einer höheren Lagerstufe.') : null,
-      building && state.status !== 'running' ? energyPreview(game.stamina(), v.quest.cost, v.quest.cost) : null,
+      building && state.status !== 'running' ? energyPreview(game.stamina(), [{ kind: 'work', n: v.quest.cost }]) : null,
       h('div', { class: 'quest-actions' }, back, act),
     ],
   });

@@ -43,4 +43,26 @@ export function replaceChildren(el, ...children) {
   append(el, children);
 }
 
+// A page that is drawn again gets new <img> elements, and a new element shows
+// nothing until its picture is decoded again: the clothes of the Envoy, for
+// example, would vanish for a moment. So pictures already on screen are moved
+// into the new page (with the new element's attributes) instead.
+export function keepPictures(oldRoot, newRoot) {
+  const shown = new Map();
+  for (const img of oldRoot.querySelectorAll('img')) {
+    const src = img.getAttribute('src');
+    if (!src || !img.complete || img.naturalWidth === 0) continue;
+    if (!shown.has(src)) shown.set(src, []);
+    shown.get(src).push(img);
+  }
+  for (const img of newRoot.querySelectorAll('img')) {
+    const src = img.getAttribute('src');
+    const old = src && shown.get(src)?.shift();
+    if (!old) continue;
+    for (const { name } of [...old.attributes]) if (!img.hasAttribute(name)) old.removeAttribute(name);
+    for (const { name, value } of [...img.attributes]) if (name !== 'src') old.setAttribute(name, value);
+    img.replaceWith(old);
+  }
+}
+
 export const formatNumber = (n) => Math.floor(n).toLocaleString('de-DE');

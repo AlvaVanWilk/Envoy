@@ -111,7 +111,7 @@ test('only one expedition at a time', () => {
   const a = expeditionEvent([], 'q-pilzholz', 0.1);
   const b = expeditionEvent([], 'q-stein', 0.15);
   const s = replay([a, b], catalog, DAY, T0 + 0.2 * H);
-  assert.equal(s.world.expedition.q, 'q-pilzholz');
+  assert.equal(s.world.expedition.stops[0].q, 'q-pilzholz');
 });
 
 test('the hero moves along the way', () => {
@@ -132,7 +132,7 @@ test('gathering never fails, yields more with Kraft and gets shorter with the te
   let strongSum = 0;
   for (let i = 0; i < 200; i += 1) {
     const weak = runQuest(quest, { ...base, stats: statsAt(1) }, `s${i}`);
-    assert.ok(weak.reward.stein >= 2 && weak.reward.stein <= 3 && weak.cleared);
+    assert.ok(weak.reward.stein >= 16 && weak.reward.stein <= 20 && weak.cleared);
     weakSum += weak.reward.stein;
     strongSum += runQuest(quest, { ...base, stats: statsAt(9) }, `s${i}`).reward.stein;
   }

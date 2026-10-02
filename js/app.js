@@ -8,7 +8,7 @@ import { sync } from './sync.js';
 import { store } from './store.js';
 import { account } from './account.js';
 import { renderWelcome } from './ui/welcome.js';
-import { h, replaceChildren } from './ui/dom.js';
+import { h, replaceChildren, keepPictures } from './ui/dom.js';
 import { NAV_ICONS } from './ui/icons.js';
 import { shield } from './ui/shield.js';
 import { renderCamp } from './ui/camp.js';
@@ -26,6 +26,7 @@ import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
 import { startTourIfNew } from './ui/tours.js';
 import { IS_TEST, APP_NAME } from './stage.js';
+import { mountTestTools } from './ui/testtools.js';
 
 // The menu at the bottom, left to right. The camp in the middle is the
 // start. `feature` = unlocked in the game.
@@ -93,7 +94,11 @@ function renderNav() {
   const name = currentView();
   const withBar = VIEWS[name].topbar !== false;
   document.body.classList.toggle('has-topbar', withBar);
-  if (withBar) replaceChildren(topRoot, renderTopbar(game, name, syncTone(), { envoyBadge: unseenDropCount(game) > 0 }));
+  if (withBar) {
+    const bar = renderTopbar(game, name, syncTone(), { envoyBadge: unseenDropCount(game) > 0 });
+    keepPictures(topRoot, bar);
+    replaceChildren(topRoot, bar);
+  }
   else replaceChildren(topRoot);
 }
 
@@ -134,7 +139,9 @@ function render() {
   // A view with choices in progress is not rebuilt while it is open.
   if (VIEWS[name].keep && name === lastView) return;
   if (name !== lastView && name === 'abenteuer') markMapForScroll();
-  replaceChildren(viewRoot, VIEWS[name].render(game));
+  const view = VIEWS[name].render(game);
+  keepPictures(viewRoot, view);
+  replaceChildren(viewRoot, view);
   renderNav();
   if (name !== lastView && ['envoy', 'abenteuer', 'lager'].includes(name) && (name !== 'lager' || game.state.world.camp.stage >= 1)) {
     startTourIfNew(name, game, () => currentView() === name);
@@ -160,7 +167,7 @@ async function start() {
   if (IS_TEST) {
     document.title = APP_NAME;
     document.body.classList.add('stage-test');
-    document.body.append(h('div', { class: 'stage-tag', 'aria-hidden': 'true' }, 'Test'));
+    mountTestTools(game);
   }
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => { /* works without */ });

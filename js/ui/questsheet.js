@@ -1,18 +1,24 @@
 // The window of one quest: what it is about, what it needs, what it brings
-// and what it costs in Energie (as a bar: what is used, what stays).
+// and what it costs in Energie (as a bar: the ways, the work, what stays).
 // Gathering on the Trümmerfeld has its own window: the Envoy is told how
 // much to gather, and the bar shows what that may take.
+// Quests can be lined up as a route (see game.js): the first one starts it
+// („Route planen“), more are added („Anhängen“) as long as the Energie would
+// still reach back to the camp from there. With a route planned the bar
+// shows the whole route, the parts planned already paler.
 
 import { h, icon, replaceChildren } from './dom.js';
 import { UI_ICONS } from './icons.js';
-import { CURRENCY, MATERIALS } from '../config.js';
+import { CURRENCY, MATERIALS, GATHER_BASE } from '../config.js';
 import { resource, resourceIcon, energyPreview, formatMinutes, MATERIAL_KEYS } from './parts.js';
 import { openSheet, closeSheet, toast } from './sheet.js';
 import { markMapForScroll } from './worldmap.js';
 import { questState, conditionMet, describeCondition, KIND_NAMES } from '../world/quests.js';
 import { besideTheCamp } from '../world/map.js';
+import { roomFor, CARRIED_MATERIALS } from '../world/inventory.js';
 import { rewardRange, gatherEstimate } from '../world/run.js';
 import { facilityRow, facilityEffect } from '../world/camp.js';
+import { routeParts, mostOf } from '../world/expedition.js';
 import { formatDayShort } from '../days.js';
 
 const range = ([a, b]) => (a === b ? String(a) : `${a}–${b}`);
@@ -97,11 +103,82 @@ export function questAction(quest, cost, game, state, place) {
   return h('button', { class: 'btn primary', onclick: () => start(quest, game, {}, message) }, label);
 }
 
+// --- the route ---------------------------------------------------------------------
+
+const BLOCKED = {
+  energy: 'Von dort reicht die Energie nicht mehr zurück ins Lager.',
+  material: 'Für die ganze Route fehlt Material.',
+};
+
+// The quests planned and where this one is among them (-1: not in it).
+function routeSpot(quest, game) {
+  const planned = game.routeEntries();
+  return { planned, index: planned.findIndex((e) => e.quest.id === quest.id) };
+}
+
+// What the route may bring of a material at most.
+function plannedLoad(planned, c, material) {
+  return planned.reduce((sum, { quest, options }) => {
+    if (quest.gather) return sum + (quest.gather.material === material ? options.amount || 0 : 0);
+    return sum + (rewardRange(quest, c)?.[material][1] || 0);
+  }, 0);
+}
+
+// How much more of a material the Envoy can take once he has what the quests
+// before may bring: both kinds share the places of the backpack.
+function roomAfter(planned, c, material) {
+  const purse = { ...c.world.purse };
+  for (const key of CARRIED_MATERIALS) purse[key] = (purse[key] || 0) + plannedLoad(planned, c, key);
+  return roomFor({ ...c.world, purse }, c.catalog, material);
+}
+
+// The bar of the route with this quest in it: its own parts bright (the way
+// there, the work, and the way home if it is the last), the rest pale.
+function routeBar(game, plan, stop) {
+  const own = (p) => p.stop === stop || (p.stop === stop + 1 && p.stop === plan.entries.length);
+  const parts = plan.parts.map((p) => ({ ...p, planned: !own(p) }));
+  return energyPreview(game.stamina(), parts, { title: 'Route' });
+}
+
+// Starts a route with the quest or adds it; with a reason why not, if it cannot be.
+function addButton(quest, game, options, first) {
+  const block = game.routeBlock(quest.id, options);
+  if (block) return first ? null : [note(BLOCKED[block] || ''), h('button', { class: 'btn primary', disabled: true }, 'Anhängen')];
+  return h('button', {
+    class: `btn ${first ? 'ghost' : 'primary'}`,
+    onclick: () => {
+      if (!game.addToRoute(quest.id, options)) return;
+      closeSheet();
+      toast(first ? `Route geplant: ${quest.name}` : `Angehängt: ${quest.name}`);
+    },
+  }, first ? 'Route planen' : 'Anhängen');
+}
+
+function inRouteActions(quest, game, index, count) {
+  return [
+    note(`In der Route, Station ${index + 1} von ${count}.`),
+    h('button', { class: 'btn ghost', onclick: () => { game.removeFromRoute(quest.id); closeSheet(); toast(`Aus der Route genommen: ${quest.name}`); } }, 'Herausnehmen'),
+  ];
+}
+
+// A reward larger than what still fits: said before setting out (with a
+// route, after what the quests before it may bring).
+function carryNote(quest, c, planned = []) {
+  const r = rewardRange(quest, c);
+  if (!r) return null;
+  const notes = CARRIED_MATERIALS
+    .map((key) => [key, roomAfter(planned, c, key)])
+    .filter(([key, room]) => r[key][1] > room)
+    .map(([key, room]) => `Tragen kann der Envoy davon nur ${room} ${MATERIALS[key]}.`);
+  return notes.length > 0 ? h('p', { class: 'quest-note carry-note' }, notes.join(' ')) : null;
+}
+
 function questBody(quest, game, place) {
   const c = game.ctx();
   const state = questState(quest, c);
   const open = state.status === 'open' || state.status === 'locked';
-  const cost = game.preview(quest.id).cost;
+  const parts = routeParts([{ quest }], c);
+  const cost = mostOf(parts);
   const monsters = quest.monsters.map((id) => c.catalog.monsterById.get(id)).filter(Boolean);
 
   const facts = [];
@@ -117,11 +194,27 @@ function questBody(quest, game, place) {
     if (reward.length > 0) facts.push(fact('Belohnung', h('span', { class: 'res-list' }, reward)));
   }
 
+  // with a route planned (and the quest one that can be part of it)
+  const { planned, index } = routeSpot(quest, game);
+  const routable = state.status === 'open' && !c.world.expedition && game.routeBlock(quest.id) !== 'camp';
+  let bar = open ? energyPreview(game.stamina(), parts) : null;
+  let actions = questAction(quest, cost, game, state, place);
+  if (routable && index >= 0) {
+    bar = routeBar(game, game.routePlan(), index);
+    actions = inRouteActions(quest, game, index, planned.length);
+  } else if (routable && planned.length > 0) {
+    bar = routeBar(game, game.routePlan({ quest, options: {} }), planned.length);
+    actions = addButton(quest, game, {}, false);
+  } else if (routable && cost <= game.stamina().value) {
+    actions = [addButton(quest, game, {}, true), actions];
+  }
+
   return [
     quest.text && open ? h('div', { class: 'quest-text' }, paragraphs(quest.text)) : null,
     facts.length > 0 ? h('dl', { class: 'quest-facts' }, facts) : null,
-    open ? energyPreview(game.stamina(), cost, cost) : null,
-    h('div', { class: 'quest-actions' }, questAction(quest, cost, game, state, place)),
+    open ? carryNote(quest, c, index >= 0 ? planned.slice(0, index) : planned) : null,
+    bar,
+    h('div', { class: 'quest-actions' }, actions),
   ];
 }
 
@@ -132,6 +225,8 @@ const gatherChoice = { stein: 1, pilzholz: 1 };
 
 // He gathers as much as is chosen: at most what he can carry, and what his
 // Energie surely brings in. A tap on + beyond that says why there is no more.
+// Added to a route, the gathering comes after the quests before it: what
+// they may bring and the Energie they take count first.
 function gatherBody(quest, game) {
   const { material } = quest.gather;
   const name = MATERIALS[material];
@@ -142,15 +237,19 @@ function gatherBody(quest, game) {
     const c = game.ctx();
     const st = game.stamina();
     const state = questState(quest, c);
-    const most = gatherEstimate(quest, c, { energy: st.value }).most;
-    const amount = Math.max(1, Math.min(gatherChoice[material], most));
-    gatherChoice[material] = amount;
-    const est = gatherEstimate(quest, c, { amount, energy: st.value });
-    const have = c.world.purse[material] || 0;
     const away = Boolean(c.world.expedition);
-    const canGather = most >= 1 && !away && state.status === 'open';
+    const { planned, index } = routeSpot(quest, game);
+    const adding = planned.length > 0 && index < 0;
+    const before = adding ? game.routePlan().most : 0;
+    const room = roomAfter(adding ? planned : [], c, material);
+    const most = Math.min(room, GATHER_BASE * Math.floor(st.value - before));
+    const amount = index >= 0 ? planned[index].options.amount || 1 : Math.max(1, Math.min(gatherChoice[material], most));
+    if (index < 0) gatherChoice[material] = amount;
+    const have = c.world.purse[material] || 0;
+    const canGather = most >= 1 && !away && state.status === 'open' && index < 0;
     const atLimit = amount >= most;
-    const limitText = amount >= est.room ? 'Mehr kann dein Envoy nicht tragen.' : 'Für mehr reicht die Energie nicht.';
+    const limitText = amount >= room ? 'Mehr kann dein Envoy nicht tragen.' : 'Für mehr reicht die Energie nicht.';
+    const options = { amount };
 
     const change = (next) => () => {
       if (next > most) blocked = limitText;
@@ -159,11 +258,23 @@ function gatherBody(quest, game) {
     };
 
     let act;
+    let bar = canGather ? energyPreview(st, routeParts([{ quest, options }], c)) : null;
     if (state.status === 'running') act = note('Der Envoy sammelt gerade.');
     else if (away) act = h('button', { class: 'btn ghost', disabled: true }, 'Der Envoy ist unterwegs');
-    else if (est.room <= 0) act = note('Mehr kann dein Envoy nicht tragen.');
-    else if (most < 1) act = waitButton(1, st);
-    else act = h('button', { class: 'btn primary', onclick: () => start(quest, game, { amount }, `Der Envoy sammelt ${name}`) }, 'Sammeln');
+    else if (index >= 0) {
+      act = inRouteActions(quest, game, index, planned.length);
+      bar = routeBar(game, game.routePlan(), index);
+    } else if (room <= 0) act = note('Mehr kann dein Envoy nicht tragen.');
+    else if (most < 1) act = adding ? note('Nach dieser Route reicht die Energie nicht mehr zum Sammeln.') : waitButton(1, st);
+    else if (adding) {
+      act = addButton(quest, game, options, false);
+      bar = routeBar(game, game.routePlan({ quest, options }), planned.length);
+    } else {
+      act = [
+        addButton(quest, game, options, true),
+        h('button', { class: 'btn primary', onclick: () => start(quest, game, options, `Der Envoy sammelt ${name}`) }, 'Sammeln'),
+      ];
+    }
 
     replaceChildren(box,
       h('div', { class: 'quest-text' }, paragraphs(quest.text)),
@@ -174,9 +285,10 @@ function gatherBody(quest, game) {
           class: `btn ghost small ${atLimit ? 'at-limit' : ''}`, type: 'button', 'aria-label': 'Mehr',
           'aria-disabled': atLimit ? 'true' : null, title: atLimit ? limitText : null, onclick: change(amount + 1),
         }, '+')) : null,
+      index >= 0 ? h('p', { class: 'gather-stock' }, resource(material, String(amount))) : null,
       blocked && canGather ? h('p', { class: 'gather-note', role: 'status' }, blocked) : null,
-      h('p', { class: 'gather-stock' }, `Im Vorrat ${have} / ${have + est.room} ${name}`),
-      canGather ? energyPreview(st, est.energy.min, est.energy.max) : null,
+      h('p', { class: 'gather-stock' }, `Im Vorrat ${have} / ${have + gatherEstimate(quest, c).room} ${name}`),
+      bar,
       h('div', { class: 'quest-actions' }, act));
   };
   draw();

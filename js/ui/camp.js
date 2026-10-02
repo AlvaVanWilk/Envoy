@@ -13,12 +13,11 @@ import { PLACE_ICONS, UI_ICONS, SLOT_ICONS } from './icons.js';
 import { versioned } from '../config.js';
 import { formatDayLong } from '../days.js';
 import { sectionTitle, supplies, staminaBar, materialLimits } from './parts.js';
-import { journeyPanel, openReport } from './journey.js';
+import { journeyPanel, openReport, expeditionTitle } from './journey.js';
 import { encountersFor, questState, placeUnlocked } from '../world/quests.js';
 import { showPlace } from './worldmap.js';
 import { openQuest } from './questsheet.js';
 import { openFacilities, canBuildSomething } from './facilities.js';
-import { testTools } from './testtools.js';
 import { unseenDropCount } from './character.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
@@ -49,7 +48,7 @@ export function campPicture(stage, phase) {
 
 function statusLine(game) {
   const exp = game.state.world.expedition;
-  if (exp) return `Der Envoy ist unterwegs: ${exp.title}.`;
+  if (exp) return `Der Envoy ist unterwegs: ${expeditionTitle(exp)}.`;
   return 'Der Envoy ist im Lager.';
 }
 
@@ -136,7 +135,7 @@ function expeditionPanel(game) {
     exp
       ? journeyPanel(exp, game)
       : h('div', { class: 'dash-report' },
-        h('p', {}, `Zurück: ${report.title}`),
+        h('p', {}, `Zurück: ${expeditionTitle(report)}`),
         h('button', { class: 'btn primary small', onclick: () => openReport(report, game) }, 'Bericht')));
 }
 
@@ -164,8 +163,7 @@ function suppliesPanel(game) {
   return h('section', { class: 'panel dash-supplies' },
     sectionTitle('Vorrat'),
     supplies(world.purse, materialLimits(world, game.catalog)),
-    staminaBar(game.stamina()),
-    testTools(game));
+    staminaBar(game.stamina()));
 }
 
 // Things worth knowing, each with a way to act on it.
