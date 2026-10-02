@@ -36,7 +36,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   (Name und Passwort) hat seine eigene Liste; ohne Konto bleibt ein Envoy auf dem Gerät.
 - Veröffentlichung: Ein GitHub-Ablauf testet, wandelt die Tabellen um und lädt per SFTP
   auf den IONOS-Webspace: den Arbeitszweig in den Testordner (`<Ordner>-test`, dort als
-  „Envoy Test“ gekennzeichnet, mit eigenem Speicher, siehe `js/stage.js`), den Zweig
+  „Envoy Test“ gekennzeichnet, mit eigenem Speicher, siehe `js/stage.js`, und eigenem
+  Icon mit orangem Hintergrund aus `assets/app/test/`), den Zweig
   `main` in den echten Ordner. Auf `main` kommt nur, was die Nutzerin im Testordner
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild

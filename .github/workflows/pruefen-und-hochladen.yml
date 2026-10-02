@@ -80,6 +80,8 @@ jobs:
             sed -i "s/export const STAGE = 'live';/export const STAGE = 'test';/" js/stage.js
             sed -i 's/"name": "Envoy"/"name": "Envoy Test"/; s/"short_name": "Envoy"/"short_name": "Envoy Test"/' manifest.webmanifest
             sed -i 's/name="apple-mobile-web-app-title" content="Envoy"/name="apple-mobile-web-app-title" content="Envoy Test"/' index.html
+            # Eigenes Icon: oranger Hintergrund, damit es auf dem Homebildschirm auffällt.
+            cp assets/app/test/*.png assets/app/
             grep -q "STAGE = 'test'" js/stage.js || { echo "Die Testfassung ließ sich nicht kennzeichnen."; exit 1; }
             echo "Ziel: der Testordner (echter Ordner mit -test)."
           fi
@@ -95,6 +97,7 @@ jobs:
               --exclude-glob .git* \
               --exclude-glob .github/ \
               --exclude-glob tools/ \
+              --exclude-glob assets/app/test/ \
               --exclude-glob tests/ \
               --exclude-glob docs/ \
               --exclude-glob node_modules/ \

@@ -14,8 +14,10 @@ Es gibt zwei Fassungen auf dem Webspace:
 
 - **Testfassung** im Ordner neben dem echten, mit „-test“ am Ende (zum Beispiel
   `envoy-test`). Jede neue Arbeit landet zuerst hier. Sie heißt „Envoy Test“, trägt
-  oben ein kleines Schild „Test“ und speichert alles getrennt von der echten App,
-  auch die Konten. Hier wird angesehen und ausprobiert.
+  oben ein kleines Schild „Test“, hat ein eigenes Icon (oranger Hintergrund, aus
+  `assets/app/test/`) und speichert alles getrennt von der echten App, auch die Konten.
+  Hier wird angesehen und ausprobiert. Ein neues Icon zeigt der Homebildschirm erst,
+  wenn man die App dort entfernt und neu hinzufügt.
 - **Echte App** im eigenen Ordner (zum Beispiel `envoy`). Sie ändert sich nur, wenn
   eine geprüfte Fassung freigegeben wird: dann kommt der Stand der Testfassung auf den
   Zweig `main`, und genau dieser wird hochgeladen.
