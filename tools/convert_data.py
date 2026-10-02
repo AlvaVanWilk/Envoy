@@ -186,14 +186,21 @@ def optional_picture(report, row, kind, filename):
     return f"{folder}/{filename}"
 
 
-def camp_pictures():
+def camp_pictures(pattern=r"stufe_(\d+)_([a-z]+)\.jpg"):
     """Which pictures of the camp there are, by stage: {'1': ['morgen', 'tag', ...]}."""
     found = {}
-    for path in sorted((ROOT / PICTURES["lager"][0]).glob("stufe_*_*.jpg")):
-        m = re.fullmatch(r"stufe_(\d+)_([a-z]+)\.jpg", path.name)
+    for path in sorted((ROOT / PICTURES["lager"][0]).glob("stufe_*")):
+        m = re.fullmatch(pattern, path.name)
         if m and m.group(2) in CAMP_TIMES:
             found.setdefault(m.group(1), []).append(m.group(2))
     return {stage: [t for t in CAMP_TIMES if t in times] for stage, times in found.items()}
+
+
+def camp_fronts():
+    """Which pictures of the camp have a front layer (what of the picture
+    stands in front of the facilities, stufe_<n>_<zeit>_vorn.png, made by
+    tools/lager_vorn.py), by stage like camp_pictures."""
+    return camp_pictures(r"stufe_(\d+)_([a-z]+)_vorn\.png")
 
 
 # --- small languages used in cells -----------------------------------------
@@ -733,7 +740,7 @@ def convert_world(path, item_ids):
         del p["_row"]
 
     return {"places": places, "monsters": monsters, "quests": quests,
-            "camp": {"stages": stages, "facilities": facilities, "pictures": camp_pictures()}, "deko": deko}, report
+            "camp": {"stages": stages, "facilities": facilities, "pictures": camp_pictures(), "fronts": camp_fronts()}, "deko": deko}, report
 
 
 # --- main -------------------------------------------------------------------

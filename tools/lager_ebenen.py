@@ -9,6 +9,9 @@ it as assets/lager/einrichtung_<id>_<stufe>.png. The app lays these over the
 picture of the camp (see js/ui/camp.js); the conversion of the tables finds
 them on its own.
 
+Level 1 of each facility is not made here: those layers are drawn by hand in
+their place on the whole picture and lie in assets/lager/ as they are.
+
 Where each one stands is the table PLACES: the middle (x), the line on the
 ground it stands on (y) and its width, in pixels of the camp picture. The
 places follow tools/vorlagen/lager-schablone.png: the stores beside the house,
@@ -31,17 +34,13 @@ SIZE = (1792, 672)
 
 # (facility, level): (x of the middle, y of the ground line, width)
 PLACES = {
-    ("steinlager", 1): (548, 476, 130),
     ("steinlager", 2): (548, 476, 160),
     ("steinlager", 3): (548, 476, 140),
-    ("pilzlager", 1): (1215, 458, 165),
     ("pilzlager", 2): (1215, 458, 125),
     ("pilzlager", 3): (1215, 458, 215),
-    ("aufbewahrung", 1): (1035, 455, 80),
     ("aufbewahrung", 2): (1035, 455, 135),
     ("aufbewahrung", 3): (1035, 455, 120),
     ("aufbewahrung", 4): (1035, 455, 92),
-    ("schlafplatz", 1): (800, 453, 170),
     ("schlafplatz", 2): (800, 453, 180),
     ("schlafplatz", 3): (800, 453, 185),
     ("schlafplatz", 4): (800, 453, 190),

@@ -628,25 +628,36 @@ solche ohne Plan sind grau, gestrichelt, mit Schloss, „?“ und „Plan fehlt�
 Bild. Ein Tipp auf eine bekannte öffnet sie mit Text, Hygge, Kosten, Energie-Leiste und
 „Bauen“.
 
-**Das Bild des Lagers** setzt sich aus Ebenen zusammen: das Grundbild der Stufe
-(`assets/lager/stufe_<n>_<zeit>.jpg`; fehlt es, das der Stufe davor; fehlt die Tageszeit,
-das Tagesbild getönt), darauf jede stehende Einrichtung auf ihrer Stufe
-(`assets/lager/einrichtung_<id>_<stufe>.png`; fehlt die Zeichnung, die der Stufe davor)
-und jede gebaute Deko (`assets/lager/deko_<id>.png`), wo es eine Zeichnung gibt. Ebenen
-sind 1792 × 672 wie das Grundbild, transparent, an ihrem Platz gezeichnet; zu anderen
-Tageszeiten werden sie getönt wie das Bild. Ab Stufe 2 ist das Lager ein Haus mit offener
-Vorderseite: Der Boden liegt auf jeder Stufe an derselben Stelle, nur Wände und Dach
-wachsen; das Feuer bleibt vor dem Haus, die Schuppen stehen daneben, jede Deko hat einen
-festen Platz (Vorschlag in `tools/vorlagen/lager-schablone.png`).
+**Das Bild des Lagers** setzt sich aus Ebenen zusammen, von hinten nach vorn: das
+Grundbild der Stufe (`assets/lager/stufe_<n>_<zeit>.jpg`; fehlt es, das der Stufe davor;
+fehlt die Tageszeit, das Tagesbild getönt), darauf jede stehende Einrichtung auf ihrer
+Stufe (`assets/lager/einrichtung_<id>_<stufe>.png`; fehlt die Zeichnung, die der Stufe
+davor), jede gebaute Deko (`assets/lager/deko_<id>.png`), wo es eine Zeichnung gibt, und
+zuletzt der Vordergrund des Grundbilds (`assets/lager/stufe_<n>_<zeit>_vorn.png`): was vom
+Bild vor den Einrichtungen steht, auf Stufe 1 die beiden Säulen, die Felsen vorn und das
+Feuer mit seinen Funken. Alle Ebenen sind 1792 × 672 wie das Grundbild, transparent, an
+ihrem Platz gezeichnet, wie bei Anziehpuppen. Die Einrichtungen sind bei Tag gezeichnet:
+auf dem Bild einer anderen Tageszeit bekommen sie dessen Licht (eine Tönung, an die Bilder
+von Stufe 1 angepasst), auf dem getönten Tagesbild dieselbe Tönung wie das Bild.
 
-Die Zeichnungen der Einrichtungen (von der Nutzerin mit Midjourney erzeugt, alle 15
-Stufen) liegen freigestellt in `tools/lager-ebenen/` (`steinlager_2.png` usw.).
-`tools/lager_ebenen.py` setzt jede an ihren Platz und in ihre Größe (Tabelle `PLACES`:
-Mitte, Bodenlinie, Breite in Pixeln des Lagerbilds), legt einen weichen Schatten darunter
-und schreibt die Ebene nach `assets/lager/`. Solange es nur das Bild des offenen Lagers
-gibt, stehen alle in der hinteren Reihe hinter Felsen und Feuer: links das Steinlager,
-in der Mitte Schlafplatz und Aufbewahrung, rechts das Pilzlager. Gibt es das Haus, werden
-nur die Zahlen der Tabelle angepasst.
+Die Nutzerin zeichnet die Ebenen auf dem Tagesbild der Stufe. Die Einrichtungen der
+Stufe 1 liegen unverändert in `assets/lager/`: links Steinstapel und Pilzholzstapel, davor
+der Krempelplatz, rechts vom Feuer das Raspelnest. Die Teile des Vordergrunds liegen in
+`tools/lager-vorn/stufe_<n>/` (`feuer.png`, `funken.png`, `fels.png`, `saeule_links.png`,
+`saeule_rechts.png`). `tools/lager_vorn.py` legt sie für den Tag zusammen und schneidet
+dieselben Umrisse aus den Bildern der anderen Tageszeiten aus, damit der Vordergrund deren
+Licht hat (die Funken nur am Tag, sie fliegen in jedem Bild anders).
+
+Die höheren Stufen der Einrichtungen (2 bis 5) sind noch die freigestellten
+Midjourney-Zeichnungen aus `tools/lager-ebenen/`, gesetzt von `tools/lager_ebenen.py`
+(Tabelle `PLACES`) nach dem Vorschlag in `tools/vorlagen/lager-schablone.png`. Sie passen
+nicht zu den Plätzen der Stufe 1 und werden ersetzt, sobald es gezeichnete Ebenen gibt.
+
+Am Telefon zeigt das Lager nur die Mitte des Bilds, und die Knöpfe liegen unten darüber.
+**Ein Tipp auf das Bild zeigt es groß**, ganz, ohne Knöpfe: so hoch, wie der Bildschirm
+erlaubt; ist er hochkant, als Streifen, der sich seitlich schieben lässt, beginnend beim
+Feuer. Ein Tipp schließt es wieder. Ein kleines Zeichen (vier Ecken) neben dem Hygge zeigt,
+dass es das gibt.
 
 Der Schlafplatz wirkt auf die Energie (siehe Energie). Ein Bonus auf Kraft wäre ein Bonus
 auf einen Wert und widerspricht dem Konzept: Werte steigen nur durch echte Übungen.
@@ -805,7 +816,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/einrichtung_<id>_<stufe>.png` und `assets/lager/deko_<id>.png` (1792 × 672, transparent, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und der Vordergrund `assets/lager/stufe_<n>_<zeit>_vorn.png` (1792 × 672, transparent, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 
@@ -1001,7 +1012,8 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Einrichtungen | Steinlager, Pilzlager (je 3 Stufen), Aufbewahrung (4), Schlafplatz (5), jede Stufe mit eigenem Namen und ab der gleichen Lagerstufe; keine Quests, nur auf der Lager-Seite („Lager einrichten“, Kacheln) |
 | Lagerstufen | Provisorisches Lager, Unterstand, Wackelige Hütte, Stabile Hütte, Steinhäuschen; Aufwerten mit Hygge 5, 14, 36, 90, Material und Energie am Stück |
 | Deko | ab Lagerstufe 2, eine Kachel „Deko“ mit Liste; je Stufe ein Plan gleich da, die anderen gefunden (Ort, Geister, Händler), selten, sehr selten oder kostbar, nach doppelt so vielen Chancen sicher; nicht gefundene grau, ohne Namen; bleibt beim Aufwerten |
-| Lagerbild aus Ebenen | Grundbild der Stufe, darauf Einrichtungen und Deko als eigene Ebenen; ab Stufe 2 ein Haus mit offener Vorderseite |
+| Lagerbild aus Ebenen | Grundbild der Stufe, darauf Einrichtungen und Deko, darüber der Vordergrund des Bilds (Säulen, Felsen, Feuer); die Ebenen von der Nutzerin an ihrem Platz gezeichnet, zu anderen Tageszeiten in deren Licht |
+| Lagerbild groß | Tipp aufs Bild zeigt es ganz und so groß wie möglich, hochkant seitlich verschiebbar; ein Tipp schließt |
 | Quests auf der Karte | Ort antippen fächert seine Quests auf (Siegel mit Namen), ein Tipp öffnet eine; der Fächer auch bei nur einer Quest |
 | Ortsbeschreibung | Kartusche am Kartenrand zusammen mit dem Fächer: Region, Name, Text, bei verschlossenen Orten, was sie öffnet |
 | Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste: die Kosten als ein Block, der Weg darin kupfern getönt, „davon Weg 2“ (in der Reihe „statt 4“); keine Dauer, keine Tempo- und Ertrag-Stats |

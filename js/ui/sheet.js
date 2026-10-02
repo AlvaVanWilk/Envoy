@@ -33,6 +33,28 @@ export function openSheet({ title, eyebrow = null, content, className = '', onCl
   return { close, panel };
 }
 
+// A picture over the whole screen, without a frame (counts as a sheet: only
+// one is open at a time). A tap anywhere closes it; moving it does not.
+export function openPicture({ label, content }) {
+  closeSheet();
+  const root = document.getElementById('sheet-root');
+  const previousFocus = document.activeElement;
+
+  const close = () => closeSheet();
+  const button = h('button', { class: 'icon-btn picture-close', 'aria-label': 'Schließen' }, icon(UI_ICONS.close));
+  const view = h('div', { class: 'picture-view', role: 'dialog', 'aria-modal': 'true', 'aria-label': label, onclick: close }, content, button);
+  const layer = h('div', { class: 'sheet-layer picture-layer' }, view);
+
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', onKey);
+  root.replaceChildren(layer);
+  requestAnimationFrame(() => layer.classList.add('open'));
+  button.focus({ preventScroll: true });
+
+  current = { layer, onKey, onClose: null, previousFocus };
+  return { close };
+}
+
 export function isSheetOpen() {
   return current !== null;
 }

@@ -13,6 +13,7 @@ import {
 } from '../js/world/camp.js';
 import { planKnown, rollPlans, traderPlans } from '../js/world/plans.js';
 import { offersFor } from '../js/world/trader.js';
+import { campScene } from '../js/ui/camp.js';
 import { addDays } from '../js/days.js';
 import { PLAN_CHANCES, PLAN_SURE_FACTOR } from '../js/config.js';
 
@@ -248,4 +249,29 @@ test('every plan to find lies where it can be searched again and again', () => {
     if (['start', 'geister', 'haendler'].includes(d.fundort)) continue;
     assert.ok(repeatable.has(d.fundort) || places.has(d.fundort), `${d.name}: ${d.fundort}`);
   }
+});
+
+test('the camp picture: the picture, what is built on it, then what of the picture stands in front', () => {
+  const world = { camp: { stage: 2, facilities: { steinlager: 1, pilzlager: 1 }, deko: {}, reached: {} } };
+  const scene = (cat, phase) => campScene(world, cat, phase).map((x) => [x.src.split('?')[0], x.look]);
+  // stage 2 has no picture of its own yet: the one of stage 1
+  assert.deepEqual(scene(catalog, 'tag'), [
+    ['assets/lager/stufe_1_tag.jpg', ''],
+    ['assets/lager/einrichtung_steinlager_1.png', ''],
+    ['assets/lager/einrichtung_pilzlager_1.png', ''],
+    ['assets/lager/stufe_1_tag_vorn.png', ''],
+  ]);
+  // at night: the night picture with its own front layer; the drawings get its light
+  assert.deepEqual(scene(catalog, 'nacht'), [
+    ['assets/lager/stufe_1_nacht.jpg', ''],
+    ['assets/lager/einrichtung_steinlager_1.png', 'light-nacht'],
+    ['assets/lager/einrichtung_pilzlager_1.png', 'light-nacht'],
+    ['assets/lager/stufe_1_nacht_vorn.png', ''],
+  ]);
+  // where there is only a day picture, it stands in, tinted, and all on it with it
+  const dayOnly = { ...catalog, camp: { ...catalog.camp, pictures: { 1: ['tag'] }, fronts: { 1: ['tag'] } } };
+  assert.deepEqual(scene(dayOnly, 'abend').map((x) => x[1]), ['tint-abend', 'tint-abend', 'tint-abend', 'tint-abend']);
+  // without a front layer there is none
+  const noFront = { ...catalog, camp: { ...catalog.camp, fronts: {} } };
+  assert.equal(scene(noFront, 'tag').length, 3);
 });

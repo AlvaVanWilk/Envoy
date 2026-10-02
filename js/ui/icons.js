@@ -122,6 +122,8 @@ export const UI_ICONS = {
   play: line('<path d="M7 5l12 7-12 7z"/>'),
   chevron: line('<path d="M9 6l6 6-6 6"/>'),
   expand: line('<path d="M6 9l6 6 6-6"/>'),
+  // four corners: show it large
+  enlarge: line('<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>'),
   search: line('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>'),
   soundOn: line('<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4Z"/><path d="M15.5 9.2a4 4 0 0 1 0 5.6"/><path d="M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/>'),
   soundOff: line('<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4Z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>'),

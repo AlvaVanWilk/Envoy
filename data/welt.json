@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-02T19:41:08Z",
+ "generated": "2026-10-02T21:57:30Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1860,6 +1860,14 @@
    "0": [
     "tag"
    ],
+   "1": [
+    "morgen",
+    "tag",
+    "abend",
+    "nacht"
+   ]
+  },
+  "fronts": {
    "1": [
     "morgen",
     "tag",
