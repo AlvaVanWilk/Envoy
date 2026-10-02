@@ -10,10 +10,10 @@ import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
 import { MATERIALS } from '../config.js';
 import { openSheet, closeSheet, isSheetOpen, toast } from './sheet.js';
-import { resource, itemIcon, formatMinutes, MATERIAL_KEYS } from './parts.js';
+import { resource, itemIcon, dekoIcon, formatMinutes, MATERIAL_KEYS } from './parts.js';
 import { progressAt, heroPosition, timeline, timesOf, nextStep } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
-import { facilityRow } from '../world/camp.js';
+import { facilityRow, stageRow } from '../world/camp.js';
 
 const PART_NAMES = { way: 'Hinweg', work: 'Vor Ort', home: 'Rückweg' };
 // Without a way the work itself is named.
@@ -55,12 +55,20 @@ const UNLOCK_TEXT = {
   haendler: 'Der Händler ist gerettet und handelt ab jetzt.',
 };
 
-// What a new feature says in the report: the Lagerfeuer, the Händler or a facility.
+// What a new feature says in the report: the Lagerfeuer, the Händler, a
+// stage of the camp, a facility or a Deko.
 function unlockText(feature, game) {
   if (UNLOCK_TEXT[feature]) return UNLOCK_TEXT[feature];
   const [id, level] = feature.split(':');
+  if (id === 'lager') return `Das Lager ist jetzt: ${stageRow(game.catalog, Number(level))?.name || `Stufe ${level}`}.`;
+  if (id === 'deko') {
+    const deko = game.catalog.dekoById.get(level);
+    return deko ? `${deko.name} steht. Hygge +${deko.hygge}.` : feature;
+  }
   const row = facilityRow(game.catalog, id, Number(level));
-  return row ? `${row.name} steht. Hygge +${row.hygge}.` : feature;
+  if (!row) return feature;
+  const before = facilityRow(game.catalog, id, Number(level) - 1)?.hygge || 0;
+  return `${row.name} steht. Hygge +${row.hygge - before}.`;
 }
 
 const clockTime = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
@@ -211,8 +219,12 @@ function stopReport(stop, game, onward = false) {
   const loot = [];
   for (const key of MATERIAL_KEYS) if (gained[key]) loot.push(resource(key, gained[key], { sign: '+' }));
   for (const thing of r.things) {
-    const t = thing.kind === 'furniture' ? game.catalog.furnitureById.get(thing.id) : game.catalog.itemById.get(thing.id);
+    const t = game.catalog.itemById.get(thing.id);
     if (t) loot.push(h('span', { class: 'loot-thing' }, itemIcon(t, game, 'loot-icon'), t.name));
+  }
+  for (const id of r.plans || []) {
+    const deko = game.catalog.dekoById.get(id);
+    if (deko) loot.push(h('span', { class: 'loot-thing loot-plan' }, dekoIcon(deko, 'loot-icon'), `Plan gefunden: ${deko.name}`));
   }
   let summary = null;
   if (o.kind === 'hoehle') {

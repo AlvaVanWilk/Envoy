@@ -17,7 +17,7 @@ import { conditionMet, describeCondition, KIND_NAMES } from '../world/quests.js'
 import { besideTheCamp } from '../world/map.js';
 import { roomFor, LIMITED_MATERIALS } from '../world/inventory.js';
 import { rewardRange, gatherEstimate } from '../world/run.js';
-import { facilityRow, facilityEffect } from '../world/camp.js';
+import { facilityRow, facilityEffect, stageRow } from '../world/camp.js';
 import { formatDayShort } from '../days.js';
 
 const range = ([a, b]) => (a === b ? String(a) : `${a}–${b}`);
@@ -28,11 +28,14 @@ export function fact(label, ...value) {
   return h('div', { class: 'fact' }, h('dt', {}, label), h('dd', {}, ...value));
 }
 
-// What a feature is called among the rewards: Lagerfeuer, Händler or a facility.
+// What a feature is called among the rewards: Lagerfeuer, Händler, a stage
+// of the camp, a facility or a Deko.
 function unlockName(feature, c) {
   if (feature === 'lagerfeuer') return 'Lagerfeuer';
   if (feature === 'haendler') return 'Händler';
   const [id, level] = feature.split(':');
+  if (id === 'lager') return stageRow(c.catalog, Number(level))?.name || feature;
+  if (id === 'deko') return c.catalog.dekoById.get(level)?.name || feature;
   return facilityRow(c.catalog, id, Number(level))?.name || feature;
 }
 
@@ -42,12 +45,12 @@ function rewardParts(quest, c, monsters) {
   if (r) for (const key of MATERIAL_KEYS) if (r[key][1] > 0) parts.push(resource(key, range(r[key])));
   const names = [
     ...(quest.reward?.items || []).map((id) => c.catalog.itemById.get(id)?.name),
-    ...(quest.reward?.furniture || []).map((id) => c.catalog.furnitureById.get(id)?.name),
+    ...(quest.reward?.plans || []).map((id) => c.catalog.dekoById.get(id)?.name).filter(Boolean).map((name) => `Plan: ${name}`),
   ].filter(Boolean);
   for (const name of names) parts.push(h('span', { class: 'pill' }, name));
   if (quest.facility) {
-    const row = facilityRow(c.catalog, quest.facility, Number(quest.id.split(':')[2]));
-    parts.push(h('span', {}, `${facilityEffect(row)} · Hygge +${row.hygge}`));
+    const row = facilityRow(c.catalog, quest.facility, quest.level);
+    parts.push(h('span', {}, `${facilityEffect(row)} · Hygge ${row.hygge}`));
   } else {
     for (const f of quest.reward?.unlocks || []) parts.push(h('span', { class: 'pill' }, unlockName(f, c)));
   }
@@ -72,7 +75,9 @@ export function requirements(quest, c, { conditions = true } = {}) {
 function verb(quest, place) {
   if (quest.gather) return 'Sammeln';
   if (quest.kind !== 'bauen' || !besideTheCamp(place)) return 'Aufbrechen';
-  return quest.facility && Number(quest.id.split(':')[2]) > 1 ? 'Ausbauen' : 'Errichten';
+  if (quest.upgrade) return 'Aufwerten';
+  if (quest.deko) return 'Bauen';
+  return quest.facility && quest.level > 1 ? 'Ausbauen' : 'Errichten';
 }
 
 function start(quest, game, options, message) {

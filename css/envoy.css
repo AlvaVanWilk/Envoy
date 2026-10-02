@@ -776,6 +776,9 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .camp-picture.tint-morgen { filter: sepia(0.28) saturate(1.05) hue-rotate(-12deg) brightness(0.96); }
 .camp-picture.tint-abend { filter: sepia(0.45) saturate(1.35) hue-rotate(-22deg) brightness(0.78); }
 .camp-picture.tint-nacht { filter: brightness(0.36) saturate(0.7) hue-rotate(12deg) contrast(1.1); }
+/* what is built lies on the picture as layers of the same size, cut the same way */
+.camp-frame { position: relative; }
+.camp-layer { position: absolute; inset: 0; height: 100%; max-height: none; aspect-ratio: auto; pointer-events: none; }
 .camp-stage { margin: 0; font-family: var(--font-display); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--copper-bright); }
 .camp-caption {
   display: flex;
@@ -891,8 +894,9 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .facility-tile:active { transform: scale(0.98); }
 .ft-emblem { position: relative; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: radial-gradient(circle at 40% 32%, #2b454b, #0f1c1f 72%); border: 2px solid rgba(240, 230, 211, 0.22); color: rgba(240, 230, 211, 0.42); }
 .ft-emblem .icon { width: 36px; height: 36px; }
-.ft-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+.ft-name { max-width: 100%; font-family: var(--font-display); font-size: 16px; font-weight: 700; hyphens: auto; overflow-wrap: break-word; }
 .ft-level { font-size: 13px; color: var(--copper-bright); }
+.ft-next { margin-bottom: -4px; font-size: 13px; color: var(--text-2); }
 .ft-costs { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .ft-cost { display: inline-flex; align-items: center; gap: 4px; }
 .ft-cost .res-icon { width: 20px; height: 20px; }
@@ -910,14 +914,26 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
   color: #ffe4c6; text-shadow: 0 0 8px rgba(246, 161, 82, 0.7);
 }
 .facility-tile.is-built { border-color: rgba(246, 161, 82, 0.4); background: linear-gradient(180deg, #24373b, #162528); }
-.ft-emblem.is-built, .facility-tile.is-built .ft-emblem { background: radial-gradient(circle at 40% 32%, #f8b06a, #b8530f 78%); border-color: #ffd9b0; color: #241205; --engrave: rgba(255, 226, 190, 0.6); box-shadow: 0 0 18px rgba(246, 161, 82, 0.55); }
+.ft-emblem.is-built, .facility-tile.is-built .ft-emblem, .facility-tile.has-level .ft-emblem { background: radial-gradient(circle at 40% 32%, #f8b06a, #b8530f 78%); border-color: #ffd9b0; color: #241205; --engrave: rgba(255, 226, 190, 0.6); box-shadow: 0 0 18px rgba(246, 161, 82, 0.55); }
 .facility-tile.is-ready { border-color: rgba(246, 161, 82, 0.75); animation: tile-glow 2.2s ease-in-out infinite; }
 .ft-emblem.is-ready, .facility-tile.is-ready .ft-emblem { border-color: #f3e9d8; color: #f3e9d8; }
+.facility-tile.has-level.is-ready .ft-emblem { border-color: #ffd9b0; color: #241205; }
 .facility-tile.is-lacking { filter: saturate(0.55) brightness(0.78); }
 .facility-tile.is-running .ft-emblem { border-color: var(--copper-bright); color: #f3e9d8; }
 .facility-tile.is-running .ft-badge { color: var(--copper-bright); }
 @keyframes tile-glow { 50% { box-shadow: 0 0 0 1px rgba(246, 161, 82, 0.5), 0 0 20px rgba(246, 161, 82, 0.45); } }
 .facility-head { display: flex; align-items: center; gap: 14px; }
+/* Deko: its own picture inside the round emblem, or the Deko symbol */
+.ft-picture .deko-icon { width: 54px; height: 54px; object-fit: contain; }
+.ft-picture .deko-icon.item-glyph { padding: 8px; color: inherit; }
+/* a Deko whose plan has not been found: grey, no name, a lock */
+.facility-tile.is-unknown { cursor: default; filter: grayscale(1) brightness(0.62); border-style: dashed; }
+.facility-tile.is-unknown .ft-name { color: var(--muted); }
+.facility-tile.is-unknown .ft-level { color: var(--muted); }
+.facility-tile.is-unknown:active { transform: none; }
+@media (min-width: 640px) { .deko-sheet .facility-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.facility-next { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(232, 121, 31, 0.3); }
+.facility-next .quest-text { margin: 4px 0 8px; }
 .facility-head .ft-emblem { flex: none; }
 .facility-head .quest-text { margin: 0; }
 .facility-sheet .facility-effect { color: var(--copper-bright); }
@@ -1247,6 +1263,7 @@ button.task-check:hover { color: var(--stat); }
 .locked-label .icon { width: 15px; height: 15px; }
 .item-hero { display: grid; place-items: center; width: 160px; height: 160px; margin: 4px auto 16px; border: 1px solid #04070a; border-radius: 50%; background: radial-gradient(circle at 50% 42%, #1b2a2e, #0c1315 70%); box-shadow: inset 0 0 0 1px rgba(244, 236, 222, 0.05), inset 0 4px 14px rgba(0, 0, 0, 0.6); }
 .item-hero-icon { width: 132px; height: 132px; }
+.item-hero-icon.item-glyph { box-sizing: border-box; padding: 24px; }
 .req-list { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 8px; }
 .req-list li { display: flex; align-items: center; gap: 10px; font-size: 15px; }
 .req-current { margin-left: auto; font-size: 13px; color: var(--muted); }
@@ -1852,6 +1869,7 @@ button.task-check:hover { color: var(--stat); }
 .loot .res-icon { width: 24px; height: 24px; }
 .loot-thing { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; }
 .loot-icon { width: 28px; height: 28px; }
+.loot-icon.item-glyph { box-sizing: border-box; padding: 3px; }
 .report-unlock { color: var(--ivory-bright); }
 
 .history { list-style: none; margin: 0; padding: 0; display: grid; }

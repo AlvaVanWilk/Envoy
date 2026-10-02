@@ -16,7 +16,7 @@ export const WHERE = { rucksack: 'Rucksack', schrank: 'Aufbewahrung', body: 'Get
 export const AWAY_NOTE = 'Der Envoy ist unterwegs. Er erinnert sich nur, was dort liegt; erreichbar wird es im Lager.';
 
 export function thingSubtitle(entry, thing) {
-  return entry.kind === 'furniture' ? `Deko · ab Lagerstufe ${thing.abStufe}` : `${slotName(thing.slot)} · Stufe ${thing.stufe}`;
+  return `${slotName(thing.slot)} · Stufe ${thing.stufe}`;
 }
 
 function requirementList(item, stats) {

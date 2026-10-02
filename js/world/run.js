@@ -8,6 +8,7 @@
 //   hoehle    several spirits one after the other, as far as the Envoy's life reaches
 // The work costs the stamina from the table (`kosten`), less with the
 // `tempo` stats, and takes as many minutes as it costs.
+// Plans for Deko are rolled with it (see plans.js).
 // The result is stored in the event as it is, so it never changes later.
 
 import {
@@ -20,6 +21,7 @@ import { fighter, heroPower } from './hero.js';
 import { fight } from './combat.js';
 import { itemLevel } from './items.js';
 import { roomFor } from './inventory.js';
+import { rollPlans } from './plans.js';
 
 const LOOT_BAND = 3;
 
@@ -50,8 +52,7 @@ function scaled(rng, amount, factor) {
   return whole + (rng() < exact - whole ? 1 : 0);
 }
 
-// An equipment piece that fits the hero's strength. (Furniture is not
-// found for now; the camp gets its own way of growing.)
+// An equipment piece that fits the hero's strength.
 function lootThing(ctx, rng) {
   const power = heroPower(ctx.stats);
   const items = ctx.catalog.equipment.filter((i) => i.herkunft.includes('beute')
@@ -104,7 +105,7 @@ function fixedReward(quest, ctx, rng, into) {
   into.pilzholz += scaled(rng, roll(rng, r.pilzholz), bonus.pieces);
   into.stein += scaled(rng, roll(rng, r.stein), bonus.pieces);
   for (const id of r.items) into.things.push({ kind: 'item', id });
-  for (const id of r.furniture) into.things.push({ kind: 'furniture', id });
+  for (const id of r.plans || []) into.plans.push(id);
   into.unlocks.push(...r.unlocks);
   into.rest = into.rest || r.rest;
 }
@@ -167,17 +168,26 @@ function runGather(quest, ctx, rng, { amount = 1, energy = Infinity } = {}) {
     cleared: true,
     stamina: units,
     minutes: units * MINUTES_PER_STAMINA,
-    reward: { splitter: 0, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], unlocks: [], rest: false },
+    reward: { splitter: 0, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], plans: [], unlocks: [], rest: false },
     consumed: {},
     gather: { material, wanted, units, rolls },
   };
 }
 
+// The plans an action finds go to its reward; `search` keeps what it adds
+// to the search for the others.
+function withPlans(outcome, quest, ctx, seed) {
+  const plans = rollPlans(quest, ctx, seed, outcome);
+  for (const id of plans.found) if (!outcome.reward.plans.includes(id)) outcome.reward.plans.push(id);
+  outcome.search = plans.search;
+  return outcome;
+}
+
 // options: for gathering { amount, energy }
 export function runQuest(quest, ctx, seed, options = {}) {
   const rng = seededRandom(seed);
-  if (quest.gather) return runGather(quest, ctx, rng, options);
-  const reward = { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false };
+  if (quest.gather) return withPlans(runGather(quest, ctx, rng, options), quest, ctx, seed);
+  const reward = { splitter: 0, pilzholz: 0, stein: 0, things: [], plans: [], unlocks: [], rest: false };
   const fights = [];
   const stamina = siteStamina(quest, ctx.stats);
   let cleared = true;
@@ -208,7 +218,7 @@ export function runQuest(quest, ctx, seed, options = {}) {
   // A cave gives its own reward only when every spirit in it is overcome.
   if (quest.kind !== 'hoehle' || cleared) fixedReward(quest, ctx, rng, reward);
 
-  return {
+  return withPlans({
     kind: quest.kind,
     fights,
     defeated: fights.length,
@@ -218,5 +228,5 @@ export function runQuest(quest, ctx, seed, options = {}) {
     minutes: stamina * MINUTES_PER_STAMINA,
     reward,
     consumed: { ...quest.consumes },
-  };
+  }, quest, ctx, seed);
 }

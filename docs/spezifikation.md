@@ -344,7 +344,8 @@ wächst. Der Knopf heißt „Aufbrechen“, beim Bauen am Lager „Errichten“,
   Erholung aus der Ausrüstung.
 - Die erledigte Gelassenheits-Aufgabe ist eine echte Rast: +50 % der Leiste.
 - Der **Schlafplatz** gibt dem Envoy jeden Morgen (ab 3 Uhr, mit dem neuen Tag) einmal
-  Energie dazu, über das Ende der Leiste hinaus: bei 10 Energie wären es 12 von 10. Der
+  Energie dazu, über das Ende der Leiste hinaus, je nach Stufe 20 bis 40 % der Leiste:
+  beim Raspelnest und 10 Energie wären es 12 von 10. Der
   Zusatz wird verbraucht, bevor die Leiste unter ihr Ende sinkt; während des Tages füllt
   sich die Leiste nur bis zum normalen Ende. Erst am nächsten Morgen kommt er wieder. Die
   Leiste zeigt den Zusatz als kupferfarbenes Ende. (Der Schlafplatz gibt Energie, keine
@@ -463,14 +464,15 @@ ist weniger Beute.
   orangefarbenen Hüten. Leicht und zäh, lässt sich sägen und schnitzen wie Holz; für
   Balken, Dächer, Brücken, Möbel.
 - **Stein**: Blöcke aus den alten Ruinen, für Mauern.
-- Ausrüstung und Einrichtung: feste Quest-Belohnungen oder mit einer Chance je Geist.
-  Beute-Ausrüstung liegt in der Nähe der Stärke des Helden (±3 Level).
+- Ausrüstung: feste Quest-Belohnungen oder mit einer Chance je Geist. Beute-Ausrüstung
+  liegt in der Nähe der Stärke des Helden (±3 Level).
+- Pläne für Deko: an ihrem Fundort, mit Glück (siehe Das Lager).
 - Glück erhöht Bannsplitter und die Chance auf Fundstücke.
 
 ### Händler
 
 Wird durch die Quest „Der Händler im Nebel“ freigeschaltet (den Händler retten).
-Bietet jeden Tag 5 Dinge an, darunter 1 bis 2 Einrichtungsgegenstände. Die
+Bietet jeden Tag 5 Dinge an, an manchen Tagen dazu einen Plan für Deko (siehe Das Lager). Die
 Ausrüstung ist zufällig, aber immer im Bereich der Stärke des Helden (Voraussetzung
 höchstens 3 Level darunter oder darüber). Preis in Bannsplittern = 12 + 4 × n + n² + 8 × Stufe
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
@@ -487,8 +489,8 @@ ist am Start leer.
 findet, ist dort, sobald die Arbeit getan ist, auch wenn er noch unterwegs ist. Das wird
 nicht erklärt (die Lager sind sozusagen magisch; man merkt es einfach). Ohne Lager fasst
 der Vorrat **10 Stück je Art**, genug für das erste Lagerfeuer (8 Stein, 2 Pilzholz). Mit
-**Steinlager** bzw. **Pilzlager** fasst er so viel, wie das Lager hält (Stufe 1: 20), mit
-höheren Stufen später mehr. Der Vorrat zeigt es als „8 / 10“ bzw. „8 / 20“. Was nicht
+**Steinlager** bzw. **Pilzlager** fasst er so viel, wie das Lager hält (Stufe 1: 20,
+Stufe 2: 50, Stufe 3: 100). Der Vorrat zeigt es als „8 / 10“ bzw. „8 / 20“. Was nicht
 mehr hineinpasst, bleibt liegen; das Fenster sagt es vorher, der Bericht nennt es.
 Bannsplitter haben keine Grenze. Gebaut wird aus dem Vorrat.
 
@@ -512,54 +514,130 @@ Slot und Sortierung (Slot, Stufe, Name, Neueste) und dem Getragenen.
 ### Das Lager
 
 Das Lager liegt auf dem Trümmerfeld. Es hat eine **Stufe**: Stufe 0 ist der offene
-Platz, **Stufe 1 „Lagerfeuer“**. Die erste Quest des Spiels ist „Ein Lagerfeuer
-errichten“ (8 Stein, 2 Pilzholz, 2 Energie). Sie ersetzt „Ein Platz zum Bleiben“. Sie ist
-zugleich der Schluss der Führung durch Abenteuer (siehe Rundgänge). Ist das Feuer
-errichtet, hat das Lager Stufe 1, das Bild zeigt das Feuer, und das Lager kann
-eingerichtet werden.
+Platz. Die erste Quest des Spiels ist „Ein Lagerfeuer errichten“ (8 Stein, 2 Pilzholz, 2
+Energie); sie ist zugleich der Schluss der Führung durch Abenteuer (siehe Rundgänge).
+Ist das Feuer errichtet, hat das Lager Stufe 1, das Bild zeigt das Feuer, und das Lager
+kann eingerichtet werden.
 
-**Vier Einrichtungen**, jede in Stufen (Blatt `Einrichtungen` in `welt.xlsx`). Sie sind
-keine Quests und stehen nicht auf der Karte, nur auf der Lager-Seite. Gebaut wird wie
-eine Quest am Lager: aus Material und Energie, in echter Zeit („fertig um“). Auf
-Lagerstufe 1 lassen sich alle vier auf ihre Stufe 1 errichten, nicht weiter ausbauen; die
-nächste Stufe einer Einrichtung gibt es erst, wenn das ganze Lager die nächste Stufe hat.
+**Fünf Lagerstufen** (Blatt `Lagerstufen` in `welt.xlsx`). Jede Zeile nennt, was das
+Aufwerten auf die nächste Stufe braucht:
 
-**„Lager einrichten“** (Knopf auf dem Bild des Lagers) öffnet die vier Einrichtungen als Kacheln: ein großes Zeichen, am Zeichen eine kleine
-Medaille mit dem Hygge, das sie gibt (wie die große auf dem Bild), der Name und darunter die
-Kosten als kleine Bilder (Pilzholz, Stein, Energie mit Zahl; was fehlt, orange).
-Gebaute Kacheln leuchten (das Zeichen kupfern mit Haken, „Stufe 1“), solche, die gerade
-gebaut werden können, glimmen, die anderen sind dunkler. Ein Tipp auf eine Kachel zeigt
-mehr: Text, was sie bringt, Hygge, Kosten, die Energie-Leiste und „Errichten“. Der Knopf
-„Lager einrichten“ glimmt, solange gerade etwas gebaut werden kann (Material, Energie und
-der Envoy im Lager).
-
-| Einrichtung | Kosten Stufe 1 | Wirkung Stufe 1 | Hygge |
+| Stufe | Name | Aufwerten auf die nächste: Hygge | Kosten |
 | --- | --- | --- | --- |
-| Steinlager | 4 Pilzholz, 2 Energie | fasst 20 Steine | 1 |
-| Pilzlager | 4 Pilzholz, 2 Energie | fasst 20 Pilzholz | 1 |
-| Aufbewahrung, auf Stufe 1 „Krempelplatz“ | 4 Pilzholz, 4 Stein, 3 Energie | 6 Plätze in der Aufbewahrung, für Gegenstände und Kleidung | 2 |
-| Schlafplatz | 6 Pilzholz, 3 Energie | morgens 20 % der Energieleiste zusätzlich, einmal am Tag | 3 |
+| 1 | Provisorisches Lager | 5 | 20 Stein, 20 Pilzholz, 22 Energie |
+| 2 | Unterstand | 14 | 50 + 50, 45 Energie |
+| 3 | Wackelige Hütte | 36 | 80 + 80, 85 Energie |
+| 4 | Stabile Hütte | 90 | 100 + 100, 130 Energie |
+| 5 | Steinhäuschen | – | – |
 
-Jede Stufe einer Einrichtung hat ihren eigenen Namen in der Tabelle: Die Aufbewahrung
-heißt auf Stufe 1 „Krempelplatz“ (so auf der Kachel); der Reiter im Rucksack heißt
-weiter „Aufbewahrung“.
+Aufwerten ist kein Muss. Es kostet immer etwa eine volle Ladung der Lager der Stufe davor,
+und die **Energie wird am Stück** gebraucht: Die Leiste muss lang genug sein, und die
+wächst nur mit der echten Ausdauer-Aufgabe (der Schlafplatz hilft, weil er morgens über
+das Ende der Leiste füllt). Wer jeden Tag die Ausdauer-Aufgabe macht, kommt frühestens
+etwa an Tag 5, 12, 22 und 34 auf die Stufen 2 bis 5; wer Tage auslässt, später. Mehr
+Training verlangt das nicht, nur Regelmäßigkeit. Einrichtungen und Deko bleiben beim
+Aufwerten stehen.
 
-**Hygge:** Jede Einrichtung hat ihren eigenen Hyggewert (nicht alle gleich), später
-bringt auch die Deko Hygge, die höchsten Werte sogar (erst ab Lagerstufe 2). Das Lager hat
-die Summe. Hygge ist kein Ziel, auf das man hinarbeiten muss: **Wenn** das Lager genug
-hat, **kann** es auf die nächste Stufe aufgewertet werden, es muss nicht. Für Stufe 1
-auf 2 reichen 5 (etwa Schlafplatz und Krempelplatz, oder Steinlager, Pilzlager und
-Schlafplatz); jede spätere Stufe verlangt mehr, und beim Aufwerten geht Hygge zum Teil
-nicht verloren. Spätere Stufen regelt die Nutzerin, wenn es so weit ist.
+**„Lager aufwerten“** (Knopf auf dem Bild) trägt ein Schloss, solange das Hygge nicht
+reicht; Antippen oder darauf zeigen sagt, wie viel es braucht („Dafür braucht das Lager 14
+Hygge.“). Reicht es, glimmt der Knopf und öffnet ein Fenster: die neue Stufe mit ihrem
+Text, was es braucht (Hygge, Stein, Pilzholz, mit Haken oder Schloss), „Einrichtungen und
+Deko bleiben stehen.“, die Energie-Leiste und „Aufwerten“. Gebaut wird es wie alles im
+Lager, in echter Zeit; die Quest heißt nach der neuen Stufe („Unterstand bauen“), der
+Bericht sagt „Das Lager ist jetzt: Unterstand.“ Auf der höchsten Stufe sagt der Knopf
+„Weitere Stufen folgen später.“
 
-Das **Hygge steht auf dem Bild des Lagers** als runde Medaille mit der Zahl und
-„Hygge“, ohne Fortschrittsanzeige und ohne Ziel. Das Aufwerten selbst ist **noch nicht
-gebaut**: Der Knopf „Lager aufwerten“ auf dem Bild trägt ein Schloss, solange das Hygge
-nicht reicht, und glimmt, sobald es reicht. Antippen oder darauf zeigen sagt, warum es
-noch nicht geht („Dafür braucht das Lager 5 Hygge.“ oder „Genug Hygge. Das Aufwerten
-folgt mit einem späteren Update.“). Knöpfe und Anzeigen folgen dem Stil der App:
+**Vier Einrichtungen**, jede in Stufen mit eigenem Namen (Blatt `Einrichtungen`). Sie sind
+keine Quests und stehen nicht auf der Karte, nur auf der Lager-Seite. Gebaut wird wie
+eine Quest am Lager: aus Material und Energie, in echter Zeit („fertig um“). Jede Stufe
+einer Einrichtung braucht die gleiche Lagerstufe (Stufe 2 der Einrichtung ab
+Lagerstufe 2 usw.). Eine Stufe ersetzt die vorige, auch beim Hygge. Die Kosten einer
+Stufe passen immer in die Lager der Stufe davor.
+
+| Einrichtung | Stufen (Name, Wirkung, Hygge) |
+| --- | --- |
+| Steinlager | Steinstapel (fasst 20, 1), Steinkiste (50, 2), Steinschuppen (100, 3) |
+| Pilzlager | Pilzholzstapel (20, 1), Pilzholzgestell (50, 2), Pilzholzschuppen (100, 3) |
+| Aufbewahrung | Krempelplatz (6 Plätze, 2), Kiste (10, 3), Truhe (15, 4), Kleiderschrank (24, 5) |
+| Schlafplatz | Raspelnest (+20 % Energie am Morgen, 3), Pilzmatte (+25 %, 4), Schlafpodest (+30 %, 5), Bett (+35 %, 6), Himmelbett (+40 %, 7) |
+
+Stein- und Pilzlager enden mit dem Schuppen auf Stufe 3; ein Schuppen kann neben dem Haus
+jeder späteren Stufe stehen bleiben. Mehr Hygge gibt es danach vor allem über Deko. Der
+Reiter im Rucksack heißt weiter „Aufbewahrung“, die Kacheln heißen nach ihrer Stufe.
+
+**„Lager einrichten“** (Knopf auf dem Bild des Lagers) öffnet die vier Einrichtungen als
+Kacheln, ab Lagerstufe 2 dazu eine fünfte für die Deko. Eine Kachel zeigt ein großes
+Zeichen, daran eine kleine Medaille mit dem Hygge der jetzigen Stufe (wie die große auf
+dem Bild), den Namen und darunter die Kosten des nächsten Schritts als kleine Bilder
+(Pilzholz, Stein, Energie mit Zahl; was fehlt, orange), bei einer stehenden Einrichtung
+mit „Ausbau: Steinkiste“ darüber. Stehende Einrichtungen leuchten (das Zeichen kupfern mit
+Haken), was gerade gebaut werden kann, glimmt, das andere ist dunkler. Ein Tipp zeigt
+mehr: Text, was sie bringt, Hygge; bei einem möglichen Ausbau darunter die nächste Stufe
+mit Text, Wirkung, „Hygge 2 statt 1“, Kosten, die Energie-Leiste und „Ausbauen“; geht der
+Ausbau erst mit der nächsten Lagerstufe, steht das da. Der Knopf „Lager einrichten“
+glimmt, solange gerade etwas gebaut werden kann.
+
+**Hygge** ist die Summe der Einrichtungen und der gebauten Deko. Es steht auf dem Bild des
+Lagers als runde Medaille mit der Zahl und „Hygge“, ohne Fortschrittsanzeige und ohne
+Ziel. Ab Stufe 2 reichen die Einrichtungen nicht mehr: Auf Stufe 2 muss die eine Deko der
+Stufe gebaut werden, auf Stufe 3 braucht es 2 bis 3 gefundene Pläne mehr, auf Stufe 4 etwa
+5 der dortigen (und alle der Stufen davor). Knöpfe und Anzeigen folgen dem Stil der App:
 kreisrund oder rechteckig, nicht oval.
-Deko wird nicht gesammelt (das Blatt `Deko` in `welt.xlsx` ist vorbereitet).
+
+**Deko** (Blatt `Deko`) gibt es ab Lagerstufe 2. Eine Deko gibt mindestens so viel Hygge wie
+das Bett ihrer Stufe und mehr als ein Lager oder die Aufbewahrung. Sie wird gebaut wie eine
+Einrichtung (Material, Energie, Zeit) und bleibt beim Aufwerten stehen. Gebaut werden kann
+sie nur mit ihrem **Plan**. Je Stufe ist ein Plan gleich da (Fundort `start`), die anderen
+muss der Envoy finden:
+
+| Stufe | Deko (Hygge) | Plan |
+| --- | --- | --- |
+| 2 | Pilzkappenschale (4) | gleich da |
+| 3 | Steinbank (5) | gleich da |
+| 3 | Wasserkrug (5) | Stilles Ufer, selten |
+| 3 | Kräuterbund (6) | Stille Quelle, selten |
+| 3 | Windspiel (6) | Geister, sehr selten |
+| 3 | Teppich (7) | Händler, selten (40 Bannsplitter) |
+| 4 | Kamin (8) | gleich da |
+| 4 | Laterne (6) | Die lange Straße, sehr selten |
+| 4 | Leuchtmooskasten (6) | Pilzhain, sehr selten |
+| 4 | Pilzholztisch (7) | Händler, selten (60 Bannsplitter) |
+| 4 | Steinregal (7) | Alter Steinbruch, sehr selten |
+| 4 | Wandbehang (7) | Wache an der Furt, sehr selten |
+| 4 | Nebelspiegel (8) | Mondsee, kostbar |
+| 4 | Sternkarte (8) | Eine Nacht am Mondsee, sehr selten |
+| 4 | Klangschale (9) | Echohöhle, selten |
+| 4 | Splitterschale (9) | Geister, kostbar |
+
+**Pläne finden** (`js/world/plans.js`): Gesucht wird erst, wenn das Lager die Stufe der
+Deko erreicht hat, und nur an ihrem Fundort. Dort ist jede Zeit eine Chance: je **10
+Minuten Arbeit** an dem Ort (die Minuten aus der Tabelle, nicht durch Werte verkürzt; als
+Fundort kann auch eine einzelne wiederholbare Quest stehen), bei `geister` **jeder
+Geist**, dem der Envoy begegnet, beim Händler **jeder Tag**. Ein seltener Plan braucht im
+Schnitt 6 Chancen, ein sehr seltener 12, ein kostbarer 24. Pech hält nicht an: Nach
+doppelt so vielen Chancen ist der Plan sicher da (das sieht man nicht). Gewürfelt wird mit
+dem Rest der Quest, wenn sie beginnt; gefunden ist der Plan, wenn die Arbeit getan ist.
+Der Bericht sagt „Plan gefunden: Windspiel“. Beim Händler liegt ein Plan an manchen Tagen
+mit im Angebot („Plan: Teppich“, mit Hygge und Preis); gekauft ist er gefunden und kein
+Ding im Rucksack. Wo ein Plan liegt, sagt das Spiel nicht.
+
+Die Kachel **„Deko“** zeigt, wie viele stehen („3 / 6“), und öffnet die Liste aller Deko der
+erreichten Stufen, in der Reihenfolge der Tabelle. Bekannte zeigen Bild (oder das
+Deko-Zeichen, solange es keins gibt), Name, Hygge-Medaille und Kosten, gebaute leuchten;
+solche ohne Plan sind grau, gestrichelt, mit Schloss, „?“ und „Plan fehlt“, ohne Namen und
+Bild. Ein Tipp auf eine bekannte öffnet sie mit Text, Hygge, Kosten, Energie-Leiste und
+„Bauen“.
+
+**Das Bild des Lagers** setzt sich aus Ebenen zusammen: das Grundbild der Stufe
+(`assets/lager/stufe_<n>_<zeit>.jpg`; fehlt es, das der Stufe davor; fehlt die Tageszeit,
+das Tagesbild getönt), darauf jede stehende Einrichtung auf ihrer Stufe
+(`assets/lager/einrichtung_<id>_<stufe>.png`; fehlt die Zeichnung, die der Stufe davor)
+und jede gebaute Deko (`assets/lager/deko_<id>.png`), wo es eine Zeichnung gibt. Ebenen
+sind 1792 × 672 wie das Grundbild, transparent, an ihrem Platz gezeichnet; zu anderen
+Tageszeiten werden sie getönt wie das Bild. Ab Stufe 2 ist das Lager ein Haus mit offener
+Vorderseite: Der Boden liegt auf jeder Stufe an derselben Stelle, nur Wände und Dach
+wachsen; das Feuer bleibt vor dem Haus, die Schuppen stehen daneben, jede Deko hat einen
+festen Platz (Vorschlag in `tools/vorlagen/lager-schablone.png`).
 
 Der Schlafplatz wirkt auf die Energie (siehe Energie). Ein Bonus auf Kraft wäre ein Bonus
 auf einen Wert und widerspricht dem Konzept: Werte steigen nur durch echte Übungen.
@@ -577,6 +655,7 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 | --- | --- |
 | Karte, Quests, Begegnungen, Rucksack, Handbuch | von Anfang an |
 | Lagerstufe 1, die vier Einrichtungen | Quest „Ein Lagerfeuer errichten“ (die erste Quest) |
+| Lagerstufen 2 bis 5, höhere Stufen der Einrichtungen, Deko | Hygge (siehe Das Lager) |
 | Händler | Quest „Der Händler im Nebel“ |
 | Aschenhang, Turm der Stufen, lange Straße | Quest „Die Brücke über die Schlucht“ |
 | Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
@@ -617,7 +696,7 @@ des Envoy):
   der Envoy sitzen, wenn er da ist); sobald das Feuer brennt, darauf das Hygge (als Zahl
   in einer runden Medaille) und die Knöpfe „Lager einrichten“ und „Lager aufwerten“ (siehe
   Das Lager). Darunter Datum, ob der Envoy da oder unterwegs ist, und die Stufe („Stufe
-  1 · Lagerfeuer“). Solange es kein Feuer gibt, steht oben „Als Erstes“: „Dein Envoy
+  1 · Provisorisches Lager“). Solange es kein Feuer gibt, steht oben „Als Erstes“: „Dein Envoy
   wird eine Weile hier bleiben. Am besten errichtest du ein Lagerfeuer.“ mit einem Knopf
   zur Quest. Dann laufende Expedition oder Bericht, Vorrat mit Energie und, auf dem iPad
   daneben, heute gesichtete Geister und Hinweise. Auf dem Telefon ist das Bild 4:3, damit
@@ -717,7 +796,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/einrichtung_<id>_<stufe>.png` und `assets/lager/deko_<id>.png` (1792 × 672, transparent, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 
@@ -738,10 +817,16 @@ Blatt „Erklärung“ mit allen Spalten.
   (mehrere Absätze durch Zeilenumbruch), monster, voraussetzung (auch `lager>=1`),
   tempo, ertrag, verbrauch, kosten (Energie vor Ort, zugleich Minuten), belohnung
   (auch `freischaltung:lagerfeuer`), wiederholbar, abklingzeit, aktiv (nein = vorerst
-  nicht im Spiel). Lagerstufen: stufe, name, hygge_bis_naechste, beschreibung.
+  nicht im Spiel); in der belohnung auch `plan:<id>` (ein Plan für Deko, sicher).
+  Lagerstufen: stufe, name, hygge_bis_naechste, stein, pilzholz, energie (was das
+  Aufwerten auf die nächste Stufe braucht; leer auf der letzten), beschreibung.
   Einrichtungen (eine Zeile je Stufe): id (steinlager, pilzlager, aufbewahrung,
   schlafplatz), stufe, name, lagerstufe, pilzholz, stein, energie, hygge, kapazitaet,
-  bonus, beschreibung. Deko ist vorbereitet für Lagerstufe 2.
+  bonus, beschreibung. Deko: id, name, lagerstufe (ab 2), hygge, fundort (start,
+  geister, haendler, eine Orts-id oder die id einer wiederholbaren Quest), seltenheit
+  (selten, sehr selten, kostbar), preis (nur beim Händler), pilzholz, stein, energie,
+  beschreibung, datei_icon. Die Umwandlung prüft, dass jeder Fundort sich wieder und
+  wieder absuchen lässt, und findet die Ebenen des Lagerbilds selbst.
 
 ## Kleiderkammer
 
@@ -834,8 +919,8 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   Energie mit der Ausdauer wächst, und was zu sammeln ist (8 Steine, 2 Pilzholz).
 - **Rundgang durch das Lager** beim ersten Öffnen, nachdem das Feuer brennt, drei
   Schritte: „Dein Envoy hat das Lagerfeuer errichtet.“ (das Bild), „Ab jetzt kannst du
-  das Lager einrichten.“ (der Knopf „Lager einrichten“), „Wenn es genug Hygge hat, kannst
-  du es sogar ausbauen.“ (das Hygge auf dem Bild). Die Ausrufezeichen der ersten Fassung sind weg
+  das Lager einrichten.“ (der Knopf „Lager einrichten“), „Hat es genug Hygge, kannst du es
+  aufwerten.“ (das Hygge auf dem Bild). Die Ausrufezeichen der ersten Fassung sind weg
   (Regel: keine Ausrufezeichen). Ist ein Bericht oder anderes Fenster offen, wartet
   der Rundgang, bis es geschlossen ist. In den Einstellungen zeigt „Rundgänge ansehen“
   alle wieder. Für die anderen Seiten (Händler, Handbuch, Tageswerk) folgen sie später.
@@ -865,11 +950,13 @@ auf den IONOS-Webspace, in zwei Ordner:
   Hochladen wird sie als Testfassung gekennzeichnet (`js/stage.js`): Sie heißt „Envoy
   Test“, zeigt oben ein kleines Schild „Test“, und alles, was sie im Browser speichert,
   liegt unter eigenen Namen (`envoy-test.…` statt `envoy.…`), ebenso ihr Offline-Speicher.
-  Auf dem Server hat sie ihr eigenes `sync-daten/`, also eigene Konten. Nur dort steht im
-  Vorrat (Lager und Abenteuer) ein gestrichelter Kasten „Nur im Test“ mit „Energie
-  auffüllen“, „+10 Stein“ und „+10 Pilzholz“ (Ereignis `test`; Material nur so viel, wie
-  passt), damit sich alles ohne Warten ausprobieren lässt. Die echte Fassung zeigt ihn
-  nie, ohne dass jemand daran denken muss.
+  Auf dem Server hat sie ihr eigenes `sync-daten/`, also eigene Konten. Nur dort öffnet
+  das Schild „Test“ ein Menü über der Seite: „Energie auffüllen“, „+50 Energie“ (über die
+  Leiste hinaus, damit sich das Aufwerten ohne hohe Ausdauer ausprobieren lässt), „+25
+  Stein“, „+25 Pilzholz“, „+50 Bannsplitter“, „Plan finden“ (der nächste noch nicht
+  gefundene der erreichten Lagerstufen) und „Expedition beenden“ (Ereignis `test`;
+  Material nur so viel, wie passt), damit sich alles ohne Warten ausprobieren lässt. Die
+  echte Fassung zeigt es nie, ohne dass jemand daran denken muss.
 - **Echter Ordner**: nur der Zweig `main`. Dorthin kommt eine Fassung erst, wenn die
   Nutzerin sie im Testordner angesehen und freigegeben hat.
 
@@ -902,7 +989,10 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Menü | fünf Punkte: Abenteuer, Talentbaum, Lager (Mitte, Start), Händler, Handbuch |
 | Obere Leiste | Portrait mit vier Werte-Ringen (auch beim Envoy), Tageswerk-Knopf, Einstellungen |
 | Handbuch | Buch mit Reitern: Anleitung, Tageswerk, Quests, Kompendium, Erfolge; füllt das Fenster, ohne zu scrollen |
-| Einrichtungen | Steinlager, Pilzlager, Aufbewahrung, Schlafplatz; Stufe 1 auf Lagerstufe 1; Deko erst ab Lagerstufe 2; keine Quests, nur auf der Lager-Seite („Lager einrichten“, Kacheln) |
+| Einrichtungen | Steinlager, Pilzlager (je 3 Stufen), Aufbewahrung (4), Schlafplatz (5), jede Stufe mit eigenem Namen und ab der gleichen Lagerstufe; keine Quests, nur auf der Lager-Seite („Lager einrichten“, Kacheln) |
+| Lagerstufen | Provisorisches Lager, Unterstand, Wackelige Hütte, Stabile Hütte, Steinhäuschen; Aufwerten mit Hygge 5, 14, 36, 90, Material und Energie am Stück |
+| Deko | ab Lagerstufe 2, eine Kachel „Deko“ mit Liste; je Stufe ein Plan gleich da, die anderen gefunden (Ort, Geister, Händler), selten, sehr selten oder kostbar, nach doppelt so vielen Chancen sicher; nicht gefundene grau, ohne Namen; bleibt beim Aufwerten |
+| Lagerbild aus Ebenen | Grundbild der Stufe, darauf Einrichtungen und Deko als eigene Ebenen; ab Stufe 2 ein Haus mit offener Vorderseite |
 | Quests auf der Karte | Ort antippen fächert seine Quests auf (Siegel mit Namen), ein Tipp öffnet eine; der Fächer auch bei nur einer Quest |
 | Ortsbeschreibung | Kartusche am Kartenrand zusammen mit dem Fächer: Region, Name, Text, bei verschlossenen Orten, was sie öffnet |
 | Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste: die Kosten als ein Block, der Weg darin kupfern getönt, „davon Weg 2“ (in der Reihe „statt 4“); keine Dauer, keine Tempo- und Ertrag-Stats |
@@ -912,13 +1002,13 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Sammeln | auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2; Menge wählen, beginnt bei 1 |
 | Mehr sammeln als tragbar | geht nicht: + stoppt an der Grenze und sagt warum (statt hinterher etwas liegen lassen zu müssen) |
 | Lagerfeuer | die erste Quest: 8 Stein, 2 Pilzholz, 2 Energie; macht Lagerstufe 1 |
-| Hygge | Summe der Einrichtungen (Steinlager 1, Pilzlager 1, Krempelplatz 2, Schlafplatz 3), später auch Deko; 5 machen Stufe 2 möglich, kein Muss; als Zahl auf dem Bild, ohne Fortschrittsanzeige |
-| Test-Knöpfe | am Schild „Test“ oben links, schwebend über der Seite (verschiebt nichts): Energie auffüllen, +10 Stein, +10 Pilzholz, +50 Bannsplitter, Expedition beenden; nur in der Testfassung |
+| Hygge | Summe der Einrichtungen und der Deko; ab Stufe 2 reichen die Einrichtungen allein nicht; als Zahl auf dem Bild, ohne Fortschrittsanzeige |
+| Test-Knöpfe | am Schild „Test“ oben links, schwebend über der Seite (verschiebt nichts): Energie auffüllen, +50 Energie (über die Leiste hinaus, zum Aufwerten), +25 Stein, +25 Pilzholz, +50 Bannsplitter, Plan finden (ab Lagerstufe 2), Expedition beenden; nur in der Testfassung |
 | Bilder beim Neuzeichnen | schon geladene Bilder werden übernommen statt neu geladen, damit nichts aufblitzt (Kleidung des Envoy, Karte) |
 | Formen | Knöpfe und Anzeigen kreisrund oder rechteckig, nicht oval |
 | Lagerbild | nach Stufe und Tageszeit (Sonnenstand) |
 | Erster Erfolg | „Angekommen“: +10 % Tageswerk und Sammeln, nur die ersten 15 Minuten |
-| Lager aufwerten | Knopf auf dem Bild; Schloss, solange das Hygge nicht reicht, glimmt, sobald es reicht; sagt beim Antippen, warum es noch nicht geht, bis Lagerstufe 2 gebaut wird |
+| Lager aufwerten | Knopf auf dem Bild; Schloss, solange das Hygge nicht reicht (sagt beim Antippen, wie viel es braucht), glimmt, sobald es reicht, und öffnet dann das Fenster zum Aufwerten |
 | Währung | Bannsplitter; dazu Pilzholz und Stein |
 | Leichter Werkstoff | Pilzholz statt Holz (Quarz war zu schwer und zu spröde) |
 | Optik | Petrol, Elfenbein, gebranntes Orange, Taubenblau; Adern über Stein; Menü aus runden Schilden |

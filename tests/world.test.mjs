@@ -57,7 +57,8 @@ test('start: at the camp, full bar, the start outfit worn, the backpack empty, n
   assert.equal(s.world.items['start:torso_leinenhemd_1'].where, 'body');
   assert.equal(countIn(s.world, 'rucksack'), 0);
   assert.deepEqual(s.world.purse, { splitter: 0, pilzholz: 0, stein: 0 });
-  assert.deepEqual(s.world.camp, { stage: 0, facilities: {} });
+  assert.deepEqual(s.world.camp, { stage: 0, facilities: {}, deko: {}, reached: {} });
+  assert.deepEqual(s.world.plans, { found: {}, search: {} });
 });
 
 test('ways: further costs more, Ausdauer makes them shorter, an over-full backpack longer', () => {

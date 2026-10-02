@@ -3,7 +3,7 @@
 
 import { DATA_FILES, STAT_IDS, versioned } from './config.js';
 
-const EMPTY_WORLD = { places: [], monsters: [], quests: [], camp: { stages: [], facilities: [] }, furniture: [] };
+const EMPTY_WORLD = { places: [], monsters: [], quests: [], camp: { stages: [], facilities: [], pictures: {} }, deko: [] };
 
 // The picture fields of a list, with the app version added (see versioned).
 function withVersions(list, fields) {
@@ -22,10 +22,12 @@ export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORL
   const exercises = exerciseData.exercises || [];
   const equipment = withVersions(equipmentData.equipment || [], ['figur', 'icon']);
   const given = { ...EMPTY_WORLD, ...worldData };
+  const camp = { stages: [], facilities: [], pictures: {}, ...given.camp };
   const world = {
     ...given,
     monsters: withVersions(given.monsters, ['bild']),
-    furniture: withVersions(given.furniture, ['icon']),
+    camp: { ...camp, facilities: withVersions(camp.facilities, ['bild']) },
+    deko: withVersions(given.deko || [], ['icon', 'bild']),
   };
   const maxIntensity = {};
   for (const stat of STAT_IDS) {
@@ -46,8 +48,8 @@ export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORL
     quests: world.quests,
     questById: byId(world.quests),
     camp: world.camp,
-    furniture: world.furniture,
-    furnitureById: byId(world.furniture),
+    deko: world.deko,
+    dekoById: byId(world.deko),
     generated: exerciseData.generated || null,
   };
 }

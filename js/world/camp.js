@@ -1,26 +1,31 @@
-// The camp: its stage and its four facilities.
+// The camp: its stage, its four facilities and its Deko.
 //   stage 0   a bare place on the Trümmerfeld
-//   stage 1   Lagerfeuer (built by the first quest)
-// The facilities Steinlager, Pilzlager, Aufbewahrung (on its first level
-// called Krempelplatz) and Schlafplatz are
-// built in levels. What a level costs and gives stands in the table
-// (data/welt.xlsx, sheet Einrichtungen); a level of a facility can only be
-// built once the camp has reached the stage the table names. Each level adds
-// Hygge; when the Hygge is high enough, the camp can grow to the next stage
-// (the extension itself is not built yet).
+//   stage 1   Provisorisches Lager, with the Lagerfeuer (built by the first quest)
+//   stage 2…  raised by „Lager aufwerten“ once the Hygge is enough (sheet Lagerstufen)
+// The facilities Steinlager, Pilzlager, Aufbewahrung and Schlafplatz are
+// built in levels, each with its own name (Steinstapel, Steinkiste, …). A
+// level can only be built once the camp has reached the stage the table names.
+// Deko is built from a plan (see plans.js): one plan of a stage is there as
+// soon as the stage is reached, the others are found. Deko stays when the
+// camp is raised.
+// Hygge is what the facilities and the built Deko give together.
+// Everything here is built like a quest at the camp: material, Energie and
+// its minutes.
 //
-// world.camp = { stage, facilities: { steinlager: level, … } }
+// world.camp = { stage, facilities: { steinlager: level, … }, deko: { id: true }, reached: { stage: day } }
+//   reached: the day each stage was reached (the trader's plans count from then)
 
 // The place of the camp on the map (its quests need no way).
 export const CAMP_PLACE = 'lager';
 
 export const FACILITY_IDS = ['steinlager', 'pilzlager', 'aufbewahrung', 'schlafplatz'];
 
-export const emptyCamp = () => ({ stage: 0, facilities: {} });
+export const emptyCamp = () => ({ stage: 0, facilities: {}, deko: {}, reached: {} });
 
 export const facilityRow = (catalog, id, level) => catalog.camp.facilities.find((f) => f.id === id && f.stufe === level) || null;
 export const facilityLevel = (world, id) => world.camp.facilities[id] || 0;
 export const stageRow = (catalog, stage) => catalog.camp.stages.find((s) => s.stufe === stage) || null;
+export const dekoBuilt = (world, id) => Boolean(world.camp.deko?.[id]);
 
 // The row of the facility's level now, or null if it is not built.
 export function facilityNow(world, catalog, id) {
@@ -28,19 +33,23 @@ export function facilityNow(world, catalog, id) {
   return level > 0 ? facilityRow(catalog, id, level) : null;
 }
 
-// What all facilities give together.
+// What all facilities and the built Deko give together.
 export function hygge(world, catalog) {
-  return FACILITY_IDS.reduce((sum, id) => sum + (facilityNow(world, catalog, id)?.hygge || 0), 0);
+  const facilities = FACILITY_IDS.reduce((sum, id) => sum + (facilityNow(world, catalog, id)?.hygge || 0), 0);
+  const deko = catalog.deko.reduce((sum, d) => sum + (dekoBuilt(world, d.id) ? d.hygge : 0), 0);
+  return facilities + deko;
 }
 
-// { stage, name, hygge, need, ready }: need = Hygge for the next stage, null
-// while there is no camp; ready = the camp has enough of it.
+// { stage, name, hygge, need, ready, next }: need = Hygge for the next stage,
+// null while there is no camp or on the highest stage; ready = the camp has
+// enough of it; next = the row of the next stage (null on the highest).
 export function campStatus(world, catalog) {
   const stage = world.camp.stage;
   const row = stageRow(catalog, stage);
+  const next = stage > 0 ? stageRow(catalog, stage + 1) : null;
   const have = hygge(world, catalog);
-  const need = row ? row.hyggeBisNaechste : null;
-  return { stage, name: row ? row.name : null, hygge: have, need, ready: need !== null && have >= need };
+  const need = row && next ? row.hyggeBisNaechste : null;
+  return { stage, name: row ? row.name : null, hygge: have, need, ready: need !== null && have >= need, next };
 }
 
 // What a level of a facility does, in a few words.
@@ -52,29 +61,45 @@ export function facilityEffect(row) {
   return '';
 }
 
-// Building a level of a facility is a quest at the camp, like the Lagerfeuer:
-// it costs material and Energie (which is also its minutes).
-export function facilityQuest(row) {
-  const cost = {};
-  if (row.cost.pilzholz > 0) cost.pilzholz = row.cost.pilzholz;
-  if (row.cost.stein > 0) cost.stein = row.cost.stein;
+// Something built at the camp, as a quest: it costs material and Energie
+// (which is also its minutes) and unlocks `feature` (see worldstate.js).
+function buildQuest({ id, name, text, conditions, cost, energie, feature }) {
+  const consumes = {};
+  if (cost.pilzholz > 0) consumes.pilzholz = cost.pilzholz;
+  if (cost.stein > 0) consumes.stein = cost.stein;
   return {
-    id: `bau:${row.id}:${row.stufe}`,
-    facility: row.id,
-    name: row.stufe === 1 ? `${row.name} errichten` : `${row.name} ausbauen`,
+    id,
+    name,
     place: CAMP_PLACE,
     kind: 'bauen',
-    text: row.text,
+    text,
     monsters: [],
-    conditions: [{ type: 'camp', min: row.lagerstufe }],
+    conditions,
     speedStats: [],
     yieldStats: [],
-    consumes: cost,
-    cost: row.energie,
-    reward: { splitter: [0, 0], pilzholz: [0, 0], stein: [0, 0], items: [], furniture: [], unlocks: [`${row.id}:${row.stufe}`], rest: false },
+    consumes,
+    cost: energie,
+    reward: { splitter: [0, 0], pilzholz: [0, 0], stein: [0, 0], items: [], plans: [], unlocks: [feature], rest: false },
     repeatable: false,
     cooldown: 0,
     active: true,
+  };
+}
+
+// A level of a facility.
+export function facilityQuest(row) {
+  return {
+    ...buildQuest({
+      id: `bau:${row.id}:${row.stufe}`,
+      name: row.stufe === 1 ? `${row.name} errichten` : `${row.name} bauen`,
+      text: row.text,
+      conditions: [{ type: 'camp', min: row.lagerstufe }],
+      cost: row.cost,
+      energie: row.energie,
+      feature: `${row.id}:${row.stufe}`,
+    }),
+    facility: row.id,
+    level: row.stufe,
   };
 }
 
@@ -86,8 +111,61 @@ export function facilityQuests(world, catalog) {
     .map(facilityQuest);
 }
 
-export function facilityQuestById(catalog, questId) {
-  const m = /^bau:([a-z]+):(\d+)$/.exec(questId);
-  const row = m && facilityRow(catalog, m[1], Number(m[2]));
+// Raising the camp to stage `target`: the Hygge of the stage before must be
+// enough, and it costs what that row of the table says.
+export function upgradeQuest(catalog, target) {
+  const from = stageRow(catalog, target - 1);
+  const to = stageRow(catalog, target);
+  if (!from || !to || !from.upgrade) return null;
+  return {
+    ...buildQuest({
+      id: `bau:lager:${target}`,
+      name: `${to.name} bauen`,
+      text: to.text,
+      conditions: [{ type: 'camp', min: target - 1 }, { type: 'hygge', min: from.hyggeBisNaechste }],
+      cost: from.upgrade.cost,
+      energie: from.upgrade.energie,
+      feature: `lager:${target}`,
+    }),
+    upgrade: target,
+  };
+}
+
+// The quest to raise the camp one stage, or null on the highest stage (or before the fire).
+export function nextUpgrade(world, catalog) {
+  return world.camp.stage > 0 ? upgradeQuest(catalog, world.camp.stage + 1) : null;
+}
+
+// Building one Deko. It needs its plan (see plans.js).
+export function dekoQuest(row) {
+  return {
+    ...buildQuest({
+      id: `bau:deko:${row.id}`,
+      name: `${row.name} bauen`,
+      text: row.text,
+      conditions: [{ type: 'camp', min: row.lagerstufe }, { type: 'plan', id: row.id }],
+      cost: row.cost,
+      energie: row.energie,
+      feature: `deko:${row.id}`,
+    }),
+    deko: row.id,
+  };
+}
+
+// The Deko of the stages the camp has reached, in the order of the table.
+export function dekoOfReachedStages(world, catalog) {
+  return catalog.deko.filter((d) => d.lagerstufe <= world.camp.stage);
+}
+
+// A quest at the camp by its id: bau:<facility>:<level>, bau:lager:<stage>, bau:deko:<id>.
+export function campQuestById(catalog, questId) {
+  const m = /^bau:([a-z]+):([a-z0-9-]+)$/.exec(questId);
+  if (!m) return null;
+  if (m[1] === 'lager') return upgradeQuest(catalog, Number(m[2]));
+  if (m[1] === 'deko') {
+    const row = catalog.dekoById.get(m[2]);
+    return row ? dekoQuest(row) : null;
+  }
+  const row = facilityRow(catalog, m[1], Number(m[2]));
   return row ? facilityQuest(row) : null;
 }

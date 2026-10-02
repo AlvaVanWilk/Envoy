@@ -7,7 +7,8 @@
 import { ENCOUNTER_COST, ENCOUNTER_CHANCE, STATS, MATERIALS, GATHER_STATS } from '../config.js';
 import { seededRandom } from './rng.js';
 import { heroPower } from './hero.js';
-import { facilityQuestById, stageRow } from './camp.js';
+import { campQuestById, stageRow, hygge } from './camp.js';
+import { planKnown } from './plans.js';
 import { gatherPlace } from './map.js';
 import { addDays } from '../days.js';
 
@@ -21,6 +22,11 @@ export function conditionMet(c, ctx) {
   if (c.type === 'total') return (ctx.totals[c.key] || 0) >= c.min;
   if (c.type === 'material') return (ctx.world.purse[c.key] || 0) >= c.min;
   if (c.type === 'camp') return ctx.world.camp.stage >= c.min;
+  if (c.type === 'hygge') return hygge(ctx.world, ctx.catalog) >= c.min;
+  if (c.type === 'plan') {
+    const row = ctx.catalog.dekoById.get(c.id);
+    return Boolean(row) && planKnown(ctx.world, row);
+  }
   return false;
 }
 
@@ -38,6 +44,8 @@ export function describeCondition(c, ctx) {
     const name = stageRow(ctx.catalog, c.min)?.name;
     return `Lager Stufe ${c.min}${name ? ` (${name})` : ''}`;
   }
+  if (c.type === 'hygge') return `${c.min} Hygge`;
+  if (c.type === 'plan') return `Plan: ${ctx.catalog.dekoById.get(c.id)?.name || c.id}`;
   return '';
 }
 
@@ -124,7 +132,7 @@ export function gatherQuests(catalog) {
 export function questById(id, ctx) {
   if (id.startsWith('enc:')) return encountersFor(ctx.day, ctx).find((q) => q.id === id) || null;
   if (id.startsWith('gather:')) return gatherQuests(ctx.catalog).find((q) => q.id === id) || null;
-  if (id.startsWith('bau:')) return facilityQuestById(ctx.catalog, id);
+  if (id.startsWith('bau:')) return campQuestById(ctx.catalog, id);
   return ctx.catalog.questById.get(id) || null;
 }
 

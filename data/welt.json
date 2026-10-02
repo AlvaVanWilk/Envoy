@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-02T14:46:51Z",
+ "generated": "2026-10-02T18:57:54Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -580,7 +580,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -619,7 +619,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -664,7 +664,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -700,7 +700,7 @@
      9
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -738,7 +738,7 @@
      20
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -782,7 +782,7 @@
      44
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -819,7 +819,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [
      "lagerfeuer"
     ],
@@ -857,7 +857,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -901,7 +901,7 @@
      6
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -948,7 +948,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [
      "haendler"
     ],
@@ -994,7 +994,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1042,7 +1042,7 @@
     "items": [
      "beine_kampfhose_2"
     ],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1088,7 +1088,7 @@
     "items": [
      "kopf_stirnband_1"
     ],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1132,7 +1132,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": true
    },
@@ -1181,7 +1181,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1234,7 +1234,7 @@
     "items": [
      "handschuhe_griffhandschuhe_2"
     ],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1278,7 +1278,7 @@
     "items": [
      "kopf_stillemaske_3"
     ],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1321,7 +1321,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1367,7 +1367,7 @@
     "items": [
      "schuhe_leichtestiefel_3"
     ],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1411,7 +1411,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1454,7 +1454,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1501,7 +1501,7 @@
     "items": [
      "handschuhe_nebelwickel_4"
     ],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1543,7 +1543,7 @@
      0
     ],
     "items": [],
-    "furniture": [],
+    "plans": [],
     "unlocks": [],
     "rest": false
    },
@@ -1556,16 +1556,69 @@
   "stages": [
    {
     "stufe": 1,
-    "name": "Lagerfeuer",
+    "name": "Provisorisches Lager",
     "hyggeBisNaechste": 5,
+    "upgrade": {
+     "cost": {
+      "pilzholz": 20,
+      "stein": 20
+     },
+     "energie": 22
+    },
     "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand."
+   },
+   {
+    "stufe": 2,
+    "name": "Unterstand",
+    "hyggeBisNaechste": 14,
+    "upgrade": {
+     "cost": {
+      "pilzholz": 50,
+      "stein": 50
+     },
+     "energie": 45
+    },
+    "text": "Ein schräges Dach aus Pilzholz und Pilzhut an einem Felsen, davor ein Windschutz aus Steinen."
+   },
+   {
+    "stufe": 3,
+    "name": "Wackelige Hütte",
+    "hyggeBisNaechste": 36,
+    "upgrade": {
+     "cost": {
+      "pilzholz": 80,
+      "stein": 80
+     },
+     "energie": 85
+    },
+    "text": "Schiefe Wände aus Pilzholz, ein Dach aus Pilzhutstücken. Sie hält, meistens."
+   },
+   {
+    "stufe": 4,
+    "name": "Stabile Hütte",
+    "hyggeBisNaechste": 90,
+    "upgrade": {
+     "cost": {
+      "pilzholz": 100,
+      "stein": 100
+     },
+     "energie": 130
+    },
+    "text": "Dieselbe Hütte, jetzt auf einem gemauerten Sockel. Drinnen bleibt es trocken."
+   },
+   {
+    "stufe": 5,
+    "name": "Steinhäuschen",
+    "hyggeBisNaechste": null,
+    "upgrade": null,
+    "text": "Gemauert, mit Tür, Fenster und Kamin."
    }
   ],
   "facilities": [
    {
     "id": "steinlager",
     "stufe": 1,
-    "name": "Steinlager",
+    "name": "Steinstapel",
     "lagerstufe": 1,
     "cost": {
      "pilzholz": 4,
@@ -1575,12 +1628,45 @@
     "hygge": 1,
     "kapazitaet": 20,
     "bonus": 0,
-    "text": "Eine Mulde, mit Pilzholz eingefasst. Hier liegen die Steine, bis sie gebraucht werden."
+    "text": "Eine Mulde, mit Pilzholz eingefasst. Hier liegen die Steine, bis sie gebraucht werden.",
+    "bild": null
+   },
+   {
+    "id": "steinlager",
+    "stufe": 2,
+    "name": "Steinkiste",
+    "lagerstufe": 2,
+    "cost": {
+     "pilzholz": 12,
+     "stein": 8
+    },
+    "energie": 6,
+    "hygge": 2,
+    "kapazitaet": 50,
+    "bonus": 0,
+    "text": "Eine Kiste aus Pilzholz, mit Steinen beschwert, damit der Deckel hält.",
+    "bild": null
+   },
+   {
+    "id": "steinlager",
+    "stufe": 3,
+    "name": "Steinschuppen",
+    "lagerstufe": 3,
+    "cost": {
+     "pilzholz": 25,
+     "stein": 20
+    },
+    "energie": 12,
+    "hygge": 3,
+    "kapazitaet": 100,
+    "bonus": 0,
+    "text": "Ein Schuppen neben dem Haus. Die Steine liegen trocken und sortiert.",
+    "bild": null
    },
    {
     "id": "pilzlager",
     "stufe": 1,
-    "name": "Pilzlager",
+    "name": "Pilzholzstapel",
     "lagerstufe": 1,
     "cost": {
      "pilzholz": 4,
@@ -1590,7 +1676,40 @@
     "hygge": 1,
     "kapazitaet": 20,
     "bonus": 0,
-    "text": "Ein Stapelplatz auf Latten, damit nichts im Boden fault."
+    "text": "Ein Stapelplatz auf Latten, damit nichts im Boden fault.",
+    "bild": null
+   },
+   {
+    "id": "pilzlager",
+    "stufe": 2,
+    "name": "Pilzholzgestell",
+    "lagerstufe": 2,
+    "cost": {
+     "pilzholz": 15,
+     "stein": 5
+    },
+    "energie": 6,
+    "hygge": 2,
+    "kapazitaet": 50,
+    "bonus": 0,
+    "text": "Ein Gestell aus Stielen, luftig, damit das Pilzholz trocknet.",
+    "bild": null
+   },
+   {
+    "id": "pilzlager",
+    "stufe": 3,
+    "name": "Pilzholzschuppen",
+    "lagerstufe": 3,
+    "cost": {
+     "pilzholz": 30,
+     "stein": 15
+    },
+    "energie": 12,
+    "hygge": 3,
+    "kapazitaet": 100,
+    "bonus": 0,
+    "text": "Ein Schuppen neben dem Haus, mit einem Dach aus Pilzhut.",
+    "bild": null
    },
    {
     "id": "aufbewahrung",
@@ -1605,12 +1724,61 @@
     "hygge": 2,
     "kapazitaet": 6,
     "bonus": 0,
-    "text": "Ein paar Fächer zwischen den Steinen. Was der Envoy nicht trägt, liegt hier."
+    "text": "Ein paar Fächer zwischen den Steinen. Was der Envoy nicht trägt, liegt hier.",
+    "bild": null
+   },
+   {
+    "id": "aufbewahrung",
+    "stufe": 2,
+    "name": "Kiste",
+    "lagerstufe": 2,
+    "cost": {
+     "pilzholz": 15,
+     "stein": 5
+    },
+    "energie": 6,
+    "hygge": 3,
+    "kapazitaet": 10,
+    "bonus": 0,
+    "text": "Eine Kiste mit Deckel. Was darin liegt, bleibt sauber.",
+    "bild": null
+   },
+   {
+    "id": "aufbewahrung",
+    "stufe": 3,
+    "name": "Truhe",
+    "lagerstufe": 3,
+    "cost": {
+     "pilzholz": 30,
+     "stein": 10
+    },
+    "energie": 12,
+    "hygge": 4,
+    "kapazitaet": 15,
+    "bonus": 0,
+    "text": "Eine schwere Truhe mit Beschlägen aus Stein.",
+    "bild": null
+   },
+   {
+    "id": "aufbewahrung",
+    "stufe": 4,
+    "name": "Kleiderschrank",
+    "lagerstufe": 4,
+    "cost": {
+     "pilzholz": 45,
+     "stein": 25
+    },
+    "energie": 20,
+    "hygge": 5,
+    "kapazitaet": 24,
+    "bonus": 0,
+    "text": "Ein Schrank mit Türen und Fächern, für Kleidung und alles, was der Envoy findet.",
+    "bild": null
    },
    {
     "id": "schlafplatz",
     "stufe": 1,
-    "name": "Schlafplatz",
+    "name": "Raspelnest",
     "lagerstufe": 1,
     "cost": {
      "pilzholz": 6,
@@ -1620,140 +1788,358 @@
     "hygge": 3,
     "kapazitaet": 0,
     "bonus": 20,
-    "text": "Eine Fläche aus Pilzraspeln, weich genug für eine Nacht."
+    "text": "Eine Fläche aus Pilzraspeln, weich genug für eine Nacht.",
+    "bild": null
+   },
+   {
+    "id": "schlafplatz",
+    "stufe": 2,
+    "name": "Pilzmatte",
+    "lagerstufe": 2,
+    "cost": {
+     "pilzholz": 15,
+     "stein": 5
+    },
+    "energie": 6,
+    "hygge": 4,
+    "kapazitaet": 0,
+    "bonus": 25,
+    "text": "Eine Matte aus geflochtenen Pilzfasern, weicher als der Boden.",
+    "bild": null
+   },
+   {
+    "id": "schlafplatz",
+    "stufe": 3,
+    "name": "Schlafpodest",
+    "lagerstufe": 3,
+    "cost": {
+     "pilzholz": 30,
+     "stein": 10
+    },
+    "energie": 12,
+    "hygge": 5,
+    "kapazitaet": 0,
+    "bonus": 30,
+    "text": "Die Matte auf einem Sockel aus Steinen. Von unten wird es nicht mehr kalt.",
+    "bild": null
+   },
+   {
+    "id": "schlafplatz",
+    "stufe": 4,
+    "name": "Bett",
+    "lagerstufe": 4,
+    "cost": {
+     "pilzholz": 45,
+     "stein": 20
+    },
+    "energie": 20,
+    "hygge": 6,
+    "kapazitaet": 0,
+    "bonus": 35,
+    "text": "Ein Bett aus Pilzholz, mit einer Decke.",
+    "bild": null
+   },
+   {
+    "id": "schlafplatz",
+    "stufe": 5,
+    "name": "Himmelbett",
+    "lagerstufe": 5,
+    "cost": {
+     "pilzholz": 50,
+     "stein": 60
+    },
+    "energie": 30,
+    "hygge": 7,
+    "kapazitaet": 0,
+    "bonus": 40,
+    "text": "Ein Bett mit einem Dach aus Stoff. Darunter ist es still.",
+    "bild": null
    }
-  ]
+  ],
+  "pictures": {
+   "0": [
+    "tag"
+   ],
+   "1": [
+    "morgen",
+    "tag",
+    "abend",
+    "nacht"
+   ]
+  }
  },
- "furniture": [
+ "deko": [
+  {
+   "id": "pilzkappenschale",
+   "name": "Pilzkappenschale",
+   "lagerstufe": 2,
+   "hygge": 4,
+   "fundort": "start",
+   "seltenheit": "",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 6,
+    "stein": 2
+   },
+   "energie": 4,
+   "text": "Eine flache Schale aus einem Pilzhut. Darin liegt, was der Envoy unterwegs aufhebt.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "steinbank",
+   "name": "Steinbank",
+   "lagerstufe": 3,
+   "hygge": 5,
+   "fundort": "start",
+   "seltenheit": "",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 4,
+    "stein": 20
+   },
+   "energie": 8,
+   "text": "Eine Bank aus flachen Steinen, gerade breit genug für zwei.",
+   "icon": "",
+   "bild": null
+  },
   {
    "id": "wasserkrug",
    "name": "Wasserkrug",
-   "effekt": {
-    "erholung": 4
+   "lagerstufe": 3,
+   "hygge": 5,
+   "fundort": "stillesufer",
+   "seltenheit": "selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 2,
+    "stein": 10
    },
-   "herkunft": [
-    "haendler",
-    "beute"
-   ],
-   "preis": 15,
-   "abStufe": 2,
+   "energie": 6,
    "text": "Immer kühl, immer gefüllt.",
-   "icon": "assets/icons/icon_einrichtung_wasserkrug.png"
+   "icon": "",
+   "bild": null
   },
   {
    "id": "kraeuterbund",
    "name": "Kräuterbund",
-   "effekt": {
-    "erholung": 5
+   "lagerstufe": 3,
+   "hygge": 6,
+   "fundort": "stillequelle",
+   "seltenheit": "selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 8,
+    "stein": 0
    },
-   "herkunft": [
-    "haendler",
-    "beute"
-   ],
-   "preis": 20,
-   "abStufe": 2,
+   "energie": 5,
    "text": "Riecht nach einem Sommer, den es hier nie gab.",
-   "icon": "assets/icons/icon_einrichtung_kraeuterbund.png"
-  },
-  {
-   "id": "laterne",
-   "name": "Laterne",
-   "effekt": {
-    "glueck": 3
-   },
-   "herkunft": [
-    "haendler"
-   ],
-   "preis": 30,
-   "abStufe": 2,
-   "text": "Wirft ein ruhiges Licht.",
-   "icon": "assets/icons/icon_einrichtung_laterne.png"
+   "icon": "",
+   "bild": null
   },
   {
    "id": "windspiel",
    "name": "Windspiel",
-   "effekt": {
-    "glueck": 5
-   },
-   "herkunft": [
-    "beute",
-    "quest"
-   ],
+   "lagerstufe": 3,
+   "hygge": 6,
+   "fundort": "geister",
+   "seltenheit": "sehr selten",
    "preis": 0,
-   "abStufe": 2,
+   "cost": {
+    "pilzholz": 8,
+    "stein": 6
+   },
+   "energie": 6,
    "text": "Klingt, bevor sich das Wetter ändert.",
-   "icon": "assets/icons/icon_einrichtung_windspiel.png"
-  },
-  {
-   "id": "wolldecke",
-   "name": "Wolldecke",
-   "effekt": {
-    "erholung": 5
-   },
-   "herkunft": [
-    "beute"
-   ],
-   "preis": 0,
-   "abStufe": 2,
-   "text": "Schwer und warm.",
-   "icon": "assets/icons/icon_einrichtung_wolldecke.png"
+   "icon": "",
+   "bild": null
   },
   {
    "id": "teppich",
    "name": "Teppich",
-   "effekt": {
-    "erholung": 6,
-    "glueck": 2
+   "lagerstufe": 3,
+   "hygge": 7,
+   "fundort": "haendler",
+   "seltenheit": "selten",
+   "preis": 40,
+   "cost": {
+    "pilzholz": 10,
+    "stein": 0
    },
-   "herkunft": [
-    "haendler"
-   ],
-   "preis": 60,
-   "abStufe": 3,
+   "energie": 8,
    "text": "Muster, in denen man sich verlieren kann.",
-   "icon": "assets/icons/icon_einrichtung_teppich.png"
-  },
-  {
-   "id": "regal",
-   "name": "Steinregal",
-   "effekt": {
-    "glueck": 4
-   },
-   "herkunft": [
-    "haendler"
-   ],
-   "preis": 50,
-   "abStufe": 3,
-   "text": "Für alles, was man unterwegs findet.",
-   "icon": "assets/icons/icon_einrichtung_regal.png"
+   "icon": "",
+   "bild": null
   },
   {
    "id": "kamin",
    "name": "Kamin",
-   "effekt": {
-    "erholung": 15
+   "lagerstufe": 4,
+   "hygge": 8,
+   "fundort": "start",
+   "seltenheit": "",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 10,
+    "stein": 60
    },
-   "herkunft": [
-    "haendler"
-   ],
-   "preis": 150,
-   "abStufe": 4,
+   "energie": 30,
    "text": "Das Feuer zieht, der Rauch geht hinaus.",
-   "icon": "assets/icons/icon_einrichtung_kamin.png"
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "laterne",
+   "name": "Laterne",
+   "lagerstufe": 4,
+   "hygge": 6,
+   "fundort": "langestrasse",
+   "seltenheit": "sehr selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 6,
+    "stein": 8
+   },
+   "energie": 8,
+   "text": "Wirft ein ruhiges Licht.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "leuchtmooskasten",
+   "name": "Leuchtmooskasten",
+   "lagerstufe": 4,
+   "hygge": 6,
+   "fundort": "pilzhain",
+   "seltenheit": "sehr selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 15,
+    "stein": 5
+   },
+   "energie": 10,
+   "text": "Ein Kasten voll Moos, das nachts leise leuchtet.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "pilzholztisch",
+   "name": "Pilzholztisch",
+   "lagerstufe": 4,
+   "hygge": 7,
+   "fundort": "haendler",
+   "seltenheit": "selten",
+   "preis": 60,
+   "cost": {
+    "pilzholz": 35,
+    "stein": 5
+   },
+   "energie": 15,
+   "text": "Ein Tisch aus einem einzigen Pilzstiel.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "regal",
+   "name": "Steinregal",
+   "lagerstufe": 4,
+   "hygge": 7,
+   "fundort": "steinbruch",
+   "seltenheit": "sehr selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 10,
+    "stein": 35
+   },
+   "energie": 15,
+   "text": "Für alles, was man unterwegs findet.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "wandbehang",
+   "name": "Wandbehang",
+   "lagerstufe": 4,
+   "hygge": 7,
+   "fundort": "q-furtwache",
+   "seltenheit": "sehr selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 10,
+    "stein": 0
+   },
+   "energie": 12,
+   "text": "Ein Tuch mit einem Muster aus Nebel und Wasser.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "nebelspiegel",
+   "name": "Nebelspiegel",
+   "lagerstufe": 4,
+   "hygge": 8,
+   "fundort": "mondsee",
+   "seltenheit": "kostbar",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 10,
+    "stein": 15
+   },
+   "energie": 15,
+   "text": "Ein Spiegel, in dem der Nebel stillsteht.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "sternkarte",
+   "name": "Sternkarte",
+   "lagerstufe": 4,
+   "hygge": 8,
+   "fundort": "q-mondnacht",
+   "seltenheit": "sehr selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 12,
+    "stein": 0
+   },
+   "energie": 12,
+   "text": "Die Sterne über dem Mondsee, Punkt für Punkt.",
+   "icon": "",
+   "bild": null
+  },
+  {
+   "id": "klangschale",
+   "name": "Klangschale",
+   "lagerstufe": 4,
+   "hygge": 9,
+   "fundort": "echohoehle",
+   "seltenheit": "selten",
+   "preis": 0,
+   "cost": {
+    "pilzholz": 0,
+    "stein": 30
+   },
+   "energie": 15,
+   "text": "Ein Schlag, und der Ton bleibt lange im Raum.",
+   "icon": "",
+   "bild": null
   },
   {
    "id": "splitterschale",
    "name": "Splitterschale",
-   "effekt": {
-    "glueck": 8
-   },
-   "herkunft": [
-    "quest"
-   ],
+   "lagerstufe": 4,
+   "hygge": 9,
+   "fundort": "geister",
+   "seltenheit": "kostbar",
    "preis": 0,
-   "abStufe": 4,
+   "cost": {
+    "pilzholz": 10,
+    "stein": 30
+   },
+   "energie": 18,
    "text": "Eine Schale voller Bannsplitter, die nie ganz erlöschen.",
-   "icon": "assets/icons/icon_einrichtung_splitterschale.png"
+   "icon": "",
+   "bild": null
   }
  ]
 }

@@ -1,7 +1,7 @@
 // Small building blocks used by several views.
 
 import { h, icon } from './dom.js';
-import { RESOURCE_ICONS, SLOT_ICONS } from './icons.js';
+import { RESOURCE_ICONS, SLOT_ICONS, FACILITY_ICONS } from './icons.js';
 import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
@@ -123,6 +123,12 @@ export function itemIcon(thing, game, className = 'item-icon') {
   const src = iconSrc(thing, resolveLook(game.state.world.envoy));
   if (!src) return thing.slot ? icon(SLOT_ICONS[thing.slot], `${className} item-glyph`) : h('span', { class: className });
   return h('img', { class: className, src, alt: '', decoding: 'async', onerror: (e) => { e.currentTarget.hidden = true; } });
+}
+
+// The picture of a Deko; without one yet, the Deko symbol.
+export function dekoIcon(row, className = 'item-icon') {
+  if (!row.icon) return icon(FACILITY_ICONS.deko, `${className} item-glyph`);
+  return h('img', { class: className, src: row.icon, alt: '', decoding: 'async', onerror: (e) => { e.currentTarget.hidden = true; } });
 }
 
 export function reqChips(item, stats) {

@@ -36,7 +36,7 @@ const TOURS = {
   lager: () => [
     { selector: '.camp-hero', text: 'Dein Envoy hat das Lagerfeuer errichtet.' },
     { selector: '.camp-build', text: 'Ab jetzt kannst du das Lager einrichten.' },
-    { selector: '.camp-hygge', text: 'Wenn es genug Hygge hat, kannst du es sogar ausbauen.' },
+    { selector: '.camp-hygge', text: 'Hat es genug Hygge, kannst du es aufwerten.' },
   ],
 };
 

@@ -1,12 +1,15 @@
 // "Lager": the first view. The camp as a picture (its stage and the time of
 // day) with its Hygge and the buttons to furnish
 // it („Lager einrichten“, see facilities.js) and to raise it to the next stage
-// („Lager aufwerten“, not built yet: it says why). Below: where the Envoy is,
-// the supplies and which spirits were seen today.
+// („Lager aufwerten“, see upgrade.js; until the Hygge is enough it says why).
+// Below: where the Envoy is, the supplies and which spirits were seen today.
 // The picture belongs to the stage of the camp and to the time of day at
-// the camp (see daylight.js). Without a fire there is only the picture of the
-// day so far; the other times of day show it darker or warmer until there
-// are pictures of their own. (Later the Envoy is to sit there while at the camp.)
+// the camp (see daylight.js). A stage without a picture of its own shows the
+// one of the stage before; a time of day without one shows the day picture,
+// darker or warmer. On it lie the facilities and the Deko that are built, each
+// as a layer of its own (assets/lager/einrichtung_<id>_<stufe>.png,
+// deko_<id>.png), where there is a drawing. (Later the Envoy is to sit there
+// while at the camp.)
 
 import { h, icon } from './dom.js';
 import { PLACE_ICONS, UI_ICONS, SLOT_ICONS } from './icons.js';
@@ -18,32 +21,41 @@ import { encountersFor, questState, placeUnlocked } from '../world/quests.js';
 import { showPlace } from './worldmap.js';
 import { openQuest } from './questsheet.js';
 import { openFacilities, canBuildSomething } from './facilities.js';
+import { openUpgrade } from './upgrade.js';
 import { unseenDropCount } from './character.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
-import { campStatus } from '../world/camp.js';
+import { campStatus, facilityRow, facilityLevel, nextUpgrade, FACILITY_IDS, dekoBuilt } from '../world/camp.js';
 
-// The pictures of the camp, by stage and time of day.
-const PICTURES = {
-  0: { tag: 'assets/lager/stufe_0_tag.jpg' },
-  1: {
-    morgen: 'assets/lager/stufe_1_morgen.jpg',
-    tag: 'assets/lager/stufe_1_tag.jpg',
-    abend: 'assets/lager/stufe_1_abend.jpg',
-    nacht: 'assets/lager/stufe_1_nacht.jpg',
-  },
-};
 const ALT = [
   'Das Lager auf dem Trümmerfeld: Steine, schwarze Säulen und hohe Pilze, noch ohne Feuer.',
   'Das Lager auf dem Trümmerfeld: ein Feuer in einem Kreis aus Steinen, dahinter hohe Pilze.',
 ];
 
-// The picture for a stage and time of day. Where there is none for the time of
+// The picture for a stage and time of day: the one of this stage, or of the
+// highest stage below it that has one. Where there is none for the time of
 // day, the day picture is used and `tint` names how it is darkened or warmed.
-export function campPicture(stage, phase) {
-  const set = PICTURES[Math.min(stage, 1)];
-  const own = set[phase];
-  return { src: versioned(own || set.tag), tint: own ? null : phase };
+export function campPicture(stage, phase, catalog) {
+  const pictures = catalog.camp.pictures || {};
+  let shown = stage;
+  while (shown > 0 && !pictures[shown]) shown -= 1;
+  const times = pictures[shown] || ['tag'];
+  const own = times.includes(phase);
+  return { src: versioned(`assets/lager/stufe_${shown}_${own ? phase : 'tag'}.jpg`), tint: own ? null : phase };
+}
+
+// The drawings of what is built, to lie on the picture: each facility at its
+// level (or the highest level below it with a drawing), then each Deko.
+export function campLayers(world, catalog) {
+  const layers = [];
+  for (const id of FACILITY_IDS) {
+    for (let level = facilityLevel(world, id); level > 0; level -= 1) {
+      const row = facilityRow(catalog, id, level);
+      if (row?.bild) { layers.push(row.bild); break; }
+    }
+  }
+  for (const d of catalog.deko) if (dekoBuilt(world, d.id) && d.bild) layers.push(d.bild);
+  return layers;
 }
 
 function statusLine(game) {
@@ -68,12 +80,22 @@ function hyggeBadge(game) {
 }
 
 // The two buttons on the picture. „Lager einrichten“ glows while something
-// can be built right now. „Lager aufwerten“ glows once the Hygge is enough;
-// a tap (or pointing at it) says why it cannot be done yet.
+// can be built right now. „Lager aufwerten“ glows once the Hygge is enough
+// and then opens the window for it (also while the Envoy is at it); before
+// that a tap (or pointing at it) says why it cannot be done yet.
 function campActions(game) {
   const status = campStatus(game.state.world, game.catalog);
+  const upgrade = nextUpgrade(game.state.world, game.catalog);
+  const running = upgrade && game.queued(upgrade.id);
   let why = 'Weitere Stufen folgen später.';
-  if (status.need !== null) why = status.ready ? 'Genug Hygge. Das Aufwerten folgt mit einem späteren Update.' : `Dafür braucht das Lager ${status.need} Hygge.`;
+  if (status.need !== null) why = status.ready ? `Genug Hygge für: ${status.next.name}` : `Dafür braucht das Lager ${status.need} Hygge.`;
+  if (status.ready || running) {
+    return h('div', { class: 'camp-actions' },
+      buildButton(game),
+      h('span', { class: 'camp-upgrade' },
+        h('button', { class: `camp-action is-up ${running ? '' : 'is-glowing'}`, type: 'button', onclick: () => openUpgrade(game) },
+          icon(UI_ICONS.chevron), h('span', {}, running ? 'Wird aufgewertet' : 'Lager aufwerten'))));
+  }
   const wrap = h('span', { class: 'camp-upgrade' });
   let timer = null;
   const showWhy = () => {
@@ -82,29 +104,37 @@ function campActions(game) {
     timer = setTimeout(() => wrap.classList.remove('show-hint'), 3500);
   };
   wrap.append(
-    h('button', { class: `camp-action ${status.ready ? 'is-glowing is-up' : 'is-locked'}`, type: 'button', title: why, 'aria-label': `Lager aufwerten. ${why}`, onclick: showWhy },
-      icon(status.ready ? UI_ICONS.chevron : UI_ICONS.lock), h('span', {}, 'Lager aufwerten')),
+    h('button', { class: 'camp-action is-locked', type: 'button', title: why, 'aria-label': `Lager aufwerten. ${why}`, onclick: showWhy },
+      icon(UI_ICONS.lock), h('span', {}, 'Lager aufwerten')),
     h('span', { class: 'camp-hint', role: 'status' }, why));
-  return h('div', { class: 'camp-actions' },
-    h('button', { class: `camp-action camp-build ${canBuildSomething(game) ? 'is-glowing' : ''}`, type: 'button', onclick: () => openFacilities(game) },
-      icon(SLOT_ICONS.einrichtung), h('span', {}, 'Lager einrichten')),
-    wrap);
+  return h('div', { class: 'camp-actions' }, buildButton(game), wrap);
+}
+
+function buildButton(game) {
+  return h('button', { class: `camp-action camp-build ${canBuildSomething(game) ? 'is-glowing' : ''}`, type: 'button', onclick: () => openFacilities(game) },
+    icon(SLOT_ICONS.einrichtung), h('span', {}, 'Lager einrichten'));
 }
 
 function hero(game) {
-  const stage = game.state.world.camp.stage;
-  const picture = h('img', { class: 'camp-picture', alt: ALT[Math.min(stage, 1)] });
+  const { world } = game.state;
+  const stage = world.camp.stage;
+  const status = campStatus(world, game.catalog);
+  const picture = h('img', { class: 'camp-picture', alt: ALT[stage] || `Das Lager: ${status.name}.` });
+  // the layers are drawn in daylight; at other times they are tinted like the picture
+  const layers = campLayers(world, game.catalog).map((src) => h('img', { class: 'camp-picture camp-layer', src, alt: '', onerror: (e) => { e.currentTarget.hidden = true; } }));
   const show = () => {
-    const { src, tint } = campPicture(game.state.world.camp.stage, dayPhase());
+    const phase = dayPhase();
+    const { src, tint } = campPicture(game.state.world.camp.stage, phase, game.catalog);
     picture.className = `camp-picture ${tint ? `tint-${tint}` : ''}`;
     if (!picture.src.endsWith(src)) picture.src = src;
+    for (const layer of layers) layer.className = `camp-picture camp-layer ${phase !== 'tag' ? `tint-${phase}` : ''}`;
   };
   show();
   // the day moves on while the page stays open
   const timer = setInterval(() => (picture.isConnected ? show() : clearInterval(timer)), 60000);
   return h('section', { class: 'camp-hero' },
     h('div', { class: 'camp-scene' },
-      picture,
+      h('div', { class: 'camp-frame' }, picture, layers),
       stage >= 1 ? hyggeBadge(game) : null,
       stage >= 1 ? campActions(game) : null),
     h('div', { class: 'camp-caption' },

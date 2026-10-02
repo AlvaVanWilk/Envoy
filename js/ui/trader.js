@@ -1,10 +1,10 @@
-// The trader: a different selection every day, around the hero's strength.
-// Buys everything back for a third of its price.
+// The trader: a different selection every day, around the hero's strength,
+// and on some days a plan for Deko. Buys everything back for a third of its price.
 
 import { h } from './dom.js';
 import { NAV_ICONS } from './icons.js';
-import { viewHead, sectionTitle, supplies, price, resource, itemIcon, reqChips, effectList, lockedView, unlockHint } from './parts.js';
-import { openSheet, closeSheet } from './sheet.js';
+import { viewHead, sectionTitle, supplies, price, resource, itemIcon, dekoIcon, reqChips, effectList, lockedView, unlockHint } from './parts.js';
+import { openSheet, closeSheet, toast } from './sheet.js';
 import { thingSubtitle } from './itemsheet.js';
 import { sellPrice, lookup } from '../world/items.js';
 import { reachable } from '../world/inventory.js';
@@ -28,7 +28,8 @@ export function renderTrader(game) {
         offers.length === 0
           ? h('p', { class: 'empty-state' }, 'Alles verkauft. Morgen gibt es Neues.')
           : h('div', { class: 'offer-grid' }, offers.map((offer) => {
-            const thing = offer.kind === 'furniture' ? game.catalog.furnitureById.get(offer.id) : game.catalog.itemById.get(offer.id);
+            if (offer.kind === 'plan') return planOffer(offer, game);
+            const thing = game.catalog.itemById.get(offer.id);
             return h('button', { class: 'offer', onclick: () => openOffer(offer, thing, game) },
               h('span', { class: 'item-frame' }, itemIcon(thing, game)),
               h('span', { class: 'item-name' }, thing.name),
@@ -62,6 +63,38 @@ function openOffer(offer, thing, game) {
         price(offer.price, world.purse.splitter),
         h('button', { class: 'btn primary', disabled: !affordable, onclick: () => { game.buy(offer); closeSheet(); } },
           affordable ? 'Kaufen' : `Nicht genug ${CURRENCY}`)),
+    ],
+  });
+}
+
+// A plan for Deko: what it is for and what it gives the camp.
+function planOffer(offer, game) {
+  const deko = game.catalog.dekoById.get(offer.id);
+  return h('button', { class: 'offer offer-plan', onclick: () => openPlan(offer, deko, game) },
+    h('span', { class: 'item-frame' }, dekoIcon(deko)),
+    h('span', { class: 'item-name' }, `Plan: ${deko.name}`),
+    h('span', { class: 'item-sub' }, `Deko · Hygge +${deko.hygge}`),
+    price(offer.price, game.state.world.purse.splitter));
+}
+
+function openPlan(offer, deko, game) {
+  const { world } = game.state;
+  const affordable = world.purse.splitter >= offer.price;
+  openSheet({
+    title: `Plan: ${deko.name}`,
+    eyebrow: `Deko · Hygge +${deko.hygge}`,
+    className: 'item-sheet',
+    content: [
+      h('div', { class: 'item-hero' }, dekoIcon(deko, 'item-hero-icon')),
+      h('p', { class: 'item-ability' }, deko.text),
+      h('p', { class: 'muted' }, 'Mit dem Plan lässt sich die Deko im Lager bauen.'),
+      h('div', { class: 'sheet-actions' },
+        price(offer.price, world.purse.splitter),
+        h('button', {
+          class: 'btn primary',
+          disabled: !affordable,
+          onclick: () => { game.buy(offer); closeSheet(); toast(`Plan gekauft: ${deko.name}`); },
+        }, affordable ? 'Kaufen' : `Nicht genug ${CURRENCY}`)),
     ],
   });
 }

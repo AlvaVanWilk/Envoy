@@ -47,13 +47,16 @@ LAYERS = {
 }
 MEASUREMENTS = ["strecke_km", "stockwerke", "haltezeit_s", "wiederholungen", "dauer_min"]
 EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
-FURNITURE_EFFECTS = ["erholung", "glueck"]
 ORIGINS = ["start", "angezogen", "haendler", "beute", "quest"]
 PLACE_TYPES = ["lager", "truemmerfeld", "wild", "sammeln", "ort", "hoehle"]
 QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
 FEATURES = ["lagerfeuer", "haendler"]
 # the facilities of the camp, each in levels (sheet Einrichtungen)
 FACILITIES = ["steinlager", "pilzlager", "aufbewahrung", "schlafplatz"]
+# where the plan of a Deko comes from, besides a place or a quest (sheet Deko)
+PLAN_SOURCES = ["start", "geister", "haendler"]
+RARITIES = ["selten", "sehr selten", "kostbar"]
+CAMP_TIMES = ["morgen", "tag", "abend", "nacht"]
 MATERIALS = ["pilzholz", "stein", "splitter"]
 # older names still read: Holz and Quarz became Pilzholz; Glimmer and Äther became Bannsplitter
 MATERIAL_ALIASES = {"holz": "pilzholz", "quarz": "pilzholz", "glimmer": "splitter", "aether": "splitter",
@@ -65,6 +68,7 @@ PICTURES = {
     "figur": ("assets/figur", (1024, 1536)),
     "icon": ("assets/icons", (256, 256)),
     "monster": ("assets/monster", (512, 512)),
+    "lager": ("assets/lager", (1792, 672)),
 }
 
 
@@ -169,6 +173,29 @@ def own_versions(report, row, kind, filename):
     return own
 
 
+def optional_picture(report, row, kind, filename):
+    """A picture that may be there or not (layers of the camp picture):
+    its path if the file exists, else None. A wrong size is reported."""
+    folder, size = PICTURES[kind]
+    path = ROOT / folder / filename
+    if not path.exists():
+        return None
+    actual = png_size(path) if path.suffix.lower() == ".png" else size
+    if actual != size:
+        report.warn(row, f"{filename} ist {actual[0]} × {actual[1]}, erwartet {size[0]} × {size[1]}")
+    return f"{folder}/{filename}"
+
+
+def camp_pictures():
+    """Which pictures of the camp there are, by stage: {'1': ['morgen', 'tag', ...]}."""
+    found = {}
+    for path in sorted((ROOT / PICTURES["lager"][0]).glob("stufe_*_*.jpg")):
+        m = re.fullmatch(r"stufe_(\d+)_([a-z]+)\.jpg", path.name)
+        if m and m.group(2) in CAMP_TIMES:
+            found.setdefault(m.group(1), []).append(m.group(2))
+    return {stage: [t for t in CAMP_TIMES if t in times] for stage, times in found.items()}
+
+
 # --- small languages used in cells -----------------------------------------
 # All of them are comma separated lists like "holz:2-4, glimmer:10".
 
@@ -260,14 +287,15 @@ def parse_materials(report, row, value, column):
 
 def parse_rewards(report, row, value):
     reward = {"splitter": [0, 0], "pilzholz": [0, 0], "stein": [0, 0],
-              "items": [], "furniture": [], "unlocks": [], "rest": False}
+              "items": [], "plans": [], "unlocks": [], "rest": False}
     for key, val in parse_pairs(report, row, value, "belohnung"):
         if key in MATERIALS:
             reward[key] = parse_range(report, row, val, "belohnung")
         elif key == "item":
             reward["items"].append(val)
-        elif key == "einrichtung":
-            reward["furniture"].append(val)
+        elif key in ("plan", "einrichtung"):
+            # the plan of a Deko (einrichtung: the older name)
+            reward["plans"].append(val)
         elif key == "freischaltung":
             if val not in FEATURES:
                 report.error(row, f"belohnung: freischaltung '{val}' unbekannt (möglich: {', '.join(FEATURES)})")
@@ -479,7 +507,7 @@ def convert_equipment(path):
 
 def convert_world(path, item_ids):
     report = Report(path.name)
-    place_seen, monster_seen, quest_seen, furniture_seen = set(), set(), set(), set()
+    place_seen, monster_seen, quest_seen, deko_seen = set(), set(), set(), set()
 
     places = []
     for row, r in records(path, "Orte"):
@@ -527,36 +555,73 @@ def convert_world(path, item_ids):
             "bild": f"{PICTURES['monster'][0]}/{picture}",
         })
 
-    furniture = []
+    deko = []
     for row, r in records(path, "Deko"):
-        fid = unique_id(report, row, r.get("id", ""), furniture_seen)
-        if fid is None:
+        did = unique_id(report, row, r.get("id", ""), deko_seen)
+        if did is None:
             continue
-        icon = text(r.get("datei_icon", "")) or f"icon_einrichtung_{fid}.png"
-        icon_path = check_picture(report, row, "icon", icon)
-        min_tier = whole_number(r.get("ab_stufe", "")) or 1
-        furniture.append({
-            "id": fid, "name": text(r.get("name", "")),
-            "effekt": parse_effects(report, row, r.get("effekt", ""), FURNITURE_EFFECTS),
-            "herkunft": parse_origin(report, row, r.get("herkunft", "")),
-            "preis": whole_number(r.get("preis", "")) or 0,
-            "abStufe": min_tier if isinstance(min_tier, int) else 1,
+        values = {}
+        for column in ("lagerstufe", "hygge", "pilzholz", "stein", "energie", "preis"):
+            value = whole_number(r.get(column, ""))
+            if value is None:
+                value = 0
+            if not isinstance(value, int) or value < 0:
+                report.error(row, f"{column} muss eine ganze Zahl sein")
+                value = 0
+            values[column] = value
+        if values["lagerstufe"] < 2:
+            report.error(row, "lagerstufe muss mindestens 2 sein (Deko gibt es ab Lagerstufe 2)")
+        if values["energie"] < 1:
+            report.error(row, "energie muss mindestens 1 sein")
+        source = text(r.get("fundort", "")).lower()
+        rarity = text(r.get("seltenheit", "")).lower()
+        if source != "start" and rarity not in RARITIES:
+            report.error(row, f"seltenheit '{rarity}' unbekannt (möglich: {', '.join(RARITIES)})")
+        if source == "haendler" and values["preis"] < 1:
+            report.error(row, "preis fehlt: was der Plan beim Händler kostet")
+        icon = text(r.get("datei_icon", "")) or f"icon_einrichtung_{did}.png"
+        deko.append({
+            "id": did, "name": text(r.get("name", "")),
+            "lagerstufe": values["lagerstufe"], "hygge": values["hygge"],
+            "fundort": source, "seltenheit": rarity if source != "start" else "",
+            "preis": values["preis"],
+            "cost": {"pilzholz": values["pilzholz"], "stein": values["stein"]},
+            "energie": values["energie"],
             "text": text(r.get("beschreibung", "")),
-            "icon": icon_path,
+            "icon": check_picture(report, row, "icon", icon),
+            "bild": optional_picture(report, row, "lager", f"deko_{did}.png"),
+            "_row": row,
         })
 
     stages = []
-    for row, r in records(path, "Lagerstufen"):
+    stage_rows = records(path, "Lagerstufen")
+    for n, (row, r) in enumerate(stage_rows):
         stage = whole_number(r.get("stufe", ""))
         if not isinstance(stage, int) or stage != len(stages) + 1:
             report.error(row, "stufe muss bei 1 beginnen und lückenlos steigen")
+        last = n == len(stage_rows) - 1
         need = whole_number(r.get("hygge_bis_naechste", ""))
-        if not isinstance(need, int) or need < 0:
+        upgrade = None
+        if last:
+            # the highest stage: nothing to raise it to
+            need = None
+        elif not isinstance(need, int) or need < 0:
             report.error(row, "hygge_bis_naechste muss eine ganze Zahl sein")
             need = 0
+        if not last:
+            cost = {}
+            for column in ("stein", "pilzholz", "energie"):
+                value = whole_number(r.get(column, ""))
+                if not isinstance(value, int) or value < 0:
+                    report.error(row, f"{column} muss eine ganze Zahl sein (Kosten für das Aufwerten)")
+                    value = 0
+                cost[column] = value
+            if cost["energie"] < 1:
+                report.error(row, "energie muss mindestens 1 sein")
+            upgrade = {"cost": {"pilzholz": cost["pilzholz"], "stein": cost["stein"]}, "energie": cost["energie"]}
         stages.append({
             "stufe": stage, "name": text(r.get("name", "")),
-            "hyggeBisNaechste": need, "text": text(r.get("beschreibung", "")),
+            "hyggeBisNaechste": need, "upgrade": upgrade, "text": text(r.get("beschreibung", "")),
         })
 
     facilities = []
@@ -597,6 +662,7 @@ def convert_world(path, item_ids):
             "kapazitaet": capacity if isinstance(capacity, int) else 0,
             "bonus": bonus if isinstance(bonus, int) else 0,
             "text": text(r.get("beschreibung", "")),
+            "bild": optional_picture(report, row, "lager", f"einrichtung_{fid}_{level}.png"),
         })
     for fid in FACILITIES:
         if fid not in levels:
@@ -644,9 +710,22 @@ def convert_world(path, item_ids):
         check_ids(report, row, [quest["place"]], place_seen, "Ort")
         check_ids(report, row, quest["monsters"], monster_seen, "Monster")
         check_ids(report, row, quest["reward"]["items"], item_ids, "Ausrüstung")
-        check_ids(report, row, quest["reward"]["furniture"], furniture_seen, "Einrichtung")
+        check_ids(report, row, quest["reward"]["plans"], deko_seen, "Deko")
         check_ids(report, row, [c["id"] for c in quest["conditions"] if c["type"] == "quest"], all_quest_ids, "Quest")
         quests.append(quest)
+
+    # where the plans are found: a place, a quest that can be done again, or start, geister, haendler
+    repeatable = {q["id"] for q in quests if q["repeatable"]}
+    for d in deko:
+        source = d["fundort"]
+        if source in PLAN_SOURCES or source in place_seen:
+            pass
+        elif source in quest_seen:
+            if source not in repeatable:
+                report.error(d["_row"], f"fundort: die Quest '{source}' ist nicht wiederholbar, dort ließe sich nicht weitersuchen")
+        else:
+            report.error(d["_row"], f"fundort '{source}' unbekannt (möglich: {', '.join(PLAN_SOURCES)}, eine Orts-id oder eine Quest-id)")
+        del d["_row"]
 
     for p in places:
         check_ids(report, p["_row"], p["monsters"], monster_seen, "Monster")
@@ -654,7 +733,7 @@ def convert_world(path, item_ids):
         del p["_row"]
 
     return {"places": places, "monsters": monsters, "quests": quests,
-            "camp": {"stages": stages, "facilities": facilities}, "furniture": furniture}, report
+            "camp": {"stages": stages, "facilities": facilities, "pictures": camp_pictures()}, "deko": deko}, report
 
 
 # --- main -------------------------------------------------------------------

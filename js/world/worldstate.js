@@ -12,7 +12,9 @@
 //   items       owned things, see inventory.js
 //   equipped    { slot: inst }
 //   unlocked    features: 'haendler'
-//   camp        { stage, facilities }: Lagerstufe and the level of each facility, see camp.js
+//   camp        { stage, facilities, deko, reached }: Lagerstufe, the level of each facility,
+//               the Deko built, the day each stage was reached; see camp.js
+//   plans       { found, search }: plans for Deko found, and the search for the others; see plans.js
 //   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
@@ -29,6 +31,7 @@ import {
   stow, removeEntry, hasSpace, atCamp, reachable, roomFor, overloaded, entriesIn, LIMITED_MATERIALS,
 } from './inventory.js';
 import { emptyCamp, FACILITY_IDS } from './camp.js';
+import { emptyPlans } from './plans.js';
 import { unmetRequirements } from './items.js';
 import { camp } from './map.js';
 import { reserve, addition, wayFrom, legStamina, nextStep } from './expedition.js';
@@ -50,6 +53,7 @@ export function initialWorld(catalog, startTime, stats) {
     equipped: {},
     unlocked: [],
     camp: emptyCamp(),
+    plans: emptyPlans(),
     quests: {},
     encountersDone: {},
     bestiary: {},
@@ -87,11 +91,21 @@ function putAway(world, ctx, entry) {
   else entry.where = 'rucksack';
 }
 
-// A feature of the game, the Lagerfeuer (stage 1 of the camp) or a level of
-// a facility, written id:level.
-function unlock(world, feature) {
+// A stage of the camp reached on `day`.
+function raiseCamp(world, stage, day) {
+  if (world.camp.stage >= stage) return;
+  world.camp.stage = stage;
+  world.camp.reached[stage] = day;
+}
+
+// A feature of the game: the Lagerfeuer (stage 1 of the camp), a stage of the
+// camp (lager:2), a level of a facility (steinlager:2), a Deko (deko:<id>),
+// or the trader.
+function unlock(world, feature, day) {
   const [id, level] = feature.split(':');
-  if (feature === 'lagerfeuer') world.camp.stage = Math.max(world.camp.stage, 1);
+  if (feature === 'lagerfeuer') raiseCamp(world, 1, day);
+  else if (id === 'lager') raiseCamp(world, Number(level) || 0, day);
+  else if (id === 'deko') world.camp.deko[level] = true;
   else if (FACILITY_IDS.includes(id)) world.camp.facilities[id] = Math.max(world.camp.facilities[id] || 0, Number(level) || 1);
   else if (!world.unlocked.includes(feature)) world.unlocked.push(feature);
 }
@@ -132,7 +146,9 @@ function bringHome(world, ctx, action, leftBehind, t) {
   r.things.forEach((thing, n) => {
     stow(world, ctx.catalog, { inst: `${action.id}:${n}`, kind: thing.kind, id: thing.id, got: t });
   });
-  for (const feature of r.unlocks) unlock(world, feature);
+  for (const feature of r.unlocks) unlock(world, feature, action.day);
+  for (const id of r.plans || []) if (!world.plans.found[id]) world.plans.found[id] = action.day;
+  for (const [id, n] of Object.entries(outcome.search || {})) world.plans.search[id] = (world.plans.search[id] || 0) + n;
   if (r.rest) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
   recordMonsters(world, outcome.fights, action.day);
 
@@ -150,7 +166,7 @@ function bringHome(world, ctx, action, leftBehind, t) {
     id: action.id, q: action.q, place: action.place, title: action.title, day: action.day, end: t,
     kind: outcome.kind, cleared: outcome.cleared,
     fights: (outcome.fights || []).map((f) => ({ monster: f.monster, result: f.result })),
-    reward: { splitter: r.splitter || 0, pilzholz: r.pilzholz || 0, stein: r.stein || 0, things: r.things.length },
+    reward: { splitter: r.splitter || 0, pilzholz: r.pilzholz || 0, stein: r.stein || 0, things: r.things.length, plans: (r.plans || []).length },
   });
 }
 
@@ -345,7 +361,9 @@ export function applyWorldEvent(world, e, ctx) {
       if (!world.bought[e.offer] && world.purse.splitter >= e.price) {
         world.purse.splitter -= e.price;
         world.bought[e.offer] = true;
-        stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t });
+        // a plan for Deko is knowledge, not a thing for the backpack
+        if (e.kind === 'plan') world.plans.found[e.thing] = world.plans.found[e.thing] || e.d;
+        else stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t });
       }
       break;
     case 'sell':
@@ -388,10 +406,16 @@ export function applyWorldEvent(world, e, ctx) {
 }
 
 // Help while trying things out, only offered in the test copy (see ui/testtools.js):
-// the bar full again, material added (as much as fits, like after a trip),
-// Bannsplitter added, or the running expedition over at once, every action done.
+// the bar full again (or more Energie, beyond the end of the bar), material
+// added (as much as fits, like after a trip), Bannsplitter added, the next
+// plan not found yet, or the running expedition over at once, every action done.
 function testHelp(world, e, ctx) {
   if (e.energie) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
+  world.stamina.value += Math.max(0, Math.floor(Number(e.mehrEnergie) || 0));
+  if (e.plan) {
+    const next = ctx.catalog.deko.find((d) => d.fundort !== 'start' && d.lagerstufe <= world.camp.stage && !world.plans.found[d.id]);
+    if (next) world.plans.found[next.id] = e.d;
+  }
   for (const key of LIMITED_MATERIALS) {
     const amount = Math.max(0, Math.floor(Number(e[key]) || 0));
     if (amount > 0) world.purse[key] += Math.min(amount, roomFor(world, ctx.catalog, key));

@@ -20,7 +20,7 @@
 //              from before: { q, place, title, out, act, back, cost, outcome } (one quest, all
 //                                             parts and the cost fixed) or { stops: […], back, cost }
 //   unqueue  { ref }                          the last action of the row taken out again
-//   buy      { offer, kind, thing, price }    bought at the trader (thing = item or furniture id)
+//   buy      { offer, kind, thing, price }    bought at the trader (kind item, or plan: the plan of a Deko)
 //   sell     { inst, price }                  sold to the trader
 //   drop     { inst }                         left behind
 //   move     { inst, to }                     between backpack and wardrobe
@@ -29,9 +29,10 @@
 //   place, unplace, build                     from earlier versions (furniture, extending the home); ignored now
 //
 // Only from the test copy of the app (see stage.js), to try things out:
-//   test     { energie?, stein?, pilzholz?, splitter?, fertig? }
-//                                             Energie full; material added, as much as fits;
-//                                             Bannsplitter added; the running expedition back at once
+//   test     { energie?, mehrEnergie?, stein?, pilzholz?, splitter?, plan?, fertig? }
+//                                             Energie full or more of it; material added, as much as
+//                                             fits; Bannsplitter added; the next plan for Deko; the
+//                                             running expedition back at once
 //
 // The Envoy itself:
 //   envoy    { name, figur, haut, haar }      name, figure, skin and hair colour (the latest counts)

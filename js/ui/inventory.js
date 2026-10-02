@@ -10,14 +10,14 @@ import { openEntry, thingSubtitle } from './itemsheet.js';
 import { lookup, unmetRequirements } from '../world/items.js';
 import { countIn, capacity, reachable } from '../world/inventory.js';
 
-const FILTERS = [{ id: 'alle', name: 'Alle' }, ...SLOTS.map((s) => ({ id: s.id, name: s.name })), { id: 'einrichtung', name: 'Einrichtung' }];
+const FILTERS = [{ id: 'alle', name: 'Alle' }, ...SLOTS.map((s) => ({ id: s.id, name: s.name }))];
 const SORTS = [
   { id: 'slot', name: 'Slot' },
   { id: 'stufe', name: 'Stufe' },
   { id: 'name', name: 'Name' },
   { id: 'neu', name: 'Neueste' },
 ];
-const SLOT_ORDER = [...SLOTS.map((s) => s.id), 'einrichtung'];
+const SLOT_ORDER = SLOTS.map((s) => s.id);
 
 // Kept while the app is open, so a new render keeps the choice.
 const view = { tab: 'rucksack', search: '', filter: 'alle', sort: 'slot' };   // tab: rucksack | schrank | body
@@ -31,21 +31,18 @@ function rows(game) {
 }
 
 function matches({ entry, thing }) {
-  const slot = entry.kind === 'furniture' ? 'einrichtung' : thing.slot;
-  if (view.filter !== 'alle' && slot !== view.filter) return false;
+  if (view.filter !== 'alle' && thing.slot !== view.filter) return false;
   const q = view.search.trim().toLowerCase();
   return !q || thing.name.toLowerCase().includes(q) || (thing.faehigkeit || thing.text || '').toLowerCase().includes(q);
 }
 
 function sorter(a, b) {
-  const slotA = a.entry.kind === 'furniture' ? 'einrichtung' : a.thing.slot;
-  const slotB = b.entry.kind === 'furniture' ? 'einrichtung' : b.thing.slot;
   const byName = a.thing.name.localeCompare(b.thing.name, 'de');
-  const byLevel = (a.thing.stufe || a.thing.abStufe || 0) - (b.thing.stufe || b.thing.abStufe || 0);
+  const byLevel = (a.thing.stufe || 0) - (b.thing.stufe || 0);
   if (view.sort === 'name') return byName;
   if (view.sort === 'stufe') return -byLevel || byName;
   if (view.sort === 'neu') return (b.entry.got || 0) - (a.entry.got || 0) || byName;
-  return SLOT_ORDER.indexOf(slotA) - SLOT_ORDER.indexOf(slotB) || byLevel || byName;
+  return SLOT_ORDER.indexOf(a.thing.slot) - SLOT_ORDER.indexOf(b.thing.slot) || byLevel || byName;
 }
 
 function tile({ entry, thing }, game) {

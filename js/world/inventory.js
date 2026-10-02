@@ -1,5 +1,5 @@
 // Backpack, storage and the Vorrat. Every owned thing is an entry in world.items:
-//   { inst, kind: 'item' | 'furniture', id, where, got }
+//   { inst, kind: 'item', id, where, got }
 // where = 'rucksack' | 'schrank' | 'body' (worn)
 // The backpack has a few places from the start; the Envoy has it with him.
 // The storage ('schrank', shown as „Aufbewahrung“) is a facility of the camp

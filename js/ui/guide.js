@@ -166,8 +166,17 @@ const CHAPTERS = [
     title: 'Das Lager einrichten',
     when: (game) => game.state.world.camp.stage >= 1,
     text: [
-      'Mit dem Lagerfeuer hat das Lager Stufe 1. Jetzt lassen sich vier Einrichtungen errichten: Steinlager, Pilzlager, Krempelplatz und Schlafplatz. Jede gibt Hygge. Hat das Lager genug davon, lässt es sich aufwerten.',
-      'Der Krempelplatz gibt Plätze in der Aufbewahrung, für Gegenstände und Kleidung. Dort sieht der Envoy unterwegs nur nach, was liegt; herankommen kann er erst im Lager. Der Schlafplatz gibt dem Envoy am Morgen einmal Energie dazu, auch über das Ende der Leiste hinaus.',
+      'Mit dem Lagerfeuer hat das Lager Stufe 1. Jetzt lassen sich vier Einrichtungen errichten: Steinstapel, Pilzholzstapel, Krempelplatz und Raspelnest. Jede gibt Hygge. Mit genug Hygge lässt sich das Lager aufwerten.',
+      'Der Krempelplatz gibt Plätze für Gegenstände und Kleidung; unterwegs sieht der Envoy dort nur nach. Das Raspelnest gibt am Morgen einmal Energie dazu, auch über das Ende der Leiste hinaus.',
+    ],
+  },
+  {
+    id: 'deko',
+    title: 'Deko und Pläne',
+    when: (game) => game.state.world.camp.stage >= 2,
+    text: [
+      'Mit jeder Lagerstufe lassen sich die Einrichtungen weiter ausbauen. Dazu gibt es Deko: Sie gibt mehr Hygge als die meisten Einrichtungen und bleibt beim Aufwerten stehen.',
+      'Gebaut wird sie nach einem Plan. Einen je Stufe gibt es gleich, die anderen muss der Envoy finden: an bestimmten Orten, bei Geistern oder beim Händler. Manche sind selten.',
     ],
   },
   {

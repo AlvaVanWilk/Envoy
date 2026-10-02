@@ -41,8 +41,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   `main` in den echten Ordner. Auf `main` kommt nur, was die Nutzerin im Testordner
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
-  „Test“, schwebend über der Seite: Energie auffüllen, Stein, Pilzholz und Bannsplitter
-  dazu, Expedition beenden, `js/ui/testtools.js`); die echte Fassung nie.
+  „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
+  Pilzholz und Bannsplitter dazu, Plan finden, Expedition beenden, `js/ui/testtools.js`);
+  die echte Fassung nie.
 - Formen der Oberfläche: kreisrund oder rechteckig, nicht oval.
 - **Kein Zugriff auf Apple Health oder die Apple Watch.** Eine Webapp kann das nicht.
   Gemessene Werte (Strecke, Tempo, Haltezeit) werden von Hand eingetragen.
@@ -78,19 +79,28 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   mit Weg-Anteil in der Energie-Leiste),
   Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
   Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)
-- Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); danach vier Einrichtungen
-  (Steinlager, Pilzlager, Aufbewahrung, Schlafplatz) auf ihrer Stufe 1, keine Quests und
-  nicht auf der Karte, nur über „Lager einrichten“ (Kacheln); Hygge als Summe der
-  Einrichtungen (1, 1, 2, 3, als kleine Medaille an jeder Kachel; die Aufbewahrung heißt
-  auf Stufe 1 Krempelplatz), ab 5 kann
-  das Lager aufgewertet werden, muss aber nicht; Rundgänge durch Abenteuer (erster Besuch) und Lager (nach dem Feuer)
+- Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); fünf Lagerstufen
+  (Provisorisches Lager, Unterstand, Wackelige Hütte, Stabile Hütte, Steinhäuschen),
+  aufzuwerten mit genug Hygge (5, 14, 36, 90), Material und Energie am Stück, kein Muss;
+  vier Einrichtungen in Stufen mit eigenen Namen (Steinlager und Pilzlager bis Stufe 3,
+  Aufbewahrung bis 4, Schlafplatz bis 5; jede Stufe ab der gleichen Lagerstufe), keine
+  Quests und nicht auf der Karte, nur über „Lager einrichten“ (Kacheln, Hygge als kleine
+  Medaille); Deko ab Lagerstufe 2 (eine Kachel mit Liste, mehr Hygge als Lager und
+  Aufbewahrung, mindestens so viel wie das Bett der Stufe, bleibt beim Aufwerten): je
+  Stufe ein Plan gleich da, die anderen werden gefunden (an ihrem Ort, bei Geistern oder
+  beim Händler; selten, sehr selten, kostbar; nach doppelt so vielen Chancen wie im
+  Schnitt sicher), nicht gefundene grau und ohne Namen; Hygge als Summe von Einrichtungen
+  und Deko, ab Stufe 2 reichen die Einrichtungen allein nicht; das Lagerbild aus Ebenen
+  (Grundbild der Stufe, Einrichtungen, Deko); Rundgänge durch Abenteuer (erster Besuch)
+  und Lager (nach dem Feuer)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
   (gesammeltes ist sofort dort, ohne Erklärung); Händler, Kompendium der getroffenen Geister
 - Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
   15 Minuten nach dem Start)
 
-Freischaltung: Karte und Quests von Anfang an. Lagerausbau und Händler über Quests.
+Freischaltung: Karte und Quests von Anfang an. Lagerfeuer und Händler über Quests,
+Lagerausbau über Hygge.
 Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 
 ## Was in Phase 1 NICHT gebaut wird
@@ -102,11 +112,8 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 - Ernährungsmodul
 - Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem
   Konzept der Nutzerin; Erfolge für echte Übungen zählen nur Summen, nie Serien
-- Lagerausbau ab Stufe 2 und höhere Stufen der Einrichtungen, Deko: nach dem Konzept der
-  Nutzerin (Deko erst ab Lagerstufe 2). Bis dahin zeigt das Lager das Hygge und einen
-  Knopf „Lager aufwerten“ (glimmt, sobald das Hygge reicht), der beim Antippen sagt, warum
-  es noch nicht geht; das Blatt `Deko`
-  in `welt.xlsx` ist vorbereitet, nichts wird gesammelt
+- Lagerstufen über das Steinhäuschen hinaus (der Knopf sagt dort „Weitere Stufen folgen
+  später.“)
 - Schlafplatz mit Bonus auf Werte: nie. Er gibt Energie (Punkt 4 der Nicht-verhandelbar-
   Liste und das Konzept: Werte steigen nur durch echte Übungen)
 - Der Envoy im Bild des Lagers (sitzend, im eigenen Lager-Outfit)
@@ -223,8 +230,11 @@ Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Lager
 `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672; Zeit = morgen, tag, abend, nacht; Stufe 0 =
 ohne Feuer, bisher nur tag, die anderen Zeiten tönt die App; Stufe 1 = Lagerfeuer),
 Portrait des Envoy
-`portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Einrichtung
-`assets/icons/icon_einrichtung_<id>.png` (256 × 256), Karte `assets/welt/karte.jpg` (3:2).
+`portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Icon einer
+Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
+Ebenen des Lagerbilds `assets/lager/einrichtung_<id>_<stufe>.png` und
+`assets/lager/deko_<id>.png` (1792 × 672, transparent, an ihrem Platz gezeichnet; Vorschlag
+für die Plätze in `tools/vorlagen/lager-schablone.png`), Karte `assets/welt/karte.jpg` (3:2).
 
 ## Kleiderkammer
 

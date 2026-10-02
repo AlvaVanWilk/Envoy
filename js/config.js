@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '4.12.1';
+export const APP_VERSION = '4.13.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -205,4 +205,13 @@ export const CAMP_LONGITUDE = 10;
 export const ENCOUNTER_CHANCE = 0.55;                  // per wild place and day
 export const ENCOUNTER_COST = 3;                        // stamina on site
 export const TRADER_OFFERS = 5;
+
+// Plans for Deko (see world/plans.js). A chance to find one: every 10
+// minutes the Envoy spends at the place where it lies, every spirit he meets,
+// or every day at the trader. On average a plan takes this many chances; it is
+// there for sure after PLAN_SURE_FACTOR times as many. Searching for a plan
+// begins once the camp has reached the stage of its Deko.
+export const PLAN_CHANCE_MINUTES = 10;
+export const PLAN_CHANCES = { selten: 6, 'sehr selten': 12, kostbar: 24 };
+export const PLAN_SURE_FACTOR = 2;
 export const SELL_SHARE = 1 / 3;
