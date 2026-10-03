@@ -217,6 +217,13 @@ export const game = {
     return { quest, busy, state, ctx: after, cost, block };
   },
 
+  // The stage of the camp once the row of the Envoy is done: while he raises
+  // the camp, what the new stage opens can already join the row.
+  stageAhead() {
+    const c = this.ctx();
+    return (c.world.expedition ? projectedWorld(c.world, c) : c.world).camp.stage;
+  },
+
   // The running expedition, with its progress right now.
   expedition() {
     const exp = this.state.world.expedition;

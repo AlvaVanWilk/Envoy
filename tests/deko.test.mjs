@@ -15,6 +15,7 @@ import { planKnown, rollPlans, traderPlans } from '../js/world/plans.js';
 import { offersFor } from '../js/world/trader.js';
 import { campScene } from '../js/ui/camp.js';
 import { addDays } from '../js/days.js';
+import { projectedWorld } from '../js/world/worldstate.js';
 import { PLAN_CHANCES, PLAN_SURE_FACTOR } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
@@ -80,6 +81,24 @@ test('the camp is raised once the Hygge is enough; it costs material and Energie
   assert.deepEqual(s.world.purse, { splitter: 0, pilzholz: 0, stein: 0 });
   assert.equal(campStatus(s.world, catalog).name, 'Unterstand');
   assert.equal(questState(quest, ctxOf(s)).status, 'done');
+});
+
+test('while the camp is being raised, what the new stage opens can join the row', () => {
+  const ready = [gift({ unlocks: ALL_LEVEL_1 }), gift({ stein: 20, pilzholz: 20 }, 0.2), ev('test', { mehrEnergie: 20 }, 0.3)];
+  const s = at([...ready, action(ready, 'bau:lager:2', 0.4)], 0.5);
+  assert.equal(s.world.camp.stage, 1);   // still building
+  const c = ctxOf(s);
+  const ahead = projectedWorld(s.world, c);
+  assert.equal(ahead.camp.stage, 2);
+
+  const next = facilityQuests(s.world, catalog).find((q) => q.facility === 'steinlager');
+  assert.ok(questState(next, c).missing.includes('Lager Stufe 2 (Unterstand)'));
+  assert.ok(!questState(next, { ...c, world: ahead }).missing.includes('Lager Stufe 2 (Unterstand)'));
+
+  const deko = dekoOfReachedStages(s.world, catalog, ahead.camp.stage);
+  assert.deepEqual(deko.map((d) => d.id), ['pilzkappenschale']);
+  assert.equal(planKnown(s.world, deko[0], ahead.camp.stage), true);
+  assert.equal(planKnown(s.world, deko[0]), false);
 });
 
 test('without enough Hygge the camp cannot be raised', () => {

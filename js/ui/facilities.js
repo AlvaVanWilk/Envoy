@@ -22,7 +22,8 @@ import {
 // How a facility stands: its level, the row of that level (null while not
 // built), its next level and the quest for it (null if there is none), the
 // plan for building it now (see game.plan) and
-//   open   the next level can be built at this stage of the camp
+//   open   the next level can be built at the stage the camp has (or will
+//          have once the row of the Envoy is done, see game.stageAhead)
 //   state  'built' | 'running' (in the row of the Envoy, or he builds it) |
 //          'ready' (can be built or added now) | 'lacking'
 export function facilityView(id, game) {
@@ -31,7 +32,7 @@ export function facilityView(id, game) {
   const now = level > 0 ? facilityRow(c.catalog, id, level) : null;
   const quest = facilityQuests(c.world, c.catalog).find((q) => q.facility === id) || null;
   const next = quest ? facilityRow(c.catalog, id, level + 1) : null;
-  const open = Boolean(next) && next.lagerstufe <= c.world.camp.stage;
+  const open = Boolean(next) && next.lagerstufe <= game.stageAhead();
   const plan = quest ? game.plan(quest.id) : null;
   let state = level > 0 ? 'built' : 'lacking';
   if (quest && game.queued(quest.id)) state = 'running';

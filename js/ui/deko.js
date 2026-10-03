@@ -16,9 +16,12 @@ import { planKnown } from '../world/plans.js';
 
 // How a Deko stands: known (its plan), its quest and plan for building it
 // now, and the state as for a facility: 'built' | 'running' | 'ready' | 'lacking'.
-function dekoView(row, game) {
+// The stage is the one the camp has once the row of the Envoy is done (see
+// game.stageAhead): the plan of a stage that is there from the start is known
+// then; plans found out there only once the Envoy is back with them.
+function dekoView(row, game, stage) {
   const { world } = game.state;
-  const known = planKnown(world, row);
+  const known = planKnown(world, row, stage);
   const quest = dekoQuest(row);
   const plan = known && !dekoBuilt(world, row.id) ? game.plan(quest.id) : null;
   let state = dekoBuilt(world, row.id) ? 'built' : 'lacking';
@@ -27,7 +30,10 @@ function dekoView(row, game) {
   return { row, known, quest, plan, state };
 }
 
-const views = (game) => dekoOfReachedStages(game.state.world, game.catalog).map((row) => dekoView(row, game));
+const views = (game) => {
+  const stage = game.stageAhead();
+  return dekoOfReachedStages(game.state.world, game.catalog, stage).map((row) => dekoView(row, game, stage));
+};
 
 // Whether a Deko can be built right now.
 export function dekoCanBeBuilt(game) {

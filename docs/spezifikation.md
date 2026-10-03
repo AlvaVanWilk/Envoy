@@ -293,7 +293,9 @@ Lager; das spart Wege, und eine lange Reihe füllt eine lange Zeit ohne App.
   passen.
 - **Was die Reihe bringt, zählt für das Spätere schon mit**: Material, das sie sammelt,
   erfüllt die Voraussetzung einer späteren Quest (Stein, Pilzholz, dann das Lagerfeuer),
-  und beim Platz im Vorrat zählt, was vorher hinzukommt. Fehlt beim Aufbruch zu einem Bau doch
+  und beim Platz im Vorrat zählt, was vorher hinzukommt. Ebenso eine Lagerstufe: Während das
+  Lager aufgewertet wird, zeigen die Einrichtungen schon ihren Ausbau, und die Deko der neuen
+  Stufe lässt sich anhängen. Fehlt beim Aufbruch zu einem Bau doch
   Material, fällt der Bau heraus und die Energie kommt zurück. Das Fenster zeigt die Welt,
   wie sie nach der Reihe sein wird („Nach der Reihe im Vorrat …“).
 - Unterwegs zeigt die Leiste einen Block je Aktion (Weg kupfern, Arbeit hell) und den

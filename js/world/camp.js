@@ -152,9 +152,9 @@ export function dekoQuest(row) {
   };
 }
 
-// The Deko of the stages the camp has reached, in the order of the table.
-export function dekoOfReachedStages(world, catalog) {
-  return catalog.deko.filter((d) => d.lagerstufe <= world.camp.stage);
+// The Deko of the stages the camp has reached (or of `stage`), in the order of the table.
+export function dekoOfReachedStages(world, catalog, stage = world.camp.stage) {
+  return catalog.deko.filter((d) => d.lagerstufe <= stage);
 }
 
 // A quest at the camp by its id: bau:<facility>:<level>, bau:lager:<stage>, bau:deko:<id>.

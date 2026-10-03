@@ -20,9 +20,10 @@ import { daysBetween } from '../days.js';
 
 export const emptyPlans = () => ({ found: {}, search: {} });
 
-// Whether the plan of a Deko is known: found, or there from the start of its stage.
-export function planKnown(world, row) {
-  if (row.fundort === 'start') return world.camp.stage >= row.lagerstufe;
+// Whether the plan of a Deko is known: found, or there from the start of its
+// stage (the stage of the camp, or `stage`).
+export function planKnown(world, row, stage = world.camp.stage) {
+  if (row.fundort === 'start') return stage >= row.lagerstufe;
   return Boolean(world.plans?.found[row.id]);
 }
 
