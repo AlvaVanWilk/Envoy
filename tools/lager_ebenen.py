@@ -36,7 +36,8 @@ Needs Pillow (pip install pillow).
 
 from pathlib import Path
 
-from PIL import Image, ImageChops
+# Pillow is loaded only for making the cut-outs: the conversion of the tables
+# reads ORDER from here and runs without it.
 
 ROOT = Path(__file__).resolve().parent.parent
 PIECES = ROOT / "tools" / "lager-ausschnitte"
@@ -96,6 +97,7 @@ def cutout_runs():
 
 
 def piece(name):
+    from PIL import Image
     img = Image.open(PIECES / f"{name}.png").convert("RGBA")
     if img.size != SIZE:
         raise SystemExit(f"{name}.png ist {img.size[0]} × {img.size[1]}, erwartet {SIZE[0]} × {SIZE[1]}")
@@ -103,6 +105,7 @@ def piece(name):
 
 
 def main():
+    from PIL import Image, ImageChops
     for names in cutout_runs():
         pieces = {name: piece(name) for name in names}
         first = names[0]
