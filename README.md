@@ -119,7 +119,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Gebäude im Lagerbild | `assets/lager/gebaeude_<n>[_<teil>].png` | 1792 × 672, transparent, das Gebäude der Lagerstufe ab 2, an seinem Platz gezeichnet, auch in Teilen (hinter und vor den Betten); fehlt eine Stufe, das der Stufe davor |
 | Einrichtung im Lagerbild | `assets/lager/einrichtung_<id>_<stufe>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet; fehlt eine Stufe, die davor |
 | Deko im Lagerbild | `assets/lager/deko_<id>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet |
-| Ausschnitte im Lagerbild | `assets/lager/ausschnitt_<name>_<zeit>.png` | 1792 × 672, transparent: Felsen, Feuer, Säulen aus dem Bild, damit sie vor dem stehen, was dahinter liegt; macht `tools/lager_ebenen.py` |
+| Ausschnitte im Lagerbild | `assets/lager/ausschnitt_<name>_<zeit>.png` | 1792 × 672, transparent: Felsen, Feuer, Säulen aus dem Bild, damit sie vor dem stehen, was dahinter liegt, manche nur bis zu einer Lagerstufe oder nicht mit einer bestimmten Einrichtung; macht `tools/lager_ebenen.py` |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |

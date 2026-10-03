@@ -643,13 +643,19 @@ gezeichnet, wie bei Anziehpuppen. Der Stapel steht als Liste `ORDER` in
 | Gebäude | `gebaeude_<stufe>.png`, manche in Teilen (`gebaeude_3_hinten`, `gebaeude_3_vorn`, `gebaeude_5_stiel`) | alle Teile des Gebäudes der Lagerstufe; fehlt es, das der Stufe davor |
 | Einrichtung | `einrichtung_<id>_<stufe>.png` | jede Einrichtung auf ihrer Stufe; fehlt die Zeichnung, die der Stufe davor |
 | Deko | `deko_<id>.png` (Platz `deko` im Stapel) | jede gebaute Deko mit Zeichnung |
-| Ausschnitt | aus dem Grundbild ausgeschnitten: Felsen, Feuer, Funken, Säulen | immer, damit sie vor dem stehen, was im Stapel davor kommt |
+| Ausschnitt | aus dem Grundbild ausgeschnitten: Felsen, Feuer, Funken, Säulen | damit sie vor dem stehen, was im Stapel davor kommt; manche nur unter Bedingungen (siehe unten) |
 
 Die Reihenfolge ist: die Gebäude, dahinter liegende Teile zuerst (die Wackelige Hütte in
 einem hinteren Teil hinter den Betten), die Schlafplätze, vor ihnen der Stängel im
 Steinhäuschen und der vordere Teil der Wackeligen Hütte, die Pilzlager, der große Felsen
 hinter dem Feuer, die Aufbewahrung, Feuer und Funken, die Steinlager, die Deko, zuletzt der
 Felsen rechts vom Feuer, die beiden Säulen und der Felsen ganz vorn.
+
+Ein Eintrag im Stapel kann Bedingungen haben: nur bis zu einer Lagerstufe (`bis_lager`) oder
+nicht, solange eine bestimmte Zeichnung zu sehen ist (`nicht_mit`). So stehen die beiden
+hinteren Felsen (hinter dem Feuer und rechts davon) nur bis zur Wackeligen Hütte vorn; ab der
+Stabilen Hütte steht das Haus vor ihnen. Der Felsen rechts vom Feuer steht vor der Kiste und
+der Truhe, aber hinter dem Krempelplatz (Aufbewahrung 1).
 
 Die Ausschnitte zeichnet die Nutzerin aus dem Tagesbild aus; sie liegen in
 `tools/lager-ausschnitte/`. `tools/lager_ebenen.py` legt Ausschnitte, die im Stapel

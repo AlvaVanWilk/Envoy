@@ -202,14 +202,16 @@ def camp_layers(report):
       {"art": "gebaeude", "stufe": 3, "bild": ...}      building of a camp stage (or a part of it)
       {"art": "einrichtung", "id": "schlafplatz", "stufe": 2, "bild": ...}
       {"art": "deko"}                                   where the built Deko lies
-      {"art": "ausschnitt", "bildstufe": 1, "bilder": {"tag": ..., "nacht": ...}}
-                                                        cut out of the camp picture of that stage"""
+      {"art": "ausschnitt", "bildstufe": 1, "bilder": {"tag": ..., "nacht": ...},
+       "bisLager": 3, "nichtMit": [{"id": "aufbewahrung", "stufe": 1}]}
+                                                        cut out of the camp picture of that stage,
+                                                        with its conditions (if any)"""
     sys.path.insert(0, str(ROOT / "tools"))
-    from lager_ebenen import ORDER, PICTURE_STAGE, cutout_runs
+    from lager_ebenen import PICTURE_STAGE, stack, cutout_runs
     folder, size = PICTURES["lager"]
-    starts = {run[0] for run in cutout_runs()}
+    starts = {names[0] for names, _ in cutout_runs()}
     layers = []
-    for entry in ORDER:
+    for entry, cond in stack():
         if entry == "deko":
             layers.append({"art": "deko"})
             continue
@@ -221,8 +223,20 @@ def camp_layers(report):
             if not times:
                 report.warn("-", f"Ausschnitt {name} fehlt noch (python3 tools/lager_ebenen.py)")
                 continue
-            layers.append({"art": "ausschnitt", "bildstufe": PICTURE_STAGE,
-                           "bilder": {t: f"{folder}/ausschnitt_{name}_{t}.png" for t in times}})
+            layer = {"art": "ausschnitt", "bildstufe": PICTURE_STAGE,
+                     "bilder": {t: f"{folder}/ausschnitt_{name}_{t}.png" for t in times}}
+            if "bis_lager" in cond:
+                layer["bisLager"] = cond["bis_lager"]
+            not_with = []
+            for other in cond.get("nicht_mit", []):
+                m = re.fullmatch(r"einrichtung_([a-z]+)_(\d+)", other)
+                if not m:
+                    report.error("-", f"tools/lager_ebenen.py: nicht_mit '{other}' unbekannt")
+                    continue
+                not_with.append({"id": m.group(1), "stufe": int(m.group(2))})
+            if not_with:
+                layer["nichtMit"] = not_with
+            layers.append(layer)
             continue
         path = ROOT / folder / f"{entry}.png"
         if not path.exists():

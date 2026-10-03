@@ -57,7 +57,8 @@ const drawnUpTo = (layers, stage) => layers.reduce((best, l) => (l.stufe <= stag
 // at its level (or the highest level below it with a drawing), the built Deko
 // where the stack has its place, and the pieces cut out of the picture shown
 // (rocks, the fire, the pillars), so that they stand in front of what lies
-// behind them. -> [{ src, cutout }]
+// behind them, where their conditions hold (only up to a camp stage, not
+// with a certain drawing). -> [{ src, cutout }]
 export function campLayers(world, catalog, picture = { shown: 1, time: 'tag' }) {
   const stack = catalog.camp.layers || [];
   const building = drawnUpTo(stack.filter((l) => l.art === 'gebaeude'), world.camp.stage);
@@ -69,7 +70,8 @@ export function campLayers(world, catalog, picture = { shown: 1, time: 'tag' }) 
     else if (l.art === 'einrichtung' && l.stufe === level[l.id]) layers.push({ src: l.bild, cutout: false });
     else if (l.art === 'deko') {
       for (const d of catalog.deko) if (dekoBuilt(world, d.id) && d.bild) layers.push({ src: d.bild, cutout: false });
-    } else if (l.art === 'ausschnitt' && l.bildstufe === picture.shown && l.bilder[picture.time]) {
+    } else if (l.art === 'ausschnitt' && l.bildstufe === picture.shown && l.bilder[picture.time]
+      && !(l.bisLager < world.camp.stage) && !(l.nichtMit || []).some((n) => level[n.id] === n.stufe)) {
       layers.push({ src: l.bilder[picture.time], cutout: true });
     }
   }

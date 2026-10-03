@@ -14,14 +14,19 @@ each drawn in its place on the day picture):
                                   (a rock, the fire, a pillar), so that it
                                   stands in front of what lies behind it
 
+An entry can come with conditions, as (entry, {...}):
+    "bis_lager": n                only up to camp stage n
+    "nicht_mit": ["einrichtung_<id>_<stufe>", ...]
+                                  not while that drawing is shown
+
 The app shows of each kind what is built: the building of the camp stage,
-each facility at its level (else the level below with a drawing), all
-cut-outs. The tables do not name these pictures; the conversion
-(tools/convert_data.py) reads ORDER and finds the files.
+each facility at its level (else the level below with a drawing), the
+cut-outs whose conditions hold. The tables do not name these pictures; the
+conversion (tools/convert_data.py) reads ORDER and finds the files.
 
 The cut-outs come from the user's pieces in tools/lager-ausschnitte/<name>.png.
 Running this script lays each run of cut-outs that follow each other in ORDER
-together, by day as they are:
+with the same conditions together, by day as they are:
     assets/lager/ausschnitt_<first name>_tag.png
 and for the other times of day the same outlines cut out of that time's
 picture (stufe_1_<zeit>.jpg), so that they have its light:
@@ -62,7 +67,9 @@ ORDER = [
     "einrichtung_pilzlager_3",       # 12 Pilzholzschuppen
     "einrichtung_pilzlager_2",       # 13 Pilzholzgestell
     "einrichtung_pilzlager_1",       # 14 Pilzholzstapel
-    "ausschnitt:fels_mitte",         # 15 the big rock behind the fire
+    # 15 the big rock behind the fire: in front of the beds up to the Wackelige
+    # Hütte; from the Stabile Hütte on the house stands in front of it
+    ("ausschnitt:fels_mitte", {"bis_lager": 3}),
     "einrichtung_aufbewahrung_4",    # 16 Kleiderschrank
     "einrichtung_aufbewahrung_3",    # 17 Truhe
     "einrichtung_aufbewahrung_2",    # 18 Kiste
@@ -73,7 +80,9 @@ ORDER = [
     "einrichtung_steinlager_2",      # 23 Steinpferch
     "einrichtung_steinlager_1",      # 24 Steinstapel
     "deko",
-    "ausschnitt:fels_rechts",        # 25 the rock right of the fire
+    # 25 the rock right of the fire: in front of the Truhe, behind the
+    # Krempelplatz, and from the Stabile Hütte on behind the house
+    ("ausschnitt:fels_rechts", {"bis_lager": 3, "nicht_mit": ["einrichtung_aufbewahrung_1"]}),
     "ausschnitt:saeule_links",       # 26
     "ausschnitt:saeule_rechts",      # 27
     "ausschnitt:fels_vorn",          # 28 the rock at the bottom
@@ -82,17 +91,27 @@ ORDER = [
 ONLY_DAY = {"funken"}
 
 
+def stack():
+    """ORDER as [(entry, conditions), ...]."""
+    return [(e, {}) if isinstance(e, str) else e for e in ORDER]
+
+
 def cutout_runs():
-    """The runs of cut-outs that follow each other in ORDER: [[name, ...], ...]."""
-    runs, run = [], []
-    for entry in ORDER:
-        if entry.startswith("ausschnitt:"):
+    """The runs of cut-outs that follow each other in ORDER with the same
+    conditions: [([name, ...], conditions), ...]."""
+    runs, run, run_cond = [], [], None
+    for entry, cond in stack():
+        if entry.startswith("ausschnitt:") and (not run or cond == run_cond):
             run.append(entry.split(":", 1)[1])
-        elif run:
-            runs.append(run)
-            run = []
+            run_cond = cond
+            continue
+        if run:
+            runs.append((run, run_cond))
+            run, run_cond = [], None
+        if entry.startswith("ausschnitt:"):
+            run, run_cond = [entry.split(":", 1)[1]], cond
     if run:
-        runs.append(run)
+        runs.append((run, run_cond))
     return runs
 
 
@@ -106,7 +125,7 @@ def piece(name):
 
 def main():
     from PIL import Image, ImageChops
-    for names in cutout_runs():
+    for names, _ in cutout_runs():
         pieces = {name: piece(name) for name in names}
         first = names[0]
 

@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-03T15:38:51Z",
+ "generated": "2026-10-03T16:36:10Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1939,7 +1939,8 @@
      "tag": "assets/lager/ausschnitt_fels_mitte_tag.png",
      "abend": "assets/lager/ausschnitt_fels_mitte_abend.png",
      "nacht": "assets/lager/ausschnitt_fels_mitte_nacht.png"
-    }
+    },
+    "bisLager": 3
    },
    {
     "art": "einrichtung",
@@ -2004,6 +2005,23 @@
      "tag": "assets/lager/ausschnitt_fels_rechts_tag.png",
      "abend": "assets/lager/ausschnitt_fels_rechts_abend.png",
      "nacht": "assets/lager/ausschnitt_fels_rechts_nacht.png"
+    },
+    "bisLager": 3,
+    "nichtMit": [
+     {
+      "id": "aufbewahrung",
+      "stufe": 1
+     }
+    ]
+   },
+   {
+    "art": "ausschnitt",
+    "bildstufe": 1,
+    "bilder": {
+     "morgen": "assets/lager/ausschnitt_saeule_links_morgen.png",
+     "tag": "assets/lager/ausschnitt_saeule_links_tag.png",
+     "abend": "assets/lager/ausschnitt_saeule_links_abend.png",
+     "nacht": "assets/lager/ausschnitt_saeule_links_nacht.png"
     }
    }
   ]

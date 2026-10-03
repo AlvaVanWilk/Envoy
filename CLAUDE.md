@@ -238,7 +238,8 @@ ihrem Platz gezeichnet und unverändert übernommen): Gebäude `assets/lager/geb
 Einrichtungen `einrichtung_<id>_<stufe>.png`, Deko `deko_<id>.png` und Ausschnitte aus dem
 Bild (Felsen, Feuer, Säulen; ihre Teile in `tools/lager-ausschnitte/`, je Tageszeit
 `ausschnitt_<name>_<zeit>.png`). Die Reihenfolge von hinten nach vorn ist die der Nutzerin
-und steht als `ORDER` in `tools/lager_ebenen.py`; das Skript macht die Ausschnitte. Neue
+und steht als `ORDER` in `tools/lager_ebenen.py` (ein Eintrag kann Bedingungen haben: nur bis
+zu einer Lagerstufe, nicht mit einer bestimmten Einrichtung); das Skript macht die Ausschnitte. Neue
 Ebenen legt sie durchnummeriert in den Ordner `LagerPNGs` im Testordner auf dem Webspace.
 Karte
 `assets/welt/karte.jpg` (3:2).

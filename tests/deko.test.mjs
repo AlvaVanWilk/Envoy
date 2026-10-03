@@ -265,9 +265,10 @@ test('the camp picture: the picture, then the layers in the order the user arran
     ['assets/lager/ausschnitt_feuer_tag.png', ''],
     ['assets/lager/einrichtung_steinlager_1.png', ''],
     ['assets/lager/ausschnitt_fels_rechts_tag.png', ''],
+    ['assets/lager/ausschnitt_saeule_links_tag.png', ''],
   ]);
   // at night: the night picture and its cut-outs; the drawings get its light
-  assert.deepEqual(scene(world, catalog, 'nacht').map(([src, look]) => look), ['', 'light-nacht', 'light-nacht', 'light-nacht', '', '', 'light-nacht', '']);
+  assert.deepEqual(scene(world, catalog, 'nacht').map(([src, look]) => look), ['', 'light-nacht', 'light-nacht', 'light-nacht', '', '', 'light-nacht', '', '']);
   assert.ok(scene(world, catalog, 'nacht').some(([src]) => src === 'assets/lager/ausschnitt_feuer_nacht.png'));
   // where there is only a day picture, it stands in, tinted, and all on it with it
   const dayOnly = { ...catalog, camp: { ...catalog.camp, pictures: { 1: ['tag'] } } };
@@ -283,6 +284,13 @@ test('the camp picture: the picture, then the layers in the order the user arran
   // a facility without a drawing of its level shows the level below
   const higher = scene({ camp: { ...world.camp, facilities: { schlafplatz: 9 } } }, catalog, 'tag').map(([src]) => src);
   assert.ok(higher.includes('assets/lager/einrichtung_schlafplatz_5.png'));
+  // the rocks behind: in front only up to the Wackelige Hütte, the right one not with the Krempelplatz
+  const rocks = (stage, facilities) => scene({ camp: { ...world.camp, stage, facilities } }, catalog, 'tag')
+    .map(([src]) => src).filter((src) => /fels_(mitte|rechts)/.test(src));
+  assert.deepEqual(rocks(3, { aufbewahrung: 3 }), ['assets/lager/ausschnitt_fels_mitte_tag.png', 'assets/lager/ausschnitt_fels_rechts_tag.png']);
+  assert.deepEqual(rocks(3, { aufbewahrung: 1 }), ['assets/lager/ausschnitt_fels_mitte_tag.png']);
+  assert.deepEqual(rocks(4, { aufbewahrung: 3 }), []);
+  assert.deepEqual(rocks(5, {}), []);
   // before the fire: the bare picture, nothing on it
   assert.deepEqual(scene({ camp: { stage: 0, facilities: {}, deko: {}, reached: {} } }, catalog, 'tag'), [['assets/lager/stufe_0_tag.jpg', '']]);
 });
