@@ -196,23 +196,51 @@ def camp_pictures(pattern=r"stufe_(\d+)_([a-z]+)\.jpg"):
     return {stage: [t for t in CAMP_TIMES if t in times] for stage, times in found.items()}
 
 
-def camp_stage_pictures(report, row, name):
-    """A layer of the camp picture can lie elsewhere from a later camp stage on
-    (the Raspelnest inside the Unterstand): <name>_lager<n>.png, from stage n.
-    -> {'2': 'assets/lager/<name>_lager2.png'}"""
-    found = {}
-    for path in sorted((ROOT / PICTURES["lager"][0]).glob(f"{name}_lager*.png")):
-        m = re.fullmatch(re.escape(name) + r"_lager(\d+)\.png", path.name)
+def camp_layers(report):
+    """The layers of the camp picture, back to front, from ORDER in
+    tools/lager_ebenen.py (see there), as far as their files exist:
+      {"art": "gebaeude", "stufe": 3, "bild": ...}      building of a camp stage (or a part of it)
+      {"art": "einrichtung", "id": "schlafplatz", "stufe": 2, "bild": ...}
+      {"art": "deko"}                                   where the built Deko lies
+      {"art": "ausschnitt", "bildstufe": 1, "bilder": {"tag": ..., "nacht": ...}}
+                                                        cut out of the camp picture of that stage"""
+    sys.path.insert(0, str(ROOT / "tools"))
+    from lager_ebenen import ORDER, PICTURE_STAGE, cutout_runs
+    folder, size = PICTURES["lager"]
+    starts = {run[0] for run in cutout_runs()}
+    layers = []
+    for entry in ORDER:
+        if entry == "deko":
+            layers.append({"art": "deko"})
+            continue
+        if entry.startswith("ausschnitt:"):
+            name = entry.split(":", 1)[1]
+            if name not in starts:
+                continue    # laid together with the cut-out before it
+            times = [t for t in CAMP_TIMES if (ROOT / folder / f"ausschnitt_{name}_{t}.png").exists()]
+            if not times:
+                report.warn("-", f"Ausschnitt {name} fehlt noch (python3 tools/lager_ebenen.py)")
+                continue
+            layers.append({"art": "ausschnitt", "bildstufe": PICTURE_STAGE,
+                           "bilder": {t: f"{folder}/ausschnitt_{name}_{t}.png" for t in times}})
+            continue
+        path = ROOT / folder / f"{entry}.png"
+        if not path.exists():
+            report.warn("-", f"Ebene fehlt noch: {folder}/{entry}.png")
+            continue
+        if png_size(path) != size:
+            report.warn("-", f"{entry}.png ist {png_size(path)[0]} × {png_size(path)[1]}, erwartet {size[0]} × {size[1]}")
+        m = re.fullmatch(r"gebaeude_(\d+)(?:_[a-z]+)?", entry)
         if m:
-            found[m.group(1)] = optional_picture(report, row, "lager", path.name)
-    return found
-
-
-def camp_fronts():
-    """Which pictures of the camp have a front layer (what of the picture
-    stands in front of the facilities, stufe_<n>_<zeit>_vorn.png, made by
-    tools/lager_vorn.py), by stage like camp_pictures."""
-    return camp_pictures(r"stufe_(\d+)_([a-z]+)_vorn\.png")
+            layers.append({"art": "gebaeude", "stufe": int(m.group(1)), "bild": f"{folder}/{entry}.png"})
+            continue
+        m = re.fullmatch(r"einrichtung_([a-z]+)_(\d+)", entry)
+        if m and m.group(1) in FACILITIES:
+            layers.append({"art": "einrichtung", "id": m.group(1), "stufe": int(m.group(2)),
+                           "bild": f"{folder}/{entry}.png"})
+            continue
+        report.error("-", f"tools/lager_ebenen.py: '{entry}' unbekannt")
+    return layers
 
 
 # --- small languages used in cells -----------------------------------------
@@ -641,8 +669,6 @@ def convert_world(path, item_ids):
         stages.append({
             "stufe": stage, "name": text(r.get("name", "")),
             "hyggeBisNaechste": need, "upgrade": upgrade, "text": text(r.get("beschreibung", "")),
-            # the building of the stage, a layer on the camp picture (see js/ui/camp.js)
-            "bild": optional_picture(report, row, "lager", f"gebaeude_{stage}.png"),
         })
 
     facilities = []
@@ -683,8 +709,6 @@ def convert_world(path, item_ids):
             "kapazitaet": capacity if isinstance(capacity, int) else 0,
             "bonus": bonus if isinstance(bonus, int) else 0,
             "text": text(r.get("beschreibung", "")),
-            "bild": optional_picture(report, row, "lager", f"einrichtung_{fid}_{level}.png"),
-            "bilder": camp_stage_pictures(report, row, f"einrichtung_{fid}_{level}"),
         })
     for fid in FACILITIES:
         if fid not in levels:
@@ -755,7 +779,7 @@ def convert_world(path, item_ids):
         del p["_row"]
 
     return {"places": places, "monsters": monsters, "quests": quests,
-            "camp": {"stages": stages, "facilities": facilities, "pictures": camp_pictures(), "fronts": camp_fronts()}, "deko": deko}, report
+            "camp": {"stages": stages, "facilities": facilities, "pictures": camp_pictures(), "layers": camp_layers(report)}, "deko": deko}, report
 
 
 # --- main -------------------------------------------------------------------

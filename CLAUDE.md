@@ -233,15 +233,14 @@ ohne Feuer, bisher nur tag, die anderen Zeiten tönt die App; Stufe 1 = Lagerfeu
 Portrait des Envoy
 `portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Icon einer
 Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
-Ebenen des Lagerbilds `assets/lager/gebaeude_<n>.png` (das Gebäude ab Stufe 2),
-`assets/lager/einrichtung_<id>_<stufe>.png` (liegt sie ab Lagerstufe n anderswo:
-`einrichtung_<id>_<stufe>_lager<n>.png`) und
-`assets/lager/deko_<id>.png` (1792 × 672, transparent, von der Nutzerin auf dem Tagesbild an
-ihrem Platz gezeichnet und unverändert übernommen; die höheren Stufen der Einrichtungen
-macht sie ebenso, bis dahin steht die Zeichnung der Stufe davor), darüber der Vordergrund
-`assets/lager/stufe_<n>_<zeit>_vorn.png` (Säulen, Felsen, Feuer: was vor den Einrichtungen
-steht; `tools/lager_vorn.py` macht ihn aus ihren Teilen in `tools/lager-vorn/stufe_<n>/`, für
-die anderen Tageszeiten mit denselben Umrissen aus deren Bild), Karte
+Ebenen des Lagerbilds (1792 × 672, transparent, von der Nutzerin auf dem Tagesbild an
+ihrem Platz gezeichnet und unverändert übernommen): Gebäude `assets/lager/gebaeude_<n>[_<teil>].png`,
+Einrichtungen `einrichtung_<id>_<stufe>.png`, Deko `deko_<id>.png` und Ausschnitte aus dem
+Bild (Felsen, Feuer, Säulen; ihre Teile in `tools/lager-ausschnitte/`, je Tageszeit
+`ausschnitt_<name>_<zeit>.png`). Die Reihenfolge von hinten nach vorn ist die der Nutzerin
+und steht als `ORDER` in `tools/lager_ebenen.py`; das Skript macht die Ausschnitte. Neue
+Ebenen legt sie durchnummeriert in den Ordner `LagerPNGs` im Testordner auf dem Webspace.
+Karte
 `assets/welt/karte.jpg` (3:2).
 
 ## Kleiderkammer

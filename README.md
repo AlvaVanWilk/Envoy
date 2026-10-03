@@ -116,10 +116,10 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Deko (ab Lagerstufe 2) | `assets/icons/icon_einrichtung_<id>.png` | 256 × 256, transparent; ohne Bild das Deko-Zeichen |
 | Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
 | Lager | `assets/lager/stufe_<n>_<zeit>.jpg` | 1792 × 672; Zeit morgen, tag, abend, nacht; Stufe 0 ohne Feuer (bisher nur tag), Stufe 1 mit Lagerfeuer; fehlt eine Stufe, zeigt die App die davor |
-| Gebäude im Lagerbild | `assets/lager/gebaeude_<n>.png` | 1792 × 672, transparent, das ganze Gebäude der Lagerstufe ab 2, an seinem Platz gezeichnet; fehlt eine Stufe, das der Stufe davor |
-| Einrichtung im Lagerbild | `assets/lager/einrichtung_<id>_<stufe>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet; fehlt eine Stufe, die davor; liegt sie ab Lagerstufe n anderswo, `einrichtung_<id>_<stufe>_lager<n>.png` |
+| Gebäude im Lagerbild | `assets/lager/gebaeude_<n>[_<teil>].png` | 1792 × 672, transparent, das Gebäude der Lagerstufe ab 2, an seinem Platz gezeichnet, auch in Teilen (hinter und vor den Betten); fehlt eine Stufe, das der Stufe davor |
+| Einrichtung im Lagerbild | `assets/lager/einrichtung_<id>_<stufe>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet; fehlt eine Stufe, die davor |
 | Deko im Lagerbild | `assets/lager/deko_<id>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet |
-| Vordergrund des Lagerbilds | `assets/lager/stufe_<n>_<zeit>_vorn.png` | 1792 × 672, transparent: was vom Bild vor den Einrichtungen steht (Säulen, Felsen, Feuer); macht `tools/lager_vorn.py` |
+| Ausschnitte im Lagerbild | `assets/lager/ausschnitt_<name>_<zeit>.png` | 1792 × 672, transparent: Felsen, Feuer, Säulen aus dem Bild, damit sie vor dem stehen, was dahinter liegt; macht `tools/lager_ebenen.py` |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
@@ -149,5 +149,5 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager (sein Bild aus Ebenen, ein Tipp zeigt es groß), `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“, `deko.js` die Deko-Liste, `upgrade.js` „Lager aufwerten“, `testtools.js` das Menü am Schild „Test“, das nur die Testfassung zeigt; `journey.js` die Leiste einer laufenden Expedition mit ihrer Reihe und den Bericht; `js/world/expedition.js` Expeditionen als Reihe von Aktionen (Wege, Zeiten, Fortschritt), der Ablauf unterwegs steht in `js/world/worldstate.js`; `js/world/camp.js` das Lager (Stufen, Einrichtungen, Deko, Hygge), `js/world/plans.js` das Finden der Pläne für Deko, `js/daylight.js` die Tageszeit |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
-| `tools/` | Umwandlung der Tabellen; `tools/lager-vorn/stufe_<n>/` die Teile des Vordergrunds im Lagerbild (von der Nutzerin auf dem Tagesbild ausgeschnitten), `tools/lager_vorn.py` legt sie zusammen und schneidet dieselben Umrisse aus den Bildern der anderen Tageszeiten |
+| `tools/` | Umwandlung der Tabellen; `tools/lager_ebenen.py` hält die Reihenfolge der Ebenen im Lagerbild (`ORDER`, von hinten nach vorn) und macht aus den Teilen in `tools/lager-ausschnitte/` die Ausschnitte für jede Tageszeit |
 | `tests/` | Prüfungen der Spielregeln, `npm test` mit Node.js |

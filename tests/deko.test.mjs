@@ -251,43 +251,38 @@ test('every plan to find lies where it can be searched again and again', () => {
   }
 });
 
-test('the camp picture: the picture, what is built on it, then what of the picture stands in front', () => {
-  const world = { camp: { stage: 2, facilities: { steinlager: 1, pilzlager: 1 }, deko: {}, reached: {} } };
-  const scene = (cat, phase) => campScene(world, cat, phase).map((x) => [x.src.split('?')[0], x.look]);
-  // stage 2 has no picture of its own yet: the one of stage 1, and on it the Unterstand
-  assert.deepEqual(scene(catalog, 'tag'), [
+test('the camp picture: the picture, then the layers in the order the user arranged them', () => {
+  const world = { camp: { stage: 2, facilities: { steinlager: 1, pilzlager: 1, schlafplatz: 2 }, deko: {}, reached: {} } };
+  const scene = (w, cat, phase) => campScene(w, cat, phase).map((x) => [x.src.split('?')[0], x.look]);
+  // stage 2 has no picture of its own yet: the one of stage 1, on it the Unterstand,
+  // the Pilzmatte, the stores, the rocks, fire and pillars cut out of the picture in between
+  assert.deepEqual(scene(world, catalog, 'tag'), [
     ['assets/lager/stufe_1_tag.jpg', ''],
     ['assets/lager/gebaeude_2.png', ''],
-    ['assets/lager/einrichtung_pilzlager_1.png', ''],   // behind the Steinlager
+    ['assets/lager/einrichtung_schlafplatz_2.png', ''],
+    ['assets/lager/einrichtung_pilzlager_1.png', ''],
+    ['assets/lager/ausschnitt_fels_mitte_tag.png', ''],
+    ['assets/lager/ausschnitt_feuer_tag.png', ''],
     ['assets/lager/einrichtung_steinlager_1.png', ''],
-    ['assets/lager/stufe_1_tag_vorn.png', ''],
+    ['assets/lager/ausschnitt_fels_rechts_tag.png', ''],
   ]);
-  // at night: the night picture with its own front layer; the drawings get its light
-  assert.deepEqual(scene(catalog, 'nacht'), [
-    ['assets/lager/stufe_1_nacht.jpg', ''],
-    ['assets/lager/gebaeude_2.png', 'light-nacht'],
-    ['assets/lager/einrichtung_pilzlager_1.png', 'light-nacht'],   // behind the Steinlager
-    ['assets/lager/einrichtung_steinlager_1.png', 'light-nacht'],
-    ['assets/lager/stufe_1_nacht_vorn.png', ''],
-  ]);
+  // at night: the night picture and its cut-outs; the drawings get its light
+  assert.deepEqual(scene(world, catalog, 'nacht').map(([src, look]) => look), ['', 'light-nacht', 'light-nacht', 'light-nacht', '', '', 'light-nacht', '']);
+  assert.ok(scene(world, catalog, 'nacht').some(([src]) => src === 'assets/lager/ausschnitt_feuer_nacht.png'));
   // where there is only a day picture, it stands in, tinted, and all on it with it
-  const dayOnly = { ...catalog, camp: { ...catalog.camp, pictures: { 1: ['tag'] }, fronts: { 1: ['tag'] } } };
-  assert.deepEqual(scene(dayOnly, 'abend').map((x) => x[1]), ['tint-abend', 'tint-abend', 'tint-abend', 'tint-abend', 'tint-abend']);
-  // without a front layer there is none
-  const noFront = { ...catalog, camp: { ...catalog.camp, fronts: {} } };
-  assert.equal(scene(noFront, 'tag').length, 4);
-  // the building of the stage, or of the highest stage below it with a drawing
-  const higher = (stage) => campScene({ camp: { ...world.camp, stage } }, catalog, 'tag')[1].src.split('?')[0];
-  assert.equal(higher(5), 'assets/lager/gebaeude_5.png');
-  assert.equal(campScene({ camp: { ...world.camp, stage: 1 } }, catalog, 'tag').some((x) => x.src.includes('gebaeude')), false);
-  // a facility can lie elsewhere from a later camp stage on: the Raspelnest inside the Unterstand
-  const nest = (stage) => campScene({ camp: { ...world.camp, stage, facilities: { schlafplatz: 1 } } }, catalog, 'tag')
-    .map((x) => x.src.split('?')[0]).find((src) => src.includes('schlafplatz'));
-  assert.equal(nest(1), 'assets/lager/einrichtung_schlafplatz_1.png');
-  assert.equal(nest(2), 'assets/lager/einrichtung_schlafplatz_1_lager2.png');
-  assert.equal(nest(4), 'assets/lager/einrichtung_schlafplatz_1_lager2.png');   // until a later stage has its own
-  // the Pilzmatte, built from stage 2 on, has its own drawing there
-  const mat = campScene({ camp: { ...world.camp, stage: 2, facilities: { schlafplatz: 2 } } }, catalog, 'tag')
-    .map((x) => x.src.split('?')[0]).find((src) => src.includes('schlafplatz'));
-  assert.equal(mat, 'assets/lager/einrichtung_schlafplatz_2.png');
+  const dayOnly = { ...catalog, camp: { ...catalog.camp, pictures: { 1: ['tag'] } } };
+  assert.ok(scene(world, dayOnly, 'abend').every(([src, look]) => look === 'tint-abend'));
+  // the Wackelige Hütte in two parts: the back one behind the beds, the front one in front of them
+  const hut = scene({ camp: { ...world.camp, stage: 3 } }, catalog, 'tag').map(([src]) => src);
+  assert.ok(hut.indexOf('assets/lager/gebaeude_3_hinten.png') < hut.indexOf('assets/lager/einrichtung_schlafplatz_2.png'));
+  assert.ok(hut.indexOf('assets/lager/gebaeude_3_vorn.png') > hut.indexOf('assets/lager/einrichtung_schlafplatz_2.png'));
+  // the Steinhäuschen: its stem in front of the bed; no other building with it
+  const house = scene({ camp: { ...world.camp, stage: 5 } }, catalog, 'tag').map(([src]) => src);
+  assert.ok(house.indexOf('assets/lager/gebaeude_5_stiel.png') > house.indexOf('assets/lager/einrichtung_schlafplatz_2.png'));
+  assert.equal(house.filter((src) => src.includes('gebaeude')).length, 2);
+  // a facility without a drawing of its level shows the level below
+  const higher = scene({ camp: { ...world.camp, facilities: { schlafplatz: 9 } } }, catalog, 'tag').map(([src]) => src);
+  assert.ok(higher.includes('assets/lager/einrichtung_schlafplatz_5.png'));
+  // before the fire: the bare picture, nothing on it
+  assert.deepEqual(scene({ camp: { stage: 0, facilities: {}, deko: {}, reached: {} } }, catalog, 'tag'), [['assets/lager/stufe_0_tag.jpg', '']]);
 });

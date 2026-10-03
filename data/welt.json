@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-03T02:46:48Z",
+ "generated": "2026-10-03T15:38:51Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1565,8 +1565,7 @@
      },
      "energie": 22
     },
-    "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand.",
-    "bild": null
+    "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand."
    },
    {
     "stufe": 2,
@@ -1579,8 +1578,7 @@
      },
      "energie": 45
     },
-    "text": "Ein schräges Dach aus Pilzholz und Pilzhut an einem Felsen, davor ein Windschutz aus Steinen.",
-    "bild": "assets/lager/gebaeude_2.png"
+    "text": "Ein schräges Dach aus Pilzholz und Pilzhut an einem Felsen, davor ein Windschutz aus Steinen."
    },
    {
     "stufe": 3,
@@ -1593,8 +1591,7 @@
      },
      "energie": 85
     },
-    "text": "Schiefe Wände aus Pilzholz, ein Dach aus Pilzhutstücken. Sie hält, meistens.",
-    "bild": "assets/lager/gebaeude_3.png"
+    "text": "Schiefe Wände aus Pilzholz, ein Dach aus Pilzhutstücken. Sie hält, meistens."
    },
    {
     "stufe": 4,
@@ -1607,16 +1604,14 @@
      },
      "energie": 130
     },
-    "text": "Dieselbe Hütte, jetzt auf einem gemauerten Sockel. Drinnen bleibt es trocken.",
-    "bild": "assets/lager/gebaeude_4.png"
+    "text": "Dieselbe Hütte, jetzt auf einem gemauerten Sockel. Drinnen bleibt es trocken."
    },
    {
     "stufe": 5,
     "name": "Steinhäuschen",
     "hyggeBisNaechste": null,
     "upgrade": null,
-    "text": "Gemauert, mit Tür, Fenster und Kamin.",
-    "bild": "assets/lager/gebaeude_5.png"
+    "text": "Gemauert, mit Tür, Fenster und Kamin."
    }
   ],
   "facilities": [
@@ -1633,9 +1628,7 @@
     "hygge": 1,
     "kapazitaet": 20,
     "bonus": 0,
-    "text": "Eine Mulde, mit Pilzholz eingefasst. Hier liegen die Steine, bis sie gebraucht werden.",
-    "bild": "assets/lager/einrichtung_steinlager_1.png",
-    "bilder": {}
+    "text": "Eine Mulde, mit Pilzholz eingefasst. Hier liegen die Steine, bis sie gebraucht werden."
    },
    {
     "id": "steinlager",
@@ -1650,9 +1643,7 @@
     "hygge": 2,
     "kapazitaet": 50,
     "bonus": 0,
-    "text": "Ein Pferch aus Pilzholzstielen, damit der Haufen nicht auseinanderrollt.",
-    "bild": "assets/lager/einrichtung_steinlager_2.png",
-    "bilder": {}
+    "text": "Ein Pferch aus Pilzholzstielen, damit der Haufen nicht auseinanderrollt."
    },
    {
     "id": "steinlager",
@@ -1667,9 +1658,7 @@
     "hygge": 3,
     "kapazitaet": 100,
     "bonus": 0,
-    "text": "Ein Schuppen neben dem Haus. Die Steine liegen trocken und sortiert.",
-    "bild": null,
-    "bilder": {}
+    "text": "Ein Schuppen neben dem Haus. Die Steine liegen trocken und sortiert."
    },
    {
     "id": "pilzlager",
@@ -1684,9 +1673,7 @@
     "hygge": 1,
     "kapazitaet": 20,
     "bonus": 0,
-    "text": "Ein Stapelplatz auf Latten, damit nichts im Boden fault.",
-    "bild": "assets/lager/einrichtung_pilzlager_1.png",
-    "bilder": {}
+    "text": "Ein Stapelplatz auf Latten, damit nichts im Boden fault."
    },
    {
     "id": "pilzlager",
@@ -1701,9 +1688,7 @@
     "hygge": 2,
     "kapazitaet": 50,
     "bonus": 0,
-    "text": "Ein Gestell aus Stielen, luftig, damit das Pilzholz trocknet.",
-    "bild": "assets/lager/einrichtung_pilzlager_2.png",
-    "bilder": {}
+    "text": "Ein Gestell aus Stielen, luftig, damit das Pilzholz trocknet."
    },
    {
     "id": "pilzlager",
@@ -1718,9 +1703,7 @@
     "hygge": 3,
     "kapazitaet": 100,
     "bonus": 0,
-    "text": "Ein Schuppen neben dem Haus, mit einem Dach aus Pilzhut.",
-    "bild": null,
-    "bilder": {}
+    "text": "Ein Schuppen neben dem Haus, mit einem Dach aus Pilzhut."
    },
    {
     "id": "aufbewahrung",
@@ -1735,9 +1718,7 @@
     "hygge": 2,
     "kapazitaet": 6,
     "bonus": 0,
-    "text": "Ein paar Fächer zwischen den Steinen. Was der Envoy nicht trägt, liegt hier.",
-    "bild": "assets/lager/einrichtung_aufbewahrung_1.png",
-    "bilder": {}
+    "text": "Ein paar Fächer zwischen den Steinen. Was der Envoy nicht trägt, liegt hier."
    },
    {
     "id": "aufbewahrung",
@@ -1752,9 +1733,7 @@
     "hygge": 3,
     "kapazitaet": 10,
     "bonus": 0,
-    "text": "Eine Kiste mit Deckel. Was darin liegt, bleibt sauber.",
-    "bild": null,
-    "bilder": {}
+    "text": "Eine Kiste mit Deckel. Was darin liegt, bleibt sauber."
    },
    {
     "id": "aufbewahrung",
@@ -1769,9 +1748,7 @@
     "hygge": 4,
     "kapazitaet": 15,
     "bonus": 0,
-    "text": "Eine schwere Truhe mit Beschlägen aus Stein.",
-    "bild": null,
-    "bilder": {}
+    "text": "Eine schwere Truhe mit Beschlägen aus Stein."
    },
    {
     "id": "aufbewahrung",
@@ -1786,9 +1763,7 @@
     "hygge": 5,
     "kapazitaet": 24,
     "bonus": 0,
-    "text": "Ein Schrank mit Türen und Fächern, für Kleidung und alles, was der Envoy findet.",
-    "bild": null,
-    "bilder": {}
+    "text": "Ein Schrank mit Türen und Fächern, für Kleidung und alles, was der Envoy findet."
    },
    {
     "id": "schlafplatz",
@@ -1803,11 +1778,7 @@
     "hygge": 3,
     "kapazitaet": 0,
     "bonus": 20,
-    "text": "Eine Fläche aus Pilzraspeln, weich genug für eine Nacht.",
-    "bild": "assets/lager/einrichtung_schlafplatz_1.png",
-    "bilder": {
-     "2": "assets/lager/einrichtung_schlafplatz_1_lager2.png"
-    }
+    "text": "Eine Fläche aus Pilzraspeln, weich genug für eine Nacht."
    },
    {
     "id": "schlafplatz",
@@ -1822,9 +1793,7 @@
     "hygge": 4,
     "kapazitaet": 0,
     "bonus": 25,
-    "text": "Eine Matte aus geflochtenen Pilzfasern, weicher als der Boden.",
-    "bild": "assets/lager/einrichtung_schlafplatz_2.png",
-    "bilder": {}
+    "text": "Eine Matte aus geflochtenen Pilzfasern, weicher als der Boden."
    },
    {
     "id": "schlafplatz",
@@ -1839,9 +1808,7 @@
     "hygge": 5,
     "kapazitaet": 0,
     "bonus": 30,
-    "text": "Die Matte auf einem Sockel aus Steinen. Von unten wird es nicht mehr kalt.",
-    "bild": null,
-    "bilder": {}
+    "text": "Die Matte auf einem Sockel aus Steinen. Von unten wird es nicht mehr kalt."
    },
    {
     "id": "schlafplatz",
@@ -1856,9 +1823,7 @@
     "hygge": 6,
     "kapazitaet": 0,
     "bonus": 35,
-    "text": "Ein Bett aus Pilzholz, mit einer Decke.",
-    "bild": null,
-    "bilder": {}
+    "text": "Ein Bett aus Pilzholz, mit einer Decke."
    },
    {
     "id": "schlafplatz",
@@ -1873,9 +1838,7 @@
     "hygge": 7,
     "kapazitaet": 0,
     "bonus": 40,
-    "text": "Ein Bett mit einem Dach aus Stoff. Darunter ist es still.",
-    "bild": null,
-    "bilder": {}
+    "text": "Ein Bett mit einem Dach aus Stoff. Darunter ist es still."
    }
   ],
   "pictures": {
@@ -1889,14 +1852,161 @@
     "nacht"
    ]
   },
-  "fronts": {
-   "1": [
-    "morgen",
-    "tag",
-    "abend",
-    "nacht"
-   ]
-  }
+  "layers": [
+   {
+    "art": "gebaeude",
+    "stufe": 5,
+    "bild": "assets/lager/gebaeude_5.png"
+   },
+   {
+    "art": "gebaeude",
+    "stufe": 4,
+    "bild": "assets/lager/gebaeude_4.png"
+   },
+   {
+    "art": "gebaeude",
+    "stufe": 3,
+    "bild": "assets/lager/gebaeude_3_hinten.png"
+   },
+   {
+    "art": "gebaeude",
+    "stufe": 2,
+    "bild": "assets/lager/gebaeude_2.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "schlafplatz",
+    "stufe": 5,
+    "bild": "assets/lager/einrichtung_schlafplatz_5.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "schlafplatz",
+    "stufe": 4,
+    "bild": "assets/lager/einrichtung_schlafplatz_4.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "schlafplatz",
+    "stufe": 3,
+    "bild": "assets/lager/einrichtung_schlafplatz_3.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "schlafplatz",
+    "stufe": 2,
+    "bild": "assets/lager/einrichtung_schlafplatz_2.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "schlafplatz",
+    "stufe": 1,
+    "bild": "assets/lager/einrichtung_schlafplatz_1.png"
+   },
+   {
+    "art": "gebaeude",
+    "stufe": 5,
+    "bild": "assets/lager/gebaeude_5_stiel.png"
+   },
+   {
+    "art": "gebaeude",
+    "stufe": 3,
+    "bild": "assets/lager/gebaeude_3_vorn.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "pilzlager",
+    "stufe": 3,
+    "bild": "assets/lager/einrichtung_pilzlager_3.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "pilzlager",
+    "stufe": 2,
+    "bild": "assets/lager/einrichtung_pilzlager_2.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "pilzlager",
+    "stufe": 1,
+    "bild": "assets/lager/einrichtung_pilzlager_1.png"
+   },
+   {
+    "art": "ausschnitt",
+    "bildstufe": 1,
+    "bilder": {
+     "morgen": "assets/lager/ausschnitt_fels_mitte_morgen.png",
+     "tag": "assets/lager/ausschnitt_fels_mitte_tag.png",
+     "abend": "assets/lager/ausschnitt_fels_mitte_abend.png",
+     "nacht": "assets/lager/ausschnitt_fels_mitte_nacht.png"
+    }
+   },
+   {
+    "art": "einrichtung",
+    "id": "aufbewahrung",
+    "stufe": 4,
+    "bild": "assets/lager/einrichtung_aufbewahrung_4.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "aufbewahrung",
+    "stufe": 3,
+    "bild": "assets/lager/einrichtung_aufbewahrung_3.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "aufbewahrung",
+    "stufe": 2,
+    "bild": "assets/lager/einrichtung_aufbewahrung_2.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "aufbewahrung",
+    "stufe": 1,
+    "bild": "assets/lager/einrichtung_aufbewahrung_1.png"
+   },
+   {
+    "art": "ausschnitt",
+    "bildstufe": 1,
+    "bilder": {
+     "morgen": "assets/lager/ausschnitt_feuer_morgen.png",
+     "tag": "assets/lager/ausschnitt_feuer_tag.png",
+     "abend": "assets/lager/ausschnitt_feuer_abend.png",
+     "nacht": "assets/lager/ausschnitt_feuer_nacht.png"
+    }
+   },
+   {
+    "art": "einrichtung",
+    "id": "steinlager",
+    "stufe": 3,
+    "bild": "assets/lager/einrichtung_steinlager_3.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "steinlager",
+    "stufe": 2,
+    "bild": "assets/lager/einrichtung_steinlager_2.png"
+   },
+   {
+    "art": "einrichtung",
+    "id": "steinlager",
+    "stufe": 1,
+    "bild": "assets/lager/einrichtung_steinlager_1.png"
+   },
+   {
+    "art": "deko"
+   },
+   {
+    "art": "ausschnitt",
+    "bildstufe": 1,
+    "bilder": {
+     "morgen": "assets/lager/ausschnitt_fels_rechts_morgen.png",
+     "tag": "assets/lager/ausschnitt_fels_rechts_tag.png",
+     "abend": "assets/lager/ausschnitt_fels_rechts_abend.png",
+     "nacht": "assets/lager/ausschnitt_fels_rechts_nacht.png"
+    }
+   }
+  ]
  },
  "deko": [
   {

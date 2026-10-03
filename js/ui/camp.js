@@ -6,13 +6,10 @@
 // The picture belongs to the stage of the camp and to the time of day at
 // the camp (see daylight.js). A stage without a picture of its own shows the
 // one of the stage before; a time of day without one shows the day picture,
-// darker or warmer. On it lie the building of the stage (assets/lager/
-// gebaeude_<stufe>.png, from stage 2: Unterstand, Hütten, Steinhäuschen), the
-// facilities and the Deko that are built, each as a layer of its own
-// (einrichtung_<id>_<stufe>.png, deko_<id>.png), where there is a drawing,
-// and over them what of the picture
-// stands in front of them (stufe_<n>_<zeit>_vorn.png: pillars, rocks, the
-// fire; see tools/lager_vorn.py). A tap on the picture shows it large, all of
+// darker or warmer. On it lie, as layers in the order the user arranged them
+// (see campLayers and tools/lager_ebenen.py), the building of the stage, the
+// facilities and the Deko that are built, and pieces cut out of the picture
+// that stand in front of them. A tap on the picture shows it large, all of
 // it. (Later the Envoy is to sit there while at the camp.)
 
 import { h, icon } from './dom.js';
@@ -30,7 +27,7 @@ import { openPicture } from './sheet.js';
 import { unseenDropCount } from './character.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
-import { campStatus, facilityRow, facilityLevel, stageRow, nextUpgrade, dekoBuilt } from '../world/camp.js';
+import { campStatus, facilityLevel, nextUpgrade, dekoBuilt, FACILITY_IDS } from '../world/camp.js';
 
 const ALT = [
   'Das Lager auf dem Trümmerfeld: Steine, schwarze Säulen und hohe Pilze, noch ohne Feuer.',
@@ -38,66 +35,60 @@ const ALT = [
 ];
 
 // The picture for a stage and time of day: the one of this stage, or of the
-// highest stage below it that has one. Where there is none for the time of
-// day, the day picture is used and `tint` names how it is darkened or warmed.
-// `front` is its front layer, if it has one.
+// highest stage below it that has one (`shown`). Where there is none for the
+// time of day, the day picture is used (`time`) and `tint` names how it is
+// darkened or warmed.
 export function campPicture(stage, phase, catalog) {
   const pictures = catalog.camp.pictures || {};
   let shown = stage;
   while (shown > 0 && !pictures[shown]) shown -= 1;
   const times = pictures[shown] || ['tag'];
   const time = times.includes(phase) ? phase : 'tag';
-  const front = (catalog.camp.fronts?.[shown] || []).includes(time) ? versioned(`assets/lager/stufe_${shown}_${time}_vorn.png`) : null;
-  return { src: versioned(`assets/lager/stufe_${shown}_${time}.jpg`), tint: time === phase ? null : phase, front };
+  return { src: versioned(`assets/lager/stufe_${shown}_${time}.jpg`), tint: time === phase ? null : phase, shown, time };
 }
 
-// The order in which the facilities lie on the picture, back to front (not
-// the order of the tiles): the Pilzlager behind the Steinlager, the
-// Aufbewahrung in front at the bottom.
-const LAYER_ORDER = ['pilzlager', 'steinlager', 'schlafplatz', 'aufbewahrung'];
+// The highest drawn stage up to `stage` among some layers (0 if none).
+const drawnUpTo = (layers, stage) => layers.reduce((best, l) => (l.stufe <= stage && l.stufe > best ? l.stufe : best), 0);
 
-// A facility's drawing at the stage of the camp: where it lies from a later
-// camp stage on (bilder, e.g. the Raspelnest inside the Unterstand), else its
-// drawing for where it first stood.
-function drawingAt(row, stage) {
-  for (let s = stage; s > 1; s -= 1) if (row.bilder?.[s]) return row.bilder[s];
-  return row.bild;
-}
-
-// The drawings of what is built, to lie on the picture: the building of the
-// stage (or of the highest stage below it with a drawing), each facility at
-// its level (or the highest level below it with a drawing), then each Deko.
-export function campLayers(world, catalog) {
+// What of the stack of layers (catalog.camp.layers, back to front, see
+// tools/lager_ebenen.py) lies on the picture now, in that order: the building
+// of the camp stage (or of the highest stage below it with a drawing; some
+// buildings come in parts, one behind the beds, one in front), each facility
+// at its level (or the highest level below it with a drawing), the built Deko
+// where the stack has its place, and the pieces cut out of the picture shown
+// (rocks, the fire, the pillars), so that they stand in front of what lies
+// behind them. -> [{ src, cutout }]
+export function campLayers(world, catalog, picture = { shown: 1, time: 'tag' }) {
+  const stack = catalog.camp.layers || [];
+  const building = drawnUpTo(stack.filter((l) => l.art === 'gebaeude'), world.camp.stage);
+  const level = Object.fromEntries(FACILITY_IDS.map((id) => [id,
+    drawnUpTo(stack.filter((l) => l.art === 'einrichtung' && l.id === id), facilityLevel(world, id))]));
   const layers = [];
-  const stage = world.camp.stage;
-  for (let s = stage; s > 0; s -= 1) {
-    const row = stageRow(catalog, s);
-    if (row?.bild) { layers.push(row.bild); break; }
-  }
-  for (const id of LAYER_ORDER) {
-    for (let level = facilityLevel(world, id); level > 0; level -= 1) {
-      const row = facilityRow(catalog, id, level);
-      const drawing = row && drawingAt(row, stage);
-      if (drawing) { layers.push(drawing); break; }
+  for (const l of stack) {
+    if (l.art === 'gebaeude' && l.stufe === building) layers.push({ src: l.bild, cutout: false });
+    else if (l.art === 'einrichtung' && l.stufe === level[l.id]) layers.push({ src: l.bild, cutout: false });
+    else if (l.art === 'deko') {
+      for (const d of catalog.deko) if (dekoBuilt(world, d.id) && d.bild) layers.push({ src: d.bild, cutout: false });
+    } else if (l.art === 'ausschnitt' && l.bildstufe === picture.shown && l.bilder[picture.time]) {
+      layers.push({ src: l.bilder[picture.time], cutout: true });
     }
   }
-  for (const d of catalog.deko) if (dekoBuilt(world, d.id) && d.bild) layers.push(d.bild);
   return layers;
 }
 
 // Everything the picture of the camp is made of at a time of day, back to
-// front, each with its look: the picture, the drawings of what is built and
-// the front layer. The drawings are made by day: on the picture of another
-// time they get its light (light-<phase>, in css/envoy.css), on the day
-// picture standing in for another time they are tinted like it.
+// front, each with its look: the picture and its layers. The drawings are
+// made by day: on the picture of another time they get its light
+// (light-<phase>, in css/envoy.css), on the day picture standing in for
+// another time they are tinted like it. The cut-outs come from the picture
+// itself and look like it.
 export function campScene(world, catalog, phase) {
-  const { src, tint, front } = campPicture(world.camp.stage, phase, catalog);
-  const picture = tint ? `tint-${tint}` : '';
-  const drawing = tint ? `tint-${tint}` : phase === 'tag' ? '' : `light-${phase}`;
+  const picture = campPicture(world.camp.stage, phase, catalog);
+  const own = picture.tint ? `tint-${picture.tint}` : '';
+  const drawing = picture.tint ? `tint-${picture.tint}` : phase === 'tag' ? '' : `light-${phase}`;
   return [
-    { src, look: picture },
-    ...campLayers(world, catalog).map((layer) => ({ src: layer, look: drawing })),
-    ...(front ? [{ src: front, look: picture }] : []),
+    { src: picture.src, look: own },
+    ...campLayers(world, catalog, picture).map((l) => ({ src: l.src, look: l.cutout ? own : drawing })),
   ];
 }
 

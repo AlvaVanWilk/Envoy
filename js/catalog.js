@@ -3,14 +3,14 @@
 
 import { DATA_FILES, STAT_IDS, versioned } from './config.js';
 
-const EMPTY_WORLD = { places: [], monsters: [], quests: [], camp: { stages: [], facilities: [], pictures: {}, fronts: {} }, deko: [] };
+const EMPTY_WORLD = { places: [], monsters: [], quests: [], camp: { stages: [], facilities: [], pictures: {}, layers: [] }, deko: [] };
 
 // The picture fields of a list, with the app version added (see versioned).
 function withVersions(list, fields) {
   return list.map((entry) => {
     const copy = { ...entry };
     for (const field of fields) if (copy[field]) copy[field] = versioned(copy[field]);
-    // the other figures' own versions: { zweite: path }; a camp layer for later stages: { 2: path }
+    // the other figures' own versions: { zweite: path }; a cut-out of the camp picture by time of day: { tag: path }
     for (const field of ['figuren', 'icons', 'bilder']) {
       if (copy[field]) copy[field] = Object.fromEntries(Object.entries(copy[field]).map(([f, path]) => [f, versioned(path)]));
     }
@@ -22,11 +22,11 @@ export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORL
   const exercises = exerciseData.exercises || [];
   const equipment = withVersions(equipmentData.equipment || [], ['figur', 'icon']);
   const given = { ...EMPTY_WORLD, ...worldData };
-  const camp = { stages: [], facilities: [], pictures: {}, fronts: {}, ...given.camp };
+  const camp = { stages: [], facilities: [], pictures: {}, layers: [], ...given.camp };
   const world = {
     ...given,
     monsters: withVersions(given.monsters, ['bild']),
-    camp: { ...camp, stages: withVersions(camp.stages, ['bild']), facilities: withVersions(camp.facilities, ['bild']) },
+    camp: { ...camp, layers: withVersions(camp.layers, ['bild']) },
     deko: withVersions(given.deko || [], ['icon', 'bild']),
   };
   const maxIntensity = {};
