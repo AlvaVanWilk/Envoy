@@ -26,7 +26,7 @@ export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORL
   const world = {
     ...given,
     monsters: withVersions(given.monsters, ['bild']),
-    camp: { ...camp, facilities: withVersions(camp.facilities, ['bild']) },
+    camp: { ...camp, stages: withVersions(camp.stages, ['bild']), facilities: withVersions(camp.facilities, ['bild']) },
     deko: withVersions(given.deko || [], ['icon', 'bild']),
   };
   const maxIntensity = {};

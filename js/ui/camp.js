@@ -6,9 +6,11 @@
 // The picture belongs to the stage of the camp and to the time of day at
 // the camp (see daylight.js). A stage without a picture of its own shows the
 // one of the stage before; a time of day without one shows the day picture,
-// darker or warmer. On it lie the facilities and the Deko that are built, each
-// as a layer of its own (assets/lager/einrichtung_<id>_<stufe>.png,
-// deko_<id>.png), where there is a drawing, and over them what of the picture
+// darker or warmer. On it lie the building of the stage (assets/lager/
+// gebaeude_<stufe>.png, from stage 2: Unterstand, Hütten, Steinhäuschen), the
+// facilities and the Deko that are built, each as a layer of its own
+// (einrichtung_<id>_<stufe>.png, deko_<id>.png), where there is a drawing,
+// and over them what of the picture
 // stands in front of them (stufe_<n>_<zeit>_vorn.png: pillars, rocks, the
 // fire; see tools/lager_vorn.py). A tap on the picture shows it large, all of
 // it. (Later the Envoy is to sit there while at the camp.)
@@ -28,7 +30,7 @@ import { openPicture } from './sheet.js';
 import { unseenDropCount } from './character.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
-import { campStatus, facilityRow, facilityLevel, nextUpgrade, dekoBuilt } from '../world/camp.js';
+import { campStatus, facilityRow, facilityLevel, stageRow, nextUpgrade, dekoBuilt } from '../world/camp.js';
 
 const ALT = [
   'Das Lager auf dem Trümmerfeld: Steine, schwarze Säulen und hohe Pilze, noch ohne Feuer.',
@@ -54,10 +56,15 @@ export function campPicture(stage, phase, catalog) {
 // Aufbewahrung in front at the bottom.
 const LAYER_ORDER = ['pilzlager', 'steinlager', 'schlafplatz', 'aufbewahrung'];
 
-// The drawings of what is built, to lie on the picture: each facility at its
-// level (or the highest level below it with a drawing), then each Deko.
+// The drawings of what is built, to lie on the picture: the building of the
+// stage (or of the highest stage below it with a drawing), each facility at
+// its level (or the highest level below it with a drawing), then each Deko.
 export function campLayers(world, catalog) {
   const layers = [];
+  for (let stage = world.camp.stage; stage > 0; stage -= 1) {
+    const row = stageRow(catalog, stage);
+    if (row?.bild) { layers.push(row.bild); break; }
+  }
   for (const id of LAYER_ORDER) {
     for (let level = facilityLevel(world, id); level > 0; level -= 1) {
       const row = facilityRow(catalog, id, level);

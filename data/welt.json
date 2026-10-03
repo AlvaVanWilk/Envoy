@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-02T22:13:02Z",
+ "generated": "2026-10-03T01:15:21Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1565,7 +1565,8 @@
      },
      "energie": 22
     },
-    "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand."
+    "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand.",
+    "bild": null
    },
    {
     "stufe": 2,
@@ -1578,7 +1579,8 @@
      },
      "energie": 45
     },
-    "text": "Ein schräges Dach aus Pilzholz und Pilzhut an einem Felsen, davor ein Windschutz aus Steinen."
+    "text": "Ein schräges Dach aus Pilzholz und Pilzhut an einem Felsen, davor ein Windschutz aus Steinen.",
+    "bild": "assets/lager/gebaeude_2.png"
    },
    {
     "stufe": 3,
@@ -1591,7 +1593,8 @@
      },
      "energie": 85
     },
-    "text": "Schiefe Wände aus Pilzholz, ein Dach aus Pilzhutstücken. Sie hält, meistens."
+    "text": "Schiefe Wände aus Pilzholz, ein Dach aus Pilzhutstücken. Sie hält, meistens.",
+    "bild": "assets/lager/gebaeude_3.png"
    },
    {
     "stufe": 4,
@@ -1604,14 +1607,16 @@
      },
      "energie": 130
     },
-    "text": "Dieselbe Hütte, jetzt auf einem gemauerten Sockel. Drinnen bleibt es trocken."
+    "text": "Dieselbe Hütte, jetzt auf einem gemauerten Sockel. Drinnen bleibt es trocken.",
+    "bild": "assets/lager/gebaeude_4.png"
    },
    {
     "stufe": 5,
     "name": "Steinhäuschen",
     "hyggeBisNaechste": null,
     "upgrade": null,
-    "text": "Gemauert, mit Tür, Fenster und Kamin."
+    "text": "Gemauert, mit Tür, Fenster und Kamin.",
+    "bild": "assets/lager/gebaeude_5.png"
    }
   ],
   "facilities": [

@@ -254,9 +254,10 @@ test('every plan to find lies where it can be searched again and again', () => {
 test('the camp picture: the picture, what is built on it, then what of the picture stands in front', () => {
   const world = { camp: { stage: 2, facilities: { steinlager: 1, pilzlager: 1 }, deko: {}, reached: {} } };
   const scene = (cat, phase) => campScene(world, cat, phase).map((x) => [x.src.split('?')[0], x.look]);
-  // stage 2 has no picture of its own yet: the one of stage 1
+  // stage 2 has no picture of its own yet: the one of stage 1, and on it the Unterstand
   assert.deepEqual(scene(catalog, 'tag'), [
     ['assets/lager/stufe_1_tag.jpg', ''],
+    ['assets/lager/gebaeude_2.png', ''],
     ['assets/lager/einrichtung_pilzlager_1.png', ''],   // behind the Steinlager
     ['assets/lager/einrichtung_steinlager_1.png', ''],
     ['assets/lager/stufe_1_tag_vorn.png', ''],
@@ -264,14 +265,19 @@ test('the camp picture: the picture, what is built on it, then what of the pictu
   // at night: the night picture with its own front layer; the drawings get its light
   assert.deepEqual(scene(catalog, 'nacht'), [
     ['assets/lager/stufe_1_nacht.jpg', ''],
+    ['assets/lager/gebaeude_2.png', 'light-nacht'],
     ['assets/lager/einrichtung_pilzlager_1.png', 'light-nacht'],   // behind the Steinlager
     ['assets/lager/einrichtung_steinlager_1.png', 'light-nacht'],
     ['assets/lager/stufe_1_nacht_vorn.png', ''],
   ]);
   // where there is only a day picture, it stands in, tinted, and all on it with it
   const dayOnly = { ...catalog, camp: { ...catalog.camp, pictures: { 1: ['tag'] }, fronts: { 1: ['tag'] } } };
-  assert.deepEqual(scene(dayOnly, 'abend').map((x) => x[1]), ['tint-abend', 'tint-abend', 'tint-abend', 'tint-abend']);
+  assert.deepEqual(scene(dayOnly, 'abend').map((x) => x[1]), ['tint-abend', 'tint-abend', 'tint-abend', 'tint-abend', 'tint-abend']);
   // without a front layer there is none
   const noFront = { ...catalog, camp: { ...catalog.camp, fronts: {} } };
-  assert.equal(scene(noFront, 'tag').length, 3);
+  assert.equal(scene(noFront, 'tag').length, 4);
+  // the building of the stage, or of the highest stage below it with a drawing
+  const higher = (stage) => campScene({ camp: { ...world.camp, stage } }, catalog, 'tag')[1].src.split('?')[0];
+  assert.equal(higher(5), 'assets/lager/gebaeude_5.png');
+  assert.equal(campScene({ camp: { ...world.camp, stage: 1 } }, catalog, 'tag').some((x) => x.src.includes('gebaeude')), false);
 });

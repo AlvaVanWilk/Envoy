@@ -629,6 +629,8 @@ def convert_world(path, item_ids):
         stages.append({
             "stufe": stage, "name": text(r.get("name", "")),
             "hyggeBisNaechste": need, "upgrade": upgrade, "text": text(r.get("beschreibung", "")),
+            # the building of the stage, a layer on the camp picture (see js/ui/camp.js)
+            "bild": optional_picture(report, row, "lager", f"gebaeude_{stage}.png"),
         })
 
     facilities = []

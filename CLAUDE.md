@@ -91,7 +91,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   beim Händler; selten, sehr selten, kostbar; nach doppelt so vielen Chancen wie im
   Schnitt sicher), nicht gefundene grau und ohne Namen; Hygge als Summe von Einrichtungen
   und Deko, ab Stufe 2 reichen die Einrichtungen allein nicht; das Lagerbild aus Ebenen
-  (Grundbild der Stufe, Einrichtungen, Deko, Vordergrund; ein Tipp zeigt es groß); Rundgänge durch Abenteuer (erster Besuch)
+  (Grundbild der Stufe, ab Stufe 2 das Gebäude, Einrichtungen, Deko, Vordergrund; ein Tipp
+  zeigt es groß); Rundgänge durch Abenteuer (erster Besuch)
   und Lager (nach dem Feuer)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
@@ -232,7 +233,8 @@ ohne Feuer, bisher nur tag, die anderen Zeiten tönt die App; Stufe 1 = Lagerfeu
 Portrait des Envoy
 `portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Icon einer
 Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
-Ebenen des Lagerbilds `assets/lager/einrichtung_<id>_<stufe>.png` und
+Ebenen des Lagerbilds `assets/lager/gebaeude_<n>.png` (das Gebäude ab Stufe 2),
+`assets/lager/einrichtung_<id>_<stufe>.png` und
 `assets/lager/deko_<id>.png` (1792 × 672, transparent, von der Nutzerin auf dem Tagesbild an
 ihrem Platz gezeichnet und unverändert übernommen; die höheren Stufen der Einrichtungen
 macht sie ebenso, bis dahin steht die Zeichnung der Stufe davor), darüber der Vordergrund
