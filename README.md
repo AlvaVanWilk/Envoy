@@ -117,7 +117,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Monster | `assets/monster/<id>.png` | 512 × 512, transparent |
 | Lager | `assets/lager/stufe_<n>_<zeit>.jpg` | 1792 × 672; Zeit morgen, tag, abend, nacht; Stufe 0 ohne Feuer (bisher nur tag), Stufe 1 mit Lagerfeuer; fehlt eine Stufe, zeigt die App die davor |
 | Gebäude im Lagerbild | `assets/lager/gebaeude_<n>.png` | 1792 × 672, transparent, das ganze Gebäude der Lagerstufe ab 2, an seinem Platz gezeichnet; fehlt eine Stufe, das der Stufe davor |
-| Einrichtung im Lagerbild | `assets/lager/einrichtung_<id>_<stufe>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet; fehlt eine Stufe, die davor |
+| Einrichtung im Lagerbild | `assets/lager/einrichtung_<id>_<stufe>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet; fehlt eine Stufe, die davor; liegt sie ab Lagerstufe n anderswo, `einrichtung_<id>_<stufe>_lager<n>.png` |
 | Deko im Lagerbild | `assets/lager/deko_<id>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet |
 | Vordergrund des Lagerbilds | `assets/lager/stufe_<n>_<zeit>_vorn.png` | 1792 × 672, transparent: was vom Bild vor den Einrichtungen steht (Säulen, Felsen, Feuer); macht `tools/lager_vorn.py` |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |

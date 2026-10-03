@@ -234,7 +234,8 @@ Portrait des Envoy
 `portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Icon einer
 Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
 Ebenen des Lagerbilds `assets/lager/gebaeude_<n>.png` (das Gebäude ab Stufe 2),
-`assets/lager/einrichtung_<id>_<stufe>.png` und
+`assets/lager/einrichtung_<id>_<stufe>.png` (liegt sie ab Lagerstufe n anderswo:
+`einrichtung_<id>_<stufe>_lager<n>.png`) und
 `assets/lager/deko_<id>.png` (1792 × 672, transparent, von der Nutzerin auf dem Tagesbild an
 ihrem Platz gezeichnet und unverändert übernommen; die höheren Stufen der Einrichtungen
 macht sie ebenso, bis dahin steht die Zeichnung der Stufe davor), darüber der Vordergrund

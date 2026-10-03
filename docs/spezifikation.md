@@ -637,7 +637,10 @@ fehlt die Tageszeit, das Tagesbild getönt), darauf ab Stufe 2 das Gebäude der 
 Steinhäuschen, jedes ganz gezeichnet, nicht zusammengesetzt; fehlt es, das der Stufe
 davor; bisher steht es auf dem Bild der Stufe 1), dann jede stehende Einrichtung auf ihrer
 Stufe (`assets/lager/einrichtung_<id>_<stufe>.png`; fehlt die Zeichnung, die der Stufe
-davor; von hinten nach vorn Pilzlager, Steinlager, Schlafplatz, Aufbewahrung), jede gebaute Deko (`assets/lager/deko_<id>.png`), wo es eine Zeichnung gibt, und
+davor; von hinten nach vorn Pilzlager, Steinlager, Schlafplatz, Aufbewahrung; liegt eine
+Einrichtung ab einer späteren Lagerstufe anderswo, etwa das Raspelnest im Unterstand, gilt
+ab dort `einrichtung_<id>_<stufe>_lager<n>.png`, bis eine spätere Lagerstufe ihre eigene
+hat), jede gebaute Deko (`assets/lager/deko_<id>.png`), wo es eine Zeichnung gibt, und
 zuletzt der Vordergrund des Grundbilds (`assets/lager/stufe_<n>_<zeit>_vorn.png`): was vom
 Bild vor den Einrichtungen steht, auf Stufe 1 die beiden Säulen, die Felsen vorn und das
 Feuer mit seinen Funken. Alle Ebenen sind 1792 × 672 wie das Grundbild, transparent, an

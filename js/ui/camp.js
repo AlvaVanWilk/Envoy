@@ -56,19 +56,29 @@ export function campPicture(stage, phase, catalog) {
 // Aufbewahrung in front at the bottom.
 const LAYER_ORDER = ['pilzlager', 'steinlager', 'schlafplatz', 'aufbewahrung'];
 
+// A facility's drawing at the stage of the camp: where it lies from a later
+// camp stage on (bilder, e.g. the Raspelnest inside the Unterstand), else its
+// drawing for where it first stood.
+function drawingAt(row, stage) {
+  for (let s = stage; s > 1; s -= 1) if (row.bilder?.[s]) return row.bilder[s];
+  return row.bild;
+}
+
 // The drawings of what is built, to lie on the picture: the building of the
 // stage (or of the highest stage below it with a drawing), each facility at
 // its level (or the highest level below it with a drawing), then each Deko.
 export function campLayers(world, catalog) {
   const layers = [];
-  for (let stage = world.camp.stage; stage > 0; stage -= 1) {
-    const row = stageRow(catalog, stage);
+  const stage = world.camp.stage;
+  for (let s = stage; s > 0; s -= 1) {
+    const row = stageRow(catalog, s);
     if (row?.bild) { layers.push(row.bild); break; }
   }
   for (const id of LAYER_ORDER) {
     for (let level = facilityLevel(world, id); level > 0; level -= 1) {
       const row = facilityRow(catalog, id, level);
-      if (row?.bild) { layers.push(row.bild); break; }
+      const drawing = row && drawingAt(row, stage);
+      if (drawing) { layers.push(drawing); break; }
     }
   }
   for (const d of catalog.deko) if (dekoBuilt(world, d.id) && d.bild) layers.push(d.bild);

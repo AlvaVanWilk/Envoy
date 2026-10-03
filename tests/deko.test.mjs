@@ -280,4 +280,10 @@ test('the camp picture: the picture, what is built on it, then what of the pictu
   const higher = (stage) => campScene({ camp: { ...world.camp, stage } }, catalog, 'tag')[1].src.split('?')[0];
   assert.equal(higher(5), 'assets/lager/gebaeude_5.png');
   assert.equal(campScene({ camp: { ...world.camp, stage: 1 } }, catalog, 'tag').some((x) => x.src.includes('gebaeude')), false);
+  // a facility can lie elsewhere from a later camp stage on: the Raspelnest inside the Unterstand
+  const nest = (stage) => campScene({ camp: { ...world.camp, stage, facilities: { schlafplatz: 1 } } }, catalog, 'tag')
+    .map((x) => x.src.split('?')[0]).find((src) => src.includes('schlafplatz'));
+  assert.equal(nest(1), 'assets/lager/einrichtung_schlafplatz_1.png');
+  assert.equal(nest(2), 'assets/lager/einrichtung_schlafplatz_1_lager2.png');
+  assert.equal(nest(4), 'assets/lager/einrichtung_schlafplatz_1_lager2.png');   // until a later stage has its own
 });

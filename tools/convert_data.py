@@ -196,6 +196,18 @@ def camp_pictures(pattern=r"stufe_(\d+)_([a-z]+)\.jpg"):
     return {stage: [t for t in CAMP_TIMES if t in times] for stage, times in found.items()}
 
 
+def camp_stage_pictures(report, row, name):
+    """A layer of the camp picture can lie elsewhere from a later camp stage on
+    (the Raspelnest inside the Unterstand): <name>_lager<n>.png, from stage n.
+    -> {'2': 'assets/lager/<name>_lager2.png'}"""
+    found = {}
+    for path in sorted((ROOT / PICTURES["lager"][0]).glob(f"{name}_lager*.png")):
+        m = re.fullmatch(re.escape(name) + r"_lager(\d+)\.png", path.name)
+        if m:
+            found[m.group(1)] = optional_picture(report, row, "lager", path.name)
+    return found
+
+
 def camp_fronts():
     """Which pictures of the camp have a front layer (what of the picture
     stands in front of the facilities, stufe_<n>_<zeit>_vorn.png, made by
@@ -672,6 +684,7 @@ def convert_world(path, item_ids):
             "bonus": bonus if isinstance(bonus, int) else 0,
             "text": text(r.get("beschreibung", "")),
             "bild": optional_picture(report, row, "lager", f"einrichtung_{fid}_{level}.png"),
+            "bilder": camp_stage_pictures(report, row, f"einrichtung_{fid}_{level}"),
         })
     for fid in FACILITIES:
         if fid not in levels:
