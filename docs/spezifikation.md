@@ -558,7 +558,7 @@ Stufe passen immer in die Lager der Stufe davor.
 
 | Einrichtung | Stufen (Name, Wirkung, Hygge) |
 | --- | --- |
-| Steinlager | Steinstapel (fasst 20, 1), Steinkiste (50, 2), Steinschuppen (100, 3) |
+| Steinlager | Steinstapel (fasst 20, 1), Steinpferch (50, 2), Steinschuppen (100, 3) |
 | Pilzlager | Pilzholzstapel (20, 1), Pilzholzgestell (50, 2), Pilzholzschuppen (100, 3) |
 | Aufbewahrung | Krempelplatz (6 Plätze, 2), Kiste (10, 3), Truhe (15, 4), Kleiderschrank (24, 5) |
 | Schlafplatz | Raspelnest (+20 % Energie am Morgen, 3), Pilzmatte (+25 %, 4), Schlafpodest (+30 %, 5), Bett (+35 %, 6), Himmelbett (+40 %, 7) |
@@ -572,7 +572,7 @@ Kacheln, ab Lagerstufe 2 dazu eine fünfte für die Deko. Eine Kachel zeigt ein 
 Zeichen, daran eine kleine Medaille mit dem Hygge der jetzigen Stufe (wie die große auf
 dem Bild), den Namen und darunter die Kosten des nächsten Schritts als kleine Bilder
 (Pilzholz, Stein, Energie mit Zahl; was fehlt, orange), bei einer stehenden Einrichtung
-mit „Ausbau: Steinkiste“ darüber. Stehende Einrichtungen leuchten (das Zeichen kupfern mit
+mit „Ausbau: Steinpferch“ darüber. Stehende Einrichtungen leuchten (das Zeichen kupfern mit
 Haken), was gerade gebaut werden kann, glimmt, das andere ist dunkler. Ein Tipp zeigt
 mehr: Text, was sie bringt, Hygge; bei einem möglichen Ausbau darunter die nächste Stufe
 mit Text, Wirkung, „Hygge 2 statt 1“, Kosten, die Energie-Leiste und „Ausbauen“; geht der

@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-03T02:15:46Z",
+ "generated": "2026-10-03T02:46:48Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1640,7 +1640,7 @@
    {
     "id": "steinlager",
     "stufe": 2,
-    "name": "Steinkiste",
+    "name": "Steinpferch",
     "lagerstufe": 2,
     "cost": {
      "pilzholz": 12,
@@ -1650,8 +1650,8 @@
     "hygge": 2,
     "kapazitaet": 50,
     "bonus": 0,
-    "text": "Eine Kiste aus Pilzholz, mit Steinen beschwert, damit der Deckel hält.",
-    "bild": null,
+    "text": "Ein Pferch aus Pilzholzstielen, damit der Haufen nicht auseinanderrollt.",
+    "bild": "assets/lager/einrichtung_steinlager_2.png",
     "bilder": {}
    },
    {
@@ -1702,7 +1702,7 @@
     "kapazitaet": 50,
     "bonus": 0,
     "text": "Ein Gestell aus Stielen, luftig, damit das Pilzholz trocknet.",
-    "bild": null,
+    "bild": "assets/lager/einrichtung_pilzlager_2.png",
     "bilder": {}
    },
    {

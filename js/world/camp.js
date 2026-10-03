@@ -3,7 +3,7 @@
 //   stage 1   Provisorisches Lager, with the Lagerfeuer (built by the first quest)
 //   stage 2…  raised by „Lager aufwerten“ once the Hygge is enough (sheet Lagerstufen)
 // The facilities Steinlager, Pilzlager, Aufbewahrung and Schlafplatz are
-// built in levels, each with its own name (Steinstapel, Steinkiste, …). A
+// built in levels, each with its own name (Steinstapel, Steinpferch, …). A
 // level can only be built once the camp has reached the stage the table names.
 // Deko is built from a plan (see plans.js): one plan of a stage is there as
 // soon as the stage is reached, the others are found. Deko stays when the

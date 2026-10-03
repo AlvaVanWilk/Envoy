@@ -94,18 +94,18 @@ test('a level of a facility replaces the one before, with its own name, Hygge an
   assert.equal(facilityNow(s1.world, catalog, 'steinlager').name, 'Steinstapel');
   const next = facilityQuests(s1.world, catalog).find((q) => q.facility === 'steinlager');
   assert.equal(next.id, 'bau:steinlager:2');
-  assert.equal(next.name, 'Steinkiste bauen');
+  assert.equal(next.name, 'Steinpferch bauen');
   assert.deepEqual(questState(next, ctxOf(s1)).missing.slice(0, 1), ['Lager Stufe 2 (Unterstand)']);
 
   const s2 = at([gift({ unlocks: [...ALL_LEVEL_1, 'lager:2', 'steinlager:2'] })], 0.5);
-  assert.equal(facilityNow(s2.world, catalog, 'steinlager').name, 'Steinkiste');
+  assert.equal(facilityNow(s2.world, catalog, 'steinlager').name, 'Steinpferch');
   assert.equal(storeCapacity(s2.world, catalog, 'stein'), 50);
   assert.equal(hygge(s2.world, catalog), 8);   // 2 + 1 + 2 + 3, not 1 + 2 more
 });
 
 test('the stores end at level 3, the Aufbewahrung at 4, the Schlafplatz at 5; each level fits into the stores of the one before', () => {
   const levels = (id) => catalog.camp.facilities.filter((f) => f.id === id).map((f) => f.name);
-  assert.deepEqual(levels('steinlager'), ['Steinstapel', 'Steinkiste', 'Steinschuppen']);
+  assert.deepEqual(levels('steinlager'), ['Steinstapel', 'Steinpferch', 'Steinschuppen']);
   assert.deepEqual(levels('pilzlager'), ['Pilzholzstapel', 'Pilzholzgestell', 'Pilzholzschuppen']);
   assert.deepEqual(levels('aufbewahrung'), ['Krempelplatz', 'Kiste', 'Truhe', 'Kleiderschrank']);
   assert.deepEqual(levels('schlafplatz'), ['Raspelnest', 'Pilzmatte', 'Schlafpodest', 'Bett', 'Himmelbett']);
