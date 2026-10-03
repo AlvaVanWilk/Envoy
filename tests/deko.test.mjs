@@ -286,4 +286,8 @@ test('the camp picture: the picture, what is built on it, then what of the pictu
   assert.equal(nest(1), 'assets/lager/einrichtung_schlafplatz_1.png');
   assert.equal(nest(2), 'assets/lager/einrichtung_schlafplatz_1_lager2.png');
   assert.equal(nest(4), 'assets/lager/einrichtung_schlafplatz_1_lager2.png');   // until a later stage has its own
+  // the Pilzmatte, built from stage 2 on, has its own drawing there
+  const mat = campScene({ camp: { ...world.camp, stage: 2, facilities: { schlafplatz: 2 } } }, catalog, 'tag')
+    .map((x) => x.src.split('?')[0]).find((src) => src.includes('schlafplatz'));
+  assert.equal(mat, 'assets/lager/einrichtung_schlafplatz_2.png');
 });

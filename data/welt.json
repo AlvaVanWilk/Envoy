@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-03T01:59:27Z",
+ "generated": "2026-10-03T02:15:46Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1823,7 +1823,7 @@
     "kapazitaet": 0,
     "bonus": 25,
     "text": "Eine Matte aus geflochtenen Pilzfasern, weicher als der Boden.",
-    "bild": null,
+    "bild": "assets/lager/einrichtung_schlafplatz_2.png",
     "bilder": {}
    },
    {
