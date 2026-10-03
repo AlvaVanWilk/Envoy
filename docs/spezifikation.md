@@ -642,8 +642,9 @@ Einrichtung ab einer späteren Lagerstufe anderswo, etwa das Raspelnest im Unter
 ab dort `einrichtung_<id>_<stufe>_lager<n>.png`, bis eine spätere Lagerstufe ihre eigene
 hat), jede gebaute Deko (`assets/lager/deko_<id>.png`), wo es eine Zeichnung gibt, und
 zuletzt der Vordergrund des Grundbilds (`assets/lager/stufe_<n>_<zeit>_vorn.png`): was vom
-Bild vor den Einrichtungen steht, auf Stufe 1 die beiden Säulen, die Felsen vorn und das
-Feuer mit seinen Funken. Alle Ebenen sind 1792 × 672 wie das Grundbild, transparent, an
+Bild vor den Einrichtungen steht, auf Stufe 1 die beiden Säulen, die Felsen vorn, das
+Feuer mit seinen Funken und der große Felsen links hinter dem Feuer (vor ihm liegen
+Raspelnest und Pilzmatte im Unterstand). Alle Ebenen sind 1792 × 672 wie das Grundbild, transparent, an
 ihrem Platz gezeichnet, wie bei Anziehpuppen. Die Einrichtungen sind bei Tag gezeichnet:
 auf dem Bild einer anderen Tageszeit bekommen sie und das Gebäude dessen Licht (eine Tönung, an die Bilder
 von Stufe 1 angepasst), auf dem getönten Tagesbild dieselbe Tönung wie das Bild.
@@ -652,7 +653,8 @@ Die Nutzerin zeichnet die Ebenen auf dem Tagesbild der Stufe. Die Einrichtungen 
 Stufe 1 liegen unverändert in `assets/lager/`: links Steinstapel und Pilzholzstapel, davor
 der Krempelplatz, rechts vom Feuer das Raspelnest. Die Teile des Vordergrunds liegen in
 `tools/lager-vorn/stufe_<n>/` (`feuer.png`, `funken.png`, `fels.png`, `saeule_links.png`,
-`saeule_rechts.png`). `tools/lager_vorn.py` legt sie für den Tag zusammen und schneidet
+`saeule_rechts.png`; `fels_mitte.png`, die Oberkante des großen Felsens, ist aus dem
+Tagesbild selbst ausgeschnitten). `tools/lager_vorn.py` legt sie für den Tag zusammen und schneidet
 dieselben Umrisse aus den Bildern der anderen Tageszeiten aus, damit der Vordergrund deren
 Licht hat (die Funken nur am Tag, sie fliegen in jedem Bild anders).
 

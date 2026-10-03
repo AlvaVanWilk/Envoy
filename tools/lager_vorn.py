@@ -30,9 +30,11 @@ TARGET = ROOT / "assets" / "lager"
 SIZE = (1792, 672)
 TIMES = ["morgen", "abend", "nacht"]
 
-# stage: its pieces, back to front
+# stage: its pieces, back to front. fels_mitte is the top of the big rock
+# behind the fire, cut out of the day picture itself (the Raspelnest and the
+# Pilzmatte inside the Unterstand lie behind it).
 PIECES = {
-    1: ["feuer", "funken", "fels", "saeule_links", "saeule_rechts"],
+    1: ["fels_mitte", "feuer", "funken", "fels", "saeule_links", "saeule_rechts"],
 }
 
 ONLY_DAY = {"funken"}
@@ -67,8 +69,10 @@ def main():
             front = Image.open(picture).convert("RGBA")
             if front.size != SIZE:
                 raise SystemExit(f"{picture.name} ist {front.size[0]} × {front.size[1]}, erwartet {SIZE[0]} × {SIZE[1]}")
-            # nothing of the picture where the outline is empty (keeps the file small)
-            front = Image.composite(front, Image.new("RGBA", SIZE, (0, 0, 0, 0)), outline)
+            # nothing of the picture where the outline is empty (keeps the file
+            # small); where it is soft, the colours stay whole
+            inside = outline.point(lambda v: 255 if v > 0 else 0)
+            front = Image.composite(front, Image.new("RGBA", SIZE, (0, 0, 0, 0)), inside)
             front.putalpha(outline)
             target = TARGET / f"stufe_{stage}_{time}_vorn.png"
             front.save(target, optimize=True)
