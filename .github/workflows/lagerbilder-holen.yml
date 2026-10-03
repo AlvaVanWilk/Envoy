@@ -1,0 +1,49 @@
+# Einmalig: holt den Ordner LagerPNGs aus dem Testordner auf dem Webspace
+# (die neuen Zeichnungen der Nutzerin für das Lagerbild) und legt ihn als
+# tools/lager-eingang/ in den Arbeitszweig. tools/ wird nie hochgeladen.
+# Läuft nur, wenn diese Datei sich ändert; danach wird sie wieder entfernt.
+
+name: Lagerbilder holen
+
+on:
+  push:
+    paths:
+      - .github/workflows/lagerbilder-holen.yml
+
+permissions:
+  contents: write
+
+jobs:
+  holen:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      IONOS_SFTP_HOST: ${{ secrets.IONOS_SFTP_HOST }}
+      IONOS_SFTP_USER: ${{ secrets.IONOS_SFTP_USER }}
+      IONOS_SFTP_PATH: ${{ secrets.IONOS_SFTP_PATH }}
+      LFTP_PASSWORD: ${{ secrets.IONOS_SFTP_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ordner vom Webspace holen
+        run: |
+          ordner="${IONOS_SFTP_PATH%/}"
+          ordner="${ordner:-/envoy}-test/LagerPNGs"
+          sudo apt-get install -y -qq lftp > /dev/null
+          lftp -c "
+            set sftp:auto-confirm yes;
+            set net:max-retries 3;
+            set net:timeout 30;
+            open --env-password -u \"$IONOS_SFTP_USER\" sftp://$IONOS_SFTP_HOST;
+            mirror \"$ordner\" tools/lager-eingang
+          "
+          ls -la tools/lager-eingang
+
+      - name: In den Arbeitszweig legen
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/lager-eingang
+          git commit -m "Lagerbilder vom Webspace geholt (LagerPNGs)"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
