@@ -3,10 +3,14 @@
 // of it. Its buttons fill the Energie or add more beyond the end of the bar
 // (for raising the camp), add Stein, Pilzholz and Bannsplitter, find the next
 // plan for Deko, and bring the Envoy back from an expedition at once, so
-// everything can be tried without waiting. A last one opens the Kleiderkammer
+// everything can be tried without waiting. The last ones open the Kleiderkammer
 // (the user's page on claude.ai for the drawings of the clothes, see
-// CLAUDE.md) in a new window. The real app never shows any of it: only the copy in
-// the test folder is marked as such while it is uploaded.
+// CLAUDE.md) or copy its address. On iPhone and iPad a link to claude.ai opens
+// the Claude app; the address with x-safari-https opens it in Safari instead
+// (from iOS 17), where the user is signed in to claude.ai. Pasted into
+// Safari's address bar, the copied address always stays in Safari. The real
+// app never shows any of it: only the copy in the test folder is marked as
+// such while it is uploaded.
 
 import { h, replaceChildren } from './dom.js';
 import { MATERIALS, CURRENCY } from '../config.js';
@@ -32,10 +36,26 @@ function findPlan(game) {
   toast(found ? `Plan gefunden: ${game.catalog.dekoById.get(found)?.name}` : 'Auf dieser Lagerstufe gibt es keinen Plan mehr zu finden');
 }
 
-const wardrobeLink = () => h('a', { class: 'btn ghost small', href: KLEIDERKAMMER, target: '_blank', rel: 'noopener' }, 'Kleiderkammer');
+const ON_APPLE = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+async function copyWardrobe() {
+  try {
+    await navigator.clipboard.writeText(KLEIDERKAMMER);
+    toast('Link kopiert');
+  } catch {
+    toast(KLEIDERKAMMER, { duration: 8000 });
+  }
+}
+
+const wardrobeLinks = () => [
+  ON_APPLE
+    ? h('a', { class: 'btn ghost small', href: KLEIDERKAMMER.replace('https://', 'x-safari-https://') }, 'Kleiderkammer')
+    : h('a', { class: 'btn ghost small', href: KLEIDERKAMMER, target: '_blank', rel: 'noopener' }, 'Kleiderkammer'),
+  h('button', { class: 'btn ghost small', type: 'button', onclick: copyWardrobe }, 'Link kopieren'),
+];
 
 function actions(game) {
-  if (!game.state?.world?.envoy) return [h('p', { class: 'test-menu-note' }, 'Erst einen Envoy anlegen.'), wardrobeLink()];
+  if (!game.state?.world?.envoy) return [h('p', { class: 'test-menu-note' }, 'Erst einen Envoy anlegen.'), ...wardrobeLinks()];
   const run = (fields, message) => () => { game.add([game.event('test', fields)]); toast(message); };
   const button = (label, onclick, disabled = false) => h('button', { class: 'btn ghost small', type: 'button', disabled, onclick }, label);
   return [
@@ -46,7 +66,7 @@ function actions(game) {
     button(`+${SPLITTER_AMOUNT} ${CURRENCY}`, run({ splitter: SPLITTER_AMOUNT }, `+${SPLITTER_AMOUNT} ${CURRENCY}`)),
     button('Plan finden', () => findPlan(game), game.state.world.camp.stage < 2),
     button('Expedition beenden', run({ fertig: true }, 'Der Envoy ist zurück'), !game.state.world.expedition),
-    wardrobeLink(),
+    ...wardrobeLinks(),
   ];
 }
 

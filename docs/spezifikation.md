@@ -1036,8 +1036,10 @@ auf den IONOS-Webspace, in zwei Ordner:
   Stein“, „+25 Pilzholz“, „+50 Bannsplitter“, „Plan finden“ (der nächste noch nicht
   gefundene der erreichten Lagerstufen) und „Expedition beenden“ (Ereignis `test`;
   Material nur so viel, wie passt), damit sich alles ohne Warten ausprobieren lässt, dazu
-  „Kleiderkammer“: öffnet die Seite der Kleiderkammer auf claude.ai in einem neuen Fenster
-  (auch schon vor dem ersten Envoy). Die echte Fassung zeigt es nie, ohne dass jemand
+  „Kleiderkammer“: öffnet die Seite der Kleiderkammer auf claude.ai, auf iPad und Telefon
+  in Safari statt in der Claude-App (Adresse mit `x-safari-https`, ab iOS 17), und „Link
+  kopieren“ für die Adressleiste von Safari (beides auch schon vor dem ersten Envoy). In
+  einem Fenster der App selbst geht es nicht: claude.ai lässt sich nicht einbetten. Die echte Fassung zeigt es nie, ohne dass jemand
   daran denken muss.
 - **Echter Ordner**: nur der Zweig `main`. Dorthin kommt eine Fassung erst, wenn die
   Nutzerin sie im Testordner angesehen und freigegeben hat.
@@ -1088,7 +1090,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Mehr sammeln als tragbar | geht nicht: + stoppt an der Grenze und sagt warum (statt hinterher etwas liegen lassen zu müssen) |
 | Lagerfeuer | die erste Quest: 8 Stein, 2 Pilzholz, 2 Energie; macht Lagerstufe 1 |
 | Hygge | Summe der Einrichtungen und der Deko; ab Stufe 2 reichen die Einrichtungen allein nicht; als Zahl auf dem Bild, ohne Fortschrittsanzeige |
-| Test-Knöpfe | am Schild „Test“ oben links, schwebend über der Seite (verschiebt nichts): Energie auffüllen, +50 Energie (über die Leiste hinaus, zum Aufwerten), +25 Stein, +25 Pilzholz, +50 Bannsplitter, Plan finden (ab Lagerstufe 2), Expedition beenden, Kleiderkammer öffnen; nur in der Testfassung |
+| Test-Knöpfe | am Schild „Test“ oben links, schwebend über der Seite (verschiebt nichts): Energie auffüllen, +50 Energie (über die Leiste hinaus, zum Aufwerten), +25 Stein, +25 Pilzholz, +50 Bannsplitter, Plan finden (ab Lagerstufe 2), Expedition beenden, Kleiderkammer öffnen (in Safari) und ihren Link kopieren; nur in der Testfassung |
 | Bilder beim Neuzeichnen | schon geladene Bilder werden übernommen statt neu geladen, damit nichts aufblitzt (Kleidung des Envoy, Karte) |
 | Formen | Knöpfe und Anzeigen kreisrund oder rechteckig, nicht oval |
 | Lagerbild | nach Stufe und Tageszeit (Sonnenstand) |

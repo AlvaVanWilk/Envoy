@@ -42,7 +42,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
-  Pilzholz und Bannsplitter dazu, Plan finden, Expedition beenden, die Kleiderkammer öffnen,
+  Pilzholz und Bannsplitter dazu, Plan finden, Expedition beenden, die Kleiderkammer in Safari
+  öffnen oder ihren Link kopieren,
   `js/ui/testtools.js`);
   die echte Fassung nie.
 - Formen der Oberfläche: kreisrund oder rechteckig, nicht oval.
