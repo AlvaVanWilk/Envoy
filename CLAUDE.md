@@ -231,7 +231,9 @@ Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Lager
 `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672; Zeit = morgen, tag, abend, nacht; Stufe 0 =
 ohne Feuer, bisher nur tag, die anderen Zeiten tönt die App; Stufe 1 = Lagerfeuer),
 Portrait des Envoy
-`portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), Icon einer
+`portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), der Envoy bei
+einer Übung `uebungen/<id>.png` im Ordner jeder Figur (am besten 3:2 quer, freigestellt, wird
+umgefärbt; auf der Karte der Aufgabe im Tageswerk), Icon einer
 Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
 Ebenen des Lagerbilds (1792 × 672, transparent, von der Nutzerin auf dem Tagesbild an
 ihrem Platz gezeichnet und unverändert übernommen): Gebäude `assets/lager/gebaeude_<n>[_<teil>].png`,

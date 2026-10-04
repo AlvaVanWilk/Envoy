@@ -121,6 +121,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Deko im Lagerbild | `assets/lager/deko_<id>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet |
 | Ausschnitte im Lagerbild | `assets/lager/ausschnitt_<name>_<zeit>.png` | 1792 × 672, transparent: Felsen, Feuer, Säulen aus dem Bild, damit sie vor dem stehen, was dahinter liegt, manche nur bis zu einer Lagerstufe oder nicht mit einer bestimmten Einrichtung; macht `tools/lager_ebenen.py` |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
+| Der Envoy bei einer Übung | `uebungen/<id>.png` im Ordner jeder Figur | am besten 3:2 quer, Hintergrund frei; wird wie die Figur umgefärbt; erscheint auf der Karte der Aufgabe |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
 

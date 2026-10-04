@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T13:24:16Z",
+ "generated": "2026-10-04T11:18:32Z",
  "source": "uebungen.xlsx",
  "exercises": [
   {
@@ -18,7 +18,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-bauchatmung",
@@ -36,7 +37,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-becken-kippen",
@@ -54,7 +56,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-beckenboden-stehen",
@@ -72,7 +75,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-kleine-bruecke",
@@ -90,7 +94,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-vierfuessler-arm",
@@ -107,7 +112,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-beckenboden-paeckchen",
@@ -124,7 +130,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-vierfuessler-diagonal",
@@ -142,7 +149,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-bruecke-halten",
@@ -160,7 +168,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-unterarmstuetz-knie",
@@ -178,7 +187,8 @@
    "messung": "haltezeit_s",
    "ziel": 20.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-seitlage-bein",
@@ -195,7 +205,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-rumpf-paeckchen",
@@ -212,7 +223,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-unterarmstuetz",
@@ -230,7 +242,8 @@
    "messung": "haltezeit_s",
    "ziel": 30.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-seitstuetz-knie",
@@ -248,7 +261,8 @@
    "messung": "haltezeit_s",
    "ziel": 20.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-bruecke-fusswechsel",
@@ -265,7 +279,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "kr-beckenboden-lang",
@@ -283,7 +298,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-strecken",
@@ -301,7 +317,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-fuss-aufs-knie",
@@ -319,7 +336,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-schultern-nacken",
@@ -336,7 +354,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-katze-kuh",
@@ -354,7 +373,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-seitbeuge",
@@ -372,7 +392,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-nacken",
@@ -391,7 +412,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-hueftbeuger",
@@ -409,7 +431,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-tuerrahmen",
@@ -427,7 +450,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-mobility-kurz",
@@ -445,7 +469,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-beinrueckseite",
@@ -463,7 +488,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-drehung-liegen",
@@ -481,7 +507,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-mobility-mittel",
@@ -499,7 +526,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-hocke",
@@ -517,7 +545,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-vorbeuge-sitzen",
@@ -535,7 +564,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "be-mobility-lang",
@@ -554,7 +584,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-spazieren-10",
@@ -570,7 +601,8 @@
    "messung": "strecke_km",
    "ziel": 0.6,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-treppe-5",
@@ -587,7 +619,8 @@
    "messung": "stockwerke",
    "ziel": 5.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-spazieren-15",
@@ -603,7 +636,8 @@
    "messung": "strecke_km",
    "ziel": 0.9,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-treppe-7",
@@ -620,7 +654,8 @@
    "messung": "stockwerke",
    "ziel": 7.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-rad-15",
@@ -636,7 +671,8 @@
    "messung": "strecke_km",
    "ziel": 3.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-spazieren-20",
@@ -652,7 +688,8 @@
    "messung": "strecke_km",
    "ziel": 1.2,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-treppe-10",
@@ -668,7 +705,8 @@
    "messung": "stockwerke",
    "ziel": 10.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-rad-20",
@@ -684,7 +722,8 @@
    "messung": "strecke_km",
    "ziel": 4.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-spazieren-25",
@@ -700,7 +739,8 @@
    "messung": "strecke_km",
    "ziel": 1.5,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-rad-25",
@@ -716,7 +756,8 @@
    "messung": "strecke_km",
    "ziel": 5.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-treppe-12",
@@ -732,7 +773,8 @@
    "messung": "stockwerke",
    "ziel": 12.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-spazieren-30",
@@ -748,7 +790,8 @@
    "messung": "strecke_km",
    "ziel": 1.8,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-rad-30",
@@ -764,7 +807,8 @@
    "messung": "strecke_km",
    "ziel": 6.0,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "au-spaziergang-treppe",
@@ -780,7 +824,8 @@
    "messung": "strecke_km",
    "ziel": 1.3,
    "timer_min": null,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-atem-3",
@@ -800,7 +845,8 @@
    "atemtakt": [
     4,
     6
-   ]
+   ],
+   "bilder": {}
   },
   {
    "id": "ge-augen-zu",
@@ -817,7 +863,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 3.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-schultern-sinken",
@@ -834,7 +881,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 3.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-atem-5",
@@ -854,7 +902,8 @@
    "atemtakt": [
     4,
     6
-   ]
+   ],
+   "bilder": {}
   },
   {
    "id": "ge-koerper-kurz",
@@ -871,7 +920,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 5.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-summen",
@@ -888,7 +938,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 4.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-box-atmung",
@@ -910,7 +961,8 @@
     4,
     4,
     4
-   ]
+   ],
+   "bilder": {}
   },
   {
    "id": "ge-an-entspannen-kurz",
@@ -927,7 +979,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 8.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-atem-7",
@@ -947,7 +1000,8 @@
    "atemtakt": [
     4,
     6
-   ]
+   ],
+   "bilder": {}
   },
   {
    "id": "ge-koerperdurchgang",
@@ -964,7 +1018,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 12.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-atem-10",
@@ -984,7 +1039,8 @@
    "atemtakt": [
     4,
     6
-   ]
+   ],
+   "bilder": {}
   },
   {
    "id": "ge-stille-10",
@@ -1001,7 +1057,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 10.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-an-entspannen-lang",
@@ -1018,7 +1075,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 15.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-stille-15",
@@ -1035,7 +1093,8 @@
    "messung": null,
    "ziel": null,
    "timer_min": 15.0,
-   "atemtakt": null
+   "atemtakt": null,
+   "bilder": {}
   },
   {
    "id": "ge-atem-15",
@@ -1055,7 +1114,8 @@
    "atemtakt": [
     4,
     6
-   ]
+   ],
+   "bilder": {}
   }
  ]
 }

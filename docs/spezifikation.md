@@ -751,8 +751,16 @@ des Envoy):
   nach dem Untergang), Nacht. Ohne Feuer gibt es bisher nur das Tagesbild; zu anderen
   Zeiten wird es dunkler oder wärmer getönt, bis die Nutzerin Bilder dafür hat.
 - **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+15 Kraft“) und
-  einem Haken zum Erledigen. Antippen klappt eine Aufgabe auf (Timer, Erledigt); die
-  Anleitung erscheint nur auf Wunsch. Ein Fragezeichen klappt eine kurze Erklärung auf
+  einem Haken zum Erledigen. **Antippen dreht eine Aufgabe um wie eine Karte**: Sie wächst
+  aus ihrer Zeile in die Mitte, erst ist die Rückseite mit dem Zeichen des Werts zu sehen,
+  dann die Vorderseite: oben das Bild des Envoy bei der Übung (von der Nutzerin gezeichnet,
+  je Übung und Figur, in den Farben des Envoy wie das Portrait; ohne Bild das Zeichen des
+  Werts), der Name, der Gewinn, die Schritte und unten Timer und „Erledigt“. Fragt die
+  Übung etwas (ein Messwert, „Wie war es?“), steht die Frage auf der Karte; danach dreht sie
+  sich zurück in ihre Zeile, und der Gewinn steigt dort auf. Der Haken an der Zeile erledigt
+  die Aufgabe ohne Karte; braucht sie eine Antwort, öffnet er die Karte bei der Frage. Eine
+  erledigte Aufgabe zeigt auf der Karte, was eingetragen wurde, und „Rückgängig“. Mit
+  reduzierter Bewegung erscheint die Karte ohne Drehen. Ein Fragezeichen klappt eine kurze Erklärung auf
   (wozu das Tageswerk da ist, dass Werte bei liegengebliebenen Aufgaben langsam sinken,
   aber nie ganz verloren gehen) mit Verweis ins Handbuch. Läuft ein befristeter Bonus,
   steht er mit seinem Ende in einer Zeile darüber. Ist alles erledigt, steht oben
@@ -840,7 +848,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), der Envoy bei einer Übung `uebungen/<id>.png` im Ordner jeder Figur (beliebige Größe, am besten 3:2 quer, Hintergrund frei; Haut und Haare in den Farben der Figur, damit die App sie umfärbt), Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 

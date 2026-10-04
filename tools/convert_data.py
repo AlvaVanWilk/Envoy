@@ -407,6 +407,19 @@ def unique_id(report, row, value, seen):
 
 # --- exercises --------------------------------------------------------------
 
+# The Envoy doing an exercise, drawn by the user: one picture per exercise
+# and figure, in the figure's folder (assets/figur/uebungen/<id>.png for the
+# first figure, assets/figur/zweite/uebungen/<id>.png for the second).
+# Any size; the card shows it whole. -> {'erste': path, 'zweite': path}
+EXERCISE_FIGURES = {"erste": "assets/figur", "zweite": "assets/figur/zweite"}
+
+
+def exercise_pictures(ex_id):
+    return {figure: f"{folder}/uebungen/{ex_id}.png"
+            for figure, folder in EXERCISE_FIGURES.items()
+            if (ROOT / folder / "uebungen" / f"{ex_id}.png").exists()}
+
+
 def convert_exercises(path):
     report = Report(path.name)
     exercises = []
@@ -472,6 +485,7 @@ def convert_exercises(path):
             "ziel": target,
             "timer_min": timer_min,
             "atemtakt": breath,
+            "bilder": exercise_pictures(ex_id),
         })
 
     for stat in STATS:

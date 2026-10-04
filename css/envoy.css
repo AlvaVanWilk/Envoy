@@ -1052,7 +1052,6 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .task-meta { overflow: hidden; font-size: 12.5px; color: var(--muted); white-space: nowrap; text-overflow: ellipsis; }
 .task-gain { font-weight: 700; color: var(--stat); }
 .task-chevron { width: 16px; height: 16px; color: var(--muted); transition: transform 0.2s; }
-.task-row.open .task-chevron { transform: rotate(180deg); }
 .task-check {
   display: grid;
   place-items: center;
@@ -1074,11 +1073,7 @@ button.task-check:hover { color: var(--stat); }
   box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.35), 0 2px 3px rgba(0, 0, 0, 0.5);
 }
 .task-row.done .task-name { color: var(--text-2); }
-.task-row.open { background: linear-gradient(90deg, color-mix(in srgb, var(--stat) 7%, transparent), transparent 60%); }
-.task-body { display: grid; gap: 10px; padding: 0 14px 16px 64px; }
 .task-hint { font-size: 13px; color: var(--text-2); }
-.task-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
-.task-actions .btn.text { margin-right: auto; padding-left: 0; }
 .task-steps { list-style: none; margin: 0; padding: 12px 14px; display: grid; gap: 8px; counter-reset: step; border-radius: 6px; background: rgba(0, 0, 0, 0.22); border: 1px solid var(--line); }
 .task-steps li { position: relative; padding-left: 30px; color: var(--text-2); font-size: 15px; line-height: 1.45; counter-increment: step; }
 .task-steps li::before {
@@ -1101,6 +1096,78 @@ button.task-check:hover { color: var(--stat); }
 .task-steps:has(li:only-child) li::before { display: none; }
 .task-done-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .task-row.empty .task-summary { cursor: default; }
+
+/* A task as a card (taskcard.js): it turns over out of its row into the middle
+   of the screen. Front: the Envoy doing the exercise, name, gain, steps, the
+   buttons below. Back: the emblem of the area, seen while it turns. */
+.card-stage {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  padding: calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);
+  perspective: 1600px;
+  pointer-events: none;
+}
+.card {
+  position: relative;
+  width: min(100%, 460px);
+  pointer-events: auto;
+  transform-style: preserve-3d;
+  transition: transform 0.52s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+.card-face { -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; }
+.card-front {
+  position: relative;
+  display: flex; flex-direction: column;
+  max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--stat) 45%, #05090d);
+  background: linear-gradient(180deg, #1c2b2f, #111b1d);
+  box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.08), 0 18px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.card-back {
+  position: absolute; inset: 0;
+  transform: rotateY(180deg);
+  display: grid; place-content: center; justify-items: center; gap: 10px;
+  border: 1px solid color-mix(in srgb, var(--stat) 60%, #05090d);
+  background:
+    radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--stat) 32%, #1b2a2e), transparent 62%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0 6px, transparent 6px 12px),
+    linear-gradient(180deg, #1a292d, #0d1517);
+}
+.card-back .stat-emblem { --size: 96px; }
+.tc-back-name { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--stat); }
+.tc-head { display: flex; align-items: center; gap: 8px; padding: 10px 10px 6px 16px; }
+.tc-head .eyebrow { flex: 1; margin: 0; color: var(--stat); }
+.tc-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px 12px; }
+.tc-picture {
+  display: grid; place-items: center;
+  aspect-ratio: 3 / 2;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--stat) 25%, #05090d);
+  background: radial-gradient(ellipse at 50% 70%, color-mix(in srgb, var(--stat) 16%, #22343a), #0d1618 75%);
+  overflow: hidden;
+}
+.tc-img { width: 100%; height: 100%; object-fit: contain; }
+.tc-picture.empty .stat-emblem { --size: 84px; opacity: 0.8; }
+.tc-titles { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; margin: 14px 0 10px; }
+.tc-title { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.2; }
+.tc-gain { font-weight: 700; color: var(--stat); }
+.tc-body { display: grid; gap: 10px; }
+.tc-body > * { animation: tc-in 0.25s var(--ease); }
+@keyframes tc-in { from { opacity: 0; transform: translateY(4px); } }
+.tc-actions {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.18);
+}
+.tc-actions .btn.text { margin-right: auto; padding-left: 0; }
+.tc-actions .btn.ghost:first-child:not(:last-child) { margin-right: auto; }
+.task-card .feedback-row { margin-bottom: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+  .tc-body > * { animation: none; }
+}
 
 .gain-float {
   position: fixed;
@@ -2063,7 +2130,6 @@ body.creating .dock { display: none; }
   .slot-label { display: none; }
   .doll-frame { grid-template-columns: 54px 1fr 54px; }
   .slot-frame { width: 50px; height: 50px; }
-  .task-body { padding-left: 14px; }
   .task-area { display: none; }
   .fact { grid-template-columns: 1fr; gap: 2px; }
 }

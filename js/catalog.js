@@ -19,7 +19,7 @@ function withVersions(list, fields) {
 }
 
 export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORLD) {
-  const exercises = exerciseData.exercises || [];
+  const exercises = withVersions(exerciseData.exercises || [], []);
   const equipment = withVersions(equipmentData.equipment || [], ['figur', 'icon']);
   const given = { ...EMPTY_WORLD, ...worldData };
   const camp = { stages: [], facilities: [], pictures: {}, layers: [], ...given.camp };

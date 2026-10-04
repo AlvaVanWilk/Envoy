@@ -8,7 +8,9 @@
 // every colour channel keeps its ratio to the drawn colour.
 // In clothing layers only pixels with exactly the tint of the drawn skin
 // are painted, for example the fingertips in fingerless gloves.
-// The portrait is painted like the base figure, with the same factors.
+// The portrait is painted like the base figure, with the same factors, and
+// so is a picture of the Envoy doing an exercise (there the hair may lie
+// anywhere in the picture).
 
 import { FIGURES, SKIN_TONES, HAIR_COLORS, versioned } from '../config.js';
 
@@ -47,7 +49,8 @@ const same = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
 // Shows a layer in an <img>. Painted first when the colours differ from
 // the drawing; until then the layer stays invisible.
 // kind: 'base' (the figure: skin and hair), 'portrait' (the same, with the
-// portrait's hair zone) or 'layer' (clothing: only visible skin).
+// portrait's hair zone), 'exercise' (the same, hair anywhere) or 'layer'
+// (clothing: only visible skin).
 export function showLayer(img, src, look, kind = 'layer') {
   const withHair = kind !== 'layer';
   const skinChanged = !same(look.skin.rgb, look.figure.skin);
@@ -88,6 +91,7 @@ async function paint(src, look, kind) {
   const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
   if (kind === 'base') paintFigure(pixels, look, look.figure.hairZone);
   else if (kind === 'portrait') paintFigure(pixels, look, look.figure.portraitHairZone);
+  else if (kind === 'exercise') paintFigure(pixels, look, 1);
   else paintSkinInLayer(pixels, look);
   context.putImageData(pixels, 0, 0);
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
