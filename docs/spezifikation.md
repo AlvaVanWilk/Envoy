@@ -570,15 +570,18 @@ jeder späteren Stufe stehen bleiben. Mehr Hygge gibt es danach vor allem über 
 Reiter im Rucksack heißt weiter „Aufbewahrung“, die Kacheln heißen nach ihrer Stufe.
 
 **„Lager einrichten“** (Knopf auf dem Bild des Lagers) öffnet die vier Einrichtungen als
-Kacheln, ab Lagerstufe 2 dazu eine fünfte für die Deko. Eine Kachel zeigt ein großes
-Zeichen, daran eine kleine Medaille mit dem Hygge der jetzigen Stufe (wie die große auf
-dem Bild), den Namen und darunter die Kosten des nächsten Schritts als kleine Bilder
-(Pilzholz, Stein, Energie mit Zahl; was fehlt, orange), bei einer stehenden Einrichtung
-mit „Ausbau: Steinpferch“ darüber. Stehende Einrichtungen leuchten (das Zeichen kupfern mit
-Haken), was gerade gebaut werden kann, glimmt, das andere ist dunkler. Ein Tipp zeigt
-mehr: Text, was sie bringt, Hygge; bei einem möglichen Ausbau darunter die nächste Stufe
-mit Text, Wirkung, „Hygge 2 statt 1“, Kosten, die Energie-Leiste und „Ausbauen“; geht der
-Ausbau erst mit der nächsten Lagerstufe, steht das da. Der Knopf „Lager einrichten“
+Kacheln, ab Lagerstufe 2 dazu eine fünfte für die Deko. **Im Vordergrund steht, was man
+haben kann:** Lässt sich die nächste Stufe einer Einrichtung auf dieser Lagerstufe bauen
+(oder steht sie noch gar nicht), zeigt die Kachel diese Stufe: ein großes Zeichen, hell
+umrandet, bei einem Ausbau mit einem Pfeil nach oben, daran eine kleine Medaille mit ihrem
+Hygge (wie die große auf dem Bild), darüber „Ausbau · Stufe 2“, ihren Namen, darunter die
+Kosten als kleine Bilder (Pilzholz, Stein, Energie mit Zahl; was fehlt, orange) und ganz
+klein, was jetzt steht („Jetzt: Steinstapel“). Was gerade gebaut werden kann, glimmt. Geht
+der nächste Schritt erst mit einer höheren Lagerstufe, zeigt die Kachel die stehende
+Einrichtung: das Zeichen kupfern mit Haken, darunter ihre Stufe. Ein Tipp öffnet die
+gezeigte Stufe: Text, was sie bringt, Hygge („2 statt 1“), Kosten, eine Zeile zu dem, was
+jetzt steht, die Energie-Leiste und „Ausbauen“; geht der Ausbau erst mit der nächsten
+Lagerstufe, steht das da. Der Knopf „Lager einrichten“
 glimmt, solange gerade etwas gebaut werden kann.
 
 **Hygge** ist die Summe der Einrichtungen und der gebauten Deko. Es steht auf dem Bild des
@@ -1038,7 +1041,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Quests auf der Karte | Ort antippen fächert seine Quests auf (Siegel mit Namen), ein Tipp öffnet eine; der Fächer auch bei nur einer Quest |
 | Ortsbeschreibung | Kartusche am Kartenrand zusammen mit dem Fächer: Region, Name, Text, bei verschlossenen Orten, was sie öffnet |
 | Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste: die Kosten als ein Block, der Weg darin kupfern getönt, „davon Weg 2“ (in der Reihe „statt 4“); keine Dauer, keine Tempo- und Ertrag-Stats |
-| Einrichtungen-Kacheln | Hygge als kleine Medaille am Zeichen |
+| Einrichtungen-Kacheln | Hygge als kleine Medaille am Zeichen; was sich bauen lässt, steht vorn (nächste Stufe mit Pfeil, Kosten, „Jetzt: …“ klein) |
 | In Reihe | während der Envoy unterwegs ist, alles anhängen (Quests, Sammeln, Bauen); er geht direkt weiter, der Rückweg dazwischen wird verrechnet; nur solange die Energie mit dem Rückweg reicht; Sammeln plant mit den besten Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus |
 | Energie | Name für die Leiste, 10 je Level Ausdauer, 1 Energie = 1 Minute |
 | Sammeln | auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2; Menge wählen, beginnt bei 1 |

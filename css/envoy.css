@@ -894,7 +894,8 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .camp-upgrade.show-hint .camp-hint { opacity: 1; transform: none; }
 @media (hover: hover) { .camp-upgrade:hover .camp-hint { opacity: 1; transform: none; } }
 
-/* „Lager einrichten“: the facilities as tiles, lit when built, glowing when they can be built now */
+/* „Lager einrichten“: the facilities as tiles, lit when built, glowing when they can be built now;
+   while the next level can be built, the tile shows that level (is-next) with an arrow up */
 .facility-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .facility-tile {
   position: relative;
@@ -919,7 +920,8 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .ft-emblem .icon { width: 36px; height: 36px; }
 .ft-name { max-width: 100%; font-family: var(--font-display); font-size: 16px; font-weight: 700; hyphens: auto; overflow-wrap: break-word; }
 .ft-level { font-size: 13px; color: var(--copper-bright); }
-.ft-next { margin-bottom: -4px; font-size: 13px; color: var(--text-2); }
+.ft-eyebrow { margin-bottom: -6px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--copper-bright); }
+.ft-now { font-size: 12px; color: var(--muted); }
 .ft-costs { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .ft-cost { display: inline-flex; align-items: center; gap: 4px; }
 .ft-cost .res-icon { width: 20px; height: 20px; }
@@ -944,6 +946,11 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .facility-tile.is-lacking { filter: saturate(0.55) brightness(0.78); }
 .facility-tile.is-running .ft-emblem { border-color: var(--copper-bright); color: #f3e9d8; }
 .facility-tile.is-running .ft-badge { color: var(--copper-bright); }
+/* the next level: not built yet, but there to be had; not dimmed while only material lacks */
+.facility-tile.is-next .ft-emblem, .ft-emblem.is-upgrade { border-color: #f3e9d8; color: #f3e9d8; }
+.facility-tile.is-next.is-lacking { filter: none; }
+.facility-tile.is-upgrade { border-color: rgba(246, 161, 82, 0.55); }
+.facility-tile.is-upgrade .ft-badge, .ft-emblem.is-upgrade .ft-badge { color: var(--copper-bright); border-color: var(--copper-bright); }
 @keyframes tile-glow { 50% { box-shadow: 0 0 0 1px rgba(246, 161, 82, 0.5), 0 0 20px rgba(246, 161, 82, 0.45); } }
 .facility-head { display: flex; align-items: center; gap: 14px; }
 /* Deko: its own picture inside the round emblem, or the Deko symbol */
@@ -955,8 +962,7 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .facility-tile.is-unknown .ft-level { color: var(--muted); }
 .facility-tile.is-unknown:active { transform: none; }
 @media (min-width: 640px) { .deko-sheet .facility-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.facility-next { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(232, 121, 31, 0.3); }
-.facility-next .quest-text { margin: 4px 0 8px; }
+.facility-now { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid rgba(232, 121, 31, 0.3); font-size: 14px; color: var(--muted); }
 .facility-head .ft-emblem { flex: none; }
 .facility-head .quest-text { margin: 0; }
 .facility-sheet .facility-effect { color: var(--copper-bright); }

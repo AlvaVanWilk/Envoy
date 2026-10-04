@@ -122,6 +122,8 @@ export const UI_ICONS = {
   play: line('<path d="M7 5l12 7-12 7z"/>'),
   chevron: line('<path d="M9 6l6 6-6 6"/>'),
   expand: line('<path d="M6 9l6 6 6-6"/>'),
+  // an arrow up: the next level can be built
+  up: line('<path d="M12 19V6M6.5 11.5L12 6l5.5 5.5"/>'),
   // four corners: show it large
   enlarge: line('<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>'),
   search: line('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>'),

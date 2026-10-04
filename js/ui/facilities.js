@@ -1,8 +1,10 @@
 // „Lager einrichten“: the four facilities of the camp as tiles, and from
-// Lagerstufe 2 a fifth tile for the Deko (see deko.js). A tile shows at a
-// glance whether the facility stands (lit), can be built or raised to its next
-// level right now (glowing) or still lacks something (dark), what that costs,
-// in small pictures, and on its symbol the Hygge it gives, as a small medal.
+// Lagerstufe 2 a fifth tile for the Deko (see deko.js). What can be built
+// leads: while the next level of a facility can be built at this stage of the
+// camp, its tile shows that level (its name, its Hygge as a small medal on the
+// symbol, an arrow up, what it costs in small pictures; glowing when it can be
+// built right now) and the level that stands only below, small. Otherwise the
+// tile shows the level that stands (lit, with a tick).
 // A tap opens its details and the button to build it (or, while the Envoy is
 // away, to add it to the row of what he does). Building works like a quest
 // at the camp: material, Energie and its minutes (see world/camp.js).
@@ -63,7 +65,7 @@ export function hyggeMedal(value) {
   return h('span', { class: 'hygge-medal', title: `Hygge ${value}`, 'aria-label': `Hygge ${value}` }, String(value));
 }
 
-export const BADGES = { built: UI_ICONS.check, running: UI_ICONS.hero };
+export const BADGES = { built: UI_ICONS.check, running: UI_ICONS.hero, upgrade: UI_ICONS.up };
 
 // Below the name: in the row, building, the costs of the next step, or the level.
 export function tileFoot(quest, plan, game, fallback) {
@@ -72,18 +74,22 @@ export function tileFoot(quest, plan, game, fallback) {
   return plan ? costs(quest, plan) : h('span', { class: 'ft-level' }, fallback);
 }
 
-// A facility that stands keeps its lit symbol and its tick, also while its
-// next level could be built (then the tile glows and says which level).
+// Whether the tile shows the next level (it can be built at this stage of the
+// camp, or it is not built at all yet) rather than the one that stands.
+const ahead = (v) => Boolean(v.next) && (v.open || v.level === 0);
+
 function tile(id, game) {
   const v = facilityView(id, game);
-  const row = v.now || v.next;
-  const badge = v.state === 'running' ? BADGES.running : v.level > 0 ? BADGES.built : null;
-  const upgrade = v.level > 0 && v.open && !game.queued(v.quest.id);
-  return h('button', { class: `facility-tile is-${v.state} ${v.level > 0 ? 'has-level' : ''}`, type: 'button', 'data-facility': id, onclick: () => openFacility(id, game) },
+  const next = ahead(v);
+  const row = next ? v.next : v.now;
+  const upgrade = next && v.level > 0;
+  const badge = v.state === 'running' ? BADGES.running : upgrade ? BADGES.upgrade : v.level > 0 ? BADGES.built : null;
+  return h('button', { class: `facility-tile is-${v.state} ${next ? 'is-next' : 'has-level'} ${upgrade ? 'is-upgrade' : ''}`, type: 'button', 'data-facility': id, onclick: () => openFacility(id, game) },
     h('span', { class: 'ft-emblem' }, icon(FACILITY_ICONS[id]), badge ? h('span', { class: 'ft-badge', html: badge }) : null, hyggeMedal(row.hygge)),
+    upgrade ? h('span', { class: 'ft-eyebrow' }, `Ausbau · Stufe ${v.next.stufe}`) : null,
     h('span', { class: 'ft-name' }, row.name),
-    upgrade ? h('span', { class: 'ft-next' }, `Ausbau: ${v.next.name}`) : null,
-    tileFoot(v.quest, v.open || v.level === 0 ? v.plan : null, game, `Stufe ${v.level}`));
+    tileFoot(v.quest, next ? v.plan : null, game, `Stufe ${v.level}`),
+    upgrade ? h('span', { class: 'ft-now' }, `Jetzt: ${v.now.name}`) : null);
 }
 
 export function openFacilities(game) {
@@ -96,43 +102,41 @@ export function openFacilities(game) {
   });
 }
 
-// One facility: what it is and what it gives, and building it or its next level.
+// One facility. While its next level can be built, the window is about that
+// level (what it brings, its Hygge, what it costs, building it), and the level
+// that stands is one line below. Otherwise it shows the level that stands.
 export function openFacility(id, game) {
   const c = game.ctx();
   const v = facilityView(id, game);
-  const shown = v.now || v.next;
-  const building = v.open || v.level === 0 ? v.next : null;
+  const building = ahead(v) ? v.next : null;
+  const shown = building || v.now;
+  const upgrade = Boolean(building) && v.level > 0;
   const facts = [
     fact('Bringt', h('span', { class: 'facility-effect' }, facilityEffect(shown))),
-    fact('Hygge', String(shown.hygge)),
+    fact('Hygge', upgrade ? `${shown.hygge} statt ${v.now.hygge}` : String(shown.hygge)),
   ];
-  let upgrade = null;
-  if (building && v.level > 0) {
-    upgrade = h('section', { class: 'facility-next' },
-      h('p', { class: 'label' }, `Ausbau: ${building.name}`),
-      h('p', { class: 'quest-text' }, building.text),
-      h('dl', { class: 'quest-facts' },
-        fact('Bringt', h('span', { class: 'facility-effect' }, facilityEffect(building))),
-        fact('Hygge', `${building.hygge} statt ${shown.hygge}`),
-        fact('Kosten', h('span', { class: 'cond-list' }, requirements(v.quest, c, { conditions: false })))));
-  } else if (building) {
-    facts.push(fact('Kosten', h('span', { class: 'cond-list' }, requirements(v.quest, c, { conditions: false }))));
-  }
+  if (building) facts.push(fact('Kosten', h('span', { class: 'cond-list' }, requirements(v.quest, c, { conditions: false }))));
 
   const back = h('button', { class: 'btn ghost', type: 'button', onclick: () => openFacilities(game) }, 'Alle Einrichtungen');
   const queued = v.quest ? game.queued(v.quest.id) : null;
   const act = building || queued ? questAction(v.quest, v.plan, game, c.catalog.placeById.get(CAMP_PLACE)) : null;
   let note = null;
-  if (!building && v.next) note = h('p', { class: 'quest-note' }, `Nächste Stufe: ${v.next.name}, ab Lagerstufe ${v.next.lagerstufe}.`);
+  if (upgrade) note = h('p', { class: 'facility-now' }, `Jetzt steht hier: ${v.now.name}. ${facilityEffect(v.now)}.`);
+  else if (!building && v.next) note = h('p', { class: 'quest-note' }, `Nächste Stufe: ${v.next.name}, ab Lagerstufe ${v.next.lagerstufe}.`);
 
+  let eyebrow = 'Einrichtung';
+  if (upgrade) eyebrow = `Ausbau · Stufe ${building.stufe}`;
+  else if (v.level > 0) eyebrow = `Einrichtung · Stufe ${v.level}`;
+  const emblemState = building ? (upgrade ? 'upgrade' : v.state) : 'built';
   openSheet({
     title: shown.name,
-    eyebrow: v.level > 0 ? `Einrichtung · Stufe ${v.level}` : 'Einrichtung',
+    eyebrow,
     className: 'quest-sheet facility-sheet',
     content: [
-      h('div', { class: 'facility-head' }, h('span', { class: `ft-emblem is-${v.level > 0 ? 'built' : v.state}` }, icon(FACILITY_ICONS[id]), hyggeMedal(shown.hygge)), h('p', { class: 'quest-text' }, shown.text)),
+      h('div', { class: 'facility-head' },
+        h('span', { class: `ft-emblem is-${emblemState}` }, icon(FACILITY_ICONS[id]), upgrade ? h('span', { class: 'ft-badge', html: BADGES.upgrade }) : null, hyggeMedal(shown.hygge)),
+        h('p', { class: 'quest-text' }, shown.text)),
       h('dl', { class: 'quest-facts' }, facts),
-      upgrade,
       note,
       building && !queued ? energyPreview(game.stamina(), v.plan.cost) : null,
       h('div', { class: 'quest-actions' }, back, act),
