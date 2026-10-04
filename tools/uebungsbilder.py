@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Draws the exercises as moving line figures (SVG), one file per exercise
-and stage: assets/uebungen/<id>.svg (the id as in the table of exercises).
+"""Draws the exercises as moving figures (SVG), one file per exercise and
+stage: assets/uebungen/<id>.svg (the id as in the table of exercises).
 
-The figure is a simple line drawing in the colours of the app: a round head,
-the body and the limbs as thick round lines; the limbs on the far side are a
-little darker. It moves the way the exercise goes, in a loop, so that it can
-be done together with it (SVG animation, it plays by itself in the app).
+The figure is drawn like the user's pictures: flat colours inside a dark ink
+line. Skin, brown hair, trousers and shoes, the shirt in the colour of the
+area (Kraft orange, Ausdauer green, Beweglichkeit blue, Gelassenheit lilac);
+the limbs on the far side are a little darker. It moves the way the exercise
+goes, in a loop, so that it can be done together with it (SVG animation, it
+plays by itself in the app).
 
 How it works: each exercise is a function that, for a moment t of the loop
 (0 to 1), places the joints. Arms and legs are placed by where hand and foot
@@ -489,13 +491,184 @@ EXERCISES = {
 }
 
 
-# --- writing the SVG -------------------------------------------------------
+# --- drawing the figure ------------------------------------------------------
+# The figure is drawn like the user's pictures: flat colours with a dark ink
+# line around them. Every part of the body (thigh, shin, shoe, sleeve, forearm
+# with hand, hips, chest, neck, head) is a fixed shape that is moved and turned
+# from moment to moment; the joints come from the poses above. Each layer
+# (the far limbs, the body, the head, the near leg, the near arm) is drawn in
+# two passes, first all its ink outlines, then its colours, so that within a
+# layer the parts join without lines between them.
 
-def fmt(points):
-    return " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
+INK = "#10181a"
+INK_WIDTH = 2.2
+SKIN = "#e9c9a3"
+HAIR = "#6d4a34"
+TROUSERS = "#55717a"
+SHOES = "#8a6f5a"
+SHIRTS = {"kraft": "#f08a3e", "ausdauer": "#a8c48a", "beweglichkeit": "#74b5c4", "gelassenheit": "#aaa4e2"}
+AREAS = {"kaefer": "kraft", "vogelhund": "kraft", "seitstuetz": "kraft", "treppe": "ausdauer",
+         "katze-kuh": "beweglichkeit", "ausfallschritt": "beweglichkeit", "brustoeffner": "beweglichkeit",
+         "innehalten": "gelassenheit"}
+# how the face is seen: from the side (the face towards the chest side), from the
+# front, or the top of the head only; closed eyes for the quiet exercises
+FACES = {"seitstuetz": ("front", False), "innehalten-1": ("front", True), "innehalten-2": ("front", True),
+         "innehalten-3": ("side", True), "brustoeffner": ("top", False)}
 
 
-def view_of(frames, least_width=190, pad=18):
+def darker(colour, share=0.7):
+    r, g, b = (int(colour[i:i + 2], 16) for i in (1, 3, 5))
+    return "#%02x%02x%02x" % tuple(round(c * share) for c in (r, g, b))
+
+
+def capsule(length, w0, w1, x0=0.0):
+    """A limb from x0 to length along the x axis, w0 wide at its start and w1 at its end, round at both ends."""
+    a, b = w0 / 2, w1 / 2
+    return (f"M {x0:.1f} {-a:.1f} L {length:.1f} {-b:.1f} A {b:.1f} {b:.1f} 0 0 1 {length:.1f} {b:.1f} "
+            f"L {x0:.1f} {a:.1f} A {a:.1f} {a:.1f} 0 0 1 {x0:.1f} {-a:.1f} Z")
+
+
+def shapes(kind, length, colours):
+    """[(path, colour)] of a part of the body, from (0, 0) to (length, 0)."""
+    shirt, trousers, skin, shoes = colours
+    if kind == "thigh":
+        return [(capsule(length, 15, 11.5), trousers)]
+    if kind == "shin":
+        return [(capsule(length, 11.5, 8.5), trousers)]
+    if kind == "foot":
+        return [(f"M -3 -4 H {length + 1:.1f} A 4 4 0 0 1 {length + 1:.1f} 4 H -3 A 4 4 0 0 1 -3 -4 Z", shoes)]
+    if kind == "upper":
+        return [(capsule(length, 10.5, 9), shirt)]
+    if kind == "fore":
+        hand = f"M {length - 4.6:.1f} 0 A 4.6 4.6 0 1 0 {length + 4.6:.1f} 0 A 4.6 4.6 0 1 0 {length - 4.6:.1f} 0 Z"
+        return [(capsule(length, 8.5, 7), skin), (hand, skin)]
+    if kind == "pelvis":
+        return [(capsule(length, 16, 14.5), shirt), (capsule(length * 0.55, 16, 15), trousers)]
+    if kind == "chest":
+        return [(capsule(length, 14.5, 17), shirt)]
+    if kind == "bar":
+        return [(capsule(length, 13, 11), shirt)]
+    if kind == "neck":
+        return [(capsule(length, 7, 7), skin)]
+    raise ValueError(kind)
+
+
+def head_shapes(face, closed, skin, hair):
+    """[(svg, colour or None)] of the head, centred on (0, 0); x points to the
+    crown, y to the side of the face. The ink outline comes separately."""
+    mode, sign = (face, 1) if isinstance(face, str) else face
+    if mode == "top":
+        return [(f'<circle r="{HEAD}" fill="{hair}"/>', None),
+                (f'<path d="M -6 -1 Q 0 2 6 -1" fill="none" stroke="{darker(hair, 0.75)}" stroke-width="1.4" stroke-linecap="round"/>', None)]
+    if mode == "front":
+        eyes = []
+        for side in (-1, 1):
+            if closed:
+                eyes.append(f'<path d="M -1.2 {side * 3.6 - 1.8:.1f} Q -2.6 {side * 3.6:.1f} -1.2 {side * 3.6 + 1.8:.1f}" fill="none" stroke="{INK}" stroke-width="1.1" stroke-linecap="round"/>')
+            else:
+                eyes.append(f'<circle cx="-0.8" cy="{side * 3.6:.1f}" r="1.25" fill="{INK}"/>')
+        return [(f'<circle cx="1.6" cy="0" r="{HEAD}" fill="{hair}"/>', None),
+                (f'<circle cx="-1.4" cy="0" r="{HEAD - 1.4}" fill="{skin}"/>', None)] + [(e, None) for e in eyes]
+    # from the side: hair over the back and the crown, one eye towards the face
+    y = 1  # the face lies towards +y in the head's own direction
+    eye = (f'<path d="M 0.6 {y * 4.2:.1f} q 1.4 {y * 1.2:.1f} 2.8 0" fill="none" stroke="{INK}" stroke-width="1.1" stroke-linecap="round"/>'
+           if closed else f'<circle cx="1.6" cy="{y * 5.2:.1f}" r="1.3" fill="{INK}"/>')
+    return [(f'<circle cx="1.2" cy="{-y * 1.8:.1f}" r="{HEAD}" fill="{hair}"/>', None),
+            (f'<circle cx="-0.9" cy="{y * 1.6:.1f}" r="{HEAD - 2}" fill="{skin}"/>', None),
+            (eye, None)]
+
+
+# the parts of the figure, by the strokes of a frame: (stroke, from, to, kind)
+PARTS = {
+    "far": [("arm-far", 0, 1, "upper"), ("arm-far", 1, 2, "fore"),
+            ("leg-far", 0, 1, "thigh"), ("leg-far", 1, 2, "shin"), ("leg-far", 2, 3, "foot")],
+    "body": [("shoulders", 0, 1, "bar"), ("shoulders", 1, 2, "bar"),
+             ("torso", 0, 1, "pelvis"), ("torso", 1, 2, "chest"), ("neck", 0, 1, "neck")],
+    "leg-near": [("leg-near", 0, 1, "thigh"), ("leg-near", 1, 2, "shin"), ("leg-near", 2, 3, "foot")],
+    "arm-near": [("arm-near", 0, 1, "upper"), ("arm-near", 1, 2, "fore")],
+}
+LAYERS = ["far", "body", "head", "leg-near", "arm-near"]
+
+
+def lines_of(frame):
+    lines = {name: points for name, points, _, _ in frame["strokes"]}
+    torso = lines["torso"]
+    lines["neck"] = [torso[2], frame["head"][0]]
+    return lines
+
+
+def unwrap(angles):
+    out = [angles[0]]
+    for a in angles[1:]:
+        while a - out[-1] > 180:
+            a -= 360
+        while a - out[-1] < -180:
+            a += 360
+        out.append(a)
+    return out
+
+
+def moving(seconds, xs, ys, angles, scales=None):
+    """The animations that place a part: moved to (x, y), turned by angle, maybe stretched."""
+    anim = f'dur="{seconds}s" repeatCount="indefinite"'
+    out = (f'<animateTransform attributeName="transform" type="translate" values="'
+           + ";".join(f"{x:.1f} {y:.1f}" for x, y in zip(xs, ys)) + f'" {anim}/>'
+           + f'<animateTransform attributeName="transform" type="rotate" values="'
+           + ";".join(f"{a:.1f}" for a in angles) + f'" additive="sum" {anim}/>')
+    if scales:
+        out += (f'<animateTransform attributeName="transform" type="scale" values="'
+                + ";".join(f"{k:.3f} 1" for k in scales) + f'" additive="sum" {anim}/>')
+    return out
+
+
+def figure_svg(name, seconds, frames):
+    key = name.rsplit("-", 1)[0]
+    area = AREAS[key]
+    face = FACES.get(name) or FACES.get(key) or ("side", False)
+    mode, closed = face
+    near = (SHIRTS[area], TROUSERS, SKIN, SHOES)
+    far = tuple(darker(c) for c in near)
+    lines = [lines_of(f) for f in frames]
+    out = []
+    for layer in LAYERS:
+        if layer == "head":
+            centres = [f["head"][0] for f in frames]
+            necks = [l["torso"][2] for l in lines]
+            angles = unwrap([angle_of(n, c) for n, c in zip(necks, centres)])
+            if mode == "front":
+                angles = [-90.0] * len(angles)      # facing the viewer, the crown up
+            # the face towards the chest side when lying on the back or kneeling: flip if needed
+            flip = ' transform="scale(1 -1)"' if mode == "side" and FLIP.get(key) else ""
+            placed = moving(seconds, [c[0] for c in centres], [c[1] for c in centres], angles)
+            parts = "".join(svg_part for svg_part, _ in head_shapes((mode, 1), closed, SKIN, HAIR))
+            out.append(f'<g>{placed}<circle r="{HEAD + INK_WIDTH}" fill="{INK}"/><g{flip}>{parts}</g></g>')
+            continue
+        colours = far if layer == "far" else near
+        inks, fills = [], []
+        for stroke, i, j, kind in PARTS[layer]:
+            if stroke not in lines[0]:
+                continue
+            starts = [l[stroke][i] for l in lines]
+            ends = [l[stroke][j] for l in lines]
+            lengths = [dist(a, b) for a, b in zip(starts, ends)]
+            if max(lengths) < 0.5:
+                continue                             # a part that is not seen from here
+            base = max(lengths)
+            angles = unwrap([angle_of(a, b) for a, b in zip(starts, ends)])
+            scales = [l / base for l in lengths] if max(lengths) - min(lengths) > 0.8 else None
+            placed = moving(seconds, [a[0] for a in starts], [a[1] for a in starts], angles, scales)
+            for path, colour in shapes(kind, base, colours):
+                inks.append(f'<g>{placed}<path d="{path}" fill="{INK}" stroke="{INK}" stroke-width="{2 * INK_WIDTH}" stroke-linejoin="round"/></g>')
+                fills.append(f'<g>{placed}<path d="{path}" fill="{colour}"/></g>')
+        out += inks + fills
+    return out
+
+
+# lying on the back or kneeling, the face looks the other way round than the head's direction suggests
+FLIP = {}
+
+
+def view_of(frames, least_width=190, pad=20):
     """The part of the drawing to show: the figure in all its moments, close
     up, standing on the floor at the bottom, in 3:2."""
     xs, ys = [], []
@@ -514,21 +687,15 @@ def view_of(frames, least_width=190, pad=18):
     return left, bottom - height, width, height
 
 
-def svg(seconds, frame, behind="", front=""):
-    n = max(2, round(seconds * SAMPLES_PER_SECOND))
+MAX_SAMPLES = 120        # long, slow loops (the body scan) need fewer moments a second
+
+
+def svg(name, seconds, frame, behind="", front=""):
+    n = max(2, min(MAX_SAMPLES, round(seconds * SAMPLES_PER_SECOND)))
     frames = [frame(i / n) for i in range(n)] + [frame(0)]
     x, y, w, h = view_of(frames)
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{x:.0f} {y:.0f} {w:.0f} {h:.0f}" width="600" height="400">', behind]
-    anim = f'dur="{seconds}s" repeatCount="indefinite"'
-    for i, (name, points, width, colour) in enumerate(frames[0]["strokes"]):
-        values = ";".join(fmt(f["strokes"][i][1]) for f in frames)
-        out.append(f'<polyline points="{fmt(points)}" fill="none" stroke="{colour}" stroke-width="{width}" '
-                   f'stroke-linecap="round" stroke-linejoin="round"><animate attributeName="points" values="{values}" {anim}/></polyline>')
-    (cx, cy), r = frames[0]["head"]
-    xs = ";".join(f'{f["head"][0][0]:.1f}' for f in frames)
-    ys = ";".join(f'{f["head"][0][1]:.1f}' for f in frames)
-    out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r}" fill="{NEAR}"><animate attributeName="cx" values="{xs}" {anim}/>'
-               f'<animate attributeName="cy" values="{ys}" {anim}/></circle>')
+    out += figure_svg(name, seconds, frames)
     out.append(front)
     out.append("</svg>")
     return "\n".join(part for part in out if part) + "\n"
@@ -541,7 +708,7 @@ def main(names):
         seconds, frame, behind = made[:3]
         front = made[3] if len(made) > 3 else ""
         path = TARGET / f"{name}.svg"
-        path.write_text(svg(seconds, frame, behind, front), encoding="utf-8")
+        path.write_text(svg(name, seconds, frame, behind, front), encoding="utf-8")
         print(path.relative_to(ROOT), f"{path.stat().st_size // 1024} KB")
 
 

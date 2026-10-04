@@ -78,7 +78,7 @@ function floatGain(text, rect, stat) {
 }
 
 // The Envoy doing an exercise at its stage: a drawing of the user for this
-// figure (painted in the Envoy's colours), else the moving line figure
+// figure (painted in the Envoy's colours), else the moving figure
 // (tools/uebungsbilder.py), else null.
 function figure(part, game, className) {
   const look = resolveLook(game.state.world.envoy);

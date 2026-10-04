@@ -416,7 +416,7 @@ EXERCISE_FIGURES = {"erste": "assets/figur", "zweite": "assets/figur/zweite"}
 ANSWER_KINDS = ["ja-nein", "anstrengung"]
 
 
-# The line figure doing the exercise (made by tools/uebungsbilder.py), for
+# The moving figure doing the exercise (made by tools/uebungsbilder.py), for
 # every figure the same: assets/uebungen/<id>.svg. A drawing of the user
 # comes first.
 def exercise_sketch(ex_id):
