@@ -7,12 +7,15 @@
 // seal opens that quest (questsheet.js). At the same time a cartouche on the
 // edge of the map, in the style of the map itself, tells about the place: its
 // name, its region, its description, and for a place still closed what opens it.
+// Beside the map (below it on a narrow screen) all quests stand as a list
+// (questlist.js); a tap there lights up the place and fans out its quests.
 
 import { h, icon } from './dom.js';
 import { PLACE_ICONS, UI_ICONS, SLOT_ICONS } from './icons.js';
 import { versioned } from '../config.js';
 import { viewHead, sectionTitle, supplies, staminaBar, materialLimits, resourceIcon } from './parts.js';
 import { journeyPanel, heroClass } from './journey.js';
+import { questListPanel } from './questlist.js';
 import { openQuest } from './questsheet.js';
 import { questsAt, questState, placeUnlocked, describeCondition } from '../world/quests.js';
 import { heroPosition } from '../world/expedition.js';
@@ -153,7 +156,28 @@ export function renderMap(game) {
         staminaBar(game.stamina())),
       h('div', { class: 'world-expedition' }, expeditionSide(game)),
       h('div', { class: 'map-frame' }, scroller),
+      h('div', { class: 'world-quests' }, questListPanel(game, c, {
+        seal: (quest) => questSeal(quest, c),
+        onPick: (quest, place) => pickFromList(game, quest, place),
+      })),
       h('div', { class: 'world-legend' }, legend())));
+}
+
+// From the list: the place lights up on the map and fans out its quests,
+// the chosen one marked. On a narrow screen the map comes into view first.
+function pickFromList(game, quest, place) {
+  const canvas = document.querySelector('.map-canvas');
+  const marker = canvas?.querySelector(`.place-marker[data-place="${place.id}"]`);
+  if (!marker) return;
+  const frame = canvas.closest('.map-frame');
+  const box = frame.getBoundingClientRect();
+  if (box.top < 0 || box.bottom > window.innerHeight) frame.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  marker.classList.remove('is-spotlit');
+  void marker.offsetWidth; // start the light again
+  marker.classList.add('is-spotlit');
+  setTimeout(() => marker.classList.remove('is-spotlit'), 3000);
+  if (!marker.classList.contains('is-fanned')) tapPlace(place, game, marker);
+  canvas.querySelectorAll('.fan-item').forEach((el) => el.classList.toggle('is-chosen', el.dataset.quest === quest.id));
 }
 
 // --- the fan of a place ------------------------------------------------------------
@@ -181,6 +205,7 @@ function fanEntries(place, game, c) {
       const queued = game.queued(quest.id);
       const step = queued && game.state.world.expedition.actions.length > 1 ? queued.index + 1 : 0;
       return {
+        id: quest.id,
         name: quest.name,
         status,
         seal: questSeal(quest, c),
@@ -260,6 +285,7 @@ function openFan(place, marker, entries, note) {
   const items = entries.map((entry, i) => h('button', {
     class: `fan-item ${entry.status}`,
     type: 'button',
+    'data-quest': entry.id || null,
     style: { '--x': `${spots[i].x}px`, '--y': `${spots[i].y}px`, '--i': String(i) },
     onclick: () => { close(); entry.open(); },
   }, entry.seal,

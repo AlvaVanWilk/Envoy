@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.7.0';
+export const APP_VERSION = '5.8.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -212,6 +212,9 @@ export const GATHER_CHANCE = 0.25;
 export const GATHER_CHANCE_PER_LEVEL = 0.015;
 export const GATHER_CHANCE_MAX = 0.9;
 export const GATHER_STATS = { stein: 'kraft', pilzholz: 'beweglichkeit' };
+// Now and then something else turns up while gathering: each minute of work
+// has this chance of one Bannsplitter (a test of the idea, see run.js).
+export const GATHER_FIND_CHANCE = 0.05;
 
 // Where the camp lies, for the time of day in its picture (middle of Germany).
 export const CAMP_LATITUDE = 51;

@@ -10,7 +10,7 @@ import { planExpedition } from '../js/world/expedition.js';
 import { roomFor, storeCapacity, materialLimit, hasSpace, stow } from '../js/world/inventory.js';
 import { seededRandom } from '../js/world/rng.js';
 import { addDays } from '../js/days.js';
-import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE, GATHER_BASE, GATHER_DICE } from '../js/config.js';
+import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE, GATHER_BASE, GATHER_DICE, GATHER_FIND_CHANCE } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -164,6 +164,22 @@ test('he gathers no more than fits into the Vorrat', () => {
   assert.equal(out.stamina, 0);
   assert.equal(gatherEstimate(GATHER('stein'), ctxOf(s), { amount: 5, energy: 10 }).room, 0);
   assert.equal(gatherEstimate(GATHER('pilzholz'), ctxOf(s), { amount: 5, energy: 10 }).room, 8);   // the other kind has its own room
+});
+
+test('gathering: now and then a Bannsplitter turns up, with dice of its own', () => {
+  const s = replay([], catalog, DAY, T0);
+  let units = 0;
+  let finds = 0;
+  for (let i = 0; i < 400; i += 1) {
+    const o = runQuest(GATHER('stein'), ctxOf(s), `fund${i}`, { amount: 8, energy: 10 });
+    units += o.gather.units;
+    finds += o.gather.finds.length;
+    assert.equal(o.reward.splitter, o.gather.finds.length);
+    assert.equal(o.reward.stein, 8);   // the material comes as always
+    assert.ok(o.gather.finds.every((u) => u < o.gather.units));
+  }
+  const share = finds / units;
+  assert.ok(share > GATHER_FIND_CHANCE * 0.6 && share < GATHER_FIND_CHANCE * 1.4, `share ${share}`);
 });
 
 test('the first day: the Lagerfeuer is sure to be built with the 10 Energie of the start, whatever the dice do', () => {

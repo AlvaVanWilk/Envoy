@@ -347,6 +347,19 @@ Lager; das spart Wege, und eine lange Reihe füllt eine lange Zeit ohne App.
 - Nach der Rückkehr ein Bericht mit einem Abschnitt je Station; was herausgefallen ist,
   steht dort („Ausgelassen: … Dafür reichte die Energie nicht mehr.“).
 
+**Quests als Liste.** Neben der Karte (auf dem Telefon darunter) stehen alle Quests der
+offenen Orte als Liste (`js/ui/questlist.js`): Name, Ort, Energie und was sie bringt, als
+kleine Zeichen (Material mit Menge, Bannsplitter, ein Kleidungsstück mit Namen,
+„vielleicht ein Fundstück“ bei Geistern, „vielleicht ein Plan“, wo einer liegen kann,
+„Neues“ für Freischaltungen). Was gerade nicht geht, steht blasser mit dem Grund („Braucht:
+Kraft 4“, „Wieder ab Mo., 6. Okt.“, „Gerade zu wenig Energie“). Darüber Filter nach dem,
+was man gerade braucht (Alle, Pilzholz, Stein, Bannsplitter, Kleidung, Pläne, Neues, je mit
+Anzahl; nur die, die es gibt) und die Reihenfolge (Machbar zuerst, Wenig Energie zuerst,
+Nach Ort); beides merkt sich das Gerät. Ein Tipp auf eine Quest lässt ihren Ort auf der
+Karte aufleuchten, öffnet dort den Fächer und hebt die Quest darin hervor; auf dem Telefon
+kommt die Karte dafür ins Bild. Auf dem iPad quer steht die Liste rechts unter Vorrat und
+Expedition und scrollt für sich.
+
 **Quests auf der Karte.** Ein Tipp auf einen Ort fächert seine Quests auf: neben dem
 Ort ein Bogen aus kleinen Siegeln, je Quest eines mit ihrem Namen daneben (ein Geist mit
 seinem Bild, Sammeln mit dem Material, verschlossene mit Schloss), die Karte dahinter
@@ -428,7 +441,11 @@ schlecht:
   Würfel, jeder gelingt mit einer Chance und bringt dann 1 Stück mehr. Bei Level 1 ist
   die Chance 25 % (im Schnitt 2,5 Stück je Energie, selten 4), sie steigt mit jedem
   Level um 1,5 Punkte, höchstens auf 90 %. Weniger als 2 Stück je Energie gibt es nie,
-  Fehlwürfe gibt es nicht.
+  Fehlwürfe gibt es nicht. Fallen beide Würfel, heißt der Fund „Glücksgriff“.
+- **Zufallsfund:** In jeder Minute beim Sammeln liegt mit 5 % ein Bannsplitter dabei
+  (eigene Würfel, das Material bleibt davon unberührt; zum Ausprobieren der Idee, auf
+  Wunsch der Nutzerin). Er steigt als „Fund: 1 Bannsplitter“ auf, steht im Tagebuch und
+  im Bericht.
 - **Stein** hängt an Kraft, **Pilzholz** an Beweglichkeit. Ein Erfolg-Bonus („Angekommen“)
   erhöht die Chance.
 - Die Menge wird mit − und + gewählt und beginnt bei 1 (nichts ist vorausgewählt). Sie

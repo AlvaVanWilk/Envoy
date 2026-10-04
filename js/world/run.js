@@ -14,7 +14,7 @@
 import {
   SPEEDUP_PER_LEVEL, FASTEST_SHARE, YIELD_PER_LEVEL, MINUTES_PER_STAMINA,
   DRIVEN_LOOT_SHARE, CAVE_RETREAT_SHARE,
-  GATHER_BASE, GATHER_DICE, GATHER_CHANCE, GATHER_CHANCE_PER_LEVEL, GATHER_CHANCE_MAX,
+  GATHER_BASE, GATHER_DICE, GATHER_CHANCE, GATHER_CHANCE_PER_LEVEL, GATHER_CHANCE_MAX, GATHER_FIND_CHANCE,
 } from '../config.js';
 import { seededRandom, randomInt, pick } from './rng.js';
 import { fighter, heroPower } from './hero.js';
@@ -145,7 +145,9 @@ export function gatherEstimate(quest, ctx, { amount = 1, energy = 0 } = {}) {
   };
 }
 
-function runGather(quest, ctx, rng, { amount = 1, energy = Infinity } = {}) {
+// findRng: dice of their own for the Bannsplitter found now and then, so
+// the dice of the material fall as they always did.
+function runGather(quest, ctx, rng, findRng, { amount = 1, energy = Infinity } = {}) {
   const { material, stat } = quest.gather;
   const chance = gatherChance(ctx.stats[stat].level, ctx.bonus?.sammeln || 0);
   const room = roomFor(ctx.world, ctx.catalog, material);
@@ -154,10 +156,12 @@ function runGather(quest, ctx, rng, { amount = 1, energy = Infinity } = {}) {
   let units = 0;
   let got = 0;
   const rolls = [];
+  const finds = []; // the minutes (from 0) in which a Bannsplitter turned up
   while (got < wanted && units < budget) {
     units += 1;
     rolls.push(gatherRoll(rng, chance));
     got += rolls[rolls.length - 1];
+    if (findRng() < GATHER_FIND_CHANCE) finds.push(units - 1);
   }
   got = Math.min(got, wanted);
   return {
@@ -168,9 +172,9 @@ function runGather(quest, ctx, rng, { amount = 1, energy = Infinity } = {}) {
     cleared: true,
     stamina: units,
     minutes: units * MINUTES_PER_STAMINA,
-    reward: { splitter: 0, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], plans: [], unlocks: [], rest: false },
+    reward: { splitter: finds.length, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], plans: [], unlocks: [], rest: false },
     consumed: {},
-    gather: { material, wanted, units, rolls },
+    gather: { material, wanted, units, rolls, finds },
   };
 }
 
@@ -186,7 +190,7 @@ function withPlans(outcome, quest, ctx, seed) {
 // options: for gathering { amount, energy }
 export function runQuest(quest, ctx, seed, options = {}) {
   const rng = seededRandom(seed);
-  if (quest.gather) return withPlans(runGather(quest, ctx, rng, options), quest, ctx, seed);
+  if (quest.gather) return withPlans(runGather(quest, ctx, rng, seededRandom(`${seed}:fund`), options), quest, ctx, seed);
   const reward = { splitter: 0, pilzholz: 0, stein: 0, things: [], plans: [], unlocks: [], rest: false };
   const fights = [];
   const stamina = siteStamina(quest, ctx.stats);

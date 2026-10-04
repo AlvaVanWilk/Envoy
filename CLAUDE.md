@@ -74,7 +74,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Speicherung und Geräteabgleich pro Konto
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen (ein Tipp auf einen Ort
   fächert seine Quests auf; das Fenster einer Quest zeigt Text, Voraussetzung, Belohnung
-  und die Energie als Leiste, keine Dauer), Energie (10 je Level
+  und die Energie als Leiste, keine Dauer; daneben alle Quests als Liste mit Belohnung,
+  Filter und Reihenfolge, ein Tipp lässt den Ort aufleuchten), Energie (10 je Level
   Ausdauer, eine Energie = eine Minute), Expeditionen in echter Zeit (Hinweg, vor Ort,
   Rückweg; solange der Envoy unterwegs ist, lässt sich alles anhängen, er geht direkt
   weiter, nur solange die Energie mit dem Rückweg reicht; Sammeln plant mit den besten
@@ -203,7 +204,8 @@ Würfen und zusammen mit den ersten Handwickeln (2 Energie): 8 Stein höchstens 
 
 **Sammeln auf dem Trümmerfeld:** je Energie 2 Stück und bis zu 2 weitere (zwei Würfel,
 Chance 25 % bei Level 1, +1,5 Punkte je Level von Kraft für Stein, von Beweglichkeit für
-Pilzholz, höchstens 90 %). Nie weniger als 2 je Energie, keine Fehlwürfe.
+Pilzholz, höchstens 90 %). Nie weniger als 2 je Energie, keine Fehlwürfe. Dazu je Minute mit
+5 % ein Bannsplitter als Zufallsfund (eigene Würfel; Idee zum Ausprobieren).
 
 ## Daten
 

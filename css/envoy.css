@@ -1472,9 +1472,10 @@ button.task-check:hover { color: var(--stat); }
   display: grid;
   gap: 14px;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "supplies" "expedition" "map" "legend";
+  grid-template-areas: "supplies" "expedition" "map" "quests" "legend";
 }
 .world-supplies { grid-area: supplies; }
+.world-quests { grid-area: quests; min-width: 0; }
 .world-expedition { grid-area: expedition; }
 .world-legend { grid-area: legend; }
 
@@ -1609,6 +1610,13 @@ button.task-check:hover { color: var(--stat); }
 .map-veil { position: absolute; inset: 0; z-index: 4; background: rgba(8, 15, 17, 0.45); animation: veil-in 0.2s ease; }
 @keyframes veil-in { from { opacity: 0; } }
 .place-marker.is-fanned { z-index: 5; }
+/* picked in the list of quests: the place lights up */
+.place-marker.is-spotlit .seal { animation: spotlit 1s ease-in-out 3; }
+@keyframes spotlit {
+  50% { border-color: #fff3c4; box-shadow: 0 0 0 1px #141e21, 0 0 0 6px rgba(246, 161, 82, 0.75), 0 0 26px 10px rgba(246, 161, 82, 0.55); transform: scale(1.18); }
+}
+.fan-item.is-chosen .fan-label { border-color: var(--copper-bright); background: linear-gradient(180deg, #2c4246, #18272a); color: var(--ivory-bright); box-shadow: 0 0 14px 2px rgba(246, 161, 82, 0.45); }
+.fan-item.is-chosen .seal { border-color: var(--copper-bright); }
 .place-marker.is-fanned .seal { border-color: var(--copper-bright); box-shadow: 0 0 0 1px #141e21, 0 0 0 4px rgba(246, 161, 82, 0.45), 0 3px 8px rgba(0, 0, 0, 0.5); }
 .place-marker.is-fanned .place-name { color: #f3e9d8; text-shadow: 0 1px 2px #000, 0 0 6px #000; }
 .fan { position: absolute; z-index: 6; width: 0; height: 0; }
@@ -2393,12 +2401,13 @@ body.creating .dock { display: none; }
   .today-grid { grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); }
   .world-grid {
     grid-template-columns: minmax(0, 1fr) 330px;
-    grid-template-areas: "map supplies" "map expedition" "map legend" "map rest";
-    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas: "map supplies" "map expedition" "map quests" "legend quests";
+    grid-template-rows: auto auto 1fr auto;
   }
   .legend-list { grid-template-columns: 1fr; }
   .map-canvas { width: max(100%, 640px); }
   .map-scroll { max-height: calc(100dvh - 220px); }
+  .world-quests .ql-list { max-height: max(280px, calc(100dvh - 430px)); overflow-y: auto; overscroll-behavior: contain; }
 }
 
 @media (min-width: 1100px) {
@@ -2494,3 +2503,27 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 @media (prefers-reduced-motion: reduce) {
   .trip-sign, .trip-sign .trip-pic, .trip-sign .trip-pic > * { animation: none; }
 }
+
+/* The quests as a list beside the map (questlist.js) --------------------- */
+.quest-list { display: grid; gap: 10px; }
+.ql-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.ql-order-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--text-2); }
+.ql-order { width: auto; min-height: 36px; padding-top: 4px; padding-bottom: 4px; font-size: 14px; }
+.ql-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.ql-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; width: 100%; padding: 8px 10px 8px 6px; border: 1px solid var(--line); border-radius: 8px; background: rgba(244, 236, 222, 0.03); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.ql-row:hover, .ql-row:focus-visible { border-color: var(--copper-bright); background: rgba(246, 161, 82, 0.06); }
+.ql-row .seal { flex: none; }
+.ql-row.is-later { opacity: 0.62; }
+.ql-main { display: grid; gap: 2px; min-width: 0; }
+.ql-name { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ivory-bright); }
+.ql-meta { font-size: 12px; color: var(--muted); }
+.ql-rewards { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 3px; }
+.ql-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px 2px 4px; border-radius: 6px; background: rgba(244, 236, 222, 0.06); font-size: 12px; color: var(--text); }
+.ql-chip .icon, .ql-chip .res-icon { width: 16px; height: 16px; }
+.ql-chip.is-thing { color: var(--ivory-bright); background: rgba(246, 161, 82, 0.16); }
+.ql-chip.is-new { padding-left: 8px; color: #10181a; background: var(--copper-bright); font-weight: 700; }
+.ql-chip.is-maybe { color: var(--text-2); }
+.ql-why { font-size: 12px; color: var(--warn); }
+.ql-go { width: 16px; height: 16px; color: var(--muted); }
+.ql-empty { padding: 14px 6px; font-size: 14px; color: var(--muted); }
+.ql-filters .chip small { margin-left: 6px; font-size: 12px; opacity: 0.7; }

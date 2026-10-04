@@ -111,6 +111,10 @@ export function storyOf(exp, game) {
           const pop = `+${sum - before} ${MATERIALS[o.gather.material]}`;
           events.push({ t: x.arrive + (u + 1) * each, key: `g${i}`, text: `${sum} ${MATERIALS[o.gather.material]} gesammelt`, pop: lucky ? `Glücksgriff: ${pop}` : pop, lucky });
         }
+        // now and then a Bannsplitter turns up as well
+        if ((o.gather.finds || []).includes(u)) {
+          events.push({ t: x.arrive + (u + 1) * each + 1, key: `s${i}.${u}`, text: 'Fund: 1 Bannsplitter', pop: 'Fund: 1 Bannsplitter', lucky: true });
+        }
       });
     } else {
       const finds = findsOf(o, catalog, game);

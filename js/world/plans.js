@@ -33,6 +33,14 @@ function sought(world, catalog) {
     && d.lagerstufe <= world.camp.stage && !world.plans.found[d.id]);
 }
 
+// The plans an action could bring (for the list of quests on the map): those
+// still sought that lie at its place or quest, and with spirits those of the
+// spirits. Only that one could be there, not which.
+export function plansFindable(quest, world, catalog) {
+  return sought(world, catalog).filter((row) => row.fundort === quest.id || row.fundort === quest.place
+    || (row.fundort === 'geister' && (quest.monsters?.length || 0) > 0));
+}
+
 // How many chances an action gives for a plan.
 function chancesFor(row, quest, outcome) {
   if (row.fundort === 'geister') return outcome.fights.length;
