@@ -18,6 +18,7 @@ import { progressAt, heroPosition, timeline, timesOf, nextStep } from '../world/
 import { materialKey } from '../world/worldstate.js';
 import { facilityRow, stageRow } from '../world/camp.js';
 import { updateScene, updateDiary, freshEvents } from './scene.js';
+import { updateTripSign } from './tripsign.js';
 
 const PART_NAMES = { way: 'Hinweg', work: 'Vor Ort', home: 'Rückweg' };
 // Without a way the work itself is named.
@@ -183,26 +184,27 @@ function updateJourney(el, exp, t, game) {
 // recalculate the state.
 export function updateJourneys(game) {
   const exp = game.state.world.expedition;
-  if (!exp) return false;
+  if (!exp) { updateTripSign(game); return false; }
   const t = Date.now();
   document.querySelectorAll(`[data-journey="${exp.id}"]`).forEach((el) => updateJourney(el, exp, t, game));
   const pos = heroPosition(exp, t, game.catalog);
   const gathering = heroClass(exp, t) !== '';
   const fresh = freshEvents(exp, game, t).filter((e) => e.pop);
+  updateTripSign(game, fresh);
   document.querySelectorAll('.hero-token').forEach((el) => {
     el.style.left = `${pos.x}%`;
     el.style.top = `${pos.y}%`;
     el.classList.toggle('is-gathering', gathering);
-    fresh.forEach((e, n) => setTimeout(() => mapPop(el, e.pop), n * 700));
+    fresh.forEach((e, n) => setTimeout(() => mapPop(el, e), n * 700));
   });
   return t >= nextStep(exp).time;
 }
 
 // A short word rising from the Envoy on the map (a find, a spirit overcome).
-function mapPop(token, text) {
+function mapPop(token, event) {
   const canvas = token.parentElement;
   if (!canvas) return;
-  const el = h('span', { class: 'map-pop', style: { left: token.style.left, top: token.style.top } }, text);
+  const el = h('span', { class: `map-pop${event.lucky ? ' is-lucky' : ''}`, style: { left: token.style.left, top: token.style.top } }, event.pop);
   canvas.append(el);
   el.addEventListener('animationend', () => el.remove());
 }

@@ -82,7 +82,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   mit Weg-Anteil in der Energie-Leiste),
   Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein;
   eine Expedition lässt sich live mitverfolgen (Weg, Kampf Runde für Runde, Sammeln,
-  Tagebuch, Wörter auf der Karte, `js/ui/scene.js`), der Bericht entfaltet sich Fund für
+  Tagebuch, Wörter auf der Karte, `js/ui/scene.js`; auf jeder anderen Seite ein Schild über
+  dem Menü, aus dem jeder Fund aufsteigt, `js/ui/tripsign.js`), der Bericht entfaltet sich Fund für
   Fund; nach einer erledigten Aufgabe fliegt ein Licht zum Ring ihres Werts, der wächst
   und mit dem Portrait aufglimmt; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
   Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)

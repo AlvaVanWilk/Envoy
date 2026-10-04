@@ -13,7 +13,7 @@
 
 import { h, icon } from './dom.js';
 import { UI_ICONS, PLACE_ICONS, FACILITY_ICONS } from './icons.js';
-import { MATERIALS } from '../config.js';
+import { MATERIALS, GATHER_BASE, GATHER_DICE } from '../config.js';
 import { timesOf, progressAt } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
 import { resolveLook, portraitSrc, showLayer } from './look.js';
@@ -106,7 +106,10 @@ export function storyOf(exp, game) {
         const before = sum;
         sum = Math.min(o.gather.wanted, sum + roll);
         if (sum > before) {
-          events.push({ t: x.arrive + (u + 1) * each, key: `g${i}`, text: `${sum} ${MATERIALS[o.gather.material]} gesammelt`, pop: `+${sum - before} ${MATERIALS[o.gather.material]}` });
+          // both dice at once: a handful more than usual
+          const lucky = roll >= GATHER_BASE + GATHER_DICE;
+          const pop = `+${sum - before} ${MATERIALS[o.gather.material]}`;
+          events.push({ t: x.arrive + (u + 1) * each, key: `g${i}`, text: `${sum} ${MATERIALS[o.gather.material]} gesammelt`, pop: lucky ? `Glücksgriff: ${pop}` : pop, lucky });
         }
       });
     } else {
@@ -244,11 +247,16 @@ function gatherScene(a) {
     h('p', { class: 'scene-text' }, a.title));
 }
 
-function updateGather(el, a, x, t) {
+// How many pieces a gathering has brought by time t.
+function gatheredAt(a, x, t) {
   const g = a.outcome.gather;
   const each = (x.done - x.arrive) / Math.max(1, g.units);
   const units = Math.min(g.units, Math.max(0, Math.floor((t - x.arrive) / each)));
-  const sum = Math.min(g.wanted, g.rolls.slice(0, units).reduce((s, r) => s + r, 0));
+  return Math.min(g.wanted, g.rolls.slice(0, units).reduce((s, r) => s + r, 0));
+}
+
+function updateGather(el, a, x, t) {
+  const sum = gatheredAt(a, x, t);
   const shown = Number(el.dataset.n ?? -1);
   el.querySelector('.gather-n').textContent = String(sum);
   if (shown >= 0 && sum > shown) {
@@ -284,6 +292,28 @@ function sceneAt(exp, story, t) {
   if (fight >= 0) return { key: `fight${p.i}.${fight}`, p, kind: 'fight', ft: fights[fight] };
   if (Array.isArray(a.outcome?.gather?.rolls)) return { key: `gather${p.i}`, p, kind: 'gather' };
   return { key: `work${p.i}`, p, kind: 'work' };
+}
+
+// In a few words what the Envoy is doing at time t, for the sign above the
+// menu (tripsign.js): { kind, title, count, material, monster }, or null.
+export function nowDoing(exp, game, t) {
+  const story = storyOf(exp, game);
+  const now = sceneAt(exp, story, t);
+  if (!now) return null;
+  const a = exp.actions[now.p.i];
+  const place = game.catalog.placeById.get(a.place);
+  if (now.kind === 'way') return { kind: 'way', title: `Auf dem Weg: ${place?.name || a.title}` };
+  if (now.kind === 'home') return { kind: 'home', title: 'Auf dem Rückweg ins Lager' };
+  if (now.kind === 'fight') {
+    const monster = game.catalog.monsterById.get(now.ft.f.monster);
+    return { kind: 'fight', title: `Kampf: ${monster?.name || ''}`, monster };
+  }
+  if (now.kind === 'gather') {
+    const g = a.outcome.gather;
+    const sum = gatheredAt(a, story.times.actions[now.p.i], t);
+    return { kind: 'gather', title: `Sammelt ${MATERIALS[g.material]}`, count: `${sum} / ${g.wanted}`, material: g.material };
+  }
+  return { kind: 'work', title: a.outcome?.kind === 'bauen' ? `Baut: ${a.title}` : `Erkundet: ${place?.name || a.title}` };
 }
 
 // Draws or moves on the scene in `box` for time t.

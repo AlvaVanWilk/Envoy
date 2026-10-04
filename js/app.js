@@ -27,6 +27,7 @@ import { isSheetOpen } from './ui/sheet.js';
 import { startTourIfNew } from './ui/tours.js';
 import { IS_TEST, APP_NAME } from './stage.js';
 import { mountTestTools } from './ui/testtools.js';
+import { updateTripSign } from './ui/tripsign.js';
 
 // The menu at the bottom, left to right. The camp in the middle is the
 // start. `feature` = unlocked in the game.
@@ -136,6 +137,7 @@ function render() {
   document.body.classList.remove('creating');
   account.setLabel(game.state.world.envoy.name);
   const name = currentView();
+  document.body.dataset.view = name;
   // A view with choices in progress is not rebuilt while it is open.
   if (VIEWS[name].keep && name === lastView) return;
   if (name !== lastView && name === 'abenteuer') markMapForScroll();
@@ -143,6 +145,7 @@ function render() {
   keepPictures(viewRoot, view);
   replaceChildren(viewRoot, view);
   renderNav();
+  updateTripSign(game);
   if (name !== lastView && ['envoy', 'tageswerk', 'abenteuer', 'lager'].includes(name) && (name !== 'lager' || game.state.world.camp.stage >= 1)) {
     startTourIfNew(name, game, () => currentView() === name);
   }

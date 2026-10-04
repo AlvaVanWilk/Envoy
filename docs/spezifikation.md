@@ -300,6 +300,14 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
   Ergebnis: Kämpfe füllen gut vier Fünftel der Zeit vor Ort, die Runden gleichmäßig verteilt,
   Funde erscheinen am Ende der Arbeit. Es ist auf jedem Gerät und nach jedem Neuladen
   gleich und ändert nichts am Spiel.
+- **Unterwegs-Schild.** Solange der Envoy unterwegs ist, schwebt auf jeder Seite außer
+  der Karte ein Schild über dem Menü (`js/ui/tripsign.js`): ein Bild (der laufende Envoy,
+  das Material, der Geist, die Suche), was er gerade tut („Sammelt Pilzholz“, „Auf dem Weg:
+  Pilzhain“, „Kampf: Nebelwicht“), beim Sammeln der Stand („5 / 8“), die Restzeit und eine
+  dünne Leiste für die ganze Reise. Jeder Fund steigt daraus auf („+3 Pilzholz“); fallen
+  beim Sammeln beide Würfel, heißt er „Glücksgriff“ und leuchtet golden (auch auf der
+  Karte). Ein Tipp führt zur Karte. Ist er zurück und der Bericht wartet, glimmt das
+  Schild („Der Envoy ist zurück · Bericht ansehen“) und führt ins Lager.
 - Zurück im Lager erscheint einmal ein Bericht: Kämpfe, Mitgebrachtes, Neues im
   Kompendium, bei zu wenig Platz auch, was liegen blieb. Er entfaltet sich: erst die Geister,
   dann jeder Fund einzeln, der kurz aufleuchtet, die Mengen zählen hoch, Neues (das
