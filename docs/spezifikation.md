@@ -886,7 +886,9 @@ Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
 Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), die Übungen als bewegte Figuren `assets/uebungen/<id>.svg` (3:2, gemacht von `tools/uebungsbilder.py`) oder, falls es sie gibt, ein Bild der Nutzerin im Ordner einer Figur: `uebungen/<übung>.png` für alle Stufen einer Übung, `uebungen/<id>.png` für eine Stufe (geht vor; Hintergrund frei; Haut und Haare in den Farben der Figur, damit die App sie umfärbt). Bisher gibt es `innehalten.png` für beide Figuren: die Frau und der Mann im Schneidersitz, für alle drei Stufen der Gelassenheit, Karte im Seitenverhältnis 3:2
-(`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
+(`assets/welt/karte.jpg`, 2400 × 1600, gezeichnet von `node tools/karte.mjs`: eine Insel im
+Nebelmeer, jedes Land mit eigener Farbe und eigenen Zeichen, der Fluss von der Stillen Quelle
+durch die Nebelfurt in den Mondsee und weiter ins Meer; nichts liegt halb außerhalb der Küste). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 
 ## Tabellen

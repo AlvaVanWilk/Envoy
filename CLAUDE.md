@@ -256,7 +256,8 @@ und steht als `ORDER` in `tools/lager_ebenen.py` (ein Eintrag kann Bedingungen h
 zu einer Lagerstufe, nicht mit einer bestimmten Einrichtung); das Skript macht die Ausschnitte. Neue
 Ebenen legt sie durchnummeriert in den Ordner `LagerPNGs` im Testordner auf dem Webspace.
 Karte
-`assets/welt/karte.jpg` (3:2).
+`assets/welt/karte.jpg` (2400 × 1600, 3:2; von Claude gezeichnet mit `node tools/karte.mjs`, die Orte an
+ihren Stellen aus `welt.xlsx`; was nicht ganz auf dem Land liegt, lässt das Skript weg und nennt es).
 
 ## Kleiderkammer
 

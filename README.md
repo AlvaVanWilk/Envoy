@@ -123,7 +123,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
 | Die Übungen als bewegte Figuren | `assets/uebungen/<id>.svg` | Comic-Stil mit Umrisslinie, Hemd in der Farbe des Bereichs, ohne Gesicht, 3:2; macht `tools/uebungsbilder.py` (`python3 tools/uebungsbilder.py`); auf der Karte der Aufgabe und im Timer |
 | Der Envoy bei einer Übung | `uebungen/<übung>.png` (alle Stufen) oder `uebungen/<id>.png` (eine Stufe) im Ordner jeder Figur | ein eigenes Bild geht vor der gezeichneten Figur; Hintergrund frei, jede Form passt ganz in die Karte; wird wie die Figur umgefärbt. Bisher: `innehalten.png` für beide Figuren (Gelassenheit) |
-| Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
+| Karte | `assets/welt/karte.jpg` | 2400 × 1600 (3:2); macht `node tools/karte.mjs`, die Orte an ihren Stellen aus `welt.xlsx` |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
 
 Die Figur des Envoy und ihre Kleidung sind eigene Zeichnungen. Für Ausrüstung ohne
@@ -151,5 +151,5 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/ui/` | die Ansichten; `today.js` das Tageswerk, `taskcard.js` die Karte einer Aufgabe (dreht sich auf, Reiter je Übung, Fragen), `timer.js` der geführte Timer, `voice.js` seine Stimme, `topbar.js` die Leiste oben, `camp.js` das Lager (sein Bild aus Ebenen, ein Tipp zeigt es groß), `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“, `deko.js` die Deko-Liste, `upgrade.js` „Lager aufwerten“, `testtools.js` das Menü am Schild „Test“, das nur die Testfassung zeigt; `journey.js` die Leiste einer laufenden Expedition mit ihrer Reihe und den Bericht; `js/world/expedition.js` Expeditionen als Reihe von Aktionen (Wege, Zeiten, Fortschritt), der Ablauf unterwegs steht in `js/world/worldstate.js`; `js/world/camp.js` das Lager (Stufen, Einrichtungen, Deko, Hygge), `js/world/plans.js` das Finden der Pläne für Deko, `js/daylight.js` die Tageszeit |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
-| `tools/` | Umwandlung der Tabellen; `tools/uebungsbilder.py` zeichnet die Übungen als bewegte Figuren; `tools/lager_ebenen.py` hält die Reihenfolge der Ebenen im Lagerbild (`ORDER`, von hinten nach vorn) und macht aus den Teilen in `tools/lager-ausschnitte/` die Ausschnitte für jede Tageszeit |
+| `tools/` | Umwandlung der Tabellen; `tools/uebungsbilder.py` zeichnet die Übungen als bewegte Figuren; `tools/karte.mjs` zeichnet die Karte; `tools/lager_ebenen.py` hält die Reihenfolge der Ebenen im Lagerbild (`ORDER`, von hinten nach vorn) und macht aus den Teilen in `tools/lager-ausschnitte/` die Ausschnitte für jede Tageszeit |
 | `tests/` | Prüfungen der Spielregeln, `npm test` mit Node.js |
