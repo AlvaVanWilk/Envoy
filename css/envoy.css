@@ -1149,6 +1149,7 @@ button.task-check:hover { color: var(--stat); }
 .tc-head .eyebrow { flex: 1; margin: 0; color: var(--stat); }
 .tc-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 16px 12px; }
 .tc-picture {
+  position: relative;
   display: grid; place-items: center;
   aspect-ratio: 3 / 2;
   border-radius: 12px;
@@ -1156,7 +1157,8 @@ button.task-check:hover { color: var(--stat); }
   background: radial-gradient(ellipse at 50% 70%, color-mix(in srgb, var(--stat) 16%, #22343a), #0d1618 75%);
   overflow: hidden;
 }
-.tc-img { width: 100%; height: 100%; object-fit: contain; }
+/* any picture fits whole, also an upright one */
+.tc-img { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); object-fit: contain; }
 .tc-picture.empty .stat-emblem { --size: 84px; opacity: 0.8; }
 .tc-meta { margin: 0 0 8px; font-size: 14px; color: var(--text-2); }
 .tc-gain { font-weight: 700; color: var(--stat); }

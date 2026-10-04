@@ -2,11 +2,11 @@
 // over and brings it to the middle of the screen (see openCard in sheet.js).
 //
 // A task is a unit of one or more exercises (see tasks.js). The card shows
-// one of them at a time, chosen with a row of tabs: the Envoy doing it,
-// drawn by the user (one picture per exercise, stage and figure, painted in
-// the Envoy's colours like the portrait; without a picture the emblem of the
-// area), its name and stage, its time and the steps. Below: the guided timer
-// for the whole unit (timer.js) and „Erledigt“.
+// one of them at a time, chosen with a row of tabs: the Envoy doing it (a
+// picture by the user for the figure, painted in the Envoy's colours like the
+// portrait, else the moving figure, else the emblem of the area), its name
+// and stage, its time and the steps. Below: the guided timer for the whole
+// unit (timer.js) and „Erledigt“.
 //
 // After „Erledigt“ (or the timer) come the questions, one for each exercise
 // that has a higher stage to go to; their answers move the stages (two good

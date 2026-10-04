@@ -762,8 +762,9 @@ des Envoy):
   Farbe des Bereichs, mit Hals und ohne Gesicht: nur das Haar zeigt, wohin der Kopf schaut;
   meist von der Seite, der Seitstütz von vorn, der Brustöffner („das offene Buch“) vom Kopf
   her schräg von oben, damit der Bogen des Arms zu sehen ist) (je Übung und Stufe, `assets/uebungen/<id>.svg`, gezeichnet mit
-  `tools/uebungsbilder.py`; eine eigene Zeichnung der Nutzerin je Figur ginge vor und würde
-  in den Farben des Envoy gezeigt; ohne beides das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
+  `tools/uebungsbilder.py`; ein eigenes Bild der Nutzerin je Figur geht vor und wird in den
+  Farben des Envoy gezeigt, bei der Gelassenheit die Frau und der Mann im Schneidersitz;
+  ohne beides das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
   Namen, dann Name, Stufe („Stufe 1 · Der Fußtipp“), Zeit, wofür sie gut ist und die
   Schritte; unten „Mit Timer“ und „Erledigt“ (und „Das war heute zu viel“, siehe
   Rückfrage). Die Fragen danach füllen die Karte: bei einer Frage genügt ein Tipp, bei
@@ -871,7 +872,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), die Übungen als bewegte Figuren `assets/uebungen/<id>.svg` (3:2, gemacht von `tools/uebungsbilder.py`) oder, falls es sie gibt, eine Zeichnung der Nutzerin `uebungen/<id>.png` im Ordner einer Figur (geht vor; Haut und Haare in den Farben der Figur, damit die App sie umfärbt), Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), die Übungen als bewegte Figuren `assets/uebungen/<id>.svg` (3:2, gemacht von `tools/uebungsbilder.py`) oder, falls es sie gibt, ein Bild der Nutzerin im Ordner einer Figur: `uebungen/<übung>.png` für alle Stufen einer Übung, `uebungen/<id>.png` für eine Stufe (geht vor; Hintergrund frei; Haut und Haare in den Farben der Figur, damit die App sie umfärbt). Bisher gibt es `innehalten.png` für beide Figuren: die Frau und der Mann im Schneidersitz, für alle drei Stufen der Gelassenheit, Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 

@@ -122,7 +122,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Ausschnitte im Lagerbild | `assets/lager/ausschnitt_<name>_<zeit>.png` | 1792 × 672, transparent: Felsen, Feuer, Säulen aus dem Bild, damit sie vor dem stehen, was dahinter liegt, manche nur bis zu einer Lagerstufe oder nicht mit einer bestimmten Einrichtung; macht `tools/lager_ebenen.py` |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
 | Die Übungen als bewegte Figuren | `assets/uebungen/<id>.svg` | Comic-Stil mit Umrisslinie, Hemd in der Farbe des Bereichs, ohne Gesicht, 3:2; macht `tools/uebungsbilder.py` (`python3 tools/uebungsbilder.py`); auf der Karte der Aufgabe und im Timer |
-| Der Envoy bei einer Übung | `uebungen/<id>.png` im Ordner jeder Figur | eine eigene Zeichnung, falls es einmal eine gibt: geht vor der gezeichneten Figur; am besten 3:2 quer, Hintergrund frei; wird wie die Figur umgefärbt |
+| Der Envoy bei einer Übung | `uebungen/<übung>.png` (alle Stufen) oder `uebungen/<id>.png` (eine Stufe) im Ordner jeder Figur | ein eigenes Bild geht vor der gezeichneten Figur; Hintergrund frei, jede Form passt ganz in die Karte; wird wie die Figur umgefärbt. Bisher: `innehalten.png` für beide Figuren (Gelassenheit) |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
 

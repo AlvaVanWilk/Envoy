@@ -408,10 +408,12 @@ def unique_id(report, row, value, seen):
 
 # --- exercises --------------------------------------------------------------
 
-# The Envoy doing an exercise, drawn by the user: one picture per exercise,
-# stage and figure, in the figure's folder (assets/figur/uebungen/<id>.png
-# for the first figure, assets/figur/zweite/uebungen/<id>.png for the second).
-# Any size; the card shows it whole. -> {'erste': path, 'zweite': path}
+# The Envoy doing an exercise, drawn by the user: one picture per exercise
+# and figure, in the figure's folder (assets/figur/uebungen/<exercise>.png
+# for the first figure, assets/figur/zweite/uebungen/<exercise>.png for the
+# second), for all its stages; a picture for one stage (<id>.png, e.g.
+# kaefer-2.png) comes before it. Any size; the card shows it whole.
+# -> {'erste': path, 'zweite': path}
 EXERCISE_FIGURES = {"erste": "assets/figur", "zweite": "assets/figur/zweite"}
 ANSWER_KINDS = ["ja-nein", "anstrengung"]
 
@@ -424,10 +426,14 @@ def exercise_sketch(ex_id):
     return f"assets/uebungen/{ex_id}.svg" if path.exists() else None
 
 
-def exercise_pictures(ex_id):
-    return {figure: f"{folder}/uebungen/{ex_id}.png"
-            for figure, folder in EXERCISE_FIGURES.items()
-            if (ROOT / folder / "uebungen" / f"{ex_id}.png").exists()}
+def exercise_pictures(ex_id, key):
+    pictures = {}
+    for figure, folder in EXERCISE_FIGURES.items():
+        for name in (ex_id, key):
+            if (ROOT / folder / "uebungen" / f"{name}.png").exists():
+                pictures[figure] = f"{folder}/uebungen/{name}.png"
+                break
+    return pictures
 
 
 def timed_parts(report, row, cell, what):
@@ -526,7 +532,7 @@ def convert_exercises(path):
             "antwort": answers,
             "ansagen": timed_parts(report, row, r.get("ansagen", ""), "ansagen"),
             "atemtakt": breath,
-            "bilder": exercise_pictures(ex_id),
+            "bilder": exercise_pictures(ex_id, key),
             "skizze": exercise_sketch(ex_id),
         })
 

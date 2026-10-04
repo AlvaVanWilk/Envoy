@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T12:51:24Z",
+ "generated": "2026-10-04T13:37:48Z",
  "source": "uebungen.xlsx",
  "exercises": [
   {
@@ -527,7 +527,10 @@
     }
    ],
    "atemtakt": null,
-   "bilder": {},
+   "bilder": {
+    "erste": "assets/figur/uebungen/innehalten.png",
+    "zweite": "assets/figur/zweite/uebungen/innehalten.png"
+   },
    "skizze": "assets/uebungen/innehalten-1.svg"
   },
   {
@@ -569,7 +572,10 @@
     }
    ],
    "atemtakt": null,
-   "bilder": {},
+   "bilder": {
+    "erste": "assets/figur/uebungen/innehalten.png",
+    "zweite": "assets/figur/zweite/uebungen/innehalten.png"
+   },
    "skizze": "assets/uebungen/innehalten-2.svg"
   },
   {
@@ -627,7 +633,10 @@
     }
    ],
    "atemtakt": null,
-   "bilder": {},
+   "bilder": {
+    "erste": "assets/figur/uebungen/innehalten.png",
+    "zweite": "assets/figur/zweite/uebungen/innehalten.png"
+   },
    "skizze": "assets/uebungen/innehalten-3.svg"
   }
  ]
