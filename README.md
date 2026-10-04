@@ -93,7 +93,7 @@ mit demselben Namen und Passwort **Anmelden**; der Spielstand kommt vom Server.
 Die Quellen sind drei Tabellen in `data/`, jede mit einem Blatt **Erklärung**:
 
 - `uebungen.xlsx` — Übungen je Bereich mit ihren Stufen, Zeit, Frage, Ansagen und XP; die Spalte `alter` sagt, für wen eine Übung ist (Kinder und Jugendliche haben eigene, leer = Erwachsene)
-- `ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Fähigkeiten, Herkunft, Preis
+- `ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Fähigkeiten, Herkunft (auch `fund` für Fundstücke), Preis, Figur (Frau, Mann, beide) und ob ein Teil gefärbt gefunden werden kann
 - `welt.xlsx` — Orte der Karte, Monster, Quests (mit `aktiv`: nein nimmt eine Quest vorerst aus
   dem Spiel, ohne sie zu löschen), Lagerstufen, Einrichtungen (mit Hygge), Deko
 

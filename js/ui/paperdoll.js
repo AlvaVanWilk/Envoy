@@ -5,11 +5,12 @@
 // Each item lies at its slot's place unless it names another (EBENEN).
 // A figure may wear an undershirt right over the base figure: no slot, it
 // cannot be taken off, only switched off in the settings.
-// Which figure and which colours: see look.js.
+// Which figure and which colours, and the colour of a piece: see look.js.
+// A piece whose drawing does not fit the figure is not drawn.
 
 import { h } from './dom.js';
 import { SLOTS, BASE_FIGURE_LAYER, UNDERSHIRT_LAYER, EBENEN } from '../config.js';
-import { resolveLook, baseSrc, undershirtSrc, layerSrc, showLayer } from './look.js';
+import { resolveLook, baseSrc, undershirtSrc, layerSrc, showLayer, dyeOf } from './look.js';
 
 const layerOf = (item, slot) => EBENEN.find((e) => e.id === item.ebene)?.layer ?? slot.layer;
 
@@ -22,7 +23,7 @@ export function paperdoll(equipped, world, catalog, { className = '', envoy = wo
     const entry = world.items[equipped[slot.id]];
     const item = entry && catalog.itemById.get(entry.id);
     const src = item && layerSrc(item, look);
-    if (src) layers.push({ layer: layerOf(item, slot), src, slot: slot.id });
+    if (src) layers.push({ layer: layerOf(item, slot), src, slot: slot.id, dye: dyeOf(entry.farbe, item) });
   }
   layers.sort((a, b) => a.layer - b.layer);
 
@@ -37,7 +38,7 @@ export function paperdoll(equipped, world, catalog, { className = '', envoy = wo
         draggable: 'false',
         onerror: (e) => { e.currentTarget.hidden = true; },
       });
-      showLayer(img, l.src, look, l.base ? 'base' : 'layer');
+      showLayer(img, l.src, look, l.base ? 'base' : 'layer', l.dye);
       return img;
     }));
 }

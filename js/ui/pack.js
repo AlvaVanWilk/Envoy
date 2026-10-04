@@ -9,7 +9,7 @@ import { UI_ICONS } from './icons.js';
 import { BACKPACK_SIZE } from '../config.js';
 import { sectionTitle, itemIcon } from './parts.js';
 import { openEntry, AWAY_NOTE } from './itemsheet.js';
-import { lookup, unmetRequirements } from '../world/items.js';
+import { lookup, wearable } from '../world/items.js';
 import { entriesIn, capacity, reachable, atCamp } from '../world/inventory.js';
 
 const ROW = 5;
@@ -20,14 +20,14 @@ function cell(entry, game, { over = false } = {}) {
   const { world, stats } = game.state;
   const thing = lookup(entry, game.catalog);
   if (!thing) return null;
-  const locked = entry.kind === 'item' && unmetRequirements(thing, stats).length > 0;
+  const locked = entry.kind === 'item' && !wearable(thing, stats, world);
   const away = !reachable(world, entry);
   return h('button', {
     class: `pack-cell filled ${locked ? 'locked' : ''} ${away ? 'away' : ''} ${over ? 'over' : ''}`,
     'aria-label': thing.name,
     title: thing.name,
     onclick: () => openEntry(entry.inst, game),
-  }, itemIcon(thing, game), locked ? icon(UI_ICONS.lock, 'item-lock') : null);
+  }, itemIcon(thing, game, 'item-icon', entry.farbe), locked ? icon(UI_ICONS.lock, 'item-lock') : null);
 }
 
 const emptyCell = () => h('span', { class: 'pack-cell', 'aria-hidden': 'true' });

@@ -1,6 +1,7 @@
 // Level and price of equipment.
 
 import { SELL_SHARE } from '../config.js';
+import { fits, figureOf } from './clothes.js';
 
 // How demanding an item is: its highest requirement (0 = none).
 export function itemLevel(item) {
@@ -21,6 +22,11 @@ export function sellPrice(entry, catalog) {
 
 export function lookup(entry, catalog) {
   return catalog.itemById.get(entry.id);
+}
+
+// Can the Envoy put this on: the requirements met, and the drawing fits its figure?
+export function wearable(item, stats, world) {
+  return unmetRequirements(item, stats).length === 0 && fits(item, figureOf(world));
 }
 
 // Which requirements of `item` the current stats do not meet.

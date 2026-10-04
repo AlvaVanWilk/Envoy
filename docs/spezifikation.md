@@ -266,6 +266,32 @@ hieß er Umhang; alte Kennungen beginnen noch mit `umhang_`).
 Rucksack und wird nicht mehr gezeichnet. Das Charakterfenster zeigt, was abgelegt wurde
 und warum.
 
+### Kleidung: viele Fundstücke in eigenen Farben
+
+Die meiste Kleidung bringt keine Fähigkeit, sondern Vielfalt: Die Teile der Kleiderkammer
+(bisher 55, Oberteile, Hosen, Sandalen, Armwickel) werden **unterwegs gefunden** (Herkunft
+`fund`), auch bei Geistern und beim Händler. Feste Questbelohnungen, die für alle gleich
+sind, bleiben wenige (Handwickel, Bastsandalen, Griffhandschuhe, Leichte Stiefel …).
+
+- **Fund unterwegs:** jede Quest außer Bauen ist eine Chance, 3 % je Energie Arbeit, höchstens
+  30 % je Quest. Der erste Fund kommt spätestens nach 5 Energie Arbeit (am ersten Tag) und ist
+  sofort tragbar, jeder weitere spätestens nach 66 Energie ohne Fund (doppelter Schnitt).
+  Welches Teil: eines, das zur Stärke des Envoy passt (±3 Level) und zu seiner Figur, meist
+  (drei von vier) eines, das er gleich anziehen kann. `world.clothes` zählt mit.
+- **Farben:** Ein Teil mit `faerbbar` bekommt beim Fund oder im Angebot des Händlers eine
+  eigene Farbe, eine von zwölf (Moosgrün, Salbei, Petrol, Nachtblau, Taubenblau, Pflaume,
+  Rostrot, Kupfer, Ocker, Sand, Altrosa, Schiefer) oder wie gezeichnet, alle gleich wahrscheinlich.
+  Die Farbe gehört dem Stück (`farbe` am Ding, im Ereignis gespeichert); dasselbe Teil gibt es
+  so in vielen Formen. Die App färbt die Zeichnung im Browser um: Muster, Schatten und Linien
+  bleiben, ein buntes Teil dreht alle Farbtöne mit, ein schlichtes nimmt die Farbe ganz an; Haut
+  in Sandalen und Armwickeln bleibt Haut. Das Icon wird aus der gefärbten Zeichnung geschnitten.
+  Die Farbe steht klein beim Teil („Oberteil · Stufe 1 · Moosgrün“), im Bericht „Bandshirt in
+  Moosgrün“.
+- **Figur:** Jede Zeichnung passt einer Figur oder beiden (Spalte `figur`: Frau, Mann, beide).
+  Teile für die andere Figur werden nicht gefunden, nicht angeboten, nicht angezogen und nicht
+  gezeichnet („Passt nicht zu dieser Figur.“).
+- Die Startkleidung und feste Questbelohnungen sind nicht färbbar.
+
 ## Spielwelt
 
 Die Zwischenwelt ist steinig, trümmerhaft und ätherisch: Geröll, umgestürzte Säulen,
@@ -555,8 +581,9 @@ ist weniger Beute.
   orangefarbenen Hüten. Leicht und zäh, lässt sich sägen und schnitzen wie Holz; für
   Balken, Dächer, Brücken, Möbel.
 - **Stein**: Blöcke aus den alten Ruinen, für Mauern.
-- Ausrüstung: feste Quest-Belohnungen oder mit einer Chance je Geist. Beute-Ausrüstung
-  liegt in der Nähe der Stärke des Helden (±3 Level).
+- Ausrüstung: wenige feste Quest-Belohnungen, sonst mit einer Chance je Geist und als
+  Fundstück unterwegs (siehe Kleidung). Beute liegt in der Nähe der Stärke des Helden
+  (±3 Level) und passt zu seiner Figur; färbbare Teile kommen in einer eigenen Farbe.
 - Pläne für Deko: an ihrem Fundort, mit Glück (siehe Das Lager).
 - Glück erhöht Bannsplitter und die Chance auf Fundstücke.
 
@@ -565,7 +592,8 @@ ist weniger Beute.
 Wird durch die Quest „Der Händler im Nebel“ freigeschaltet (den Händler retten).
 Bietet jeden Tag 5 Dinge an, an manchen Tagen dazu einen Plan für Deko (siehe Das Lager). Die
 Ausrüstung ist zufällig, aber immer im Bereich der Stärke des Helden (Voraussetzung
-höchstens 3 Level darunter oder darüber). Preis in Bannsplittern = 12 + 4 × n + n² + 8 × Stufe
+höchstens 3 Level darunter oder darüber) und passend zur Figur; färbbare Kleidung hat eine
+eigene Farbe, die beim Kauf bleibt. Preis in Bannsplittern = 12 + 4 × n + n² + 8 × Stufe
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
 alles für ein Drittel des Preises zurück.
 

@@ -18,6 +18,7 @@ import { timesOf, progressAt } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
 import { resolveLook, portraitSrc, showLayer } from './look.js';
 import { resourceIcon, itemIcon, MATERIAL_KEYS } from './parts.js';
+import { thingName } from '../world/clothes.js';
 
 const RESULT = { won: 'besiegt', calmed: 'beruhigt', driven: 'Der Envoy zieht sich zurück' };
 const clock = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
@@ -58,7 +59,7 @@ function findsOf(outcome, catalog, game) {
   }
   for (const thing of r.things || []) {
     const item = catalog.itemById.get(thing.id);
-    if (item) finds.push({ text: item.name, pic: () => itemIcon(item, game, 'scene-thing') });
+    if (item) finds.push({ text: thingName(item, thing.farbe), pic: () => itemIcon(item, game, 'scene-thing', thing.farbe) });
   }
   for (const id of r.plans || []) {
     const deko = catalog.dekoById.get(id);
@@ -115,6 +116,11 @@ export function storyOf(exp, game) {
         if ((o.gather.finds || []).includes(u)) {
           events.push({ t: x.arrive + (u + 1) * each + 1, key: `s${i}.${u}`, text: 'Fund: 1 Bannsplitter', pop: 'Fund: 1 Bannsplitter', lucky: true });
         }
+      });
+      // a piece of clothing found between the stones, at the end
+      (o.reward?.things || []).forEach((thing, n) => {
+        const item = catalog.itemById.get(thing.id);
+        if (item) events.push({ t: x.done, key: `k${i}.${n}`, text: `Fund: ${thingName(item, thing.farbe)}`, pop: `Fund: ${item.name}`, lucky: true });
       });
     } else {
       const finds = findsOf(o, catalog, game);

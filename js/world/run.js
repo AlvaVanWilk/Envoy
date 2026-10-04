@@ -8,7 +8,8 @@
 //   hoehle    several spirits one after the other, as far as the Envoy's life reaches
 // The work costs the stamina from the table (`kosten`), less with the
 // `tempo` stats, and takes as many minutes as it costs.
-// Plans for Deko are rolled with it (see plans.js).
+// Plans for Deko are rolled with it (see plans.js), and whether a piece of
+// clothing turns up (see clothes.js).
 // The result is stored in the event as it is, so it never changes later.
 
 import {
@@ -19,11 +20,13 @@ import {
 import { seededRandom, randomInt, pick } from './rng.js';
 import { fighter, heroPower } from './hero.js';
 import { fight } from './combat.js';
-import { itemLevel } from './items.js';
+import { itemLevel, unmetRequirements } from './items.js';
 import { roomFor } from './inventory.js';
 import { rollPlans } from './plans.js';
+import { fits, figureOf, rollDye, rollClothes } from './clothes.js';
 
 const LOOT_BAND = 3;
+const WEARABLE_SHARE = 0.75;
 
 const average = (stats, ids) => (ids.length === 0 ? 1 : ids.reduce((sum, id) => sum + stats[id].level, 0) / ids.length);
 
@@ -52,22 +55,32 @@ function scaled(rng, amount, factor) {
   return whole + (rng() < exact - whole ? 1 : 0);
 }
 
-// An equipment piece that fits the hero's strength.
-function lootThing(ctx, rng) {
+// An equipment piece that fits the hero's strength and figure, from spirits
+// (origin `beute`) or found on the way (`fund`), maybe in a colour of its own.
+// Found on the way, it is mostly one that can be put on right away
+// (WEARABLE_SHARE), the very first always.
+export function lootThing(ctx, rng, origin, dyeRng) {
   const power = heroPower(ctx.stats);
-  const items = ctx.catalog.equipment.filter((i) => i.herkunft.includes('beute')
-    && Math.abs(itemLevel(i) - power) <= LOOT_BAND);
-  return items.length > 0 ? { kind: 'item', id: pick(rng, items).id } : null;
+  const figure = figureOf(ctx.world);
+  const items = ctx.catalog.equipment.filter((i) => i.herkunft.includes(origin)
+    && fits(i, figure) && Math.abs(itemLevel(i) - power) <= LOOT_BAND);
+  if (items.length === 0) return null;
+  const now = items.filter((i) => unmetRequirements(i, ctx.stats).length === 0);
+  const first = (ctx.world?.clothes?.found || 0) === 0;
+  const wearableFirst = origin === 'fund' && now.length > 0 && (first || rng() < WEARABLE_SHARE);
+  const item = pick(rng, wearableFirst ? now : items);
+  const farbe = rollDye(item, dyeRng);
+  return farbe ? { kind: 'item', id: item.id, farbe } : { kind: 'item', id: item.id };
 }
 
-function monsterLoot(monster, result, ctx, rng, into) {
+function monsterLoot(monster, result, ctx, rng, into, dyeRng) {
   const luck = 1 + ctx.fx.glueck / 100;
   const share = result === 'calmed' ? 1.5 : result === 'driven' ? DRIVEN_LOOT_SHARE : 1;
   into.splitter += scaled(rng, roll(rng, monster.loot.splitter), share * luck);
   into.pilzholz += Math.round(roll(rng, monster.loot.pilzholz) * (result === 'driven' ? DRIVEN_LOOT_SHARE : 1));
   into.stein += Math.round(roll(rng, monster.loot.stein) * (result === 'driven' ? DRIVEN_LOOT_SHARE : 1));
   if (result !== 'driven' && rng() * 100 < monster.loot.itemChance * luck) {
-    const thing = lootThing(ctx, rng);
+    const thing = lootThing(ctx, rng, 'beute', dyeRng);
     if (thing) into.things.push(thing);
   }
 }
@@ -179,18 +192,27 @@ function runGather(quest, ctx, rng, findRng, { amount = 1, energy = Infinity } =
 }
 
 // The plans an action finds go to its reward; `search` keeps what it adds
-// to the search for the others.
-function withPlans(outcome, quest, ctx, seed) {
+// to the search for the others. And maybe a piece of clothing (not while
+// building); `clothes` keeps the roll for the next ones (see clothes.js).
+function withFinds(outcome, quest, ctx, seed) {
   const plans = rollPlans(quest, ctx, seed, outcome);
   for (const id of plans.found) if (!outcome.reward.plans.includes(id)) outcome.reward.plans.push(id);
   outcome.search = plans.search;
+  if (quest.kind !== 'bauen') {
+    const rng = seededRandom(`${seed}:kleidung`);
+    const roll = rollClothes(ctx.world, outcome.stamina, rng);
+    const thing = roll.found ? lootThing(ctx, rng, 'fund', seededRandom(`${seed}:farbe:fund`)) : null;
+    if (thing) outcome.reward.things.push(thing);
+    outcome.clothes = { energy: roll.energy, found: Boolean(thing) };
+  }
   return outcome;
 }
 
 // options: for gathering { amount, energy }
 export function runQuest(quest, ctx, seed, options = {}) {
   const rng = seededRandom(seed);
-  if (quest.gather) return withPlans(runGather(quest, ctx, rng, seededRandom(`${seed}:fund`), options), quest, ctx, seed);
+  if (quest.gather) return withFinds(runGather(quest, ctx, rng, seededRandom(`${seed}:fund`), options), quest, ctx, seed);
+  const dyeRng = seededRandom(`${seed}:farbe`);
   const reward = { splitter: 0, pilzholz: 0, stein: 0, things: [], plans: [], unlocks: [], rest: false };
   const fights = [];
   const stamina = siteStamina(quest, ctx.stats);
@@ -210,7 +232,7 @@ export function runQuest(quest, ctx, seed, options = {}) {
       const f = fight(hero, monster, rng);
       const result = f.result === 'lost' ? 'driven' : f.result;
       fights.push({ monster: id, result, rounds: f.rounds, heroMax: maxLife, monsterMax: monster.leben });
-      monsterLoot(monster, result, ctx, rng, reward);
+      monsterLoot(monster, result, ctx, rng, reward, dyeRng);
       life = f.heroLife;
       if (result === 'driven') {
         if (n < quest.monsters.length - 1) cleared = false;
@@ -222,7 +244,7 @@ export function runQuest(quest, ctx, seed, options = {}) {
   // A cave gives its own reward only when every spirit in it is overcome.
   if (quest.kind !== 'hoehle' || cleared) fixedReward(quest, ctx, rng, reward);
 
-  return withPlans({
+  return withFinds({
     kind: quest.kind,
     fights,
     defeated: fights.length,

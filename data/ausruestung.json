@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T16:32:41Z",
+ "generated": "2026-10-04T23:01:32Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -23,7 +23,12 @@
    "icons": {
     "zweite": "assets/icons/zweite/icon_torso_leinenhemd_1.png"
    },
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "beine_leinenhose_1",
@@ -46,7 +51,12 @@
    "icons": {
     "zweite": "assets/icons/zweite/icon_beine_leinenhose_1.png"
    },
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "schuhe_bastsandalen_1",
@@ -65,7 +75,12 @@
    "figuren": {},
    "icon": "assets/icons/icon_schuhe_bastsandalen_1.png",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "handschuhe_handwickel_1",
@@ -90,7 +105,12 @@
    "icons": {
     "zweite": "assets/icons/zweite/icon_handschuhe_handwickel_1.png"
    },
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "kopf_stirnband_1",
@@ -113,7 +133,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "umhang_reiseumhang_1",
@@ -136,7 +161,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "torso_wickeljacke_2",
@@ -160,7 +190,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "beine_kampfhose_2",
@@ -183,7 +218,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "schuhe_wanderstiefel_2",
@@ -205,7 +245,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "handschuhe_griffhandschuhe_2",
@@ -231,7 +276,12 @@
    "icons": {
     "zweite": "assets/icons/zweite/icon_handschuhe_griffhandschuhe_2.png"
    },
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "handschuhe_lederwickel_2",
@@ -255,7 +305,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "kopf_kapuze_2",
@@ -278,7 +333,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "umhang_nebelumhang_2",
@@ -301,7 +361,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "torso_kampfjacke_3",
@@ -326,7 +391,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "beine_wickelhose_3",
@@ -350,7 +420,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "schuhe_leichtestiefel_3",
@@ -373,7 +448,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "handschuhe_eisenwickel_3",
@@ -397,7 +477,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "kopf_stillemaske_3",
@@ -419,7 +504,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "umhang_sturmmantel_3",
@@ -444,7 +534,12 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   },
   {
    "id": "handschuhe_nebelwickel_4",
@@ -468,7 +563,1509 @@
    "figuren": {},
    "icon": "",
    "icons": {},
-   "ebene": null
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
+  },
+  {
+   "id": "beine_stoffhose_1",
+   "slot": "beine",
+   "name": "Stoffhose",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_stoffhose_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/beine_stoffhose_1.png"
+   },
+   "icon": "assets/icons/icon_beine_stoffhose_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_beine_stoffhose_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_zweifarbigepumphose_2",
+   "slot": "beine",
+   "name": "Zweifarbige Pumphose",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_zweifarbigepumphose_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_zweifarbigepumphose_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_bundhose_1",
+   "slot": "beine",
+   "name": "Bundhose",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_bundhose_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/beine_bundhose_1.png"
+   },
+   "icon": "assets/icons/icon_beine_bundhose_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_beine_bundhose_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_pumphose_2",
+   "slot": "beine",
+   "name": "Pumphose",
+   "stufe": 2,
+   "req": {
+    "gelassenheit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_pumphose_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/beine_pumphose_2.png"
+   },
+   "icon": "assets/icons/icon_beine_pumphose_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_beine_pumphose_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_schaerpenhose_2",
+   "slot": "beine",
+   "name": "Schärpenhose",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_schaerpenhose_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/beine_schaerpenhose_2.png"
+   },
+   "icon": "assets/icons/icon_beine_schaerpenhose_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_beine_schaerpenhose_2.png"
+   },
+   "ebene": "ueber_schuhen",
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_flickenhose_2",
+   "slot": "beine",
+   "name": "Flickenhose",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_flickenhose_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/beine_flickenhose_2.png"
+   },
+   "icon": "assets/icons/icon_beine_flickenhose_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_beine_flickenhose_2.png"
+   },
+   "ebene": "ueber_schuhen",
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_bunteflickenhose_2",
+   "slot": "beine",
+   "name": "Bunte Flickenhose",
+   "stufe": 2,
+   "req": {
+    "kraft": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_bunteflickenhose_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/beine_bunteflickenhose_2.png"
+   },
+   "icon": "assets/icons/icon_beine_bunteflickenhose_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_beine_bunteflickenhose_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_blaetterleggings_2",
+   "slot": "beine",
+   "name": "Blätterleggings",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_blaetterleggings_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_blaetterleggings_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_musterleggings_2",
+   "slot": "beine",
+   "name": "Musterleggings",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_musterleggings_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_musterleggings_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_wanderhose_2",
+   "slot": "beine",
+   "name": "Wanderhose",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 4
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_wanderhose_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_wanderhose_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_kurzehose_1",
+   "slot": "beine",
+   "name": "Kurze Hose",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_kurzehose_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_kurzehose_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_engejeans_1",
+   "slot": "beine",
+   "name": "Enge Jeans",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_engejeans_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_engejeans_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_weitejeans_1",
+   "slot": "beine",
+   "name": "Weite Jeans",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_weitejeans_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_weitejeans_1.png",
+   "icons": {},
+   "ebene": "ueber_schuhen",
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_jeansmitbuendchen_2",
+   "slot": "beine",
+   "name": "Jeans mit Bündchen",
+   "stufe": 2,
+   "req": {
+    "gelassenheit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_jeansmitbuendchen_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_jeansmitbuendchen_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_leggings_1",
+   "slot": "beine",
+   "name": "Leggings",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_leggings_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_leggings_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_cargohose_3",
+   "slot": "beine",
+   "name": "Cargohose",
+   "stufe": 3,
+   "req": {
+    "kraft": 6
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_cargohose_3.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_cargohose_3.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "beine_hosenrock_3",
+   "slot": "beine",
+   "name": "Hosenrock",
+   "stufe": 3,
+   "req": {
+    "gelassenheit": 5
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_hosenrock_3.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_hosenrock_3.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_bergpulli_2",
+   "slot": "torso",
+   "name": "Bergpulli",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_bergpulli_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_bergpulli_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_druckshirt_1",
+   "slot": "torso",
+   "name": "Druckshirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_druckshirt_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_druckshirt_1.png"
+   },
+   "icon": "assets/icons/icon_torso_druckshirt_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_druckshirt_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_mosaiktop_2",
+   "slot": "torso",
+   "name": "Mosaik-Top",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_mosaiktop_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_mosaiktop_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_stickereitop_2",
+   "slot": "torso",
+   "name": "Stickerei-Top",
+   "stufe": 2,
+   "req": {
+    "gelassenheit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_stickereitop_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_stickereitop_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_bestickterbolero_3",
+   "slot": "torso",
+   "name": "Bestickter Bolero",
+   "stufe": 3,
+   "req": {
+    "beweglichkeit": 7
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_bestickterbolero_3.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_bestickterbolero_3.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_schlichtesshirt_1",
+   "slot": "torso",
+   "name": "Schlichtes Shirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_schlichtesshirt_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_schlichtesshirt_1.png"
+   },
+   "icon": "assets/icons/icon_torso_schlichtesshirt_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_schlichtesshirt_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_lederwams_3",
+   "slot": "torso",
+   "name": "Lederwams",
+   "stufe": 3,
+   "req": {
+    "kraft": 8
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_lederwams_3.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_lederwams_3.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_rautenpulli_2",
+   "slot": "torso",
+   "name": "Rautenpulli",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 4
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_rautenpulli_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_rautenpulli_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_lagentop_1",
+   "slot": "torso",
+   "name": "Lagen-Top",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_lagentop_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_lagentop_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_norwegerhoodie_2",
+   "slot": "torso",
+   "name": "Norweger-Hoodie",
+   "stufe": 2,
+   "req": {
+    "gelassenheit": 5
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_norwegerhoodie_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_norwegerhoodie_2.png"
+   },
+   "icon": "assets/icons/icon_torso_norwegerhoodie_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_norwegerhoodie_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_grobstrickpulli_2",
+   "slot": "torso",
+   "name": "Grobstrickpulli",
+   "stufe": 2,
+   "req": {
+    "gelassenheit": 4
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_grobstrickpulli_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_grobstrickpulli_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_leinenbluse_1",
+   "slot": "torso",
+   "name": "Leinenbluse",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_leinenbluse_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_leinenbluse_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_sonnenshirt_1",
+   "slot": "torso",
+   "name": "Sonnenshirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_sonnenshirt_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_sonnenshirt_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_baenderpulli_2",
+   "slot": "torso",
+   "name": "Bänderpulli",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 4
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_baenderpulli_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_baenderpulli_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_langarmshirt_1",
+   "slot": "torso",
+   "name": "Langarmshirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_langarmshirt_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_langarmshirt_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_besticktetunika_3",
+   "slot": "torso",
+   "name": "Bestickte Tunika",
+   "stufe": 3,
+   "req": {
+    "gelassenheit": 6
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_besticktetunika_3.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_besticktetunika_3.png"
+   },
+   "icon": "assets/icons/icon_torso_besticktetunika_3.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_besticktetunika_3.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_sportshirt_2",
+   "slot": "torso",
+   "name": "Sportshirt",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_sportshirt_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_sportshirt_2.png"
+   },
+   "icon": "assets/icons/icon_torso_sportshirt_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_sportshirt_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_zackenshirt_2",
+   "slot": "torso",
+   "name": "Zackenshirt",
+   "stufe": 2,
+   "req": {
+    "kraft": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_zackenshirt_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_zackenshirt_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_turnanzug_3",
+   "slot": "torso",
+   "name": "Turnanzug",
+   "stufe": 3,
+   "req": {
+    "beweglichkeit": 7
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_turnanzug_3.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_turnanzug_3.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_knopfshirt_1",
+   "slot": "torso",
+   "name": "Knopfshirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_knopfshirt_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_knopfshirt_1.png"
+   },
+   "icon": "assets/icons/icon_torso_knopfshirt_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_knopfshirt_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_baseballshirt_2",
+   "slot": "torso",
+   "name": "Baseballshirt",
+   "stufe": 2,
+   "req": {
+    "kraft": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_baseballshirt_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_baseballshirt_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_sporttop_2",
+   "slot": "torso",
+   "name": "Sport-Top",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 4
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_sporttop_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_sporttop_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_wickelbluse_2",
+   "slot": "torso",
+   "name": "Wickelbluse",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 4
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_wickelbluse_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_wickelbluse_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_batikshirt_2",
+   "slot": "torso",
+   "name": "Batikshirt",
+   "stufe": 2,
+   "req": {
+    "gelassenheit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_batikshirt_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_batikshirt_2.png"
+   },
+   "icon": "assets/icons/icon_torso_batikshirt_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_batikshirt_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_raglanshirt_1",
+   "slot": "torso",
+   "name": "Raglanshirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_raglanshirt_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_raglanshirt_1.png"
+   },
+   "icon": "assets/icons/icon_torso_raglanshirt_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_raglanshirt_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_ringelshirt_1",
+   "slot": "torso",
+   "name": "Ringelshirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_ringelshirt_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_ringelshirt_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_katzenshirt_2",
+   "slot": "torso",
+   "name": "Katzenshirt",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_katzenshirt_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_katzenshirt_2.png"
+   },
+   "icon": "assets/icons/icon_torso_katzenshirt_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_katzenshirt_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_waldshirt_3",
+   "slot": "torso",
+   "name": "Waldshirt",
+   "stufe": 3,
+   "req": {
+    "gelassenheit": 8
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_waldshirt_3.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_waldshirt_3.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_weitesshirt_1",
+   "slot": "torso",
+   "name": "Weites Shirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_weitesshirt_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_weitesshirt_1.png"
+   },
+   "icon": "assets/icons/icon_torso_weitesshirt_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_weitesshirt_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_bandshirt_2",
+   "slot": "torso",
+   "name": "Bandshirt",
+   "stufe": 2,
+   "req": {
+    "kraft": 4
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_bandshirt_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_bandshirt_2.png"
+   },
+   "icon": "assets/icons/icon_torso_bandshirt_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_bandshirt_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_haekelshirt_3",
+   "slot": "torso",
+   "name": "Häkelshirt",
+   "stufe": 3,
+   "req": {
+    "beweglichkeit": 6
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_haekelshirt_3.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_haekelshirt_3.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_ausgefranstesshirt_1",
+   "slot": "torso",
+   "name": "Ausgefranstes Shirt",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": null,
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_ausgefranstesshirt_1.png"
+   },
+   "icon": null,
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_ausgefranstesshirt_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "torso_tanktop_1",
+   "slot": "torso",
+   "name": "Tanktop",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": null,
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_tanktop_1.png"
+   },
+   "icon": null,
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_tanktop_1.png"
+   },
+   "ebene": null,
+   "passt": [
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "schuhe_geflochtenesandalen_2",
+   "slot": "schuhe",
+   "name": "Geflochtene Sandalen",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/schuhe_geflochtenesandalen_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_schuhe_geflochtenesandalen_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "schuhe_riemensandalen_1",
+   "slot": "schuhe",
+   "name": "Riemensandalen",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/schuhe_riemensandalen_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_schuhe_riemensandalen_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "schuhe_knoechelsandalen_2",
+   "slot": "schuhe",
+   "name": "Knöchelsandalen",
+   "stufe": 2,
+   "req": {
+    "beweglichkeit": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/schuhe_knoechelsandalen_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_schuhe_knoechelsandalen_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "schuhe_zehensandalen_1",
+   "slot": "schuhe",
+   "name": "Zehensandalen",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/schuhe_zehensandalen_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_schuhe_zehensandalen_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
+  },
+  {
+   "id": "handschuhe_armwickel_2",
+   "slot": "handschuhe",
+   "name": "Armwickel",
+   "stufe": 2,
+   "req": {
+    "kraft": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/handschuhe_armwickel_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/handschuhe_armwickel_2.png"
+   },
+   "icon": "assets/icons/icon_handschuhe_armwickel_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_handschuhe_armwickel_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
   }
  ]
 }

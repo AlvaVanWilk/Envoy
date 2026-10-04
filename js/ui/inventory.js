@@ -7,7 +7,7 @@ import { UI_ICONS } from './icons.js';
 import { SLOTS, BACKPACK_SIZE } from '../config.js';
 import { viewHead, itemIcon, reqChips } from './parts.js';
 import { openEntry, thingSubtitle } from './itemsheet.js';
-import { lookup, unmetRequirements } from '../world/items.js';
+import { lookup, wearable } from '../world/items.js';
 import { countIn, capacity, reachable } from '../world/inventory.js';
 
 const FILTERS = [{ id: 'alle', name: 'Alle' }, ...SLOTS.map((s) => ({ id: s.id, name: s.name }))];
@@ -46,10 +46,10 @@ function sorter(a, b) {
 }
 
 function tile({ entry, thing }, game) {
-  const locked = entry.kind === 'item' && unmetRequirements(thing, game.state.stats).length > 0;
+  const locked = entry.kind === 'item' && !wearable(thing, game.state.stats, game.state.world);
   const away = !reachable(game.state.world, entry);
   return h('button', { class: `item-tile ${locked ? 'locked' : ''} ${away ? 'away' : ''}`, onclick: () => openEntry(entry.inst, game) },
-    h('span', { class: 'item-frame' }, itemIcon(thing, game), locked ? icon(UI_ICONS.lock, 'item-lock') : null),
+    h('span', { class: 'item-frame' }, itemIcon(thing, game, 'item-icon', entry.farbe), locked ? icon(UI_ICONS.lock, 'item-lock') : null),
     h('span', { class: 'item-name' }, thing.name),
     h('span', { class: 'item-sub' }, thingSubtitle(entry, thing)),
     entry.kind === 'item' ? reqChips(thing, game.state.stats) : null);

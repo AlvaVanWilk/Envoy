@@ -2,7 +2,7 @@
 // the top opens a menu that lies over the page, so no page changes because
 // of it. Its buttons fill the Energie or add more beyond the end of the bar
 // (for raising the camp), add Stein, Pilzholz and Bannsplitter, find the next
-// plan for Deko, and bring the Envoy back from an expedition at once, so
+// plan for Deko or a piece of clothing (in a colour of its own), and bring the Envoy back from an expedition at once, so
 // everything can be tried without waiting. The last ones open the Kleiderkammer
 // (the user's page on claude.ai for the drawings of the clothes, see
 // CLAUDE.md) or copy its address. On iPhone and iPad a link to claude.ai opens
@@ -16,6 +16,7 @@ import { h, replaceChildren } from './dom.js';
 import { MATERIALS, CURRENCY } from '../config.js';
 import { IS_TEST } from '../stage.js';
 import { toast } from './sheet.js';
+import { thingName } from '../world/clothes.js';
 
 const MATERIAL_AMOUNT = 25;
 const SPLITTER_AMOUNT = 50;
@@ -34,6 +35,14 @@ function findPlan(game) {
   game.add([game.event('test', { plan: true })]);
   const found = Object.keys(game.state.world.plans.found).find((id) => !before.has(id));
   toast(found ? `Plan gefunden: ${game.catalog.dekoById.get(found)?.name}` : 'Auf dieser Lagerstufe gibt es keinen Plan mehr zu finden');
+}
+
+function findClothes(game) {
+  const before = new Set(Object.keys(game.state.world.items));
+  game.add([game.event('test', { kleidung: true })]);
+  const entry = Object.values(game.state.world.items).find((e) => !before.has(e.inst));
+  const item = entry && game.catalog.itemById.get(entry.id);
+  toast(item ? `Gefunden: ${thingName(item, entry.farbe)}` : 'Keine Kleidung für diese Figur');
 }
 
 const ON_APPLE = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -65,6 +74,7 @@ function actions(game) {
     button(`+${MATERIAL_AMOUNT} ${MATERIALS.pilzholz}`, () => addMaterial(game, 'pilzholz')),
     button(`+${SPLITTER_AMOUNT} ${CURRENCY}`, run({ splitter: SPLITTER_AMOUNT }, `+${SPLITTER_AMOUNT} ${CURRENCY}`)),
     button('Plan finden', () => findPlan(game), game.state.world.camp.stage < 2),
+    button('Kleidung finden', () => findClothes(game)),
     button('Expedition beenden', run({ fertig: true }, 'Der Envoy ist zurück'), !game.state.world.expedition),
     ...wardrobeLinks(),
   ];

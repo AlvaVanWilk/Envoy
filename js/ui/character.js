@@ -45,7 +45,7 @@ function slotTile(slotId, game) {
     'aria-label': item ? `${slotName(slotId)}: ${item.name}` : `${slotName(slotId)}: leer`,
     onclick: () => openSlot(slotId, game),
   },
-  h('span', { class: 'slot-frame' }, item ? itemIcon(item, game) : icon(SLOT_ICONS[slotId], 'slot-glyph')),
+  h('span', { class: 'slot-frame' }, item ? itemIcon(item, game, 'item-icon', entry.farbe) : icon(SLOT_ICONS[slotId], 'slot-glyph')),
   h('span', { class: 'slot-label' }, SLOTS.find((x) => x.id === slotId).short));
 }
 

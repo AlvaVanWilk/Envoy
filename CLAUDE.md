@@ -42,7 +42,7 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
-  Pilzholz und Bannsplitter dazu, Plan finden, Expedition beenden, die Kleiderkammer in Safari
+  Pilzholz und Bannsplitter dazu, Plan finden, Kleidung finden, Expedition beenden, die Kleiderkammer in Safari
   öffnen oder ihren Link kopieren,
   `js/ui/testtools.js`);
   die echte Fassung nie.
@@ -108,6 +108,12 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   zwischen den Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung, 2 Energie, am ersten Tag
   zu schaffen), die Bastsandalen die Quest „Bast aus dem Pilzhain“ (ohne Voraussetzung,
   2 Energie und je 1 Energie Weg)
+- Kleidung als Fundstücke: die Teile der Kleiderkammer (Herkunft `fund`, ohne Fähigkeit)
+  unterwegs bei jeder Quest außer Bauen (3 % je Energie, der erste nach 5 Energie sicher und
+  sofort tragbar, sonst spätestens nach 66), bei Geistern und beim Händler; jedes Stück in einer
+  eigenen Farbe (12 oder wie gezeichnet, Spalte `faerbbar`, `DYES` in `js/config.js`, umgefärbt
+  in `js/ui/look.js`, Haut bleibt); nur, was der Figur passt (Spalte `figur`: Frau, Mann, beide);
+  feste Questbelohnungen bleiben wenige
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
   (gesammeltes ist sofort dort, ohne Erklärung); Händler, Kompendium der getroffenen Geister
@@ -257,7 +263,8 @@ Nutzerin), direkt über der Basisfigur und unter der Hose, ohne Slot und nicht a
 in den Einstellungen lässt es sich abschalten (Feld `unterhemd` im Ereignis `envoy`,
 `undershirt` in `FIGURES`). Figur und Ausrüstung zeichnet die Nutzerin; keine eigenen
 Platzhalter erzeugen. Teile ohne Bild werden nicht gezeichnet, als Icon dient das
-Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`).
+Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`), ebenso
+die eigene Farbe eines gefundenen Stücks (Ebene und Icon).
 
 Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.
 

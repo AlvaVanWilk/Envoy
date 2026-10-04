@@ -46,7 +46,10 @@ LAYERS = {
     "vorn": "Ganz vorn",
 }
 EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
-ORIGINS = ["start", "angezogen", "haendler", "beute", "quest"]
+ORIGINS = ["start", "angezogen", "haendler", "beute", "fund", "quest"]
+# which figures a drawing fits (column figur of ausruestung.xlsx), as the
+# Kleiderkammer names them; the ids are those of FIGURES in js/config.js
+FIGURE_WORDS = {"frau": ["erste"], "mann": ["zweite"], "beide": ["erste", "zweite"]}
 PLACE_TYPES = ["lager", "truemmerfeld", "wild", "sammeln", "ort", "hoehle"]
 QUEST_KINDS = ["sammeln", "erkunden", "kampf", "hoehle", "bauen"]
 FEATURES = ["lagerfeuer", "haendler"]
@@ -685,10 +688,18 @@ def convert_equipment(path):
         if given and not layer:
             report.error(row, f"ebene: unbekannt '{given}' (möglich: {', '.join(LAYERS.values())}; leer = wie der Slot)")
 
+        fits_word = text(r.get("figur", "")).lower() or "beide"
+        fits = FIGURE_WORDS.get(fits_word)
+        if fits is None:
+            report.error(row, f"figur: unbekannt '{text(r.get('figur', ''))}' (möglich: Frau, Mann, beide)")
+            fits = FIGURE_WORDS["beide"]
+
         figure = text(r.get("datei_figur", "")) or f"{slot}_{slug(name)}_{level}.png"
         icon = text(r.get("datei_icon", "")) or f"icon_{figure}"
-        figure_path = check_picture(report, row, "figur", figure)
-        icon_path = check_picture(report, row, "icon", icon)
+        # a drawing only for the second figure lies only in its folder
+        only_second = fits == ["zweite"]
+        figure_path = optional_picture(report, row, "figur", figure) if only_second else check_picture(report, row, "figur", figure)
+        icon_path = optional_picture(report, row, "icon", icon) if only_second else check_picture(report, row, "icon", icon)
 
         items.append({
             "id": item_id,
@@ -705,6 +716,8 @@ def convert_equipment(path):
             "icon": icon_path,
             "icons": own_versions(report, row, "icon", icon),
             "ebene": layer,
+            "passt": fits,
+            "faerbbar": is_yes(r.get("faerbbar", ""), default=False),
         })
     return {"equipment": items}, report
 

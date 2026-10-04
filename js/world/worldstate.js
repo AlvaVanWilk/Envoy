@@ -17,6 +17,8 @@
 //   camp        { stage, facilities, deko, reached }: Lagerstufe, the level of each facility,
 //               the Deko built, the day each stage was reached; see camp.js
 //   plans       { found, search }: plans for Deko found, and the search for the others; see plans.js
+//   clothes     { since, found }: Energie of work since the last piece of clothing found on
+//               the way, and how many were found; see clothes.js
 //   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
@@ -34,6 +36,9 @@ import {
 } from './inventory.js';
 import { emptyCamp, FACILITY_IDS } from './camp.js';
 import { emptyPlans } from './plans.js';
+import { emptyClothes, countClothes, fits, figureOf } from './clothes.js';
+import { lootThing } from './run.js';
+import { seededRandom } from './rng.js';
 import { unmetRequirements } from './items.js';
 import { camp } from './map.js';
 import { reserve, addition, wayFrom, legStamina, nextStep } from './expedition.js';
@@ -44,6 +49,8 @@ const OLD_NAMES = { quarz: 'pilzholz', aether: 'splitter' };
 export const materialKey = (key) => OLD_NAMES[key] || key;
 const slotKey = (slot) => OLD_SLOT_NAMES[slot] || slot;
 const KEEP_REPORTS = 30;
+// The colour of a thing, if it has one (see clothes.js).
+const dyed = (farbe) => (typeof farbe === 'string' && farbe ? { farbe } : {});
 
 export function initialWorld(catalog, startTime, stats) {
   const world = {
@@ -56,6 +63,7 @@ export function initialWorld(catalog, startTime, stats) {
     unlocked: [],
     camp: emptyCamp(),
     plans: emptyPlans(),
+    clothes: emptyClothes(),
     quests: {},
     encountersDone: {},
     bestiary: {},
@@ -146,7 +154,7 @@ function bringHome(world, ctx, action, leftBehind, t) {
     if (taken < amount) leftBehind[name] = (leftBehind[name] || 0) + amount - taken;
   }
   r.things.forEach((thing, n) => {
-    stow(world, ctx.catalog, { inst: `${action.id}:${n}`, kind: thing.kind, id: thing.id, got: t });
+    stow(world, ctx.catalog, { inst: `${action.id}:${n}`, kind: thing.kind, id: thing.id, got: t, ...dyed(thing.farbe) });
   });
   for (const feature of r.unlocks) unlock(world, feature, action.day);
   for (const id of r.plans || []) if (!world.plans.found[id]) world.plans.found[id] = action.day;
@@ -323,6 +331,7 @@ function addAction(world, e, ctx) {
   if (!world.expedition) world.expedition = newExpedition(e);
   world.expedition.actions.push(action);
   spend(world, reserve(action));
+  countClothes(world, e.outcome.clothes);
 }
 
 // The person takes the last action out again, while it has not begun.
@@ -342,6 +351,7 @@ function equip(world, e, ctx) {
   if (!entry || entry.kind !== 'item' || entry.where === 'body' || !reachable(world, entry)) return;
   const item = ctx.catalog.itemById.get(entry.id);
   if (!item || item.slot !== slot || unmetRequirements(item, ctx.stats).length > 0) return;
+  if (!fits(item, figureOf(world))) return;
   const previous = world.items[world.equipped[slot]];
   if (previous) previous.where = entry.where;
   entry.where = 'body';
@@ -365,7 +375,7 @@ export function applyWorldEvent(world, e, ctx) {
         world.bought[e.offer] = true;
         // a plan for Deko is knowledge, not a thing for the backpack
         if (e.kind === 'plan') world.plans.found[e.thing] = world.plans.found[e.thing] || e.d;
-        else stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t });
+        else stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t, ...dyed(e.farbe) });
       }
       break;
     case 'sell':
@@ -418,6 +428,11 @@ function testHelp(world, e, ctx) {
   if (e.plan) {
     const next = ctx.catalog.deko.find((d) => d.fundort !== 'start' && d.lagerstufe <= world.camp.stage && !world.plans.found[d.id]);
     if (next) world.plans.found[next.id] = e.d;
+  }
+  if (e.kleidung) {
+    // a piece of clothing as if found on the way: fits the Envoy, in a colour of its own
+    const thing = lootThing({ ...ctx, world }, seededRandom(`${e.id}:kleidung`), 'fund', seededRandom(`${e.id}:farbe`));
+    if (thing) stow(world, ctx.catalog, { inst: e.id, kind: 'item', id: thing.id, got: e.t, ...dyed(thing.farbe) });
   }
   for (const key of LIMITED_MATERIALS) {
     const amount = Math.max(0, Math.floor(Number(e[key]) || 0));

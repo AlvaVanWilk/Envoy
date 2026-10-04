@@ -31,9 +31,9 @@ export function renderTrader(game) {
             if (offer.kind === 'plan') return planOffer(offer, game);
             const thing = game.catalog.itemById.get(offer.id);
             return h('button', { class: 'offer', onclick: () => openOffer(offer, thing, game) },
-              h('span', { class: 'item-frame' }, itemIcon(thing, game)),
+              h('span', { class: 'item-frame' }, itemIcon(thing, game, 'item-icon', offer.farbe)),
               h('span', { class: 'item-name' }, thing.name),
-              h('span', { class: 'item-sub' }, thingSubtitle({ kind: offer.kind }, thing)),
+              h('span', { class: 'item-sub' }, thingSubtitle(offer, thing)),
               offer.kind === 'item' ? reqChips(thing, stats) : null,
               price(offer.price, world.purse.splitter));
           }))),
@@ -42,7 +42,7 @@ export function renderTrader(game) {
         owned.length === 0
           ? h('p', { class: 'muted' }, 'Nichts im Rucksack oder Lager.')
           : h('div', { class: 'item-list' }, owned.map(({ entry, thing }) => h('div', { class: 'item-row' },
-            h('span', { class: 'item-frame' }, itemIcon(thing, game)),
+            h('span', { class: 'item-frame' }, itemIcon(thing, game, 'item-icon', entry.farbe)),
             h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, thing.name), h('span', { class: 'item-sub' }, thingSubtitle(entry, thing))),
             h('button', { class: 'btn ghost small', onclick: () => confirmSell(entry, thing, game) }, resource('splitter', sellPrice(entry, game.catalog)))))))));
 }
@@ -52,10 +52,10 @@ function openOffer(offer, thing, game) {
   const affordable = world.purse.splitter >= offer.price;
   openSheet({
     title: thing.name,
-    eyebrow: thingSubtitle({ kind: offer.kind }, thing),
+    eyebrow: thingSubtitle(offer, thing),
     className: 'item-sheet',
     content: [
-      h('div', { class: 'item-hero' }, itemIcon(thing, game, 'item-hero-icon')),
+      h('div', { class: 'item-hero' }, itemIcon(thing, game, 'item-hero-icon', offer.farbe)),
       offer.kind === 'item' ? reqChips(thing, stats) : null,
       thing.faehigkeit || thing.text ? h('p', { class: 'item-ability' }, thing.faehigkeit || thing.text) : null,
       effectList(thing.effekt),

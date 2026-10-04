@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.9.0';
+export const APP_VERSION = '5.10.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -219,6 +219,33 @@ export const GATHER_STATS = { stein: 'kraft', pilzholz: 'beweglichkeit' };
 // Now and then something else turns up while gathering: each minute of work
 // has this chance of one Bannsplitter (a test of the idea, see run.js).
 export const GATHER_FIND_CHANCE = 0.05;
+
+// Clothes found on the way (see world/clothes.js): every Energie of work at
+// a quest (not building) is a chance of CLOTHES_PER_ENERGY for a piece of
+// clothing, at most CLOTHES_MOST per action. The first piece comes for sure
+// after CLOTHES_FIRST_ENERGY, every other after CLOTHES_SURE_ENERGY without one
+// (twice the average).
+export const CLOTHES_PER_ENERGY = 0.03;
+export const CLOTHES_MOST = 0.3;
+export const CLOTHES_FIRST_ENERGY = 5;
+export const CLOTHES_SURE_ENERGY = 66;
+// A found or bought piece that can be dyed (column `faerbbar`) gets one of
+// these colours, or stays as drawn (one share like each colour). The app
+// paints the drawing in the browser (ui/look.js); skin stays as it is.
+export const DYES = [
+  { id: 'moos', name: 'Moosgrün', rgb: [92, 120, 64] },
+  { id: 'salbei', name: 'Salbei', rgb: [146, 164, 124] },
+  { id: 'petrol', name: 'Petrol', rgb: [36, 104, 110] },
+  { id: 'nacht', name: 'Nachtblau', rgb: [40, 58, 104] },
+  { id: 'taube', name: 'Taubenblau', rgb: [112, 138, 172] },
+  { id: 'pflaume', name: 'Pflaume', rgb: [108, 56, 96] },
+  { id: 'rost', name: 'Rostrot', rgb: [166, 74, 48] },
+  { id: 'kupfer', name: 'Kupfer', rgb: [196, 116, 58] },
+  { id: 'ocker', name: 'Ocker', rgb: [200, 154, 60] },
+  { id: 'sand', name: 'Sand', rgb: [206, 186, 152] },
+  { id: 'rose', name: 'Altrosa', rgb: [196, 128, 132] },
+  { id: 'schiefer', name: 'Schiefer', rgb: [78, 84, 92] },
+];
 
 // Where the camp lies, for the time of day in its picture (middle of Germany).
 export const CAMP_LATITUDE = 51;

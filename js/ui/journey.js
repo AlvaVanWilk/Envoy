@@ -14,6 +14,7 @@ import { UI_ICONS } from './icons.js';
 import { MATERIALS } from '../config.js';
 import { openSheet, closeSheet, isSheetOpen, toast } from './sheet.js';
 import { resource, itemIcon, dekoIcon, formatMinutes, MATERIAL_KEYS } from './parts.js';
+import { thingName } from '../world/clothes.js';
 import { progressAt, heroPosition, timeline, timesOf, nextStep } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
 import { facilityRow, stageRow } from '../world/camp.js';
@@ -241,7 +242,7 @@ function stopReport(stop, game, onward = false) {
   for (const key of MATERIAL_KEYS) if (gained[key]) loot.push(resource(key, gained[key], { sign: '+' }));
   for (const thing of r.things) {
     const t = game.catalog.itemById.get(thing.id);
-    if (t) loot.push(h('span', { class: 'loot-thing' }, itemIcon(t, game, 'loot-icon'), t.name));
+    if (t) loot.push(h('span', { class: 'loot-thing' }, itemIcon(t, game, 'loot-icon', thing.farbe), thingName(t, thing.farbe)));
   }
   for (const id of r.plans || []) {
     const deko = game.catalog.dekoById.get(id);

@@ -6,7 +6,7 @@ import { statEmblem, statInfo } from './stats.js';
 import { shield } from './shield.js';
 import { MATERIALS } from '../config.js';
 import { materialLimit, LIMITED_MATERIALS } from '../world/inventory.js';
-import { resolveLook, iconSrc } from './look.js';
+import { resolveLook, iconSrc, iconLayerSrc, showLayer, dyeOf } from './look.js';
 
 export const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 
@@ -122,12 +122,19 @@ export function energyPreview(st, cost) {
       `davon Weg ${way}${alone > way ? ` statt ${alone}` : ''}`) : null);
 }
 
-// The picture of a thing, as drawn for the figure of this Envoy.
+// The picture of a thing, as drawn for the figure of this Envoy; in its
+// colour (farbe, see world/clothes.js) it is cut from its dyed drawing.
 // Without one yet, the symbol of its slot.
-export function itemIcon(thing, game, className = 'item-icon') {
-  const src = iconSrc(thing, resolveLook(game.state.world.envoy));
+export function itemIcon(thing, game, className = 'item-icon', farbe = null) {
+  const look = resolveLook(game.state.world.envoy);
+  const src = iconSrc(thing, look);
   if (!src) return thing.slot ? icon(SLOT_ICONS[thing.slot], `${className} item-glyph`) : h('span', { class: className });
-  return h('img', { class: className, src, alt: '', decoding: 'async', onerror: (e) => { e.currentTarget.hidden = true; } });
+  const img = h('img', { class: className, alt: '', decoding: 'async', onerror: (e) => { e.currentTarget.hidden = true; } });
+  const dye = dyeOf(farbe, thing);
+  const layer = dye && iconLayerSrc(thing, look);
+  if (layer) showLayer(img, layer, look, 'icon', dye);
+  else img.src = src;
+  return img;
 }
 
 // The picture of a Deko; without one yet, the Deko symbol.
