@@ -173,7 +173,7 @@ dort rückwärts weiter.
 derselben Reihenfolge (Kraft: Käfer, Vogelhund, Seitstütz; Ausdauer: Treppe;
 Beweglichkeit: Katze-Kuh, kniender Ausfallschritt, Brustöffner; Gelassenheit:
 Innehalten). Feste Zeit statt Menge, ein geführter Timer mit Stimme. Die App entscheidet
-die Stufe jeder Übung.
+die Stufe jeder Übung. Jede Übung wird für sich abgehakt, die letzte erledigt die Aufgabe.
 
 **Steigerung der Übungsintensität:** je Übung. Hoch nach zwei guten Durchgängen in Folge,
 runter nach zwei zu schweren in Folge; gezählt werden Durchgänge, nicht Kalendertage.

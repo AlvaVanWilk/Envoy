@@ -11,7 +11,10 @@
 //                                             sick = done in Krankheitsmodus
 //            from before: { stat, ex, xp, mk?, z?, m?, fb?, sick? } (one exercise, measured value
 //                                             or feedback); its XP counts, its exercise is gone
-//   undo     { ref }                          takes back the `done` event with id `ref`
+//   teil     { stat, teil, antwort? }         one exercise of today's task done (teil = its row id),
+//                                             antwort = to its question; the last exercise of a
+//                                             task writes `done` instead, with all the answers
+//   undo     { ref }                          takes back the `done` or `teil` event with id `ref`
 //   mode     { sick }                         Krankheitsmodus on or off
 //   plan     { stat, ex, sick? }              from before: the exercise picked for a day; ignored now
 //
@@ -87,7 +90,7 @@ export function mergeEvents(listA, listB) {
 }
 
 export const KNOWN_TYPES = new Set([
-  'plan', 'done', 'undo', 'mode',
+  'plan', 'done', 'teil', 'undo', 'mode',
   'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
   'envoy', 'travel', 'quest', 'test',
 ]);

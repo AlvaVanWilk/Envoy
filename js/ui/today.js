@@ -103,11 +103,14 @@ function taskRow(stat, game) {
         h('span', { class: 'task-title' }, h('span', { class: 'task-name' }, info.name), h('span', { class: 'task-meta' }, 'Keine Übung im Katalog.'))));
   }
 
+  // of a task with several exercises: how many are done so far
+  const partsDone = done ? 0 : Object.keys(game.partsDone(stat)).length;
   const summary = h('button', { class: 'task-summary', 'aria-haspopup': 'dialog', onclick: () => openTaskCard(stat, game) },
     statEmblem(stat),
     h('span', { class: 'task-title' },
       h('span', { class: 'task-name' }, taskTitle(task)),
-      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, gainText(stat, gainOf(stat, task, game))), h('span', { class: 'task-area' }, ` · ${formatSeconds(task.seconds)}`))),
+      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, gainText(stat, gainOf(stat, task, game))), h('span', { class: 'task-area' }, ` · ${formatSeconds(task.seconds)}`),
+        partsDone > 0 ? h('span', { class: 'task-progress' }, ` · ${partsDone} von ${task.parts.length}`) : null)),
     icon(UI_ICONS.chevron, 'icon task-chevron'));
 
   const quick = done

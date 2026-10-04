@@ -1051,6 +1051,7 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 .task-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; line-height: 1.25; }
 .task-meta { overflow: hidden; font-size: 12.5px; color: var(--muted); white-space: nowrap; text-overflow: ellipsis; }
 .task-gain { font-weight: 700; color: var(--stat); }
+.task-progress { color: var(--text-2); }
 .task-chevron { width: 16px; height: 16px; color: var(--muted); transition: transform 0.2s; }
 .task-check {
   display: grid;
@@ -1170,6 +1171,11 @@ button.task-check:hover { color: var(--stat); }
   color: var(--text-2); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
 }
 .tc-tab.on { border-color: color-mix(in srgb, var(--stat) 60%, transparent); background: color-mix(in srgb, var(--stat) 16%, #132023); color: var(--text); }
+/* an exercise done today: a tick on its tab */
+.tc-tab .icon { width: 15px; height: 15px; margin: 0 4px -2px 0; color: var(--stat); }
+.tc-tab.done:not(.on) { color: var(--muted); }
+.tc-part-done { display: inline-flex; align-items: center; gap: 4px; min-height: 40px; padding: 0 14px; color: var(--stat); border-color: color-mix(in srgb, var(--stat) 45%, transparent); }
+.tc-part-done .icon { width: 16px; height: 16px; }
 .tc-part { display: grid; gap: 6px; margin: 12px 0 10px; }
 .tc-title { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.2; }
 .tc-stage { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0; font-size: 14px; color: var(--stat); }

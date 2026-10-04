@@ -70,9 +70,13 @@ Wechsel zur nächsten (siehe Timer). Messwerte werden nicht mehr eingetragen.
 
 ### Rückfrage nach der Übung
 
-Nach „Erledigt“ fragt die App je Übung eine Frage, aber nur, solange es für diese Übung
-eine nächste Stufe gibt, und nie im Krankheitsmodus. Die Fragen sind konkret, damit man
-nicht überlegen muss, was gemeint ist:
+Jede Übung einer Einheit wird für sich abgehakt („Käfer erledigt“), damit keine aus
+Versehen mit erledigt wird; die letzte erledigt die Aufgabe. Gleich nach einer Übung
+fragt die App ihre Frage (nach dem Timer die Fragen aller Übungen, die er durchlaufen
+hat), aber nur, solange es für diese Übung eine nächste Stufe gibt, und nie im
+Krankheitsmodus. Die Antworten zählen für die Stufen, sobald die ganze Aufgabe erledigt
+ist; eine halb erledigte Aufgabe zählt am nächsten Tag nicht. Die Fragen sind konkret,
+damit man nicht überlegen muss, was gemeint ist:
 
 - Kraft, je Übung Ja oder Nein: „Blieb der untere Rücken die ganze Minute am Boden?“,
   „Blieb der Rücken die ganze Minute ruhig und flach?“, „Blieb das Becken auf beiden
@@ -766,13 +770,18 @@ des Envoy):
   Farben des Envoy gezeigt, bei der Gelassenheit die Frau und der Mann im Schneidersitz;
   ohne beides das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
   Namen, dann Name, Stufe („Stufe 1 · Der Fußtipp“), Zeit, wofür sie gut ist und die
-  Schritte; unten „Mit Timer“ und „Erledigt“ (und „Das war heute zu viel“, siehe
-  Rückfrage). Die Fragen danach füllen die Karte: bei einer Frage genügt ein Tipp, bei
-  mehreren kommt „Fertig“. Dann dreht sich die Karte zurück und wird dabei kleiner, ohne
+  Schritte; unten „Mit Timer“ (für das, was von der Einheit noch offen ist) und bei
+  mehreren Übungen ein Knopf mit dem Namen der gezeigten („Käfer erledigt“), bei einer
+  „Erledigt“ (und „Das war heute zu viel“ für die ganze Aufgabe, siehe Rückfrage). Eine
+  erledigte Übung bekommt einen Haken an ihrem Reiter, die Karte geht zur nächsten offenen;
+  auf dem Reiter einer erledigten steht „Rückgängig“ für diese Übung. Die Fragen füllen die
+  Karte: bei einer Frage genügt ein Tipp, bei mehreren kommt „Fertig“. Ist die letzte Übung
+  erledigt, dreht sich die Karte zurück und wird dabei kleiner, ohne
   sich zu verziehen, bis sie über ihrer Zeile verblasst; die Zeile leuchtet kurz auf, und
   der Gewinn steigt dort auf. Die Zeile nennt die Übung oder die kurzen Namen aller („Käfer ·
-  Vogelhund · Seitstütz“), den Gewinn und die Zeit. Der Haken an der Zeile erledigt die
-  Aufgabe ohne Karte; gibt es Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
+  Vogelhund · Seitstütz“), den Gewinn, die Zeit und, wenn schon ein Teil erledigt ist, wie
+  viel („2 von 3“). Der Haken an der Zeile erledigt, was von der Aufgabe noch offen ist, ohne
+  Karte; gibt es dazu Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
   Aufgabe zeigt auf der Karte „Erledigt“ und „Rückgängig“. Mit
   reduzierter Bewegung erscheint die Karte ohne Drehen. Ein Fragezeichen klappt eine kurze Erklärung auf
   (wozu das Tageswerk da ist, dass Werte bei liegengebliebenen Aufgaben langsam sinken,
@@ -1054,7 +1063,8 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | --- | --- |
 | Tagesaufgaben | je Bereich eine Einheit, jeden Tag dieselben Übungen, Stufe je Übung; nur Treppe für Ausdauer |
 | Zeit statt Menge | feste Zeit je Übung, langsam und nur so viel wie sauber geht; geführter Timer mit Stimme |
-| Rückfrage | je Übung, solange es eine nächste Stufe gibt; nicht im Krankheitsmodus |
+| Rückfrage | je Übung gleich nach ihr, solange es eine nächste Stufe gibt; nicht im Krankheitsmodus |
+| Erledigen | jede Übung einer Einheit für sich („Käfer erledigt“), die letzte erledigt die Aufgabe; Haken der Zeile: alles Offene |
 | Stufen | hoch nach zwei guten Durchgängen in Folge, runter nach zwei zu schweren in Folge; Durchgänge, nicht Kalendertage |
 | Lange Pause | nach je 7 Fehltagen jede Übung des Bereichs eine Stufe runter |
 | Krankheitsmodus | Stufe 1, Übungen ohne Stufen halbe Zeit, 14 XP, zählt nicht für die Stufen, kein Malus-Erlass |

@@ -5,14 +5,18 @@
 // one of them at a time, chosen with a row of tabs: the Envoy doing it (a
 // picture by the user for the figure, painted in the Envoy's colours like the
 // portrait, else the moving figure, else the emblem of the area), its name
-// and stage, its time and the steps. Below: the guided timer for the whole
-// unit (timer.js) and „Erledigt“.
+// and stage, its time and the steps. Below: the guided timer for what is
+// still open of the unit (timer.js) and the button that finishes the
+// exercise shown, with its name on it („Käfer erledigt“): each exercise is
+// done on its own, its tab gets a tick and the card goes on to the next one;
+// the last one finishes the task. A unit of one exercise just has „Erledigt“.
 //
-// After „Erledigt“ (or the timer) come the questions, one for each exercise
-// that has a higher stage to go to; their answers move the stages (two good
-// runs in a row up, two too hard ones down). „Das war heute zu viel“ counts
-// as too hard for every exercise of the unit. Then the card turns back into
-// its row and the gain rises from there.
+// Each exercise that has a higher stage to go to has a question; it comes
+// right after the exercise (after the timer: those of all the exercises it
+// ran). The answers move the stages (two good runs in a row up, two too hard
+// ones down). „Das war heute zu viel“ finishes the whole task and counts as
+// too hard for every exercise of the unit. Then the card turns back into its
+// row and the gain rises from there.
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
@@ -48,19 +52,28 @@ const fill = (el, ...children) => el.replaceChildren(...children.filter(Boolean)
 const tooMuchLink = (task, questions) =>
   canBeTooMuch(task) && !questions.some((q) => q.answers.some((a) => a.id === TOO_MUCH));
 
-// The tick on the row: done at once, or the card opens at its questions.
+// The exercises of the task not done yet today, and their questions.
+const openParts = (task, game) => task.parts.filter((p) => !game.partsDone(task.stat)[p.row.id]);
+const openQuestions = (task, game) => questionsOf(task).filter((q) => !game.partsDone(task.stat)[q.part.row.id]);
+
+// The tick on the row: what is still open of the task done at once, or the
+// card opens at the questions of those exercises.
 export function finishTask(stat, game) {
   const task = game.todayTask(stat);
   if (!task || game.state.todayDone[stat]) return;
-  if (questionsOf(task).length > 0) openTaskCard(stat, game, 'questions');
+  if (openQuestions(task, game).length > 0) openTaskCard(stat, game, 'questions');
   else commit(stat, {}, game, false);
 }
 
-function commit(stat, answer, game, onCard) {
+// Runs what finishes something of the task. Once the whole task is done,
+// the card turns back into its row and the gain rises there; returns
+// whether it is.
+function settle(stat, game, onCard, action) {
   const task = game.todayTask(stat);
   const gain = game.gainFor(task);
   const before = game.state.stats[stat].level;
-  game.complete(stat, answer);
+  action();
+  if (!game.state.todayDone[stat]) return false;
   const after = game.state.stats[stat].level;
   if (onCard) closeSheet();
   const wait = onCard ? TURN_MS : 0;
@@ -69,7 +82,10 @@ function commit(stat, answer, game, onCard) {
     if (anchor) floatGain(gainText(stat, gain), anchor.getBoundingClientRect(), stat);
   }, wait);
   if (after > before) setTimeout(() => toast(`${statInfo(stat).name} · Level ${after}`, { tone: 'level' }), wait + 700);
+  return true;
 }
+
+const commit = (stat, answer, game, onCard) => settle(stat, game, onCard, () => game.complete(stat, answer));
 
 function floatGain(text, rect, stat) {
   const el = h('div', { class: 'gain-float', 'data-stat': stat, style: { left: `${rect.left + rect.width / 2}px`, top: `${rect.top}px` } }, text);
@@ -111,16 +127,18 @@ function timerSegments(task, game) {
   return segments;
 }
 
-// start: 'questions' to open the card at its questions.
+// start: 'questions' to open the card at the questions of what is open.
 export function openTaskCard(stat, game, start = null) {
   const task = game.todayTask(stat);
   if (!task) return;
   const info = statInfo(stat);
   const done = game.state.todayDone[stat];
-  let shown = 0;   // which exercise the card shows
+  const several = task.parts.length > 1;
+  const isDone = (part) => Boolean(done || game.partsDone(stat)[part.row.id]);
+  let shown = Math.max(0, task.parts.findIndex((p) => !isDone(p)));   // which exercise the card shows
 
   const pictureBox = h('div', { class: 'tc-picture' });
-  const tabs = task.parts.length > 1 ? h('div', { class: 'tc-tabs', role: 'tablist' }) : null;
+  const tabs = several ? h('div', { class: 'tc-tabs', role: 'tablist' }) : null;
   const partBox = h('div', { class: 'tc-part' });
   const body = h('div', { class: 'tc-body' });
   const actions = h('div', { class: 'tc-actions' });
@@ -138,7 +156,8 @@ export function openTaskCard(stat, game, start = null) {
   const { card } = openCard({ label: taskTitle(task), front, back, from: () => rowOf(stat), className: 'task-card' });
   card.dataset.stat = stat;
 
-  // one exercise: picture, name, stage, time, what it is for, the steps
+  // one exercise: picture, name, stage, time, what it is for, the steps;
+  // the tabs show which ones are done
   function showPart(i) {
     shown = i;
     const part = task.parts[i];
@@ -146,9 +165,10 @@ export function openTaskCard(stat, game, start = null) {
     pictureBox.classList.toggle('empty', !pictureBox.querySelector('img'));
     if (tabs) {
       fill(tabs, ...task.parts.map((p, n) => h('button', {
-        class: `tc-tab ${n === i ? 'on' : ''}`, type: 'button', role: 'tab', 'aria-selected': String(n === i),
-        onclick: () => showPart(n),
-      }, p.row.kurz)));
+        class: `tc-tab ${n === i ? 'on' : ''} ${isDone(p) ? 'done' : ''}`, type: 'button', role: 'tab', 'aria-selected': String(n === i),
+        'aria-label': isDone(p) ? `${p.row.kurz}, erledigt` : p.row.kurz,
+        onclick: () => { showPart(n); if (card.dataset.view === 'steps') show('steps'); },
+      }, isDone(p) ? icon(UI_ICONS.check) : null, p.row.kurz)));
     }
     const stage = part.row.stufenname ? `Stufe ${part.level} · ${part.row.stufenname}` : null;
     fill(partBox,
@@ -161,24 +181,59 @@ export function openTaskCard(stat, game, start = null) {
       h('ol', { class: 'task-steps' }, part.row.steps.map((step) => h('li', {}, step))));
   }
 
-  const questions = questionsOf(task);
+  // the next exercise that is still open, after the one shown
+  const nextOpen = () => {
+    for (let k = 1; k <= task.parts.length; k += 1) {
+      const i = (shown + k) % task.parts.length;
+      if (!isDone(task.parts[i])) return i;
+    }
+    return shown;
+  };
+
+  // all that is still open: its questions, then the task is done
   const finish = () => {
-    if (questions.length > 0) show('questions');
+    const questions = openQuestions(task, game);
+    if (questions.length > 0) showQuestions(questions, (given) => commit(stat, { antworten: given }, game, true));
     else commit(stat, {}, game, true);
   };
+
+  // one exercise of several: its question, then on to the next one (the
+  // last one finishes the task)
+  const finishPart = (part) => {
+    const question = openQuestions(task, game).find((q) => q.part.row.id === part.row.id);
+    const record = (answer) => {
+      if (settle(stat, game, true, () => game.completePart(stat, part.row.id, answer))) return;
+      showPart(nextOpen());
+      show('steps');
+    };
+    if (question) showQuestions([question], (given) => record(given[part.row.id]));
+    else record(null);
+  };
+
   const tooMuch = () => h('button', { class: 'btn text tc-too-much', type: 'button', onclick: () => commit(stat, { zuviel: true }, game, true) }, 'Das war heute zu viel');
 
   function show(view) {
     card.dataset.view = view;
     if (view === 'steps') {
+      const part = task.parts[shown];
+      const open = openParts(task, game);
+      const timer = () => openTimer({
+        title: taskTitle({ parts: open }), segments: timerSegments({ ...task, parts: open }, game),
+        rhythm: open.length === 1 ? open[0].row.atemtakt : null, onFinish: finish,
+      });
       fill(body);
       fill(actions,
-        canBeTooMuch(task) ? tooMuch() : null,
-        h('button', { class: 'btn ghost', type: 'button', onclick: () => openTimer({ title: taskTitle(task), segments: timerSegments(task, game), rhythm: task.parts.length === 1 ? task.parts[0].row.atemtakt : null, onFinish: finish }) },
-          icon(UI_ICONS.timer), 'Mit Timer'),
-        h('button', { class: 'btn primary', type: 'button', onclick: finish }, 'Erledigt'));
+        isDone(part)
+          ? h('button', { class: 'btn text tc-too-much', type: 'button', onclick: () => { game.undoPart(stat, part.row.id); showPart(shown); show('steps'); } },
+            icon(UI_ICONS.undo), 'Rückgängig')
+          : (canBeTooMuch(task) ? tooMuch() : null),
+        open.length > 0 ? h('button', { class: 'btn ghost', type: 'button', onclick: timer }, icon(UI_ICONS.timer), 'Mit Timer') : null,
+        isDone(part)
+          ? h('span', { class: 'pill tc-part-done' }, icon(UI_ICONS.check), `${part.row.kurz} erledigt`)
+          : h('button', { class: 'btn primary', type: 'button', onclick: () => (several ? finishPart(part) : finish()) },
+            several ? `${part.row.kurz} erledigt` : 'Erledigt'));
     } else if (view === 'questions') {
-      showQuestions();
+      finish();
     } else {
       fill(body, h('div', { class: 'task-done-row' },
         h('span', { class: 'pill' }, 'Erledigt'),
@@ -190,23 +245,24 @@ export function openTaskCard(stat, game, start = null) {
     }
   }
 
-  // One question per exercise. A single one is answered with one tap; with
-  // several, „Fertig“ comes once all are answered.
-  function showQuestions() {
+  // Questions, one for each exercise given. A single one is answered with
+  // one tap; with several, „Fertig“ comes once all are answered.
+  function showQuestions(questions, onAnswered) {
+    card.dataset.view = 'questions';
     const given = {};
-    const ready = h('button', { class: 'btn primary', type: 'button', disabled: true, onclick: () => commit(stat, { antworten: given }, game, true) }, 'Fertig');
+    const ready = h('button', { class: 'btn primary', type: 'button', disabled: true, onclick: () => onAnswered(given) }, 'Fertig');
     const blocks = questions.map(({ part, answers }) => {
       const buttons = answers.map((a) => h('button', {
         class: `btn feedback fb-${a.id}`, type: 'button', 'aria-pressed': 'false',
         onclick: (e) => {
           given[part.row.id] = a.id;
-          if (questions.length === 1) { commit(stat, { antworten: given }, game, true); return; }
+          if (questions.length === 1) { onAnswered(given); return; }
           for (const b of e.currentTarget.parentElement.children) b.setAttribute('aria-pressed', String(b === e.currentTarget));
           ready.disabled = Object.keys(given).length < questions.length;
         },
       }, a.label));
       return h('div', { class: 'tc-question' },
-        questions.length > 1 ? h('p', { class: 'tc-question-part' }, part.row.kurz) : null,
+        questions.length > 1 || several ? h('p', { class: 'tc-question-part' }, part.row.kurz) : null,
         h('p', { class: 'sheet-question' }, part.row.frage),
         h('div', { class: `feedback-row answers-${answers.length}` }, buttons));
     });

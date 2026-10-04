@@ -5,7 +5,7 @@
 // The real app and its test copy can lie side by side on one web space.
 // Each keeps its own store, named after its folder, and only clears its own.
 const FOLDER = new URL(self.registration.scope).pathname;
-const CACHE = `envoy-v50 ${FOLDER}`;
+const CACHE = `envoy-v51 ${FOLDER}`;
 const NETWORK_TIMEOUT_MS = 3500;
 
 self.addEventListener('install', () => self.skipWaiting());

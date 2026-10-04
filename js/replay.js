@@ -22,7 +22,7 @@ import { taskFor, taskOfDone, resultOf } from './tasks.js';
 export { unmetRequirements } from './world/items.js';
 
 const HISTORY_DAYS = 30;
-const TASK_TYPES = new Set(['plan', 'done', 'undo', 'mode']);
+const TASK_TYPES = new Set(['plan', 'done', 'teil', 'undo', 'mode']);
 
 function initialStats() {
   const stats = {};
@@ -92,6 +92,7 @@ export function replay(events, catalog, today, now = Date.now()) {
   let lastT = 0;                    // moment of the latest event so far
   let sick = false;
   let todayDone = {};
+  let todayParts = {};              // stat -> { row id: { id, antwort } }: exercises done of a task not done yet
 
   const firstEvent = sorted.find((e) => e.d <= today);
   const firstDay = firstEvent ? firstEvent.d : today;
@@ -103,6 +104,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     intensityAtDayStart = { ...intensity };
     statsAtDayStart = { ...stats };
     const done = {};
+    const parts = {};
     if (day !== firstDay) startOfDay(world, dayStartMs(day), ctx);
 
     for (const e of byDay.get(day) || []) {
@@ -115,6 +117,10 @@ export function replay(events, catalog, today, now = Date.now()) {
         // ahead; the task of an area now follows from its stages
       } else if (e.type === 'mode') {
         sick = Boolean(e.sick);
+      } else if (e.type === 'teil') {
+        // one exercise of a task with several; it counts once the task is done
+        if (undone.has(e.id) || done[e.stat] || !STAT_IDS.includes(e.stat) || typeof e.teil !== 'string') continue;
+        parts[e.stat] = { ...parts[e.stat], [e.teil]: { id: e.id, antwort: typeof e.antwort === 'string' ? e.antwort : null } };
       } else if (e.type === 'done') {
         if (undone.has(e.id) || done[e.stat] || !STAT_IDS.includes(e.stat)) continue;
         const gain = withBonus(e.xp, bonusOf(earned, 'tageswerk', e.t));
@@ -155,6 +161,7 @@ export function replay(events, catalog, today, now = Date.now()) {
 
     if (day === today) {
       todayDone = done;
+      todayParts = Object.fromEntries(Object.entries(parts).filter(([stat]) => !done[stat]));
       for (const stat of STAT_IDS) {
         if (done[stat]) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: stats[stat].level });
       }
@@ -201,6 +208,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     intensityAtDayStart,
     sick,
     todayDone,
+    todayParts,
     history,
     log,
     totals,

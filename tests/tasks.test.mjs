@@ -223,3 +223,35 @@ test('minutes of stairs add up for the quests that need them', () => {
   ];
   assert.equal(replay(events, catalog, addDays(START, 2)).totals.treppe_min, 3 + 5);
 });
+
+test('exercises done one by one: shown as progress, counted once the last one finishes the task', () => {
+  const day = START;
+  const first = ev(day, 'teil', { stat: 'kraft', teil: 'a-1', antwort: 'ja' });
+  const second = ev(day, 'teil', { stat: 'kraft', teil: 'b-1' });
+  let s = replay([first, second], catalog, day);
+  assert.deepEqual(Object.keys(s.todayParts.kraft), ['a-1', 'b-1']);
+  assert.equal(s.todayParts.kraft['a-1'].antwort, 'ja');
+  assert.equal(s.todayDone.kraft, undefined);
+  assert.equal(s.stats.kraft.xp, 0);
+
+  // the last one: the task as a whole, with the answers given along the way
+  const last = done(day, 'kraft', ['a-1', 'b-1', 'c-1'], { 'a-1': 'ja', 'b-1': 'ja' });
+  s = replay([first, second, last], catalog, day);
+  assert.equal(s.todayDone.kraft.xp, 14);
+  assert.equal(s.todayParts.kraft, undefined);
+  assert.equal(s.stats.kraft.xp, 14);
+});
+
+test('an exercise done one by one can be taken back; one from yesterday does not carry over', () => {
+  const day = START;
+  const first = ev(day, 'teil', { stat: 'kraft', teil: 'a-1' });
+  const back = ev(day, 'undo', { ref: first.id });
+  assert.equal(replay([first, back], catalog, day).todayParts.kraft, undefined);
+
+  // a task left half done: nothing counts, the day is missed
+  const next = addDays(day, 1);
+  const s = replay([first], catalog, next);
+  assert.equal(s.todayParts.kraft, undefined);
+  assert.equal(s.stats.kraft.missed, 1);
+  assert.deepEqual(levels(s), { a: 1, b: 1, c: 1, t: 1, m: 1, n: 1, g: 1 });
+});

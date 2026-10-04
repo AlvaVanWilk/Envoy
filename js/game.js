@@ -100,14 +100,16 @@ export const game = {
     return runningBonuses(this.state.achievements, Date.now());
   },
 
-  // antworten: { row id: answer id } for the questions asked (see tasks.js);
-  // zuviel: „Das war heute zu viel“.
+  // The whole task (what is still open of it). antworten: { row id: answer
+  // id } for the questions asked (see tasks.js), together with those given
+  // for exercises done one by one; zuviel: „Das war heute zu viel“.
   complete(stat, { antworten = {}, zuviel = false } = {}) {
     const task = this.todayTask(stat);
     if (!task || this.state.todayDone[stat]) return;
     const teile = task.parts.map((p) => p.row.id);
     const fields = { stat, teile, xp: task.xp };
-    const given = Object.fromEntries(Object.entries(antworten).filter(([id, a]) => teile.includes(id) && typeof a === 'string'));
+    const earlier = Object.fromEntries(Object.entries(this.partsDone(stat)).filter(([, p]) => p.antwort).map(([id, p]) => [id, p.antwort]));
+    const given = Object.fromEntries(Object.entries({ ...earlier, ...antworten }).filter(([id, a]) => teile.includes(id) && typeof a === 'string'));
     if (Object.keys(given).length > 0) fields.antworten = given;
     if (zuviel) fields.zuviel = true;
     if (this.state.sick) fields.sick = true;
@@ -118,6 +120,32 @@ export const game = {
     const done = this.state.todayDone[stat];
     if (!done) return;
     this.add([this.event('undo', { ref: done.id })]);
+  },
+
+  // The exercises of today's task done one by one: { row id: { id, antwort } }.
+  partsDone(stat) {
+    return this.state.todayParts?.[stat] || {};
+  },
+
+  // One exercise of the task done (antwort: to its question, if it was asked).
+  // The last open one finishes the task.
+  completePart(stat, rowId, antwort = null) {
+    const task = this.todayTask(stat);
+    if (!task || this.state.todayDone[stat]) return;
+    const done = this.partsDone(stat);
+    if (done[rowId] || !task.parts.some((p) => p.row.id === rowId)) return;
+    const open = task.parts.filter((p) => !done[p.row.id] && p.row.id !== rowId);
+    if (open.length === 0) {
+      this.complete(stat, { antworten: antwort ? { [rowId]: antwort } : {} });
+      return;
+    }
+    this.add([this.event('teil', { stat, teil: rowId, ...(antwort ? { antwort } : {}) })]);
+  },
+
+  undoPart(stat, rowId) {
+    const part = this.partsDone(stat)[rowId];
+    if (!part || this.state.todayDone[stat]) return;
+    this.add([this.event('undo', { ref: part.id })]);
   },
 
   setSick(on) {
