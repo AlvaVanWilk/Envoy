@@ -46,14 +46,16 @@ function expeditionEvent(events, questId, hoursAfter) {
 }
 const total = (e) => e.out + e.act + e.back;
 
-test('start: at the camp, full bar, the start outfit worn, the backpack empty, no camp yet', () => {
+test('start: at the camp, full bar, the start outfit worn without gloves, the backpack empty, no camp yet', () => {
   const s = replay([], catalog, DAY, T0);
   assert.equal(s.world.expedition, null);
   assert.equal(s.world.stamina.value, maxStamina(s.stats));
   assert.equal(s.world.equipped.torso, 'start:torso_leinenhemd_1');
   assert.equal(s.world.equipped.beine, 'start:beine_leinenhose_1');
   assert.equal(s.world.equipped.schuhe, 'start:schuhe_bastsandalen_1');
-  assert.equal(s.world.equipped.handschuhe, 'start:handschuhe_handwickel_1');
+  // the first gloves come from a quest on the Trümmerfeld (q-handwickel)
+  assert.equal(s.world.equipped.handschuhe, undefined);
+  assert.equal(s.world.items['start:handschuhe_handwickel_1'], undefined);
   assert.equal(s.world.items['start:torso_leinenhemd_1'].where, 'body');
   assert.equal(countIn(s.world, 'rucksack'), 0);
   assert.deepEqual(s.world.purse, { splitter: 0, pilzholz: 0, stein: 0 });
@@ -304,23 +306,23 @@ test('a facility is built like a quest: material and Energie, then it stands', (
 
 test('the Aufbewahrung gives places for things; away, it can only be looked at', () => {
   const camp1 = gift({ unlocks: ['lagerfeuer', 'aufbewahrung:1'] }, 0);
-  const wraps = 'start:handschuhe_handwickel_1';
-  const takeOff = ev('unequip', { slot: 'handschuhe' }, 0.9);
-  const store = ev('move', { inst: wraps, to: 'schrank' }, 1);
+  const shirt = 'start:torso_leinenhemd_1';
+  const takeOff = ev('unequip', { slot: 'torso' }, 0.9);
+  const store = ev('move', { inst: shirt, to: 'schrank' }, 1);
   const away = expeditionEvent([camp1, takeOff, store], 'q-stein', 1.1);            // back after 8 minutes
-  const takeOut = ev('move', { inst: wraps, to: 'rucksack' }, 1.12);
-  const wear = ev('equip', { slot: 'handschuhe', inst: wraps }, 1.13);
+  const takeOut = ev('move', { inst: shirt, to: 'rucksack' }, 1.12);
+  const wear = ev('equip', { slot: 'torso', inst: shirt }, 1.13);
   const s = replay([camp1, takeOff, store, away, takeOut, wear], catalog, DAY, T0 + 1.14 * H);
   assert.ok(s.world.expedition);
-  assert.equal(s.world.items[wraps].where, 'schrank');
-  assert.equal(s.world.equipped.handschuhe, undefined);
+  assert.equal(s.world.items[shirt].where, 'schrank');
+  assert.equal(s.world.equipped.torso, undefined);
 
-  const back = ev('equip', { slot: 'handschuhe', inst: wraps }, 2);
+  const back = ev('equip', { slot: 'torso', inst: shirt }, 2);
   const s2 = replay([camp1, takeOff, store, away, takeOut, wear, back], catalog, DAY, T0 + 2.1 * H);
-  assert.equal(s2.world.equipped.handschuhe, wraps);
+  assert.equal(s2.world.equipped.torso, shirt);
   // without the facility nothing goes into the storage
-  const none = replay([takeOff, ev('move', { inst: wraps, to: 'schrank' }, 1)], catalog, DAY, T0 + 2 * H);
-  assert.equal(none.world.items[wraps].where, 'rucksack');
+  const none = replay([takeOff, ev('move', { inst: shirt, to: 'schrank' }, 1)], catalog, DAY, T0 + 2 * H);
+  assert.equal(none.world.items[shirt].where, 'rucksack');
 });
 
 test('the Envoy: name and look from the latest envoy event, trimmed', () => {
@@ -338,10 +340,13 @@ test('the backpack has five places', () => {
 
 test('equipment abilities count, never stats', () => {
   const s = replay([], catalog, DAY, T0);
-  assert.equal(effects(s.world, catalog).schaden, 1);   // the hand wraps are worn from the start
-  assert.equal(s.stats.kraft.level, 1);
-  const bare = replay([ev('unequip', { slot: 'handschuhe' }, 0.1)], catalog, DAY, T0 + H);
-  assert.equal(effects(bare.world, catalog).schaden, 0);
+  assert.equal(effects(s.world, catalog).schaden, 0);   // no gloves at the start
+  const found = expeditionEvent([], 'q-handwickel', 0.1);
+  const back = replay([found], catalog, DAY, T0 + H);
+  const wraps = Object.values(back.world.items).find((i) => i.id === 'handschuhe_handwickel_1');
+  const worn = replay([found, ev('equip', { slot: 'handschuhe', inst: wraps.inst }, 0.9)], catalog, DAY, T0 + H);
+  assert.equal(effects(worn.world, catalog).schaden, 1);
+  assert.equal(worn.stats.kraft.level, 1);
 });
 
 test('an achievement bonus on gathering adds to the pieces, not to the Bannsplitter', () => {

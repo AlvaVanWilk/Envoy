@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T12:01:59Z",
+ "generated": "2026-10-04T16:23:44Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -823,6 +823,42 @@
     "unlocks": [
      "lagerfeuer"
     ],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0,
+   "active": true
+  },
+  {
+   "id": "q-handwickel",
+   "name": "Stoff zwischen den Trümmern",
+   "place": "truemmerfeld",
+   "kind": "erkunden",
+   "text": "Unter einer umgestürzten Säule klemmt ein langer Streifen Leinen. Um die Hände gewickelt, schützt er die Knöchel.",
+   "monsters": [],
+   "conditions": [],
+   "speedStats": [],
+   "yieldStats": [],
+   "consumes": {},
+   "cost": 2,
+   "reward": {
+    "splitter": [
+     0,
+     0
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [
+     "handschuhe_handwickel_1"
+    ],
+    "plans": [],
+    "unlocks": [],
     "rest": false
    },
    "repeatable": false,

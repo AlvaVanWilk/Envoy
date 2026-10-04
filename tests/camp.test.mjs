@@ -95,7 +95,8 @@ test('gathering is offered on the Trümmerfeld beside the camp from the start an
   const s = replay([], catalog, DAY, T0);
   const field = catalog.places.find((p) => p.typ === 'truemmerfeld');
   const ids = questsAt(field.id, ctxOf(s)).map((q) => q.id);
-  assert.deepEqual(ids.sort(), ['gather:pilzholz', 'gather:stein']);
+  // besides the gathering: the quest for the first gloves
+  assert.deepEqual(ids.sort(), ['gather:pilzholz', 'gather:stein', 'q-handwickel']);
   // the Lagerfeuer is a quest of its own, at the camp
   assert.deepEqual(questsAt('lager', ctxOf(s)).map((q) => q.id), ['q-lagerfeuer']);
   assert.equal(GATHER('stein').place, field.id);
@@ -173,7 +174,9 @@ test('the first day: the Lagerfeuer is sure to be built with the 10 Energie of t
   assert.equal(est.energy.max, 4);        // 8 Stein: four Energie at the very most
   assert.equal(estPilz.energy.max, 1);    // 2 Pilzholz: one Energie at the very most
   const fire = catalog.questById.get('q-lagerfeuer');
-  assert.ok(est.energy.max + estPilz.energy.max + fire.cost <= 10);
+  const gloves = catalog.questById.get('q-handwickel');
+  // the fire, and the first gloves too, on the same day
+  assert.ok(est.energy.max + estPilz.energy.max + fire.cost + gloves.cost <= 10);
   // and in play, with many different dice
   for (let i = 0; i < 300; i += 1) {
     const stone = runQuest(GATHER('stein'), ctxOf(s), `stein${i}`, { amount: 8, energy: 10 });
@@ -205,6 +208,35 @@ test('gathering and building in play: from the empty start to the Lagerfeuer in 
   assert.equal(done.world.camp.stage, 1);
   assert.deepEqual(done.world.purse, { splitter: 0, pilzholz: 0, stein: 0 });
   assert.ok(done.world.stamina.value >= 3, `left ${done.world.stamina.value}`);
+});
+
+test('the first gloves: a quest on the Trümmerfeld without conditions, then still the Lagerfeuer on the same day', () => {
+  const s = replay([], catalog, DAY, T0);
+  const quest = questById('q-handwickel', ctxOf(s));
+  assert.deepEqual(quest.conditions, []);
+  assert.deepEqual(quest.reward.items, ['handschuhe_handwickel_1']);
+  assert.equal(quest.repeatable, false);
+  const plan = planExpedition(quest, ctxOf(s), 'x', { energy: 10 });
+  assert.equal(plan.out + plan.back, 0);     // beside the camp: no way
+
+  let events = [];
+  let hours = 0.1;
+  const gloves = expeditionEvent(events, 'q-handwickel', hours);
+  events = [...events, gloves];
+  hours += total(gloves) / 60 + 0.01;
+  const got = replay(events, catalog, DAY, T0 + hours * H);
+  const wraps = Object.values(got.world.items).find((i) => i.id === 'handschuhe_handwickel_1');
+  assert.equal(wraps.where, 'rucksack');
+  const worn = replay([...events, ev('equip', { slot: 'handschuhe', inst: wraps.inst }, hours)], catalog, DAY, T0 + (hours + 0.01) * H);
+  assert.equal(worn.world.equipped.handschuhe, wraps.inst);
+
+  for (const [id, options] of [['gather:stein', { amount: 8 }], ['gather:pilzholz', { amount: 2 }], ['q-lagerfeuer', {}]]) {
+    const e = expeditionEvent(events, id, hours, options);
+    events = [...events, e];
+    hours += total(e) / 60 + 0.01;
+  }
+  const done = replay(events, catalog, DAY, T0 + hours * H);
+  assert.equal(done.world.camp.stage, 1);
 });
 
 // --- Schlafplatz ----------------------------------------------------------------

@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-02T17:56:37Z",
+ "generated": "2026-10-04T16:23:44Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -78,14 +78,18 @@
     "schaden": 1
    },
    "herkunft": [
-    "angezogen",
+    "quest",
     "haendler"
    ],
    "preis": null,
-   "figur": "",
-   "figuren": {},
-   "icon": "",
-   "icons": {},
+   "figur": "assets/figur/handschuhe_handwickel_1.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/handschuhe_handwickel_1.png"
+   },
+   "icon": "assets/icons/icon_handschuhe_handwickel_1.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_handschuhe_handwickel_1.png"
+   },
    "ebene": null
   },
   {

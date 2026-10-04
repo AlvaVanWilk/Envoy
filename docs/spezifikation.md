@@ -411,8 +411,9 @@ schlecht:
   „kostet 2–4 von 10“). „Bis die Energie reicht“ gibt es nicht mehr.
 - **Sicher am ersten Tag:** Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) ist mit den
   10 Energie des Starts immer zu schaffen: 8 Stein kosten höchstens 4 Energie (4 × 2
-  Stück), 2 Pilzholz höchstens 1, dazu 2 zum Bauen. Das sind höchstens 7 von 10, es
-  bleibt Luft, auch bei schlechtesten Würfen.
+  Stück), 2 Pilzholz höchstens 1, dazu 2 zum Bauen. Das sind höchstens 7 von 10, auch bei
+  schlechtesten Würfen. Die 2 Energie für die ersten Handwickel („Stoff zwischen den
+  Trümmern“) passen noch dazu.
 
 **Weitere Sammelorte.** Am Pilzhain und im Steinbruch gibt es noch je drei Quests mit
 festem Ertrag und Weg (je 1 Energie hin und zurück). Sie folgen derselben Rechnung wie
@@ -498,8 +499,10 @@ alles für ein Drittel des Preises zurück.
 
 Der Rucksack hat von Anfang an **5 Plätze** und der Envoy hat ihn immer bei sich. Er ist
 nur für Dinge (Kleidung, Fundstücke). Getragenes zählt nicht mit. Das Startoutfit
-(Leinenhemd, Leinenhose, Bastsandalen, Handwickel) trägt er von Anfang an, der Rucksack
-ist am Start leer.
+(Leinenhemd, Leinenhose, Bastsandalen) trägt er von Anfang an, der Rucksack ist am Start
+leer. Handschuhe hat er am Anfang keine: Die ersten Handwickel bringt die Quest „Stoff
+zwischen den Trümmern“ auf dem Trümmerfeld, ohne Voraussetzung, für 2 Energie und ohne
+Weg. Sie landen im Rucksack und werden von dort angelegt.
 
 **Pilzholz und Stein liegen im Vorrat**, nicht im Rucksack: was der Envoy sammelt oder
 findet, ist dort, sobald die Arbeit getan ist, auch wenn er noch unterwegs ist. Das wird
@@ -710,6 +713,7 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 | Was | Wann |
 | --- | --- |
 | Karte, Quests, Begegnungen, Rucksack, Handbuch | von Anfang an |
+| Handwickel (die ersten Handschuhe) | Quest „Stoff zwischen den Trümmern“ auf dem Trümmerfeld, ohne Voraussetzung |
 | Lagerstufe 1, die vier Einrichtungen | Quest „Ein Lagerfeuer errichten“ (die erste Quest) |
 | Lagerstufen 2 bis 5, höhere Stufen der Einrichtungen, Deko | Hygge (siehe Das Lager) |
 | Händler | Quest „Der Händler im Nebel“ |
@@ -872,10 +876,12 @@ Fingerspitzen in fingerlosen Handschuhen. Die gezeichneten Farben stehen in
 eingetragen.
 
 **Startoutfit:** Leinenhemd und Leinenhose, ohne Voraussetzung und ohne Fähigkeit. Der
-Envoy trägt sie von Anfang an (Herkunft `angezogen`), ebenso Handwickel und
-Bastsandalen, damit der Rucksack am Start leer ist und Platz für 10 Stück Material hat
-(Herkunft `start` legt Dinge in den Rucksack; es gibt vorerst keine). Die
-Griffhandschuhe sind die Belohnung für die Brücke über die Schlucht.
+Envoy trägt sie von Anfang an (Herkunft `angezogen`), ebenso die Bastsandalen, damit
+der Rucksack am Start leer ist (Herkunft `start` legt Dinge in den Rucksack; es gibt
+vorerst keine). Handschuhe trägt er am Anfang nicht: Die Handwickel (Zeichnungen der
+Nutzerin, Nr. 7 und 8 der Kleiderkammer) sind die Belohnung der Quest „Stoff zwischen den
+Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung, 2 Energie), die Griffhandschuhe die
+für die Brücke über die Schlucht.
 
 **Teile ohne Bild:** Fehlt die Ebene eines Teils noch, wird es getragen, aber nicht
 gezeichnet; fehlt sein Icon, zeigt die App das Symbol des Slots. Die Umwandlung listet
@@ -1001,14 +1007,21 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   öffnet sich die Envoy-Seite mit dem Rundgang.
 - **Rundgang** auf der Envoy-Seite: Beim ersten Öffnen der Seite (also gleich nach dem
   Erstellen) wird die Seite abgedunkelt, ein Teil leuchtet auf, daneben steht eine Karte
-  mit einem Satz. Vier Schritte: „Hier siehst du deinen Envoy.“ (die Figur), „Du kannst
+  mit einem Satz. Fünf Schritte: „Hier siehst du deinen Envoy.“ (die Figur), „Du kannst
   ihm andere Kleidung anlegen.“ (die Plätze), „In deinem Rucksack ist Platz für 5
   Gegenstände.“ (der Rucksack), „Mit einem Tipp auf das Portrait kommst du jederzeit
-  hierher zurück.“ (das Portrait). Jede Karte hat „Weiter“ und „Überspringen“ (auch die
-  Esc-Taste), „1 von 4“ und beim letzten Schritt „Fertig“. Gesehen oder übersprungen
+  hierher zurück.“ (das Portrait), „Durch das Tageswerk kannst du deinen Envoy stärken.“
+  (der Tageswerk-Knopf; so früh wie möglich, auf Wunsch der Nutzerin). Jede Karte hat
+  „Weiter“ und „Überspringen“ (auch die Esc-Taste), „1 von 5“ und beim letzten Schritt
+  „Fertig“. Gesehen oder übersprungen
   kommt er nicht wieder (je Profil gemerkt); in den Einstellungen unter „Envoy“ lassen
   sich alle mit „Rundgänge ansehen“ wiederholen. Er ist kein Tutorial für die Übungen, nur ein
   Rundgang durch die Oberfläche.
+- **Rundgang durch das Tageswerk** beim ersten Öffnen der Seite, drei Schritte: „Mach
+  jeden Tag mit deinem Envoy diese Übungen. Nur so wird er besser, und du nebenbei auch.“
+  (die vier Aufgaben), „Ein Tipp auf eine Aufgabe zeigt dir, wie ihre Übungen gehen.“ (die
+  erste Aufgabe), „Vorsicht: Wenn du nichts machst, sinken die Werte deines Envoy langsam
+  wieder.“ (die Werte). Die Sätze stammen von der Nutzerin.
 - **Rundgang durch Abenteuer** beim ersten Öffnen der Karte, sechs Schritte: die Karte,
   der Vorrat, die Energie („Alles, was er tut, kostet
   Energie. Steigt seine Ausdauer, steigt auch seine Energie.“), die laufende Expedition,
@@ -1022,7 +1035,7 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   aufwerten.“ (das Hygge auf dem Bild). Die Ausrufezeichen der ersten Fassung sind weg
   (Regel: keine Ausrufezeichen). Ist ein Bericht oder anderes Fenster offen, wartet
   der Rundgang, bis es geschlossen ist. In den Einstellungen zeigt „Rundgänge ansehen“
-  alle wieder. Für die anderen Seiten (Händler, Handbuch, Tageswerk) folgen sie später.
+  alle wieder. Für die anderen Seiten (Händler, Handbuch) folgen sie später.
 - **Einstellungen:** angemeldet als, Stand des Abgleichs, „Jetzt abgleichen“,
   „Abmelden“ (die Daten bleiben auf dem Gerät und auf dem Server); ohne Konto „Konto
   erstellen“ und „Profil wechseln“.

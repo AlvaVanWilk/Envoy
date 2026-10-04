@@ -1,6 +1,9 @@
 // The tours of the pages (see tour.js). Each page has one; it starts by itself
 // the first time the page is opened (for the Lager only once it has its fire):
-//   Envoy      right after the Envoy has been created: the figure, clothes, backpack, portrait
+//   Envoy      right after the Envoy has been created: the figure, clothes, backpack,
+//              portrait, and the Tageswerk, which alone makes the Envoy stronger
+//   Tageswerk  the first visit: the exercises each day, a tap shows them, and the
+//              values sink slowly when nothing is done
 //   Abenteuer  the first visit of the map: what is on the page, and the first task
 //   Lager      the first visit after the Lagerfeuer stands: furnishing the camp, and the Hygge
 // Once a tour has been seen or skipped it stays away; the settings can show them again.
@@ -16,6 +19,13 @@ const TOURS = {
     { selector: '.doll-frame .slot-column', text: 'Du kannst ihm andere Kleidung anlegen.' },
     { selector: '.char-grid .pack', text: `In deinem Rucksack ist Platz für ${BACKPACK_SIZE} Gegenstände.` },
     { selector: '.topbar .portrait-rings', text: 'Mit einem Tipp auf das Portrait kommst du jederzeit hierher zurück.', round: true },
+    { selector: '.topbar .daywork', text: 'Durch das Tageswerk kannst du deinen Envoy stärken.' },
+  ],
+
+  tageswerk: () => [
+    { selector: '.today .task-list', text: 'Mach jeden Tag mit deinem Envoy diese Übungen. Nur so wird er besser, und du nebenbei auch.' },
+    { selector: '.today .task-row:first-child .task-summary', text: 'Ein Tipp auf eine Aufgabe zeigt dir, wie ihre Übungen gehen.' },
+    { selector: '.today .today-side', text: 'Vorsicht: Wenn du nichts machst, sinken die Werte deines Envoy langsam wieder.' },
   ],
 
   abenteuer: (game) => [

@@ -143,7 +143,7 @@ function render() {
   keepPictures(viewRoot, view);
   replaceChildren(viewRoot, view);
   renderNav();
-  if (name !== lastView && ['envoy', 'abenteuer', 'lager'].includes(name) && (name !== 'lager' || game.state.world.camp.stage >= 1)) {
+  if (name !== lastView && ['envoy', 'tageswerk', 'abenteuer', 'lager'].includes(name) && (name !== 'lager' || game.state.world.camp.stage >= 1)) {
     startTourIfNew(name, game, () => currentView() === name);
   }
   if (name !== lastView) {

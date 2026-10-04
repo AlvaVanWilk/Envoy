@@ -67,7 +67,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   (lange Listen teilen sich auf so viele Seiten, wie das Fenster fasst)
 - Charakterfenster mit Paperdoll-Darstellung, Ausrüstungsslots, Inventar-Box und dem
   Namen des Envoy; nach dem ersten Erstellen beginnt das Spiel dort mit einem kurzen,
-  überspringbaren Rundgang (Overlay, vier Schritte), jeder spätere Start ist im Lager
+  überspringbaren Rundgang (Overlay, fünf Schritte, der letzte zeigt auf das Tageswerk:
+  „Durch das Tageswerk kannst du deinen Envoy stärken.“), jeder spätere Start ist im Lager
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
   Haut- und Haarfarbe, Name
 - Speicherung und Geräteabgleich pro Konto
@@ -94,8 +95,10 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Schnitt sicher), nicht gefundene grau und ohne Namen; Hygge als Summe von Einrichtungen
   und Deko, ab Stufe 2 reichen die Einrichtungen allein nicht; das Lagerbild aus Ebenen
   (Grundbild der Stufe, ab Stufe 2 das Gebäude, Einrichtungen, Deko, Vordergrund; ein Tipp
-  zeigt es groß); Rundgänge durch Abenteuer (erster Besuch)
+  zeigt es groß); Rundgänge durch Tageswerk und Abenteuer (je beim ersten Besuch)
   und Lager (nach dem Feuer)
+- Startoutfit ohne Handschuhe; die ersten Handwickel bringt die Quest „Stoff zwischen den
+  Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung, 2 Energie, am ersten Tag zu schaffen)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
   (gesammeltes ist sofort dort, ohne Erklärung); Händler, Kompendium der getroffenen Geister
@@ -188,7 +191,8 @@ Aufgabe 14 XP, keine Fragen, zählt nicht für die Stufen. Keine Pausenregel fü
 **Energie:** Größe der Leiste = 10 × Ausdauer. Alles, was der Envoy tut, kostet Energie,
 eine Energie ist eine Minute. Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) muss am
 ersten Tag mit den 10 Energie des Starts sicher zu schaffen sein, auch bei den schlechtesten
-Würfen: 8 Stein höchstens 4 Energie, 2 Pilzholz höchstens 1.
+Würfen und zusammen mit den ersten Handwickeln (2 Energie): 8 Stein höchstens 4 Energie,
+2 Pilzholz höchstens 1.
 
 **Sammeln auf dem Trümmerfeld:** je Energie 2 Stück und bis zu 2 weitere (zwei Würfel,
 Chance 25 % bei Level 1, +1,5 Punkte je Level von Kraft für Stein, von Beweglichkeit für
