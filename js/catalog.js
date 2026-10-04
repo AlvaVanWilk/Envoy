@@ -19,14 +19,15 @@ function withVersions(list, fields) {
 }
 
 // Each area is one unit: its exercises in the order of `teil`, each with its
-// stages (the rows of the table, by `stufe`).
-// -> { kraft: [{ key, teil, stages: [row, …] }, …], … }
+// stages (the rows of the table, by `stufe`) and for whom it is (`alter`:
+// [from, to], to null: no end; see exercisesFor in tasks.js).
+// -> { kraft: [{ key, teil, alter, stages: [row, …] }, …], … }
 function unitsOf(exercises) {
   const units = {};
   for (const stat of STAT_IDS) {
     const byKey = new Map();
     for (const row of exercises.filter((x) => x.stat === stat)) {
-      if (!byKey.has(row.uebung)) byKey.set(row.uebung, { key: row.uebung, teil: row.teil, stages: [] });
+      if (!byKey.has(row.uebung)) byKey.set(row.uebung, { key: row.uebung, teil: row.teil, alter: row.alter || null, stages: [] });
       byKey.get(row.uebung).stages.push(row);
     }
     for (const exercise of byKey.values()) exercise.stages.sort((a, b) => a.stufe - b.stufe);
@@ -36,7 +37,11 @@ function unitsOf(exercises) {
 }
 
 export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORLD) {
-  const exercises = withVersions(exerciseData.exercises || [], ['skizze']);
+  const exercises = withVersions(exerciseData.exercises || [], ['skizze']).map((row) => ({
+    ...row,
+    // a part of the time with a moving figure of its own (the Hampel-Runden)
+    phasen: (row.phasen || []).map((p) => (p.skizze ? { ...p, skizze: versioned(p.skizze) } : p)),
+  }));
   const equipment = withVersions(equipmentData.equipment || [], ['figur', 'icon']);
   const given = { ...EMPTY_WORLD, ...worldData };
   const camp = { stages: [], facilities: [], pictures: {}, layers: [], ...given.camp };

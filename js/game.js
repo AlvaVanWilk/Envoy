@@ -86,7 +86,7 @@ export const game = {
   todayTask(stat) {
     const done = this.state.todayDone[stat];
     const task = done ? taskOfDone(done, this.catalog) : null;
-    return task || taskFor(stat, this.state.intensityAtDayStart, this.state.sick, this.catalog);
+    return task || taskFor(stat, this.state.intensityAtDayStart, this.state.sick, this.catalog, this.state.age);
   },
 
   // What finishing the task brings now: its points with the bonus of the
@@ -334,11 +334,13 @@ export const game = {
   },
 
   // Name and look of the Envoy, at the creation or changed later
-  // (unterhemd: false switches the undershirt off, see FIGURES).
-  setEnvoy({ name, figur, haut, haar, unterhemd = true }) {
+  // (unterhemd: false switches the undershirt off, see FIGURES), and the
+  // year of birth, from the age (it picks the exercises, see tasks.js).
+  setEnvoy({ name, figur, haut, haar, unterhemd = true, geburtsjahr = null }) {
     const clean = String(name || '').trim();
     if (!clean) return;
-    this.add([this.event('envoy', { name: clean, figur, haut, haar, unterhemd: unterhemd !== false })]);
+    const born = Number.isInteger(geburtsjahr) ? { geburtsjahr } : {};
+    this.add([this.event('envoy', { name: clean, figur, haut, haar, unterhemd: unterhemd !== false, ...born })]);
   },
 };
 

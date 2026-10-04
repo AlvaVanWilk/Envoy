@@ -2312,6 +2312,10 @@ body.creating .dock { display: none; }
 }
 .swatch.active { box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.25), 0 0 0 3px var(--ivory); }
 .name-field { width: 100%; font-size: 18px; }
+.age-field { width: 6.5em; font-size: 18px; font-variant-numeric: tabular-nums; }
+.age-panel { display: grid; gap: 10px; }
+.age-panel p { margin: 0; }
+.age-line { display: flex; gap: 10px; align-items: center; }
 .create-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 18px; }
 
 /* 14c. start screen and account ---------------------------------------- */

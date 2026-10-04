@@ -37,7 +37,7 @@ export function describeCondition(c, ctx) {
     const now = ctx.totals[c.key] || 0;
     if (c.key === 'km') return `${c.min} km real gegangen oder gefahren (bisher ${now.toFixed(1).replace('.', ',')})`;
     if (c.key === 'stockwerke') return `${c.min} Stockwerke real gestiegen (bisher ${Math.floor(now)})`;
-    return `${c.min} Minuten Treppe im Tageswerk (bisher ${Math.floor(now)})`;
+    return `${c.min} Minuten Ausdauer im Tageswerk (bisher ${Math.floor(now)})`;
   }
   if (c.type === 'material') return `${c.min} ${MATERIALS[c.key]}`;
   if (c.type === 'camp') {

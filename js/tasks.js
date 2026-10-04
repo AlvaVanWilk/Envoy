@@ -3,13 +3,17 @@
 // decides at which stage each exercise is done (see replay.js: levels go up
 // after two good runs in a row and down after two too hard ones).
 //
+// Children and young people have exercises of their own (column `alter`,
+// see exercisesFor); the age comes from the creation of the Envoy.
+//
 // A task: { stat, parts, xp, seconds, sick }
 //   parts  [{ key, row, level, top, fresh, phases, seconds }]
 //          row     the line of the table for this exercise at this stage
 //          top     no higher stage exists (then nothing is asked about it)
 //          fresh   the stage changed since it was last done
-//          phases  [{ label, s }]: the time of the exercise, maybe in parts
-//                  (one side, the other side), see the column `zeit`
+//          phases  [{ label, s, skizze }]: the time of the exercise, maybe in
+//                  parts (one side, the other side), see the column `zeit`;
+//                  skizze: a part with a moving figure of its own
 //   xp     what the task brings: the sum of its exercises, XP_MIN when sick
 //
 // Krankheitsmodus: every exercise at stage 1; one with only one stage takes
@@ -44,10 +48,28 @@ function taskOf(stat, parts, sick) {
   };
 }
 
+// The age the person turns in the year of `day` (from the year of birth of
+// the Envoy), or null when no age was given.
+export function ageOn(envoy, day) {
+  const born = envoy?.geburtsjahr;
+  return Number.isInteger(born) ? Number(day.slice(0, 4)) - born : null;
+}
+
+// The exercises of an area for this age (column `alter`); without an age,
+// those for grown-ups (the ones without an upper end).
+export function exercisesFor(stat, age, catalog) {
+  return (catalog.units?.[stat] || []).filter((exercise) => {
+    const [from, to] = exercise.alter || [0, null];
+    if (age === null) return to === null;
+    return from <= age && (to === null || age <= to);
+  });
+}
+
 // The task of an area with the given stages (state.intensityAtDayStart for
-// today: an answer given today changes the task of tomorrow).
-export function taskFor(stat, levels, sick, catalog) {
-  const parts = (catalog.units?.[stat] || []).map((exercise) => {
+// today: an answer given today changes the task of tomorrow) for a person
+// of this age (see ageOn).
+export function taskFor(stat, levels, sick, catalog, age = null) {
+  const parts = exercisesFor(stat, age, catalog).map((exercise) => {
     const entry = levels[exercise.key];
     const level = sick ? 1 : Math.min(Math.max(1, entry?.level || 1), exercise.stages.length);
     return part(exercise, level, sick, !sick && entry?.fresh);

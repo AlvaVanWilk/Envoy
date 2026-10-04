@@ -92,7 +92,7 @@ mit demselben Namen und Passwort **Anmelden**; der Spielstand kommt vom Server.
 
 Die Quellen sind drei Tabellen in `data/`, jede mit einem Blatt **Erklärung**:
 
-- `uebungen.xlsx` — Übungen je Bereich mit ihren Stufen, Zeit, Frage, Ansagen und XP
+- `uebungen.xlsx` — Übungen je Bereich mit ihren Stufen, Zeit, Frage, Ansagen und XP; die Spalte `alter` sagt, für wen eine Übung ist (Kinder und Jugendliche haben eigene, leer = Erwachsene)
 - `ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Fähigkeiten, Herkunft, Preis
 - `welt.xlsx` — Orte der Karte, Monster, Quests (mit `aktiv`: nein nimmt eine Quest vorerst aus
   dem Spiel, ohne sie zu löschen), Lagerstufen, Einrichtungen (mit Hygge), Deko
@@ -121,7 +121,7 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Deko im Lagerbild | `assets/lager/deko_<id>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet |
 | Ausschnitte im Lagerbild | `assets/lager/ausschnitt_<name>_<zeit>.png` | 1792 × 672, transparent: Felsen, Feuer, Säulen aus dem Bild, damit sie vor dem stehen, was dahinter liegt, manche nur bis zu einer Lagerstufe oder nicht mit einer bestimmten Einrichtung; macht `tools/lager_ebenen.py` |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
-| Die Übungen als bewegte Figuren | `assets/uebungen/<id>.svg` | Comic-Stil mit Umrisslinie, Hemd in der Farbe des Bereichs, ohne Gesicht, 3:2; macht `tools/uebungsbilder.py` (`python3 tools/uebungsbilder.py`); auf der Karte der Aufgabe und im Timer |
+| Die Übungen als bewegte Figuren | `assets/uebungen/<id>.svg`, ein Abschnitt mit eigener Bewegung `assets/uebungen/<übung>-<abschnitt>.svg` | Comic-Stil mit Umrisslinie, Hemd in der Farbe des Bereichs, ohne Gesicht, 3:2; macht `tools/uebungsbilder.py` (`python3 tools/uebungsbilder.py`); auf der Karte der Aufgabe und im Timer |
 | Der Envoy bei einer Übung | `uebungen/<übung>.png` (alle Stufen) oder `uebungen/<id>.png` (eine Stufe) im Ordner jeder Figur | ein eigenes Bild geht vor der gezeichneten Figur; Hintergrund frei, jede Form passt ganz in die Karte; wird wie die Figur umgefärbt. Bisher: `innehalten.png` für beide Figuren (Gelassenheit) |
 | Karte | `assets/welt/karte.jpg` | 2400 × 1600 (3:2); macht `node tools/karte.mjs`, die Orte an ihren Stellen aus `welt.xlsx` |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
@@ -145,7 +145,7 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/config.js` | alle Zahlen der Regeln an einer Stelle |
 | `js/formulas.js` | Levelkurve, Malus, Bodensatz |
 | `js/replay.js` | berechnet den Spielstand aus allen Einträgen |
-| `js/tasks.js` | die Aufgabe jedes Bereichs: seine Übungen auf ihrer Stufe, Fragen danach, XP |
+| `js/tasks.js` | die Aufgabe jedes Bereichs: seine Übungen für das Alter des Envoy auf ihrer Stufe, Fragen danach, XP |
 | `js/world/` | Karte, Expeditionen, Energie, Kampf, Quests, Händler, Inventar, Lager |
 | `js/achievements.js` | die Erfolge und ihre Belohnungen |
 | `js/ui/` | die Ansichten; `today.js` das Tageswerk, `taskcard.js` die Karte einer Aufgabe (dreht sich auf, Reiter je Übung, Fragen), `timer.js` der geführte Timer, `voice.js` seine Stimme, `topbar.js` die Leiste oben, `camp.js` das Lager (sein Bild aus Ebenen, ein Tipp zeigt es groß), `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questlist.js` die Liste der Quests daneben, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“, `deko.js` die Deko-Liste, `upgrade.js` „Lager aufwerten“, `testtools.js` das Menü am Schild „Test“, das nur die Testfassung zeigt; `journey.js` die Leiste einer laufenden Expedition mit ihrer Reihe und den Bericht, `scene.js` das Bild darüber (was der Envoy gerade tut: Weg, Kampf Runde für Runde, Sammeln) und das Tagebuch der Reise, `tripsign.js` das Schild über dem Menü, solange er unterwegs ist; `js/world/expedition.js` Expeditionen als Reihe von Aktionen (Wege, Zeiten, Fortschritt), der Ablauf unterwegs steht in `js/world/worldstate.js`; `js/world/camp.js` das Lager (Stufen, Einrichtungen, Deko, Hygge), `js/world/plans.js` das Finden der Pläne für Deko, `js/daylight.js` die Tageszeit |

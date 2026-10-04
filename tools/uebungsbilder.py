@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Draws the exercises as moving figures (SVG), one file per exercise and
-stage: assets/uebungen/<id>.svg (the id as in the table of exercises).
+stage: assets/uebungen/<id>.svg (the id as in the table of exercises); a
+part of the time with a move of its own gets assets/uebungen/<exercise>-<part>.svg
+(the Hampel-Runden: hampelrunde-hampelmann.svg …).
 
 The figure is drawn like the user's pictures: flat colours inside a dark ink
 line. Skin, brown hair, trousers and shoes, the shirt in the colour of the
@@ -655,6 +657,508 @@ def innehalten(stage):
     return cycle, frame, mat(80, 220), glow
 
 
+# --- for children and young people -------------------------------------------
+# Their own exercises (column `alter` of the table): animals, jumping, a teddy.
+
+def moving_floor(seconds, distance, spacing):
+    """a mat whose dashes move back by `distance` each loop: the figure goes forward on the spot"""
+    dashes = " ".join(f"M {x} {FLOOR + 6} h 10" for x in range(-80, W + 80, spacing))
+    return (f'<rect x="14" y="{FLOOR - 2}" width="{W - 28}" height="8" rx="4" fill="{MAT}"/>'
+            f'<g><path d="{dashes}" stroke="{LINE}" stroke-width="2.5" stroke-linecap="round"/>'
+            f'<animateTransform attributeName="transform" type="translate" values="0 0;{-distance} 0" {repeat(seconds)}/></g>')
+
+
+def step(s, stride, lift):
+    """a hand or foot relative to its place under the body at moment s of its
+    step (0 to 1): the first half on the floor, sliding back while the body
+    goes on; the second half lifted and brought forward. -> (dx, dy)"""
+    s %= 1
+    if s < 0.5:
+        return stride / 2 - stride * s / 0.5, 0.0
+    u = (s - 0.5) / 0.5
+    return -stride / 2 + stride * smooth(u), -math.sin(math.pi * u) * lift
+
+
+# Der Bärengang: on hands and feet, head to the right, the hand of one side
+# with the foot of the other. Stage 1 hips high on the spot, stage 2 forward
+# and back again, stage 3 the knees just above the floor, slow and quiet.
+def baerengang(stage):
+    low = stage == 3
+    hip0 = (112, FLOOR - 46) if low else (112, FLOOR - 72)
+    shoulder_y = FLOOR - 3 - ARM + (4 if low else 0)
+    torso_angle = math.degrees(math.asin((shoulder_y - hip0[1]) / TORSO))
+    shoulder0 = at(hip0, torso_angle, TORSO)
+    hand0 = (shoulder0[0] + 3, FLOOR - 3)
+    ankle0 = (hip0[0] - 34, FLOOR - 9) if low else (hip0[0] - 26, FLOOR - 6)
+    stride, lift = (10, 4) if low else (14, 7)
+    cycle = 2.2 if low else 1.6
+
+    def pose(s, x, back=False):
+        hip = (hip0[0] + x, hip0[1] + math.sin(4 * math.pi * s) * 1.2)
+        shoulder = at(hip, torso_angle, TORSO)
+        head = at(shoulder, torso_angle + 12, NECK)
+        arms, legs = {}, {}
+        # near hand with far foot, far hand with near foot
+        for side, offset in (("near", 0.0), ("far", 0.5)):
+            o = offset + (0.5 if back else 0.0)
+            dx, dy = step(s + o, stride, lift)
+            dx = -dx if back else dx
+            arms[side] = arm_to(shoulder, (hand0[0] + x + dx, hand0[1] + dy), 1)
+            other = "far" if side == "near" else "near"
+            fx, fy = step(s + o, stride, lift)
+            fx = -fx if back else fx
+            ankle = (ankle0[0] + x + fx, ankle0[1] + fy)
+            legs[other] = leg_to(hip, ankle, -1, 150 if low else 0)
+        return figure(hip, shoulder, head, arms, legs)
+
+    if stage != 2:
+        return cycle, lambda t: pose(t, 0.0), moving_floor(cycle, 2 * stride, stride)
+
+    # stage 2: two steps forward, two back, over a loop of four steps
+    def frame(t):
+        if t < 0.5:
+            local = t / 0.5 * 2
+            return pose(local % 1, 2 * stride * local)
+        local = (t - 0.5) / 0.5 * 2
+        return pose(local % 1, 4 * stride - 2 * stride * local, back=True)
+    return 4 * cycle, frame, mat(30, 280)
+
+
+# Lying on the belly, head to the right (Flieger, Kobra, the pause of the Brett).
+PRONE_HIP = (118, FLOOR - 8)
+
+
+def prone(hip, chest=0.0, arm_angles=(4.0, 4.0), arm_shares=(1.0, 1.0), leg_angles=(177.0, 177.0), head_up=0.0, arms=None):
+    """chest: how far the chest is lifted (degrees); arm_angles, leg_angles:
+    far and near; arms: the arms as points instead."""
+    shoulder = at(hip, -chest, TORSO)
+    head = at(shoulder, -chest - 8 - head_up, NECK)
+    if arms is None:
+        arms = {side: arm_dir(shoulder, a, share, 1)
+                for side, a, share in zip(("far", "near"), arm_angles, arm_shares)}
+    legs = {}
+    for side, a in zip(("far", "near"), leg_angles):
+        ankle = at(hip, a, LEG - 0.05)
+        legs[side] = leg_to(hip, ankle, -1, a - 12)
+    return figure(hip, shoulder, head, arms, legs)
+
+
+def flieger(stage):
+    rest_arm, up_arm = 4.0, -12.0
+    rest_leg, up_leg = 177.0, 189.0
+    if stage == 1:
+        # one arm with the other leg, then the other pair
+        def frame(t):
+            def lifted(start):
+                return track(hold((start, 0.0), (start + 0.1, 1.0), (start + 0.3, 1.0), (start + 0.4, 0.0)), t)
+            a, b = lifted(0.05), lifted(0.55)
+            return prone(PRONE_HIP, chest=2 * max(a, b),
+                         arm_angles=(lerp(rest_arm, up_arm, b) - 2, lerp(rest_arm, up_arm, a)),
+                         leg_angles=(lerp(rest_leg, up_leg, a), lerp(rest_leg, up_leg, b)))
+        return 5.0, frame, mat(30, 280)
+    if stage == 2:
+        def frame(t):
+            s = track(hold((0.1, 0.0), (0.25, 1.0), (0.7, 1.0), (0.85, 0.0)), t)
+            return prone(PRONE_HIP, chest=5 * s, head_up=2 * s,
+                         arm_angles=(lerp(rest_arm, up_arm, s) - 2, lerp(rest_arm, up_arm, s)),
+                         leg_angles=(lerp(rest_leg, up_leg, s), lerp(rest_leg, up_leg, s) + 1))
+        return 4.0, frame, mat(30, 280)
+
+    # stage 3: up in the air, the arms sweep to the hips and forward again
+    sweep = hold((0.15, (up_arm, 1.0)), (0.35, (-80.0, 0.3)), (0.5, (-166.0, 0.95)),
+                 (0.62, (-166.0, 0.95)), (0.78, (-80.0, 0.3)), (0.95, (up_arm, 1.0)))
+
+    def frame(t):
+        angle, share = track(sweep, t)
+        return prone(PRONE_HIP, chest=5, head_up=2, arm_angles=(angle - 3, angle), arm_shares=(share, share),
+                     leg_angles=(up_leg, up_leg + 1))
+    return 4.0, frame, mat(30, 280)
+
+
+# Froschsprünge, from the front: down in a deep squat, the knees wide, the
+# hands on the floor between the feet; up and back down. Higher from stage to
+# stage, at stage 3 with the arms stretched up.
+def froschsprung(stage):
+    cx = 150
+    peak = {1: 12, 2: 20, 3: 28}[stage]
+    arms_up = stage == 3
+
+    def pose(s, up):
+        """s: 0 crouched … 1 stretched; up: height above the floor"""
+        hip_y = lerp(FLOOR - 26.0, STAND_HIP, s) - up
+        shoulder = (cx, hip_y - lerp(30.0, TORSO, s))          # leaning forward, so seen shorter
+        head = (cx, shoulder[1] - lerp(19.0, NECK, s))
+        arms, legs = {}, {}
+        for side, sign in (("far", -1), ("near", 1)):
+            top = (cx + 5 * sign, hip_y)
+            ankle = (cx + sign * lerp(19.0, 7.0, s), FLOOR - 6 - up)
+            knee = lerp((cx + sign * 37, FLOOR - 40.0), (lerp(top[0], ankle[0], 0.5) + 2 * sign, hip_y + THIGH - 1), s)
+            out = 0 if sign > 0 else 180
+            foot = at(ankle, out + sign * lerp(18.0, 75.0, min(1.0, up / 6)), FOOT - 2)
+            legs[side] = [top, knee, ankle, foot]
+            point = (cx + 13 * sign, shoulder[1] + 3)
+            floor = (cx + 8 * sign, FLOOR - 4 - up)
+            down = angle_of(point, floor)
+            if sign < 0:
+                end = 250.0 if arms_up else 118.0
+                angle = lerp(down if down > 0 else down + 360, end, s)
+            else:
+                end = -70.0 if arms_up else 62.0
+                angle = lerp(down, end, s)
+            share = lerp(min(1.0, dist(point, floor) / ARM), 1.0, s)
+            arms[side] = arm_dir(point, angle, share, 1 if sign < 0 else -1)
+        f = figure((cx, hip_y), shoulder, head, arms, legs, facing_us=True)
+        left, right = (cx - 13, shoulder[1] + 3), (cx + 13, shoulder[1] + 3)
+        f["strokes"].insert(2, ("shoulders", [left, shoulder, right], LIMB, NEAR))
+        return f
+
+    stretch = hold((0.22, 0.0), (0.36, 1.0), (0.56, 1.0), (0.7, 0.0))
+    height = hold((0.3, 0.0), (0.46, 1.0), (0.64, 0.0))
+    return 1.8, lambda t: pose(track(stretch, t), peak * track(height, t)), mat(80, 220)
+
+
+# Das Brett: on the forearms, head to the right, body straight; stage 1 on
+# the knees, stage 2 on the toes, stage 3 on the hands, tapping the other
+# shoulder. A slow breath moves the back a little. In the pauses (its own
+# figure): lying on the belly, the head on the hands.
+BRETT_ELBOW = (180, FLOOR - 4)
+
+
+def brett(stage):
+    if stage < 3:
+        shoulder = (BRETT_ELBOW[0], BRETT_ELBOW[1] - UPPER_ARM)
+        hand = (BRETT_ELBOW[0] + FOREARM, FLOOR - 4)
+    else:
+        shoulder = (BRETT_ELBOW[0], FLOOR - 3 - ARM)
+        hand = (BRETT_ELBOW[0] + 2, FLOOR - 3)
+    if stage == 1:
+        knee = (shoulder[0] - math.sqrt((THIGH + TORSO) ** 2 - (FLOOR - 5 - shoulder[1]) ** 2), FLOOR - 5)
+        line_angle = angle_of(knee, shoulder)
+        hip = at(knee, line_angle, THIGH)
+    else:
+        ankle_y = FLOOR - 9
+        ankle = (shoulder[0] - math.sqrt((LEG + TORSO) ** 2 - (ankle_y - shoulder[1]) ** 2), ankle_y)
+        line_angle = angle_of(ankle, shoulder)
+        hip = at(ankle, line_angle, LEG - 0.5)
+    tap = hold((0.08, 0.0), (0.2, 1.0), (0.3, 1.0), (0.42, 0.0)) if stage == 3 else [(0, 0.0), (1, 0.0)]
+
+    def frame(t):
+        breath = math.sin(2 * math.pi * t) * 0.9
+        head = at(shoulder, line_angle + 10, NECK)
+        if stage < 3:
+            arms = {"far": [shoulder, (BRETT_ELBOW[0] - 1, BRETT_ELBOW[1]), (hand[0] - 3, hand[1])],
+                    "near": [shoulder, BRETT_ELBOW, hand]}
+        else:
+            to_shoulder = (shoulder[0] + 3, shoulder[1] + 9)
+            near = lerp(hand, to_shoulder, track(tap, t))
+            far = lerp((hand[0] - 2, hand[1]), to_shoulder, track(tap, (t + 0.5) % 1))
+            arms = {"far": arm_to(shoulder, far, 1), "near": arm_to(shoulder, near, 1)}
+        if stage == 1:
+            shin = (knee[0] - SHIN, FLOOR - 6)
+            legs = {s: [hip, knee, shin, at(shin, 186, FOOT)] for s in ("far", "near")}
+        else:
+            legs = {s: leg_to(hip, (ankle[0] - (2 if s == "far" else 0), ankle[1]), 1, 112) for s in ("far", "near")}
+        return figure(hip, shoulder, head, arms, legs, spine_bend=breath)
+    return (3.0 if stage == 3 else 4.0), frame, mat(30, 270)
+
+
+def brett_pause():
+    def frame(t):
+        breath = math.sin(2 * math.pi * t) * 1.0
+        hip = PRONE_HIP
+        shoulder = at(hip, 0, TORSO)
+        head = at(shoulder, -12, NECK)
+        # the hands under the forehead, the elbows out in front
+        arms = {side: [shoulder, (shoulder[0] + 20 + d, FLOOR - 5), (head[0] - 2 + d, FLOOR - 7)]
+                for side, d in (("far", -3), ("near", 0))}
+        legs = {side: leg_to(hip, at(hip, 177 + d, LEG - 0.05), -1, 168) for side, d in (("far", 1), ("near", 0))}
+        return figure(hip, shoulder, head, arms, legs, spine_bend=breath)
+    return 4.0, frame, mat(30, 280)
+
+
+# Seen from the front: standing, the hips and the shoulders as two points each.
+def front(cx, hip_y, arm_angles, ankles, arm_bends=(1, -1), knee_out=0.0, feet=(160.0, 20.0)):
+    """arm_angles: far (left on the picture) and near (right) arm; ankles: the
+    far and the near ankle; knee_out: how far the knees bend outwards."""
+    hip = (cx, hip_y)
+    shoulder = (cx, hip_y - TORSO)
+    head = (cx, shoulder[1] - NECK)
+    left, right = (cx - 13, shoulder[1] + 3), (cx + 13, shoulder[1] + 3)
+    arms = {"far": arm_dir(left, arm_angles[0], 1.0, arm_bends[0]),
+            "near": arm_dir(right, arm_angles[1], 1.0, arm_bends[1])}
+    legs = {}
+    for side, top, ankle, bend, foot in (("far", (cx - 5, hip_y), ankles[0], 1, feet[0]), ("near", (cx + 5, hip_y), ankles[1], -1, feet[1])):
+        knee, end = limb(top, ankle, THIGH, SHIN, bend)
+        if knee_out:
+            knee = (knee[0] + (-knee_out if side == "far" else knee_out), knee[1])
+        legs[side] = [top, knee, end, at(end, foot, FOOT - 2)]
+    f = figure(hip, shoulder, head, arms, legs, facing_us=True)
+    f["strokes"].insert(2, ("shoulders", [left, shoulder, right], LIMB, NEAR))
+    return f
+
+
+STAND_HIP = FLOOR - 6 - LEG + 2
+
+
+# Hampel-Runden: jumping jack (from the front), running on the spot and
+# knees up (from the side). The card shows the jumping jack; in the timer
+# each move has its own figure (hampelrunde-<move>.svg).
+def hampelmann():
+    def frame(t):
+        open_ = track(hold((0.0, 0.0), (0.38, 1.0), (0.5, 1.0), (0.88, 0.0)), t)
+        up = 7 * math.sin(math.pi * ((t * 2) % 1)) ** 2
+        spread = lerp(6.0, 30.0, open_)
+        ankles = ((150 - spread, FLOOR - 6 - up), (150 + spread, FLOOR - 6 - up))
+        return front(150, STAND_HIP - up + 3 * (1 - open_), (lerp(100.0, 236.0, open_), lerp(80.0, -56.0, open_)), ankles)
+    return 1.4, frame, mat(80, 220)
+
+
+def laufen(knees):
+    """running on the spot, head to the right; knees: the knees come up high"""
+    hip0 = (150, STAND_HIP)
+
+    def frame(t):
+        hip = (hip0[0], hip0[1] - 2 * abs(math.sin(2 * math.pi * t)))
+        shoulder = at(hip, -84, TORSO)
+        head = at(shoulder, -80, NECK)
+        legs, arms = {}, {}
+        for side, shift in (("near", 0.0), ("far", 0.5)):
+            s = (t + shift) % 1
+            lift = math.sin(math.pi * s / 0.5) if s < 0.5 else 0.0
+            if knees:
+                knee = at(hip, lerp(88.0, 4.0, lift), THIGH)
+                ankle = at(knee, lerp(92.0, 96.0, lift), SHIN)
+                foot = lerp(0.0, 40.0, lift)
+            else:
+                ankle = (hip[0] - 22 * lift + 2, FLOOR - 6 - 26 * lift)
+                knee = None
+                foot = lerp(0.0, -60.0, lift)
+            legs[side] = [hip, knee, ankle, at(ankle, foot, FOOT)] if knee else leg_to(hip, ankle, -1, foot)
+            swing = math.sin(2 * math.pi * s)
+            elbow = at(shoulder, 90 + 38 * swing, UPPER_ARM)
+            arms["far" if side == "near" else "near"] = [shoulder, elbow, at(elbow, -20 + 30 * swing, FOREARM)]
+        return figure(hip, shoulder, head, arms, legs)
+    return (0.9 if knees else 0.7), frame, mat(80, 220)
+
+
+def hampelrunde():
+    return hampelmann()
+
+
+# Der Baum, from the front: on the near leg, the other foot at its calf, the
+# knee out to the side, the arms up like branches; it sways a little.
+def turned(frame_, pivot, degrees):
+    """the whole figure turned around pivot"""
+    def turn(p):
+        a = math.radians(degrees)
+        x, y = p[0] - pivot[0], p[1] - pivot[1]
+        return (pivot[0] + x * math.cos(a) - y * math.sin(a), pivot[1] + x * math.sin(a) + y * math.cos(a))
+    strokes = [(name, [turn(p) for p in points], width, colour) for name, points, width, colour in frame_["strokes"]]
+    (centre, r) = frame_["head"]
+    dx, dy, hr = frame_["hair"]
+    a = math.radians(degrees)
+    hair = (dx * math.cos(a) - dy * math.sin(a), dx * math.sin(a) + dy * math.cos(a), hr)
+    return {**frame_, "strokes": strokes, "head": (turn(centre), r), "hair": hair}
+
+
+def baum():
+    cx = 150
+    foot_at = (cx + 6, FLOOR - 6)
+
+    def frame(t):
+        sway = math.sin(2 * math.pi * t) * 3.0
+        hip = (cx, STAND_HIP)
+        f = front(cx, STAND_HIP, (-106.0, -74.0), ((cx + 4, FLOOR - 40), foot_at), arm_bends=(-1, 1))
+        # the far leg: the knee out to the side, the foot at the calf of the near leg
+        top = (cx - 5, hip[1])
+        knee = (cx - 34, hip[1] + 26)
+        ankle = (cx + 2, FLOOR - 36)
+        for k, (name, points, width, colour) in enumerate(f["strokes"]):
+            if name == "leg-far":
+                f["strokes"][k] = (name, [top, knee, ankle, at(ankle, 70, FOOT - 2)], width, colour)
+        return turned(f, (foot_at[0], FLOOR), sway)
+    return 6.0, frame, mat(80, 220)
+
+
+# Der Hund: hands and feet on the floor, the hips up high, an upside-down V;
+# head to the right. The knees bend in turn, a heel lifts.
+def hund():
+    hip = (138, FLOOR - 70)
+    theta = math.degrees(math.asin((FLOOR - 3 - hip[1]) / (TORSO + ARM)))
+    shoulder = at(hip, theta, TORSO)
+    hand = at(shoulder, theta, ARM - 1)
+    ankle0 = (hip[0] - 34, FLOOR - 7)
+
+    def frame(t):
+        legs = {}
+        for side, shift in (("near", 0.0), ("far", 0.5)):
+            s = track(hold((0.08, 0.0), (0.22, 1.0), (0.32, 1.0), (0.46, 0.0)), (t + shift) % 1)
+            ankle = (ankle0[0] + 3 * s - (2 if side == "far" else 0), ankle0[1] - 9 * s)
+            legs[side] = leg_to(hip, ankle, -1, lerp(-4.0, 52.0, s))
+        head = at(shoulder, theta + 20, NECK)
+        arms = {"far": arm_to(shoulder, (hand[0] - 2, hand[1]), 1), "near": arm_to(shoulder, hand, 1)}
+        return figure(hip, shoulder, head, arms, legs)
+    return 3.0, frame, mat(50, 260)
+
+
+# Die Kobra: on the belly, the hands beside the chest; the chest comes up,
+# the belly stays down, and it hisses.
+def kobra():
+    hip = PRONE_HIP
+    hand = (hip[0] + TORSO - 2, FLOOR - 3)
+    lift = hold((0.1, 0.0), (0.38, 1.0), (0.68, 1.0), (0.9, 0.0))
+
+    def frame(t):
+        s = track(lift, t)
+        chest = 34 * s + 1
+        shoulder = at(hip, -chest, TORSO)
+        head = at(shoulder, -chest - 6 - 14 * s, NECK)
+        arms = {"far": arm_to(shoulder, (hand[0] - 3, hand[1]), 1), "near": arm_to(shoulder, hand, 1)}
+        legs = {side: leg_to(hip, at(hip, 177 + d, LEG - 0.05), -1, 168) for side, d in (("far", 1), ("near", 0))}
+        return figure(hip, shoulder, head, arms, legs)
+
+    # the hiss: three little waves in front of the face while the chest is up
+    up = at(at(hip, -35, TORSO), -55, NECK)
+    waves = "".join(f'<path d="M {up[0] + 16 + 7 * i:.1f} {up[1] - 6:.1f} q 4 6 0 12" fill="none" stroke="{LINE}" '
+                    f'stroke-width="2.5" stroke-linecap="round" opacity="0">'
+                    f'<animate attributeName="opacity" values="0;0;0.9;0.9;0;0" keyTimes="0;{0.36 + 0.04 * i:.2f};{0.42 + 0.04 * i:.2f};0.64;0.7;1" {repeat(5.0)}/></path>'
+                    for i in range(3))
+    return 5.0, frame, mat(30, 280), waves
+
+
+# Der Schmetterling, from the front: sitting, the soles together, the knees
+# out to the sides flutter up and down; the hands hold the feet.
+def schmetterling():
+    cx = 150
+
+    def frame(t):
+        flap = math.sin(2 * math.pi * t)
+        hip = (cx, FLOOR - 16)
+        shoulder = (cx, hip[1] - TORSO)
+        head = (cx, shoulder[1] - NECK)
+        left, right = (cx - 13, shoulder[1] + 3), (cx + 13, shoulder[1] + 3)
+        legs = {}
+        arms = {}
+        for side, sign, top in (("far", -1, (cx - 4, hip[1])), ("near", 1, (cx + 4, hip[1]))):
+            knee = at(top, (180 if sign < 0 else 0) - sign * (10 + 9 * flap), THIGH)
+            ankle = (cx + sign * 5, FLOOR - 8)
+            legs[side] = [top, knee, ankle, (cx + sign * 1, FLOOR - 13)]
+            shoulder_point = left if sign < 0 else right
+            arms[side] = [shoulder_point, (shoulder_point[0] + sign * 9, shoulder_point[1] + 22), (cx + sign * 9, FLOOR - 11)]
+        f = figure(hip, shoulder, head, arms, legs, facing_us=True)
+        f["strokes"].insert(2, ("shoulders", [left, shoulder, right], LIMB, NEAR))
+        return f
+    return 1.6, frame, mat(80, 220)
+
+
+# Lying on the back, head to the left (Teddy, the last stage of the Ballon).
+SUPINE_REST_HIP = (176, FLOOR - 6)
+
+
+def lying(t, breath, tense=0.0, wobble=0.0):
+    hip = SUPINE_REST_HIP
+    shoulder = at(hip, 180, TORSO)
+    head = (shoulder[0] - NECK + 1, FLOOR - HEAD)
+    lift = 10 * tense + wobble
+    arms = {side: [shoulder, at(shoulder, 10 - lift + d, UPPER_ARM), at(shoulder, 8 - lift + d, ARM)]
+            for side, d in (("far", -2), ("near", 0))}
+    legs = {side: [hip, at(hip, -lift / 2 + d, THIGH), at(hip, -lift / 2 + d, LEG),
+                   at(at(hip, -lift / 2 + d, LEG), -70 - 25 * tense, FOOT)] for side, d in (("far", -1), ("near", 0))}
+    return figure(hip, shoulder, head, arms, legs, spine_bend=breath)
+
+
+def breath_curve(t, share_in=0.4):
+    return smooth(t / share_in) if t < share_in else 1 - smooth((t - share_in) / (1 - share_in))
+
+
+def teddy_svg(seconds, rise, wobble=None):
+    """a teddy sitting on the belly, going up and down with the breath"""
+    x, y = SUPINE_REST_HIP[0] - 20, FLOOR - 20
+    ink = f'stroke="{INK}" stroke-width="{2 * INK_WIDTH / 1.6:.1f}"'
+    bear = (f'<circle cx="{x - 6}" cy="{y - 16}" r="3.5" fill="#9a7552" {ink}/>'
+            f'<circle cx="{x + 6}" cy="{y - 16}" r="3.5" fill="#9a7552" {ink}/>'
+            f'<circle cx="{x}" cy="{y}" r="9" fill="#9a7552" {ink}/>'
+            f'<circle cx="{x}" cy="{y - 11}" r="7" fill="#9a7552" {ink}/>'
+            f'<circle cx="{x}" cy="{y - 9}" r="2.8" fill="#d9c2a0"/>'
+            f'<circle cx="{x}" cy="{y + 1}" r="4.5" fill="#b8936c"/>')
+    values = ";".join(f"0 {v:.1f}" for v in rise)
+    return f'<g>{bear}<animateTransform attributeName="transform" type="translate" values="{values}" {repeat(seconds)}/></g>'
+
+
+def teddy(stage):
+    if stage < 3:
+        seconds = 4.0 if stage == 1 else 7.0
+        share = 0.4 if stage == 1 else 3 / 7
+        n = 24
+        rise = [-5 * breath_curve(i / n, share) for i in range(n)] + [0.0]
+
+        def frame(t):
+            return lying(t, 1.6 * breath_curve(t, share))
+        return seconds, frame, mat(60, 268), teddy_svg(seconds, rise)
+    seconds, frame = tense_and_loose()
+    n = 48
+    rise = [-1.5 * math.sin(2 * math.pi * 3 * i / n) * jelly(i / n) for i in range(n)] + [0.0]
+    return seconds, frame, mat(60, 268), teddy_svg(seconds, rise)
+
+
+def jelly(t):
+    """after letting go: a wobble that dies away"""
+    return 0.0 if t < 0.42 else math.exp(-5 * (t - 0.42)) * (1 if t < 0.9 else 0)
+
+
+def tense_and_loose():
+    """all tight for a moment, then let go like a jelly"""
+    tight = hold((0.08, 0.0), (0.18, 1.0), (0.36, 1.0), (0.42, 0.0))
+
+    def frame(t):
+        wobble = 4 * math.sin(2 * math.pi * 6 * t) * jelly(t)
+        return lying(t, 0.8 * math.sin(2 * math.pi * t), tense=track(tight, t), wobble=wobble)
+    return 6.0, frame
+
+
+# Ballon-Atmen: sitting, a hand on the belly where a balloon grows and
+# shrinks with the breath; stage 2 a square traced by a light (in, hold, out,
+# hold); stage 3 lying, tight and loose.
+def sitting(t, breath, hand_on_belly=True):
+    b = breath
+    hip = (150, FLOOR - 16)
+    shoulder = (150, hip[1] - TORSO - 2 * b)
+    head = (150, shoulder[1] - NECK)
+    left = (150 - 13, shoulder[1] + 3 - 2 * b)
+    right = (150 + 13, shoulder[1] + 3 - 2 * b)
+    near = [right, (right[0] + 9, right[1] + 20), (150 + 3, hip[1] - 14)] if hand_on_belly else \
+        [right, (right[0] + 12, right[1] + 22), (150 + 34, FLOOR - 16)]
+    arms = {"far": [left, (left[0] - 12, left[1] + 22), (150 - 34, FLOOR - 16)], "near": near}
+    legs = {"far": [hip, (150 - 40, FLOOR - 8), (150 + 14, FLOOR - 4), (150 + 22, FLOOR - 5)],
+            "near": [hip, (150 + 40, FLOOR - 8), (150 - 14, FLOOR - 4), (150 - 22, FLOOR - 5)]}
+    f = figure(hip, shoulder, head, arms, legs, facing_us=True)
+    f["strokes"].insert(2, ("shoulders", [left, shoulder, right], LIMB, NEAR))
+    return f
+
+
+def ballon(stage):
+    if stage == 1:
+        seconds, share = 9.0, 4 / 9
+        balloon = (f'<circle cx="150" cy="{FLOOR - 32}" r="10" fill="#aaa4e2" opacity="0.35">'
+                   f'<animate attributeName="r" values="9;26;9" keyTimes="0;{share:.3f};1" {repeat(seconds)}/></circle>')
+        return seconds, lambda t: sitting(t, breath_curve(t, share)), mat(80, 220), balloon
+    if stage == 2:
+        seconds = 16.0
+        cy, r = FLOOR - 56, 48
+        box = (f'<rect x="{150 - r}" y="{cy - r}" width="{2 * r}" height="{2 * r}" rx="10" fill="none" stroke="#aaa4e2" '
+               f'stroke-width="3" opacity="0.45"/>')
+        path = f"M {150 - r} {cy + r} V {cy - r} H {150 + r} V {cy + r} Z"
+        light = (f'<circle r="7" fill="#aaa4e2"><animateMotion path="{path}" {repeat(seconds)}/></circle>')
+
+        def frame(t):
+            # in for a quarter, hold, out, hold
+            b = smooth(t / 0.25) if t < 0.25 else 1.0 if t < 0.5 else 1 - smooth((t - 0.5) / 0.25) if t < 0.75 else 0.0
+            return sitting(t, b, hand_on_belly=False)
+        return seconds, frame, mat(80, 220) + box + light
+    seconds, frame = tense_and_loose()
+    return seconds, frame, mat(60, 268)
+
+
 EXERCISES = {
     "kaefer-1": lambda: kaefer(1), "kaefer-2": lambda: kaefer(2), "kaefer-3": lambda: kaefer(3),
     "vogelhund-1": lambda: vogelhund(1), "vogelhund-2": lambda: vogelhund(2), "vogelhund-3": lambda: vogelhund(3),
@@ -662,6 +1166,16 @@ EXERCISES = {
     "treppe-1": lambda: treppe(1), "treppe-2": lambda: treppe(2), "treppe-3": lambda: treppe(3),
     "katze-kuh-1": katze_kuh, "ausfallschritt-1": ausfallschritt, "brustoeffner-1": brustoeffner,
     "innehalten-1": lambda: innehalten(1), "innehalten-2": lambda: innehalten(2), "innehalten-3": lambda: innehalten(3),
+    # for children and young people
+    "baerengang-1": lambda: baerengang(1), "baerengang-2": lambda: baerengang(2), "baerengang-3": lambda: baerengang(3),
+    "flieger-1": lambda: flieger(1), "flieger-2": lambda: flieger(2), "flieger-3": lambda: flieger(3),
+    "froschsprung-1": lambda: froschsprung(1), "froschsprung-2": lambda: froschsprung(2), "froschsprung-3": lambda: froschsprung(3),
+    "brett-1": lambda: brett(1), "brett-2": lambda: brett(2), "brett-3": lambda: brett(3), "brett-pause": brett_pause,
+    "hampelrunde-1": hampelrunde, "hampelrunde-2": hampelrunde, "hampelrunde-3": hampelrunde,
+    "hampelrunde-hampelmann": hampelmann, "hampelrunde-laufen": lambda: laufen(False), "hampelrunde-knie-hoch": lambda: laufen(True),
+    "baum-1": baum, "hund-1": hund, "kobra-1": kobra, "schmetterling-1": schmetterling,
+    "teddy-1": lambda: teddy(1), "teddy-2": lambda: teddy(2), "teddy-3": lambda: teddy(3),
+    "ballon-1": lambda: ballon(1), "ballon-2": lambda: ballon(2), "ballon-3": lambda: ballon(3),
 }
 
 
@@ -684,7 +1198,11 @@ SHOES = "#8a6f5a"
 SHIRTS = {"kraft": "#f08a3e", "ausdauer": "#a8c48a", "beweglichkeit": "#74b5c4", "gelassenheit": "#aaa4e2"}
 AREAS = {"kaefer": "kraft", "vogelhund": "kraft", "seitstuetz": "kraft", "treppe": "ausdauer",
          "katze-kuh": "beweglichkeit", "ausfallschritt": "beweglichkeit", "brustoeffner": "beweglichkeit",
-         "innehalten": "gelassenheit"}
+         "innehalten": "gelassenheit",
+         "baerengang": "kraft", "flieger": "kraft", "froschsprung": "kraft", "brett": "kraft",
+         "hampelrunde": "ausdauer",
+         "baum": "beweglichkeit", "hund": "beweglichkeit", "kobra": "beweglichkeit", "schmetterling": "beweglichkeit",
+         "teddy": "gelassenheit", "ballon": "gelassenheit"}
 
 
 def darker(colour, share=0.7):
@@ -808,8 +1326,8 @@ def slab_shape(points):
 
 
 def figure_svg(name, seconds, frames):
-    key = name.rsplit("-", 1)[0]
-    area = AREAS[key]
+    # the exercise is the name up to the stage or the part of the time (hampelrunde-knie-hoch)
+    area = next(AREAS[key] for key in sorted(AREAS, key=len, reverse=True) if name.startswith(key + "-"))
     near = (SHIRTS[area], TROUSERS, SKIN, SHOES)
     far = tuple(darker(c) for c in near)
     colours_by_name = {"shirt": SHIRTS[area], "trousers": TROUSERS}

@@ -118,8 +118,10 @@ function floatGain(text, rect, stat) {
 
 // The Envoy doing an exercise at its stage: a drawing of the user for this
 // figure (painted in the Envoy's colours), else the moving figure
-// (tools/uebungsbilder.py), else null.
-function figure(part, game, className) {
+// (tools/uebungsbilder.py), else null. phase: a part of the time with a
+// moving figure of its own (the Hampel-Runden) shows that one.
+function figure(part, game, className, phase = null) {
+  if (phase?.skizze) return h('img', { class: `${className} is-sketch`, src: phase.skizze, alt: `Der Envoy: ${phase.label}`, draggable: 'false' });
   const look = resolveLook(game.state.world.envoy);
   const src = part.row.bilder?.[look.figure.id];
   const alt = `Der Envoy: ${part.row.name}`;
@@ -144,7 +146,7 @@ function timerSegments(task, game) {
       const prompts = j === 0 ? part.row.ansagen : [];
       const spokenAtStart = prompts.some((p) => p.at === 0);
       const start = phase.label || (spokenAtStart || (i === 0 && prep === 0) ? '' : 'Los.');
-      segments.push({ name, label: phase.label, seconds: phase.s, say: start, prompts, figure: figure(part, game, 'timer-img') });
+      segments.push({ name, label: phase.label, seconds: phase.s, say: start, prompts, figure: figure(part, game, 'timer-img', phase) });
     });
   });
   return segments;

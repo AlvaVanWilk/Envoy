@@ -64,6 +64,9 @@ MATERIAL_ALIASES = {"holz": "pilzholz", "quarz": "pilzholz", "glimmer": "splitte
 # earlier versions, measured kilometres and floors)
 TOTALS = {"summe_treppe_min": "treppe_min", "summe_km": "km", "summe_stockwerke": "stockwerke"}
 XP_MIN, XP_MAX = 14, 28
+# ages the app takes (see AGE_MIN, AGE_MAX in js/config.js); an exercise
+# without an age in the table is for grown-ups, from ADULT_AGE on
+AGE_MIN, AGE_MAX, ADULT_AGE = 4, 120, 16
 
 PICTURES = {
     "figur": ("assets/figur", (1024, 1536)),
@@ -436,6 +439,51 @@ def exercise_pictures(ex_id, key):
     return pictures
 
 
+# A part of the time with its own moving figure (a move of several in one
+# exercise, like the Hampel-Runden): assets/uebungen/<exercise>-<part>.svg,
+# the part as in the column `zeit` in small letters, ä as ae, spaces as -.
+def phase_sketch(key, label):
+    name = text(label).lower()
+    for a, b in (("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")):
+        name = name.replace(a, b)
+    name = re.sub(r"[^a-z0-9]+", "-", name).strip("-")
+    if not name:
+        return None
+    path = ROOT / "assets" / "uebungen" / f"{key}-{name}.svg"
+    return f"assets/uebungen/{key}-{name}.svg" if path.exists() else None
+
+
+def parse_age(report, row, value):
+    """For whom an exercise is: 'bis 8', '9-12', 'ab 13', '10', 'alle';
+    empty: grown-ups (from ADULT_AGE). -> [from, to], to None: no end."""
+    cell = text(value).lower().replace("–", "-").replace("—", "-")
+    if not cell:
+        return [ADULT_AGE, None]
+    if cell == "alle":
+        return [0, None]
+    m = re.fullmatch(r"bis\s*(\d+)", cell)
+    if m:
+        return [0, int(m.group(1))]
+    m = re.fullmatch(r"ab\s*(\d+)", cell)
+    if m:
+        return [int(m.group(1)), None]
+    m = re.fullmatch(r"(\d+)\s*(?:-|bis)\s*(\d+)", cell)
+    if m and int(m.group(1)) <= int(m.group(2)):
+        return [int(m.group(1)), int(m.group(2))]
+    m = re.fullmatch(r"\d+", cell)
+    if m:
+        return [int(cell), int(cell)]
+    report.error(row, f"alter: „{text(value)}“ wie „bis 8“, „9-12“, „ab 13“ oder leer (Erwachsene)")
+    return [ADULT_AGE, None]
+
+
+def fits_age(span, age):
+    """age None: no age given, then the exercises for grown-ups (no end)."""
+    if age is None:
+        return span[1] is None
+    return span[0] <= age and (span[1] is None or age <= span[1])
+
+
 def timed_parts(report, row, cell, what):
     """'60' or 'Erste Seite 30 | Andere Seite 30' -> [{'label', 's'}].
     what: 'zeit' (label, then seconds) or 'ansagen' (second, then text)."""
@@ -515,11 +563,17 @@ def convert_exercises(path):
             else:
                 breath = [int(p) for p in rhythm.split("-")]
 
+        for phase in phases:
+            sketch = phase_sketch(key, phase["label"])
+            if sketch:
+                phase["skizze"] = sketch
+
         exercises.append({
             "id": ex_id,
             "uebung": key,
             "stat": stat,
             "teil": part,
+            "alter": parse_age(report, row, r.get("alter", "")),
             "stufe": level,
             "name": name,
             "kurz": text(r.get("kurz", "")) or name,
@@ -551,12 +605,23 @@ def convert_exercises(path):
                 report.error("-", f"{key}: die Stufen müssen bei 1 beginnen und lückenlos sein ({levels})")
             if len({x["teil"] for x in rows}) > 1:
                 report.error("-", f"{key}: alle Stufen brauchen denselben teil")
+            if len({tuple(x["alter"]) for x in rows}) > 1:
+                report.error("-", f"{key}: alle Stufen brauchen dasselbe alter")
         if any(not isinstance(x["xp"], int) for x in own):
             continue
-        least = sum(min(x["xp"] for x in rows) for rows in by_key.values())
-        most = sum(max(x["xp"] for x in rows) for rows in by_key.values())
-        if least < XP_MIN or most > XP_MAX:
-            report.error("-", f"{stat}: die Einheit bringt {least} bis {most} XP, erlaubt sind {XP_MIN} bis {XP_MAX}")
+        # every age has its unit: at least one exercise, and what it brings
+        # lies between XP_MIN and XP_MAX (None: no age given, grown-ups)
+        for age in [*range(AGE_MIN, AGE_MAX + 1), None]:
+            unit = [rows for rows in by_key.values() if fits_age(rows[0]["alter"], age)]
+            who = f"für {age} Jahre" if age is not None else "ohne Alter"
+            if not unit:
+                report.error("-", f"{stat}: keine Übung {who}")
+                break
+            least = sum(min(x["xp"] for x in rows) for rows in unit)
+            most = sum(max(x["xp"] for x in rows) for rows in unit)
+            if least < XP_MIN or most > XP_MAX:
+                report.error("-", f"{stat} {who}: die Einheit bringt {least} bis {most} XP, erlaubt sind {XP_MIN} bis {XP_MAX}")
+                break
     return {"exercises": exercises}, report
 
 

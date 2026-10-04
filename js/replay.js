@@ -17,7 +17,7 @@ import { dayRange, addDays, dayStartMs } from './days.js';
 import { compareEvents } from './events.js';
 import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance, startOfDay } from './world/worldstate.js';
 import { checkAchievements, bonusOf, withBonus } from './achievements.js';
-import { taskFor, taskOfDone, resultOf } from './tasks.js';
+import { taskFor, taskOfDone, resultOf, ageOn } from './tasks.js';
 
 export { unmetRequirements } from './world/items.js';
 
@@ -153,7 +153,7 @@ export function replay(events, catalog, today, now = Date.now()) {
       if (done[stat]) {
         tasks[stat] = { teile: done[stat].teile || null, ex: done[stat].ex || null, done: true, gain: done[stat].gain };
       } else if (day === today) {
-        const open = taskFor(stat, intensityAtDayStart, sick, catalog);
+        const open = taskFor(stat, intensityAtDayStart, sick, catalog, ageOn(world.envoy, day));
         if (open) tasks[stat] = { teile: open.parts.map((p) => p.row.id), ex: null, done: false, gain: 0 };
       }
     }
@@ -207,6 +207,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     intensity,
     intensityAtDayStart,
     sick,
+    age: ageOn(world.envoy, today),
     todayDone,
     todayParts,
     history,

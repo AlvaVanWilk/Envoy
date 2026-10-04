@@ -1,13 +1,25 @@
-// Creating the Envoy: first the figure, then skin and hair colour and a
-// name. The same screen changes the look later (from the settings).
-// The choice is stored as an event, so it is the same on every device.
+// Creating the Envoy: first the figure, then skin and hair colour, a name
+// and the age (kept as the year of birth; it picks the exercises, children
+// have their own, see tasks.js). The same screen changes the look later
+// (from the settings). The choice is stored as an event, so it is the same
+// on every device.
 
 import { h, replaceChildren } from './dom.js';
-import { FIGURES, SKIN_TONES, HAIR_COLORS, NAME_MAX } from '../config.js';
+import { FIGURES, SKIN_TONES, HAIR_COLORS, NAME_MAX, AGE_MIN, AGE_MAX } from '../config.js';
+import { dayKey } from '../days.js';
 import { paperdoll } from './paperdoll.js';
 import { resolveLook } from './look.js';
 
 const rgb = (c) => `rgb(${c.rgb.join(',')})`;
+const thisYear = () => Number(dayKey().slice(0, 4));
+// The year of birth kept for an age (see ageOn in tasks.js).
+export const birthYearFor = (age) => thisYear() - age;
+
+// The age as typed, or null when it is not a whole number the app takes.
+export function ageOf(text) {
+  const n = Number(String(text).trim());
+  return /^\d+$/.test(String(text).trim()) && n >= AGE_MIN && n <= AGE_MAX ? n : null;
+}
 
 // onDone: called after the Envoy is saved. change: true when an existing
 // Envoy is changed (then there is a way back without saving).
@@ -19,7 +31,9 @@ export function renderCreate(game, { onDone, onCancel = null } = {}) {
     haar: current?.haar || HAIR_COLORS[0].id,
     name: current?.name || '',
     unterhemd: current?.unterhemd !== false,   // switched in the settings, kept here
+    alter: Number.isInteger(current?.geburtsjahr) ? String(thisYear() - current.geburtsjahr) : '',
   };
+  const ready = () => Boolean(choice.name.trim()) && ageOf(choice.alter) !== null;
   let step = 1;
   const root = h('section', { class: 'view create' });
   const { world } = game.state;
@@ -62,20 +76,27 @@ export function renderCreate(game, { onDone, onCancel = null } = {}) {
     const input = h('input', {
       class: 'field name-field', type: 'text', maxlength: String(NAME_MAX), value: choice.name,
       placeholder: 'Name', 'aria-label': 'Name des Envoy', autocomplete: 'off', autocapitalize: 'words', spellcheck: 'false',
-      oninput: (e) => { choice.name = e.currentTarget.value; done.disabled = !choice.name.trim(); },
-      onkeydown: (e) => { if (e.key === 'Enter' && choice.name.trim()) save(); },
+      oninput: (e) => { choice.name = e.currentTarget.value; done.disabled = !ready(); },
+      onkeydown: (e) => { if (e.key === 'Enter' && ready()) save(); },
     });
-    const done = h('button', { class: 'btn primary', disabled: !choice.name.trim(), onclick: save }, 'Fertig');
+    const age = h('input', {
+      class: 'field age-field', type: 'text', inputmode: 'numeric', pattern: '[0-9]*', maxlength: '3', value: choice.alter,
+      placeholder: 'Jahre', 'aria-label': 'Alter in Jahren', autocomplete: 'off',
+      oninput: (e) => { choice.alter = e.currentTarget.value; done.disabled = !ready(); },
+      onkeydown: (e) => { if (e.key === 'Enter' && ready()) save(); },
+    });
+    const done = h('button', { class: 'btn primary', disabled: !ready(), onclick: save }, 'Fertig');
     return [
       h('header', { class: 'create-head' },
         h('p', { class: 'eyebrow' }, current ? 'Aussehen' : 'Neuer Envoy'),
-        h('h1', {}, 'Aussehen und Name')),
+        h('h1', {}, 'Aussehen, Name und Alter')),
       h('div', { class: 'create-look' },
         h('div', { class: 'panel create-preview' }, doll(choice, 'look-preview')),
         h('div', { class: 'panel create-controls' },
           swatches(SKIN_TONES, 'haut', 'Haut'),
           swatches(HAIR_COLORS, 'haar', 'Haare'),
-          h('label', { class: 'swatch-group' }, h('span', { class: 'swatch-label' }, 'Name'), input))),
+          h('label', { class: 'swatch-group' }, h('span', { class: 'swatch-label' }, 'Name'), input),
+          h('label', { class: 'swatch-group' }, h('span', { class: 'swatch-label' }, 'Alter'), age))),
       h('div', { class: 'create-actions' },
         h('button', { class: 'btn text', onclick: () => { step = 1; draw(); } }, 'Zurück'),
         done),
@@ -83,15 +104,16 @@ export function renderCreate(game, { onDone, onCancel = null } = {}) {
   }
 
   function save() {
-    if (!choice.name.trim()) return;
-    game.setEnvoy(choice);
+    if (!ready()) return;
+    const { alter, ...look } = choice;
+    game.setEnvoy({ ...look, geburtsjahr: birthYearFor(ageOf(alter)) });
     onDone?.();
   }
 
   function draw() {
-    const focusName = document.activeElement?.classList.contains('name-field');
+    const focused = ['name-field', 'age-field'].find((c) => document.activeElement?.classList.contains(c));
     replaceChildren(root, step === 1 ? figureStep() : lookStep());
-    if (focusName) root.querySelector('.name-field')?.focus();
+    if (focused) root.querySelector(`.${focused}`)?.focus();
   }
 
   draw();

@@ -331,8 +331,11 @@ test('the Envoy: name and look from the latest envoy event, trimmed', () => {
   const first = ev('envoy', { name: '  Mira ', figur: 'erste', haut: 'braun', haar: 'schwarz' }, 0.1);
   const empty = ev('envoy', { name: '   ', figur: 'zweite' }, 0.2);
   const later = ev('envoy', { name: 'Mira Kupfer', figur: 'erste', haut: 'hell', haar: 'kupfer' }, 0.3);
-  assert.deepEqual(replay([first, empty], catalog, DAY, T0 + H).envoy, { name: 'Mira', figur: 'erste', haut: 'braun', haar: 'schwarz', unterhemd: true });
+  assert.deepEqual(replay([first, empty], catalog, DAY, T0 + H).envoy, { name: 'Mira', figur: 'erste', haut: 'braun', haar: 'schwarz', unterhemd: true, geburtsjahr: null });
   assert.equal(replay([first, empty, later], catalog, DAY, T0 + H).envoy.haar, 'kupfer');
+  // the year of birth from the age at the creation
+  const child = ev('envoy', { name: 'Mira', figur: 'erste', haut: 'braun', haar: 'schwarz', geburtsjahr: 2016 }, 0.4);
+  assert.equal(replay([first, child], catalog, DAY, T0 + H).envoy.geburtsjahr, 2016);
 });
 
 test('the backpack has five places', () => {

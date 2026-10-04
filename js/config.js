@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.8.0';
+export const APP_VERSION = '5.9.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -10,7 +10,7 @@ export const versioned = (path) => (path ? `${path}?v=${APP_VERSION}` : path);
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
   { id: 'kraft',         name: 'Kraft',         area: 'Tiefenmuskulatur' },
-  { id: 'ausdauer',      name: 'Ausdauer',      area: 'Treppe' },
+  { id: 'ausdauer',      name: 'Ausdauer',      area: 'Bewegung' },
   { id: 'beweglichkeit', name: 'Beweglichkeit', area: 'Stretching und Mobility' },
   { id: 'gelassenheit',  name: 'Gelassenheit',  area: 'Entspannung' },
 ];
@@ -122,6 +122,10 @@ export const HAIR_COLORS = [
   { id: 'grau', name: 'Grau', rgb: [184, 184, 186] },
 ];
 export const NAME_MAX = 24;
+// The age asked at the creation of the Envoy (the app keeps the year of
+// birth, see ageOn in tasks.js). It picks the exercises (column `alter`).
+export const AGE_MIN = 4;
+export const AGE_MAX = 120;
 
 export const SLOT_IDS = SLOTS.map((s) => s.id);
 

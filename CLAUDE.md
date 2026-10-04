@@ -70,7 +70,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   überspringbaren Rundgang (Overlay, fünf Schritte, der letzte zeigt auf das Tageswerk:
   „Durch das Tageswerk kannst du deinen Envoy stärken.“), jeder spätere Start ist im Lager
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
-  Haut- und Haarfarbe, Name
+  Haut- und Haarfarbe, Name, Alter (gespeichert als Geburtsjahr; Kinder und Jugendliche
+  bekommen eigene Übungen, Spalte `alter` in `uebungen.xlsx`)
 - Speicherung und Geräteabgleich pro Konto
 - Spielwelt: Karte mit Orten, Quests und täglichen Begegnungen (ein Tipp auf einen Ort
   fächert seine Quests auf; das Fenster einer Quest zeigt Text, Voraussetzung, Belohnung
@@ -185,6 +186,12 @@ derselben Reihenfolge (Kraft: Käfer, Vogelhund, Seitstütz; Ausdauer: Treppe;
 Beweglichkeit: Katze-Kuh, kniender Ausfallschritt, Brustöffner; Gelassenheit:
 Innehalten). Feste Zeit statt Menge, ein geführter Timer mit Stimme. Die App entscheidet
 die Stufe jeder Übung. Jede Übung wird für sich abgehakt, die letzte erledigt die Aufgabe.
+Kinder und Jugendliche haben eigene Einheiten nach Alter (Spalte `alter`, leer =
+Erwachsene ab 16): bis 8 Bärengang, Flieger, Froschsprünge; Hampel-Runden; Baum, Hund,
+Kobra; Teddy-Atmen. 9 bis 12 Bärengang, Brett, Flieger; Hampel-Runden; Hund, Kobra,
+Schmetterling; Ballon-Atmen. 13 bis 15 Brett, Vogelhund, Seitstütz; Treppe; Hund, Kobra,
+Schmetterling; Innehalten. Das Alter kommt aus der Erstellung (Geburtsjahr im Ereignis
+`envoy`), ein Envoy ohne Alter gilt als erwachsen.
 
 **Steigerung der Übungsintensität:** je Übung. Hoch nach zwei guten Durchgängen in Folge,
 runter nach zwei zu schweren in Folge; gezählt werden Durchgänge, nicht Kalendertage.
@@ -259,7 +266,8 @@ Weitere Bilder: Monster `assets/monster/<id>.png` (512 × 512), Lager
 ohne Feuer, bisher nur tag, die anderen Zeiten tönt die App; Stufe 1 = Lagerfeuer),
 Portrait des Envoy
 `portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), die Übungen
-als bewegte Figuren `assets/uebungen/<id>.svg` (auf Wunsch der Nutzerin von Claude gezeichnet,
+als bewegte Figuren `assets/uebungen/<id>.svg` (ein Abschnitt mit eigener Bewegung, etwa in den
+Hampel-Runden: `<übung>-<abschnitt>.svg`, auf Wunsch der Nutzerin von Claude gezeichnet,
 mit `tools/uebungsbilder.py`: Comic-Stil mit Umrisslinie, Hemd in der Farbe des Bereichs, ohne Gesicht; auf der Karte der Aufgabe und im Timer; eine Zeichnung
 der Nutzerin im Ordner einer Figur geht vor: `uebungen/<übung>.png` für alle Stufen, `uebungen/<id>.png`
 für eine; bisher `innehalten.png` für Gelassenheit, je Figur, freigestellt), Icon einer

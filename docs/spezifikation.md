@@ -61,6 +61,31 @@ Spazieren und Rad gibt es vorerst nicht im Tageswerk; sie können später über 
 Talentbaum dazukommen. Die Übungen stehen in `data/uebungen.xlsx`, eine Zeile je Übung
 und Stufe (siehe Tabellen).
 
+### Kinder und Jugendliche
+
+Bei der Erstellung des Envoy wird das Alter gefragt (4 bis 120, Kinder können das leichter
+als ein Geburtsjahr). Die App behält daraus das Geburtsjahr (Feld `geburtsjahr` im
+Ereignis `envoy`) und rechnet das Alter jedes Jahr neu: Alter = Jahr des Tages −
+Geburtsjahr. Danach richten sich die Übungen; die Spalte `alter` der Tabelle sagt, für wen
+eine Übung ist („bis 8“, „9-12“, „ab 13“, „alle“; leer = Erwachsene ab 16). Jedes Alter hat
+in jedem Bereich eine Einheit von 14 bis 28 XP; der Konverter prüft das für jedes Alter.
+
+| Alter | Kraft | Ausdauer | Beweglichkeit | Gelassenheit |
+| --- | --- | --- | --- | --- |
+| bis 8 | Bärengang, Flieger, Froschsprünge | Hampel-Runden | Baum, Hund, Kobra | Teddy-Atmen |
+| 9 bis 12 | Bärengang, Brett, Flieger | Hampel-Runden | Hund, Kobra, Schmetterling | Ballon-Atmen |
+| 13 bis 15 | Brett, Vogelhund, Seitstütz | Treppe | Hund, Kobra, Schmetterling | Innehalten |
+| ab 16 | Käfer, Vogelhund, Seitstütz | Treppe | Katze-Kuh, Ausfallschritt, Brustöffner | Innehalten |
+
+Die Kinderübungen sind bildhaft und ohne Becken-Anweisungen (Tiere, Springen, ein
+Kuscheltier auf dem Bauch); Jugendliche haben teils die Übungen der Erwachsenen, statt
+Käfer, Ausfallschritt und Brustöffner aber einfachere. Stufen, Fragen und XP gelten wie für
+alle; bei Kindern lautet die Frage meist „War das leicht?“. Die Hampel-Runden wechseln
+Hampelmann, Laufen und Knie hoch; jeder Abschnitt hat im Timer seine eigene Figur. Ein Envoy
+ohne Alter (aus der Zeit davor) bekommt die Übungen der Erwachsenen, und das Tageswerk fragt
+einmal: „Wie alt bist du?“. Das Alter lässt sich in den Einstellungen ändern (Aussehen, Name
+und Alter).
+
 ### Feste Zeit statt Menge
 
 Jede Übung hat eine feste Zeit, keine Wiederholungszahl. Gemacht wird langsam und nur
@@ -422,8 +447,8 @@ Quests stehen an festen Orten. Arten:
 | Höhle | mehrere Geister nacheinander | so viele, wie die Kraft des Envoy reicht |
 
 Voraussetzungen: Mindestwerte in Stats, erledigte Quests oder reale Leistung (Summe
-der Minuten Treppe aus dem Tageswerk; ein Stockwerk aus früheren Versionen zählt als
-eine Minute). „Der Turm der Stufen“ braucht 60 Minuten, „Die lange Straße“ 150. Manche Quests sind
+der Minuten der Ausdauer-Aufgabe aus dem Tageswerk, Treppe oder Hampel-Runden; ein
+Stockwerk aus früheren Versionen zählt als eine Minute). „Der Turm der Stufen“ braucht 60 Minuten, „Die lange Straße“ 150. Manche Quests sind
 wiederholbar, mit Abklingzeit in Tagen.
 
 Ein Bonus wird bei kleinen Mengen zufällig auf- oder abgerundet: 1 Stück mit +30 %
@@ -953,7 +978,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), die Übungen als bewegte Figuren `assets/uebungen/<id>.svg` (3:2, gemacht von `tools/uebungsbilder.py`) oder, falls es sie gibt, ein Bild der Nutzerin im Ordner einer Figur: `uebungen/<übung>.png` für alle Stufen einer Übung, `uebungen/<id>.png` für eine Stufe (geht vor; Hintergrund frei; Haut und Haare in den Farben der Figur, damit die App sie umfärbt). Bisher gibt es `innehalten.png` für beide Figuren: die Frau und der Mann im Schneidersitz, für alle drei Stufen der Gelassenheit, Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), die Übungen als bewegte Figuren `assets/uebungen/<id>.svg` (3:2, gemacht von `tools/uebungsbilder.py`; ein Abschnitt der Zeit mit eigener Bewegung, etwa „Hampelmann“ in den Hampel-Runden oder „Pause“ beim Brett, hat `assets/uebungen/<übung>-<abschnitt>.svg`, das der Timer in diesem Abschnitt zeigt) oder, falls es sie gibt, ein Bild der Nutzerin im Ordner einer Figur: `uebungen/<übung>.png` für alle Stufen einer Übung, `uebungen/<id>.png` für eine Stufe (geht vor; Hintergrund frei; Haut und Haare in den Farben der Figur, damit die App sie umfärbt). Bisher gibt es `innehalten.png` für beide Figuren: die Frau und der Mann im Schneidersitz, für alle drei Stufen der Gelassenheit, Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`, 2400 × 1600, gezeichnet von `node tools/karte.mjs`: eine Insel im
 Nebelmeer, jedes Land mit eigener Farbe und eigenen Zeichen, der Fluss von der Stillen Quelle
 durch die Nebelfurt in den Mondsee und weiter ins Meer; nichts liegt halb außerhalb der Küste). Die Orte auf der Karte liegen über dem Bild (Position in
@@ -1067,9 +1092,10 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   was sein alter Geräteschlüssel auf dem Server kennt, in das neue Konto übernommen. Die
   alten Daten bleiben als Reserve liegen.
 - **Envoy-Erstellung**, wenn es noch keinen Envoy gibt: erst die Figur wählen, dann Haut-
-  und Haarfarbe (mit Vorschau) und einen Namen. Der Name steht als Titel auf dem
-  Charakterblatt. Aussehen und Name lassen sich in den Einstellungen ändern. Danach
-  öffnet sich die Envoy-Seite mit dem Rundgang.
+  und Haarfarbe (mit Vorschau), einen Namen und das Alter (Pflicht; es wählt die Übungen,
+  siehe Kinder und Jugendliche). Der Name steht als Titel auf dem Charakterblatt. Aussehen,
+  Name und Alter lassen sich in den Einstellungen ändern. Danach öffnet sich die
+  Envoy-Seite mit dem Rundgang.
 - **Rundgang** auf der Envoy-Seite: Beim ersten Öffnen der Seite (also gleich nach dem
   Erstellen) wird die Seite abgedunkelt, ein Teil leuchtet auf, daneben steht eine Karte
   mit einem Satz. Fünf Schritte: „Hier siehst du deinen Envoy.“ (die Figur), „Du kannst

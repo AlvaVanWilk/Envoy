@@ -14,6 +14,7 @@ import { openStatDetail } from './statdetail.js';
 import { viewHead, sectionTitle } from './parts.js';
 import { taskFor } from '../tasks.js';
 import { openTaskCard, finishTask, countsFor, taskTitle, formatSeconds } from './taskcard.js';
+import { ageOf, birthYearFor } from './create.js';
 
 let helpOpen = false;
 
@@ -34,6 +35,27 @@ function helpButton(game) {
   }, '?');
 }
 
+// An Envoy from before the age was asked: once, the age (children and young
+// people have exercises of their own, see tasks.js).
+function agePanel(game) {
+  const envoy = game.state.world.envoy;
+  if (!envoy || Number.isInteger(envoy.geburtsjahr)) return null;
+  const save = () => {
+    const age = ageOf(field.value);
+    if (age !== null) game.setEnvoy({ ...envoy, geburtsjahr: birthYearFor(age) });
+  };
+  const button = h('button', { class: 'btn primary small', type: 'button', disabled: true, onclick: save }, 'Übernehmen');
+  const field = h('input', {
+    class: 'field age-field', type: 'text', inputmode: 'numeric', pattern: '[0-9]*', maxlength: '3',
+    placeholder: 'Jahre', 'aria-label': 'Alter in Jahren', autocomplete: 'off',
+    oninput: () => { button.disabled = ageOf(field.value) === null; },
+    onkeydown: (e) => { if (e.key === 'Enter') save(); },
+  });
+  return h('section', { class: 'panel age-panel' },
+    h('p', {}, 'Wie alt bist du? Kinder und Jugendliche bekommen eigene Übungen.'),
+    h('div', { class: 'age-line' }, field, button));
+}
+
 const clock = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 
 // A bonus that only lasts a short while, named once, calmly, with its end.
@@ -52,7 +74,7 @@ function bonusNote(game) {
 function restPanel(game) {
   const { state, catalog } = game;
   const line = (stat) => {
-    const next = taskFor(stat, state.intensity, state.sick, catalog);
+    const next = taskFor(stat, state.intensity, state.sick, catalog, state.age);
     if (!next) return null;
     const changed = next.parts.filter((p) => p.level !== (state.intensityAtDayStart[p.key]?.level || 1));
     return h('li', { 'data-stat': stat }, statEmblem(stat, 'tiny'),
@@ -77,6 +99,7 @@ export function renderToday(game) {
   return h('section', { class: `view today ${doneCount === STATS.length ? 'all-done' : ''}` },
     viewHead(formatDayLong(s.today), 'Tageswerk', helpButton(game)),
     helpOpen ? helpPanel() : null,
+    agePanel(game),
     doneCount < STATS.length ? bonusNote(game) : null,
     h('div', { class: 'today-grid' },
       h('div', { class: 'today-main' },

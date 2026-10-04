@@ -117,7 +117,7 @@ function envoyPanel() {
     h('p', {}, envoy?.name || 'Envoy'),
     undershirtSwitch(envoy),
     h('div', { class: 'button-row' },
-      h('a', { class: 'btn ghost', href: '#aussehen' }, 'Aussehen und Name ändern'),
+      h('a', { class: 'btn ghost', href: '#aussehen' }, 'Aussehen, Name und Alter'),
       h('button', { class: 'btn ghost', type: 'button', onclick: () => { resetTours(); location.hash = '#envoy'; } }, 'Rundgänge ansehen')));
 }
 

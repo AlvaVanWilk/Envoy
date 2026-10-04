@@ -5,9 +5,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { replay } from '../js/replay.js';
 import { buildCatalog } from '../js/catalog.js';
-import { taskFor, taskOfDone, questionsOf, canBeTooMuch, resultOf } from '../js/tasks.js';
-import { addDays } from '../js/days.js';
-import { XP_MIN, XP_MAX } from '../js/config.js';
+import { taskFor, taskOfDone, questionsOf, canBeTooMuch, resultOf, ageOn, exercisesFor } from '../js/tasks.js';
+import { addDays, dayStartMs } from '../js/days.js';
+import { XP_MIN, XP_MAX, AGE_MIN, AGE_MAX } from '../js/config.js';
 
 const row = (id, stat, teil, xp, extra = {}) => {
   const [uebung, stufe] = [id.slice(0, id.lastIndexOf('-')), Number(id.slice(id.lastIndexOf('-') + 1))];
@@ -202,17 +202,70 @@ test('the log: what was done each day, and today also what is still open', () =>
   assert.deepEqual(today.tasks.gelassenheit, { teile: ['g-1'], ex: null, done: false, gain: 0 });
 });
 
-test('the table: every area a unit of 14 to 28 XP, whatever the mix of stages', () => {
-  const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
-  const real = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
-  for (const stat of ['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit']) {
-    const unit = real.units[stat];
-    assert.ok(unit.length > 0, stat);
-    const least = unit.reduce((sum, x) => sum + Math.min(...x.stages.map((r) => r.xp)), 0);
-    const most = unit.reduce((sum, x) => sum + Math.max(...x.stages.map((r) => r.xp)), 0);
-    assert.ok(least >= XP_MIN && most <= XP_MAX, `${stat}: ${least} bis ${most}`);
-    for (const x of unit) assert.deepEqual(x.stages.map((r) => r.stufe), x.stages.map((_, i) => i + 1));
+const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
+const real = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
+const STAT_LIST = ['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit'];
+
+test('the table: every area a unit of 14 to 28 XP for every age, whatever the mix of stages', () => {
+  for (const age of [...Array.from({ length: AGE_MAX - AGE_MIN + 1 }, (_, i) => AGE_MIN + i), null]) {
+    for (const stat of STAT_LIST) {
+      const unit = exercisesFor(stat, age, real);
+      assert.ok(unit.length > 0, `${stat}, ${age}`);
+      const least = unit.reduce((sum, x) => sum + Math.min(...x.stages.map((r) => r.xp)), 0);
+      const most = unit.reduce((sum, x) => sum + Math.max(...x.stages.map((r) => r.xp)), 0);
+      assert.ok(least >= XP_MIN && most <= XP_MAX, `${stat}, ${age}: ${least} bis ${most}`);
+    }
   }
+  for (const stat of STAT_LIST) {
+    for (const x of real.units[stat]) assert.deepEqual(x.stages.map((r) => r.stufe), x.stages.map((_, i) => i + 1));
+  }
+});
+
+test('the age: from the year of birth, by the year of the day; none without one', () => {
+  assert.equal(ageOn({ geburtsjahr: 2016 }, '2026-10-04'), 10);
+  assert.equal(ageOn({ geburtsjahr: 2016 }, '2027-01-02'), 11);
+  assert.equal(ageOn({ name: 'Mira' }, '2026-10-04'), null);
+  assert.equal(ageOn(null, '2026-10-04'), null);
+});
+
+test('children and young people have exercises of their own; without an age those for grown-ups', () => {
+  const keys = (stat, age) => exercisesFor(stat, age, real).map((x) => x.key);
+  assert.deepEqual(keys('kraft', 6), ['baerengang', 'flieger', 'froschsprung']);
+  assert.deepEqual(keys('kraft', 10), ['baerengang', 'brett', 'flieger']);
+  assert.deepEqual(keys('kraft', 13), ['brett', 'vogelhund', 'seitstuetz']);
+  assert.deepEqual(keys('kraft', 15), ['brett', 'vogelhund', 'seitstuetz']);
+  assert.deepEqual(keys('kraft', null), ['kaefer', 'vogelhund', 'seitstuetz']);
+  assert.deepEqual(keys('kraft', 40), keys('kraft', null));
+  assert.deepEqual(keys('ausdauer', 10), ['hampelrunde']);
+  assert.deepEqual(keys('ausdauer', 13), ['treppe']);
+  assert.deepEqual(keys('beweglichkeit', 6), ['baum', 'hund', 'kobra']);
+  assert.deepEqual(keys('beweglichkeit', 13), ['hund', 'kobra', 'schmetterling']);
+  assert.deepEqual(keys('beweglichkeit', null), ['katze-kuh', 'ausfallschritt', 'brustoeffner']);
+  assert.deepEqual(keys('gelassenheit', 6), ['teddy']);
+  assert.deepEqual(keys('gelassenheit', 10), ['ballon']);
+  assert.deepEqual(keys('gelassenheit', 15), ['innehalten']);
+});
+
+test('the task of today follows the age of the Envoy; its stages count as for everyone', () => {
+  const day = START;
+  const born = Number(day.slice(0, 4)) - 6;
+  const envoy = { id: 'e0', type: 'envoy', d: day, t: dayStartMs(day) + 1000, name: 'Ida', figur: 'erste', haut: 'hell', haar: 'blond', geburtsjahr: born };
+  let s = replay([envoy], real, day);
+  assert.equal(s.age, 6);
+  assert.deepEqual(s.log.at(-1).tasks.kraft.teile, ['baerengang-1', 'flieger-1', 'froschsprung-1']);
+  assert.deepEqual(taskFor('gelassenheit', s.intensityAtDayStart, false, real, s.age).parts.map((p) => p.row.id), ['teddy-1']);
+  // two easy runs: the Bärengang goes up a stage the day after
+  const run = (d, n) => ({ id: `k${n}`, type: 'done', d, t: dayStartMs(d) + 7200000, stat: 'kraft', xp: 14,
+    teile: ['baerengang-1', 'flieger-1', 'froschsprung-1'], antworten: { 'baerengang-1': 'ja' } });
+  s = replay([envoy, run(day, 1), run(addDays(day, 1), 2)], real, addDays(day, 2));
+  assert.deepEqual(taskFor('kraft', s.intensityAtDayStart, false, real, s.age).parts.map((p) => p.row.id),
+    ['baerengang-2', 'flieger-1', 'froschsprung-1']);
+});
+
+test('the Hampel-Runden: each move with its own moving figure', () => {
+  const row = real.exerciseById.get('hampelrunde-1');
+  assert.deepEqual([...new Set(row.phasen.map((p) => p.label))], ['Hampelmann', 'Laufen', 'Knie hoch']);
+  for (const p of row.phasen) assert.match(p.skizze, /^assets\/uebungen\/hampelrunde-(hampelmann|laufen|knie-hoch)\.svg/);
 });
 
 test('minutes of stairs add up for the quests that need them', () => {

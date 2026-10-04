@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T13:37:48Z",
+ "generated": "2026-10-04T22:45:56Z",
  "source": "uebungen.xlsx",
  "exercises": [
   {
@@ -7,6 +7,10 @@
    "uebung": "kaefer",
    "stat": "kraft",
    "teil": 1,
+   "alter": [
+    16,
+    null
+   ],
    "stufe": 1,
    "name": "Der halbe Käfer",
    "kurz": "Käfer",
@@ -37,6 +41,10 @@
    "uebung": "kaefer",
    "stat": "kraft",
    "teil": 1,
+   "alter": [
+    16,
+    null
+   ],
    "stufe": 2,
    "name": "Der halbe Käfer",
    "kurz": "Käfer",
@@ -67,6 +75,10 @@
    "uebung": "kaefer",
    "stat": "kraft",
    "teil": 1,
+   "alter": [
+    16,
+    null
+   ],
    "stufe": 3,
    "name": "Der halbe Käfer",
    "kurz": "Käfer",
@@ -97,6 +109,10 @@
    "uebung": "vogelhund",
    "stat": "kraft",
    "teil": 2,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 1,
    "name": "Der Vogelhund",
    "kurz": "Vogelhund",
@@ -127,6 +143,10 @@
    "uebung": "vogelhund",
    "stat": "kraft",
    "teil": 2,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 2,
    "name": "Der Vogelhund",
    "kurz": "Vogelhund",
@@ -157,6 +177,10 @@
    "uebung": "vogelhund",
    "stat": "kraft",
    "teil": 2,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 3,
    "name": "Der Vogelhund",
    "kurz": "Vogelhund",
@@ -191,6 +215,10 @@
    "uebung": "seitstuetz",
    "stat": "kraft",
    "teil": 3,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 1,
    "name": "Der Seitstütz",
    "kurz": "Seitstütz",
@@ -225,6 +253,10 @@
    "uebung": "seitstuetz",
    "stat": "kraft",
    "teil": 3,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 2,
    "name": "Der Seitstütz",
    "kurz": "Seitstütz",
@@ -259,6 +291,10 @@
    "uebung": "seitstuetz",
    "stat": "kraft",
    "teil": 3,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 3,
    "name": "Der Seitstütz",
    "kurz": "Seitstütz",
@@ -293,6 +329,10 @@
    "uebung": "treppe",
    "stat": "ausdauer",
    "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 1,
    "name": "Treppensteigen",
    "kurz": "Treppe",
@@ -321,6 +361,10 @@
    "uebung": "treppe",
    "stat": "ausdauer",
    "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 2,
    "name": "Treppensteigen",
    "kurz": "Treppe",
@@ -349,6 +393,10 @@
    "uebung": "treppe",
    "stat": "ausdauer",
    "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 3,
    "name": "Treppensteigen",
    "kurz": "Treppe",
@@ -394,6 +442,10 @@
    "uebung": "katze-kuh",
    "stat": "beweglichkeit",
    "teil": 1,
+   "alter": [
+    16,
+    null
+   ],
    "stufe": 1,
    "name": "Katze und Kuh",
    "kurz": "Katze-Kuh",
@@ -424,6 +476,10 @@
    "uebung": "ausfallschritt",
    "stat": "beweglichkeit",
    "teil": 2,
+   "alter": [
+    16,
+    null
+   ],
    "stufe": 1,
    "name": "Der kniende Ausfallschritt",
    "kurz": "Ausfallschritt",
@@ -458,6 +514,10 @@
    "uebung": "brustoeffner",
    "stat": "beweglichkeit",
    "teil": 3,
+   "alter": [
+    16,
+    null
+   ],
    "stufe": 1,
    "name": "Der Brustöffner",
    "kurz": "Brustöffner",
@@ -492,6 +552,10 @@
    "uebung": "innehalten",
    "stat": "gelassenheit",
    "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 1,
    "name": "Innehalten",
    "kurz": "Innehalten",
@@ -538,6 +602,10 @@
    "uebung": "innehalten",
    "stat": "gelassenheit",
    "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 2,
    "name": "Innehalten",
    "kurz": "Innehalten",
@@ -583,6 +651,10 @@
    "uebung": "innehalten",
    "stat": "gelassenheit",
    "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
    "stufe": 3,
    "name": "Innehalten",
    "kurz": "Innehalten",
@@ -638,6 +710,1082 @@
     "zweite": "assets/figur/zweite/uebungen/innehalten.png"
    },
    "skizze": "assets/uebungen/innehalten-3.svg"
+  },
+  {
+   "id": "baerengang-1",
+   "uebung": "baerengang",
+   "stat": "kraft",
+   "teil": 1,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 1,
+   "name": "Der Bärengang",
+   "kurz": "Bär",
+   "stufenname": "Der Bär",
+   "xp": 5,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf Hände und Füße stellen, der Po zeigt nach oben.",
+    "Wie ein Bär durchs Zimmer tapsen, immer eine Hand und einen Fuß nach vorn.",
+    "Gemütlich, ein Bär hat keine Eile. Pausen sind in Ordnung."
+   ],
+   "wofuer": "Für Arme, Schultern und Bauch.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/baerengang-1.svg"
+  },
+  {
+   "id": "baerengang-2",
+   "uebung": "baerengang",
+   "stat": "kraft",
+   "teil": 1,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 2,
+   "name": "Der Bärengang",
+   "kurz": "Bär",
+   "stufenname": "Vor und zurück",
+   "xp": 7,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf Hände und Füße stellen, der Po zeigt nach oben.",
+    "Ein paar Bärenschritte nach vorn, dann ein paar rückwärts.",
+    "Der Kopf schaut zum Boden. Pausen sind in Ordnung."
+   ],
+   "wofuer": "Für Arme, Schultern und Bauch.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [
+    {
+     "at": 20,
+     "text": "Und jetzt rückwärts."
+    },
+    {
+     "at": 40,
+     "text": "Wieder nach vorn."
+    }
+   ],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/baerengang-2.svg"
+  },
+  {
+   "id": "baerengang-3",
+   "uebung": "baerengang",
+   "stat": "kraft",
+   "teil": 1,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 3,
+   "name": "Der Bärengang",
+   "kurz": "Bär",
+   "stufenname": "Der leise Bär",
+   "xp": 9,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf Hände und Füße, die Knie schweben knapp über dem Boden.",
+    "Ganz leise vorwärts schleichen, damit niemand den Bären hört.",
+    "Der Rücken bleibt flach wie ein Tisch. Pausen sind in Ordnung."
+   ],
+   "wofuer": "Für Arme, Schultern und Bauch.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/baerengang-3.svg"
+  },
+  {
+   "id": "brett-1",
+   "uebung": "brett",
+   "stat": "kraft",
+   "teil": 1,
+   "alter": [
+    9,
+    15
+   ],
+   "stufe": 1,
+   "name": "Das Brett",
+   "kurz": "Brett",
+   "stufenname": "Auf den Knien",
+   "xp": 5,
+   "phasen": [
+    {
+     "label": "Halten",
+     "s": 20
+    },
+    {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/brett-pause.svg"
+    },
+    {
+     "label": "Halten",
+     "s": 20
+    },
+    {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/brett-pause.svg"
+    },
+    {
+     "label": "Halten",
+     "s": 20
+    }
+   ],
+   "steps": [
+    "Auf die Unterarme stützen, die Ellbogen unter den Schultern.",
+    "Die Knie bleiben am Boden. Von den Knien bis zum Kopf gerade wie ein Brett.",
+    "Halten und ruhig weiteratmen. In den Pausen ablegen."
+   ],
+   "wofuer": "Für den Bauch und den ganzen Rumpf.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/brett-1.svg"
+  },
+  {
+   "id": "brett-2",
+   "uebung": "brett",
+   "stat": "kraft",
+   "teil": 1,
+   "alter": [
+    9,
+    15
+   ],
+   "stufe": 2,
+   "name": "Das Brett",
+   "kurz": "Brett",
+   "stufenname": "Das ganze Brett",
+   "xp": 7,
+   "phasen": [
+    {
+     "label": "Halten",
+     "s": 20
+    },
+    {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/brett-pause.svg"
+    },
+    {
+     "label": "Halten",
+     "s": 20
+    },
+    {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/brett-pause.svg"
+    },
+    {
+     "label": "Halten",
+     "s": 20
+    }
+   ],
+   "steps": [
+    "Auf die Unterarme und die Zehenspitzen stützen.",
+    "Von den Fersen bis zum Kopf gerade wie ein Brett, der Po nicht zu hoch und nicht zu tief.",
+    "Halten und ruhig weiteratmen. In den Pausen ablegen."
+   ],
+   "wofuer": "Für den Bauch und den ganzen Rumpf.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/brett-2.svg"
+  },
+  {
+   "id": "brett-3",
+   "uebung": "brett",
+   "stat": "kraft",
+   "teil": 1,
+   "alter": [
+    9,
+    15
+   ],
+   "stufe": 3,
+   "name": "Das Brett",
+   "kurz": "Brett",
+   "stufenname": "Schulter tippen",
+   "xp": 9,
+   "phasen": [
+    {
+     "label": "Tippen",
+     "s": 20
+    },
+    {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/brett-pause.svg"
+    },
+    {
+     "label": "Tippen",
+     "s": 20
+    },
+    {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/brett-pause.svg"
+    },
+    {
+     "label": "Tippen",
+     "s": 20
+    }
+   ],
+   "steps": [
+    "Auf die Hände und die Zehenspitzen stützen, die Arme gestreckt.",
+    "Abwechselnd mit einer Hand die andere Schulter antippen.",
+    "Die Hüfte bleibt ruhig. In den Pausen ablegen."
+   ],
+   "wofuer": "Für den Bauch und den ganzen Rumpf.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/brett-3.svg"
+  },
+  {
+   "id": "flieger-1",
+   "uebung": "flieger",
+   "stat": "kraft",
+   "teil": 2,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 1,
+   "name": "Der Flieger",
+   "kurz": "Flieger",
+   "stufenname": "Ein Flügel",
+   "xp": 5,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf den Bauch legen, die Arme lang nach vorn.",
+    "Einen Arm und das andere Bein ein kleines Stück anheben, kurz halten, ablegen.",
+    "Dann die andere Seite. Die Nase schaut zum Boden."
+   ],
+   "wofuer": "Für den Rücken.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/flieger-1.svg"
+  },
+  {
+   "id": "flieger-2",
+   "uebung": "flieger",
+   "stat": "kraft",
+   "teil": 2,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 2,
+   "name": "Der Flieger",
+   "kurz": "Flieger",
+   "stufenname": "Abheben",
+   "xp": 7,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf den Bauch legen, die Arme lang nach vorn.",
+    "Beide Arme und beide Beine zugleich ein kleines Stück anheben und fliegen.",
+    "Ablegen, ausruhen, wieder abheben. Die Nase schaut zum Boden."
+   ],
+   "wofuer": "Für den Rücken.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/flieger-2.svg"
+  },
+  {
+   "id": "flieger-3",
+   "uebung": "flieger",
+   "stat": "kraft",
+   "teil": 2,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 3,
+   "name": "Der Flieger",
+   "kurz": "Flieger",
+   "stufenname": "Durch die Luft schwimmen",
+   "xp": 9,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Abheben wie beim Flieger.",
+    "In der Luft die Arme in einem Bogen zu den Hüften führen und wieder nach vorn, wie beim Schwimmen.",
+    "Zwischendurch ablegen ist in Ordnung."
+   ],
+   "wofuer": "Für den Rücken.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/flieger-3.svg"
+  },
+  {
+   "id": "froschsprung-1",
+   "uebung": "froschsprung",
+   "stat": "kraft",
+   "teil": 3,
+   "alter": [
+    0,
+    8
+   ],
+   "stufe": 1,
+   "name": "Froschsprünge",
+   "kurz": "Frosch",
+   "stufenname": "Kleine Frösche",
+   "xp": 4,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Tief in die Hocke, die Hände berühren den Boden zwischen den Füßen.",
+    "Hochhüpfen und weich wieder in der Hocke landen.",
+    "Dazwischen ausruhen ist in Ordnung."
+   ],
+   "wofuer": "Für die Beine.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/froschsprung-1.svg"
+  },
+  {
+   "id": "froschsprung-2",
+   "uebung": "froschsprung",
+   "stat": "kraft",
+   "teil": 3,
+   "alter": [
+    0,
+    8
+   ],
+   "stufe": 2,
+   "name": "Froschsprünge",
+   "kurz": "Frosch",
+   "stufenname": "Über den Teich",
+   "xp": 6,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Tief in die Hocke wie ein Frosch.",
+    "Nach vorn springen und weich in der Hocke landen.",
+    "Umdrehen und zurückspringen. Dazwischen ausruhen ist in Ordnung."
+   ],
+   "wofuer": "Für die Beine.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/froschsprung-2.svg"
+  },
+  {
+   "id": "froschsprung-3",
+   "uebung": "froschsprung",
+   "stat": "kraft",
+   "teil": 3,
+   "alter": [
+    0,
+    8
+   ],
+   "stufe": 3,
+   "name": "Froschsprünge",
+   "kurz": "Frosch",
+   "stufenname": "Hoch hinaus",
+   "xp": 8,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Tief in die Hocke, die Hände am Boden.",
+    "Hochspringen und dabei die Arme weit nach oben strecken.",
+    "Weich in der Hocke landen. Dazwischen ausruhen ist in Ordnung."
+   ],
+   "wofuer": "Für die Beine.",
+   "frage": "War das leicht?",
+   "antwort": "ja-nein",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/froschsprung-3.svg"
+  },
+  {
+   "id": "hampelrunde-1",
+   "uebung": "hampelrunde",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 1,
+   "name": "Hampel-Runden",
+   "kurz": "Hampeln",
+   "stufenname": "Drei Minuten",
+   "xp": 14,
+   "phasen": [
+    {
+     "label": "Hampelmann",
+     "s": 30,
+     "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/hampelrunde-laufen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
+    },
+    {
+     "label": "Hampelmann",
+     "s": 30,
+     "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/hampelrunde-laufen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
+    }
+   ],
+   "steps": [
+    "Hampelmann: beim Springen Arme und Beine auseinander, beim nächsten Sprung wieder zusammen.",
+    "Laufen: locker auf der Stelle laufen.",
+    "Knie hoch: auf der Stelle laufen und die Knie hochziehen.",
+    "Die Stimme sagt, was als Nächstes kommt. Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten am Stück in Bewegung.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/hampelrunde-1.svg"
+  },
+  {
+   "id": "hampelrunde-2",
+   "uebung": "hampelrunde",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 2,
+   "name": "Hampel-Runden",
+   "kurz": "Hampeln",
+   "stufenname": "Vier Minuten",
+   "xp": 20,
+   "phasen": [
+    {
+     "label": "Hampelmann",
+     "s": 40,
+     "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 40,
+     "skizze": "assets/uebungen/hampelrunde-laufen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 40,
+     "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
+    },
+    {
+     "label": "Hampelmann",
+     "s": 40,
+     "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 40,
+     "skizze": "assets/uebungen/hampelrunde-laufen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 40,
+     "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
+    }
+   ],
+   "steps": [
+    "Hampelmann: beim Springen Arme und Beine auseinander, beim nächsten Sprung wieder zusammen.",
+    "Laufen: locker auf der Stelle laufen.",
+    "Knie hoch: auf der Stelle laufen und die Knie hochziehen.",
+    "Die Stimme sagt, was als Nächstes kommt. Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten am Stück in Bewegung.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/hampelrunde-2.svg"
+  },
+  {
+   "id": "hampelrunde-3",
+   "uebung": "hampelrunde",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    0,
+    12
+   ],
+   "stufe": 3,
+   "name": "Hampel-Runden",
+   "kurz": "Hampeln",
+   "stufenname": "Fünf Minuten",
+   "xp": 24,
+   "phasen": [
+    {
+     "label": "Hampelmann",
+     "s": 50,
+     "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 50,
+     "skizze": "assets/uebungen/hampelrunde-laufen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 50,
+     "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
+    },
+    {
+     "label": "Hampelmann",
+     "s": 50,
+     "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 50,
+     "skizze": "assets/uebungen/hampelrunde-laufen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 50,
+     "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
+    }
+   ],
+   "steps": [
+    "Hampelmann: beim Springen Arme und Beine auseinander, beim nächsten Sprung wieder zusammen.",
+    "Laufen: locker auf der Stelle laufen.",
+    "Knie hoch: auf der Stelle laufen und die Knie hochziehen.",
+    "Die Stimme sagt, was als Nächstes kommt. Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten am Stück in Bewegung.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/hampelrunde-3.svg"
+  },
+  {
+   "id": "baum-1",
+   "uebung": "baum",
+   "stat": "beweglichkeit",
+   "teil": 1,
+   "alter": [
+    0,
+    8
+   ],
+   "stufe": 1,
+   "name": "Der Baum",
+   "kurz": "Baum",
+   "stufenname": null,
+   "xp": 6,
+   "phasen": [
+    {
+     "label": "Erste Seite",
+     "s": 30
+    },
+    {
+     "label": "Andere Seite",
+     "s": 30
+    }
+   ],
+   "steps": [
+    "Auf ein Bein stellen, den anderen Fuß an den Knöchel oder an die Wade legen.",
+    "Die Arme wie Äste nach oben strecken.",
+    "Ein Baum im Wind darf schwanken. Kippt er, einfach wieder hinstellen."
+   ],
+   "wofuer": "Für das Gleichgewicht.",
+   "frage": null,
+   "antwort": null,
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/baum-1.svg"
+  },
+  {
+   "id": "hund-1",
+   "uebung": "hund",
+   "stat": "beweglichkeit",
+   "teil": 2,
+   "alter": [
+    0,
+    15
+   ],
+   "stufe": 1,
+   "name": "Der Hund",
+   "kurz": "Hund",
+   "stufenname": null,
+   "xp": 7,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf Hände und Füße stellen und den Po hoch in die Luft schieben, wie ein umgedrehtes V.",
+    "Die Fersen sinken Richtung Boden, die Knie dürfen gebeugt sein.",
+    "Abwechselnd ein Knie beugen, wie ein Hund, der mit den Pfoten tappt.",
+    "Zwischendurch auf den Knien ausruhen ist in Ordnung."
+   ],
+   "wofuer": "Dehnt die Rückseite der Beine und den Rücken.",
+   "frage": null,
+   "antwort": null,
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/hund-1.svg"
+  },
+  {
+   "id": "kobra-1",
+   "uebung": "kobra",
+   "stat": "beweglichkeit",
+   "teil": 3,
+   "alter": [
+    0,
+    15
+   ],
+   "stufe": 1,
+   "name": "Die Kobra",
+   "kurz": "Kobra",
+   "stufenname": null,
+   "xp": 7,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf den Bauch legen, die Hände neben die Schultern.",
+    "Langsam den Oberkörper anheben, der Bauch bleibt am Boden. Dabei leise zischen wie eine Schlange.",
+    "Wieder ablegen und noch einmal, im eigenen Tempo."
+   ],
+   "wofuer": "Dehnt den Bauch und macht den Rücken beweglich.",
+   "frage": null,
+   "antwort": null,
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/kobra-1.svg"
+  },
+  {
+   "id": "schmetterling-1",
+   "uebung": "schmetterling",
+   "stat": "beweglichkeit",
+   "teil": 4,
+   "alter": [
+    9,
+    15
+   ],
+   "stufe": 1,
+   "name": "Der Schmetterling",
+   "kurz": "Schmetterling",
+   "stufenname": null,
+   "xp": 7,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Aufrecht hinsetzen, die Fußsohlen aneinanderlegen, die Knie fallen zur Seite.",
+    "Die Füße mit den Händen halten.",
+    "Die Knie sanft auf und ab flattern lassen wie Flügel.",
+    "Zum Schluss mit geradem Rücken ein Stück nach vorn lehnen und ruhig atmen."
+   ],
+   "wofuer": "Dehnt die Innenseite der Beine.",
+   "frage": null,
+   "antwort": null,
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/schmetterling-1.svg"
+  },
+  {
+   "id": "teddy-1",
+   "uebung": "teddy",
+   "stat": "gelassenheit",
+   "teil": 1,
+   "alter": [
+    0,
+    8
+   ],
+   "stufe": 1,
+   "name": "Teddy-Atmen",
+   "kurz": "Teddy",
+   "stufenname": "Teddy schaukeln",
+   "xp": 14,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf den Rücken legen, ein Kuscheltier oder ein Kissen auf den Bauch.",
+    "Tief in den Bauch atmen, so schaukelt der Teddy hoch und runter.",
+    "Nur zuschauen, sonst nichts."
+   ],
+   "wofuer": "Eine Minute, in der nichts zu tun ist.",
+   "frage": "Hätte es noch ein bisschen länger sein dürfen?",
+   "antwort": "ja-nein",
+   "ansagen": [
+    {
+     "at": 0,
+     "text": "Leg dich hin und setz dein Kuscheltier auf den Bauch."
+    },
+    {
+     "at": 15,
+     "text": "Atme ein, der Teddy fährt nach oben. Atme aus, er fährt nach unten."
+    },
+    {
+     "at": 40,
+     "text": "Ganz langsam schaukeln."
+    }
+   ],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/teddy-1.svg"
+  },
+  {
+   "id": "teddy-2",
+   "uebung": "teddy",
+   "stat": "gelassenheit",
+   "teil": 1,
+   "alter": [
+    0,
+    8
+   ],
+   "stufe": 2,
+   "name": "Teddy-Atmen",
+   "kurz": "Teddy",
+   "stufenname": "Teddy zählen",
+   "xp": 18,
+   "phasen": [
+    {
+     "label": "",
+     "s": 90
+    }
+   ],
+   "steps": [
+    "Auf den Rücken legen, das Kuscheltier auf den Bauch.",
+    "Beim Einatmen leise bis drei zählen, beim Ausatmen bis vier.",
+    "Der Kreis zeigt, wann es hoch- und wann es runtergeht."
+   ],
+   "wofuer": "Mit dem Atem langsamer werden.",
+   "frage": "Hätte es noch ein bisschen länger sein dürfen?",
+   "antwort": "ja-nein",
+   "ansagen": [
+    {
+     "at": 0,
+     "text": "Kuscheltier auf den Bauch. Atme mit dem Kreis."
+    },
+    {
+     "at": 45,
+     "text": "Der Teddy schaukelt ganz ruhig."
+    }
+   ],
+   "atemtakt": [
+    3,
+    4
+   ],
+   "bilder": {},
+   "skizze": "assets/uebungen/teddy-2.svg"
+  },
+  {
+   "id": "teddy-3",
+   "uebung": "teddy",
+   "stat": "gelassenheit",
+   "teil": 1,
+   "alter": [
+    0,
+    8
+   ],
+   "stufe": 3,
+   "name": "Teddy-Atmen",
+   "kurz": "Teddy",
+   "stufenname": "Wackelpudding",
+   "xp": 24,
+   "phasen": [
+    {
+     "label": "",
+     "s": 120
+    }
+   ],
+   "steps": [
+    "Auf den Rücken legen, Augen zu.",
+    "Die Stimme sagt, was du ganz fest machen sollst. Kurz festhalten, dann loslassen wie ein Wackelpudding.",
+    "Danach einfach liegen bleiben und weiteratmen."
+   ],
+   "wofuer": "Spüren, wie fest und wie locker sich der Körper anfühlt.",
+   "frage": "Hätte es noch ein bisschen länger sein dürfen?",
+   "antwort": "ja-nein",
+   "ansagen": [
+    {
+     "at": 0,
+     "text": "Augen zu. Atme in den Bauch."
+    },
+    {
+     "at": 15,
+     "text": "Mach die Füße ganz fest. Und loslassen."
+    },
+    {
+     "at": 35,
+     "text": "Mach die Hände zu Fäusten. Und loslassen."
+    },
+    {
+     "at": 55,
+     "text": "Zieh die Schultern hoch zu den Ohren. Und loslassen."
+    },
+    {
+     "at": 75,
+     "text": "Kneif das Gesicht zusammen. Und loslassen."
+    },
+    {
+     "at": 95,
+     "text": "Jetzt bist du ein Wackelpudding. Bleib einfach liegen."
+    }
+   ],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/teddy-3.svg"
+  },
+  {
+   "id": "ballon-1",
+   "uebung": "ballon",
+   "stat": "gelassenheit",
+   "teil": 1,
+   "alter": [
+    9,
+    12
+   ],
+   "stufe": 1,
+   "name": "Ballon-Atmen",
+   "kurz": "Ballon",
+   "stufenname": "Der Ballon",
+   "xp": 14,
+   "phasen": [
+    {
+     "label": "",
+     "s": 90
+    }
+   ],
+   "steps": [
+    "Bequem hinsetzen oder hinlegen, eine Hand auf den Bauch.",
+    "Beim Einatmen wird der Bauch rund wie ein Ballon, beim Ausatmen geht die Luft langsam heraus.",
+    "Der Kreis zeigt den Takt."
+   ],
+   "wofuer": "Mit dem Atem langsamer werden.",
+   "frage": "Hätte es noch ein bisschen länger sein dürfen?",
+   "antwort": "ja-nein",
+   "ansagen": [
+    {
+     "at": 0,
+     "text": "Hand auf den Bauch. Beim Einatmen wird der Ballon rund, beim Ausatmen geht die Luft heraus."
+    },
+    {
+     "at": 45,
+     "text": "Ganz ruhig weiter."
+    }
+   ],
+   "atemtakt": [
+    4,
+    5
+   ],
+   "bilder": {},
+   "skizze": "assets/uebungen/ballon-1.svg"
+  },
+  {
+   "id": "ballon-2",
+   "uebung": "ballon",
+   "stat": "gelassenheit",
+   "teil": 1,
+   "alter": [
+    9,
+    12
+   ],
+   "stufe": 2,
+   "name": "Ballon-Atmen",
+   "kurz": "Ballon",
+   "stufenname": "Das Viereck",
+   "xp": 18,
+   "phasen": [
+    {
+     "label": "",
+     "s": 120
+    }
+   ],
+   "steps": [
+    "Bequem hinsetzen.",
+    "Ein Viereck atmen: ein, halten, aus, halten, jedes Mal bis vier.",
+    "Der Kreis führt durch das Viereck."
+   ],
+   "wofuer": "Mit dem Atem langsamer werden.",
+   "frage": "Hätte es noch ein bisschen länger sein dürfen?",
+   "antwort": "ja-nein",
+   "ansagen": [
+    {
+     "at": 0,
+     "text": "Atme ein Viereck: ein, halten, aus, halten."
+    },
+    {
+     "at": 60,
+     "text": "Folge einfach dem Kreis."
+    }
+   ],
+   "atemtakt": [
+    4,
+    4,
+    4,
+    4
+   ],
+   "bilder": {},
+   "skizze": "assets/uebungen/ballon-2.svg"
+  },
+  {
+   "id": "ballon-3",
+   "uebung": "ballon",
+   "stat": "gelassenheit",
+   "teil": 1,
+   "alter": [
+    9,
+    12
+   ],
+   "stufe": 3,
+   "name": "Ballon-Atmen",
+   "kurz": "Ballon",
+   "stufenname": "Fest und locker",
+   "xp": 24,
+   "phasen": [
+    {
+     "label": "",
+     "s": 180
+    }
+   ],
+   "steps": [
+    "Bequem hinlegen, Augen zu.",
+    "Die Stimme sagt, was du fest anspannen sollst. Kurz halten, dann loslassen.",
+    "Zum Schluss liegen bleiben und spüren, wie locker alles ist."
+   ],
+   "wofuer": "Spüren, wie fest und wie locker sich der Körper anfühlt.",
+   "frage": "Hätte es noch ein bisschen länger sein dürfen?",
+   "antwort": "ja-nein",
+   "ansagen": [
+    {
+     "at": 0,
+     "text": "Augen zu. Atme in den Bauch."
+    },
+    {
+     "at": 20,
+     "text": "Spann die Füße und die Beine fest an. Und loslassen."
+    },
+    {
+     "at": 50,
+     "text": "Mach die Hände zu Fäusten und spann die Arme an. Und loslassen."
+    },
+    {
+     "at": 80,
+     "text": "Zieh die Schultern hoch zu den Ohren. Und loslassen."
+    },
+    {
+     "at": 110,
+     "text": "Kneif das Gesicht zusammen. Und loslassen."
+    },
+    {
+     "at": 140,
+     "text": "Spür, wie schwer und locker alles ist. Bleib einfach so."
+    }
+   ],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/ballon-3.svg"
   }
  ]
 }
