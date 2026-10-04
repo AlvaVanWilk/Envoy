@@ -77,14 +77,19 @@ function floatGain(text, rect, stat) {
   el.addEventListener('animationend', () => el.remove());
 }
 
-// The Envoy doing an exercise at its stage, or null without a picture.
+// The Envoy doing an exercise at its stage: a drawing of the user for this
+// figure (painted in the Envoy's colours), else the moving line figure
+// (tools/uebungsbilder.py), else null.
 function figure(part, game, className) {
   const look = resolveLook(game.state.world.envoy);
   const src = part.row.bilder?.[look.figure.id];
-  if (!src) return null;
-  const img = h('img', { class: className, alt: `Der Envoy: ${part.row.name}`, draggable: 'false' });
-  showLayer(img, src, look, 'exercise');
-  return img;
+  const alt = `Der Envoy: ${part.row.name}`;
+  if (src) {
+    const img = h('img', { class: className, alt, draggable: 'false' });
+    showLayer(img, src, look, 'exercise');
+    return img;
+  }
+  return part.row.skizze ? h('img', { class: `${className} is-sketch`, src: part.row.skizze, alt, draggable: 'false' }) : null;
 }
 
 // The parts of the guided timer: getting ready, every exercise (one side,

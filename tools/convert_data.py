@@ -416,6 +416,14 @@ EXERCISE_FIGURES = {"erste": "assets/figur", "zweite": "assets/figur/zweite"}
 ANSWER_KINDS = ["ja-nein", "anstrengung"]
 
 
+# The line figure doing the exercise (made by tools/uebungsbilder.py), for
+# every figure the same: assets/uebungen/<id>.svg. A drawing of the user
+# comes first.
+def exercise_sketch(ex_id):
+    path = ROOT / "assets" / "uebungen" / f"{ex_id}.svg"
+    return f"assets/uebungen/{ex_id}.svg" if path.exists() else None
+
+
 def exercise_pictures(ex_id):
     return {figure: f"{folder}/uebungen/{ex_id}.png"
             for figure, folder in EXERCISE_FIGURES.items()
@@ -519,6 +527,7 @@ def convert_exercises(path):
             "ansagen": timed_parts(report, row, r.get("ansagen", ""), "ansagen"),
             "atemtakt": breath,
             "bilder": exercise_pictures(ex_id),
+            "skizze": exercise_sketch(ex_id),
         })
 
     # the exercises of an area, their stages, and what the unit brings

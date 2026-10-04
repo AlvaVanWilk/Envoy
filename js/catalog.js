@@ -36,7 +36,7 @@ function unitsOf(exercises) {
 }
 
 export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORLD) {
-  const exercises = withVersions(exerciseData.exercises || [], []);
+  const exercises = withVersions(exerciseData.exercises || [], ['skizze']);
   const equipment = withVersions(equipmentData.equipment || [], ['figur', 'icon']);
   const given = { ...EMPTY_WORLD, ...worldData };
   const camp = { stages: [], facilities: [], pictures: {}, layers: [], ...given.camp };

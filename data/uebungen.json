@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T11:52:40Z",
+ "generated": "2026-10-04T12:51:24Z",
  "source": "uebungen.xlsx",
  "exercises": [
   {
@@ -29,7 +29,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/kaefer-1.svg"
   },
   {
    "id": "kaefer-2",
@@ -58,7 +59,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/kaefer-2.svg"
   },
   {
    "id": "kaefer-3",
@@ -87,7 +89,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/kaefer-3.svg"
   },
   {
    "id": "vogelhund-1",
@@ -116,7 +119,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/vogelhund-1.svg"
   },
   {
    "id": "vogelhund-2",
@@ -145,7 +149,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/vogelhund-2.svg"
   },
   {
    "id": "vogelhund-3",
@@ -178,7 +183,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/vogelhund-3.svg"
   },
   {
    "id": "seitstuetz-1",
@@ -211,7 +217,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/seitstuetz-1.svg"
   },
   {
    "id": "seitstuetz-2",
@@ -244,7 +251,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/seitstuetz-2.svg"
   },
   {
    "id": "seitstuetz-3",
@@ -277,7 +285,8 @@
    "antwort": "ja-nein",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/seitstuetz-3.svg"
   },
   {
    "id": "treppe-1",
@@ -304,7 +313,8 @@
    "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/treppe-1.svg"
   },
   {
    "id": "treppe-2",
@@ -331,7 +341,8 @@
    "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/treppe-2.svg"
   },
   {
    "id": "treppe-3",
@@ -375,7 +386,8 @@
    "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/treppe-3.svg"
   },
   {
    "id": "katze-kuh-1",
@@ -404,7 +416,8 @@
    "antwort": null,
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/katze-kuh-1.svg"
   },
   {
    "id": "ausfallschritt-1",
@@ -437,7 +450,8 @@
    "antwort": null,
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/ausfallschritt-1.svg"
   },
   {
    "id": "brustoeffner-1",
@@ -470,7 +484,8 @@
    "antwort": null,
    "ansagen": [],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/brustoeffner-1.svg"
   },
   {
    "id": "innehalten-1",
@@ -512,7 +527,8 @@
     }
    ],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/innehalten-1.svg"
   },
   {
    "id": "innehalten-2",
@@ -553,7 +569,8 @@
     }
    ],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/innehalten-2.svg"
   },
   {
    "id": "innehalten-3",
@@ -610,7 +627,8 @@
     }
    ],
    "atemtakt": null,
-   "bilder": {}
+   "bilder": {},
+   "skizze": "assets/uebungen/innehalten-3.svg"
   }
  ]
 }

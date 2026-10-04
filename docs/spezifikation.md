@@ -757,9 +757,10 @@ des Envoy):
 - **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+15 Kraft“) und
   einem Haken zum Erledigen. **Antippen dreht eine Aufgabe um wie eine Karte**: Sie wächst
   aus ihrer Zeile in die Mitte, erst ist die Rückseite mit dem Zeichen des Werts zu sehen,
-  dann die Vorderseite: oben Gewinn und Gesamtzeit, das Bild des Envoy bei der Übung (von
-  der Nutzerin gezeichnet, je Übung, Stufe und Figur, in den Farben des Envoy wie das
-  Portrait; ohne Bild das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
+  dann die Vorderseite: oben Gewinn und Gesamtzeit, die Übung als bewegte Linienfigur, die
+  sie im Takt vormacht (je Übung und Stufe, `assets/uebungen/<id>.svg`, gezeichnet mit
+  `tools/uebungsbilder.py`; eine eigene Zeichnung der Nutzerin je Figur ginge vor und würde
+  in den Farben des Envoy gezeigt; ohne beides das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
   Namen, dann Name, Stufe („Stufe 1 · Der Fußtipp“), Zeit, wofür sie gut ist und die
   Schritte; unten „Mit Timer“ und „Erledigt“ (und „Das war heute zu viel“, siehe
   Rückfrage). Die Fragen danach füllen die Karte: bei einer Frage genügt ein Tipp, bei
@@ -777,7 +778,7 @@ des Envoy):
 - **Timer**: führt durch die ganze Einheit, Teil für Teil: kurz bereit machen (Kraft und
   Beweglichkeit 10 Sekunden, Treppe 5), jede Übung, ihre Abschnitte (eine Seite, die andere;
   normal, zügig), dazwischen 10 Sekunden Wechsel. Groß stehen der Name der Übung und die
-  Restzeit des Teils in einem Ring, darüber das Bild des Envoy bei der Übung, darunter
+  Restzeit des Teils in einem Ring, darüber die Linienfigur, die die Übung mitmacht, darunter
   „Insgesamt noch …“. Bei jedem neuen Teil klingt ein leiser Ton, und eine Stimme sagt an,
   was kommt („Als Nächstes: Der Vogelhund.“, „Andere Seite“, „Zügig“). Bei der
   Gelassenheit spricht sie die Sätze der Übung zu ihrer Sekunde (Spalte `ansagen`), denn
@@ -866,7 +867,7 @@ Tabelle da ist, erscheint sie.
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen
 ersetzt das jederzeit. Weitere
-Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), der Envoy bei einer Übung `uebungen/<id>.png` im Ordner jeder Figur (beliebige Größe, am besten 3:2 quer, Hintergrund frei; Haut und Haare in den Farben der Figur, damit die App sie umfärbt), Karte im Seitenverhältnis 3:2
+Bilder: Monster 512 × 512, Lager `assets/lager/stufe_<n>_<zeit>.jpg` (1792 × 672, Seitenverhältnis 8:3; Zeit = `morgen`, `tag`, `abend`, `nacht`; Stufe 0 = ohne Feuer, bisher nur `tag`; Stufe 1 = Lagerfeuer; fehlt eine Stufe, gilt die davor), Ebenen des Lagers `assets/lager/gebaeude_<n>[_<teil>].png`, `assets/lager/einrichtung_<id>_<stufe>.png`, `assets/lager/deko_<id>.png` und die Ausschnitte `assets/lager/ausschnitt_<name>_<zeit>.png` (1792 × 672, transparent, Reihenfolge in `tools/lager_ebenen.py`, siehe Das Lager), Portraits `portrait.png` im Ordner jeder Figur (quadratisch, Hintergrund frei), die Übungen als bewegte Linienfiguren `assets/uebungen/<id>.svg` (3:2, gemacht von `tools/uebungsbilder.py`) oder, falls es sie gibt, eine Zeichnung der Nutzerin `uebungen/<id>.png` im Ordner einer Figur (geht vor; Haut und Haare in den Farben der Figur, damit die App sie umfärbt), Karte im Seitenverhältnis 3:2
 (`assets/welt/karte.jpg`). Die Orte auf der Karte liegen über dem Bild (Position in
 Prozent aus `welt.xlsx`), ein neues Kartenbild braucht also nur passende Koordinaten.
 

@@ -121,7 +121,8 @@ Auf dem Mac geht es auch direkt: im Projektordner `python3 tools/convert_data.py
 | Deko im Lagerbild | `assets/lager/deko_<id>.png` | 1792 × 672, transparent, an ihrem Platz gezeichnet |
 | Ausschnitte im Lagerbild | `assets/lager/ausschnitt_<name>_<zeit>.png` | 1792 × 672, transparent: Felsen, Feuer, Säulen aus dem Bild, damit sie vor dem stehen, was dahinter liegt, manche nur bis zu einer Lagerstufe oder nicht mit einer bestimmten Einrichtung; macht `tools/lager_ebenen.py` |
 | Portrait des Envoy | `portrait.png` im Ordner jeder Figur | quadratisch, Hintergrund frei; wird wie die Figur umgefärbt |
-| Der Envoy bei einer Übung | `uebungen/<id>.png` im Ordner jeder Figur | am besten 3:2 quer, Hintergrund frei; wird wie die Figur umgefärbt; erscheint auf der Karte der Aufgabe |
+| Die Übungen als Linienfiguren | `assets/uebungen/<id>.svg` | bewegt, 3:2; macht `tools/uebungsbilder.py` (`python3 tools/uebungsbilder.py`); auf der Karte der Aufgabe und im Timer |
+| Der Envoy bei einer Übung | `uebungen/<id>.png` im Ordner jeder Figur | eine eigene Zeichnung, falls es einmal eine gibt: geht vor der Linienfigur; am besten 3:2 quer, Hintergrund frei; wird wie die Figur umgefärbt |
 | Karte | `assets/welt/karte.jpg` | Seitenverhältnis 3:2, z. B. 2400 × 1600 |
 | App-Symbol | `assets/app/` | 180, 192, 512, dazu `icon-maskable-512.png` mit mehr Rand für runde Masken |
 
@@ -150,5 +151,5 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/ui/` | die Ansichten; `today.js` das Tageswerk, `taskcard.js` die Karte einer Aufgabe (dreht sich auf, Reiter je Übung, Fragen), `timer.js` der geführte Timer, `voice.js` seine Stimme, `topbar.js` die Leiste oben, `camp.js` das Lager (sein Bild aus Ebenen, ein Tipp zeigt es groß), `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“, `deko.js` die Deko-Liste, `upgrade.js` „Lager aufwerten“, `testtools.js` das Menü am Schild „Test“, das nur die Testfassung zeigt; `journey.js` die Leiste einer laufenden Expedition mit ihrer Reihe und den Bericht; `js/world/expedition.js` Expeditionen als Reihe von Aktionen (Wege, Zeiten, Fortschritt), der Ablauf unterwegs steht in `js/world/worldstate.js`; `js/world/camp.js` das Lager (Stufen, Einrichtungen, Deko, Hygge), `js/world/plans.js` das Finden der Pläne für Deko, `js/daylight.js` die Tageszeit |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
-| `tools/` | Umwandlung der Tabellen; `tools/lager_ebenen.py` hält die Reihenfolge der Ebenen im Lagerbild (`ORDER`, von hinten nach vorn) und macht aus den Teilen in `tools/lager-ausschnitte/` die Ausschnitte für jede Tageszeit |
+| `tools/` | Umwandlung der Tabellen; `tools/uebungsbilder.py` zeichnet die Übungen als bewegte Linienfiguren; `tools/lager_ebenen.py` hält die Reihenfolge der Ebenen im Lagerbild (`ORDER`, von hinten nach vorn) und macht aus den Teilen in `tools/lager-ausschnitte/` die Ausschnitte für jede Tageszeit |
 | `tests/` | Prüfungen der Spielregeln, `npm test` mit Node.js |
