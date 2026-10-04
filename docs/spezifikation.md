@@ -929,9 +929,13 @@ Eine private Seite auf claude.ai (https://claude.ai/artifact/92pbHMV3YqemSrC4s86
 nicht Teil der App: die Austausch-Datenbank zwischen Nutzerin und Claude für alle
 Kleidungsteile. Quelltext in `tools/kleiderkammer.html`.
 
-- **Teile.** Jede Zeichnung ist ein Eintrag mit eindeutigem Namen und fortlaufender
-  Nummer, für eine Figur (Frau oder Mann) und einen Slot. Das Gegenstück für die andere
-  Figur wird verknüpft. Beim Hochladen entsteht das Icon im Browser: das Kleidungsstück
+- **Teile.** Jede Zeichnung ist ein Eintrag mit fortlaufender Nummer, für eine Figur
+  (Frau, Mann oder beide) und einen Slot. Ein Name ist freiwillig; ohne heißt das Teil
+  nach Slot und Nummer, ein vergebener Name ist eindeutig. Bei Frau oder Mann wird das
+  Gegenstück für die andere Figur verknüpft; eine Zeichnung für beide trägt jede Figur
+  gleich (die Vorschau lässt sich zwischen ihnen umschalten). Mehrere Zeichnungen lassen
+  sich auf einmal hochladen: eine Liste mit Figur und Slot für alle oder je Zeile, dann
+  „Alle anlegen“. Beim Hochladen entsteht das Icon im Browser: das Kleidungsstück
   allein, auf 256 × 256, weit auseinanderliegende Teile (zwei Handschuhe) rücken
   zusammen. Die Leinwand wird geprüft (1024 × 1536, durchsichtiger Hintergrund).
 - **Vorgaben der Nutzerin**, alle freiwillig: Verwendung (Quest mit Thema, Erfolg,

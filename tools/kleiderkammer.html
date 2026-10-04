@@ -281,6 +281,20 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
 .busy { opacity: 0.6; pointer-events: none; }
 
 .wish-card { gap: 10px; }
+.card-name.unnamed { color: var(--text-2); font-weight: 600; }
+
+/* several new items at once */
+.batch-list { display: grid; gap: 8px; }
+.batch-row { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; align-items: start; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: rgba(244, 236, 222, 0.03); }
+.batch-row .tile { width: 64px; }
+.batch-row .tile svg { width: 50%; height: 50%; }
+.batch-fields { display: grid; gap: 4px; min-width: 0; }
+.batch-line { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.batch-fields .hint:empty { display: none; }
+@media (max-width: 480px) {
+  .batch-line { grid-template-columns: minmax(0, 1fr) auto; }
+  .batch-line .field:first-child { grid-column: 1 / -1; }
+}
 .wish-card .desc { font-size: 13px; color: var(--text-2); }
 
 @media (min-width: 720px) {
@@ -308,7 +322,7 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
       <h1>Kleiderkammer</h1>
       <p class="sub" id="summary"></p>
     </div>
-    <button class="btn primary" id="add" hidden>Neues Teil</button>
+    <button class="btn primary" id="add" hidden>Neue Teile</button>
   </header>
   <nav class="tabs" role="tablist">
     <button class="tab active" role="tab" data-tab="teile" aria-selected="true">Teile<span class="n" id="n-teile"></span></button>
@@ -355,6 +369,10 @@ const SLOTS = [
   { id: 'schuhe', name: 'Schuhe', layer: 4 },
 ];
 const FIGUREN = [{ id: 'frau', name: 'Frau' }, { id: 'mann', name: 'Mann' }];
+// A drawing is for one figure, or fits both (the same picture for each).
+const FIGUR_WAHL = [...FIGUREN, { id: 'beide', name: 'Beide' }];
+// the figures a drawing is for
+const figurenOf = (f) => (f === 'beide' ? ['frau', 'mann'] : f ? [f] : []);
 // Where a drawing lies when not at its slot's place; same as in the game
 // (EBENEN in js/config.js). The base figure lies at 2.
 const EBENEN = [
@@ -463,7 +481,9 @@ const $ = (sel) => document.querySelector(sel);
 const fill = (el, ...kids) => el.replaceChildren(...kids.flat(Infinity).filter((k) => k != null && k !== false));
 const byId = (list, id) => list.find((x) => x.id === id);
 const slotName = (id) => byId(SLOTS, id)?.name || 'Ohne Slot';
-const figurName = (id) => byId(FIGUREN, id)?.name || '–';
+const figurName = (id) => byId(FIGUR_WAHL, id)?.name || '–';
+// how an item is called: its name, or else its slot (the name may stay empty)
+const teilLabel = (t) => t.name || slotName(t.slot);
 const blobUrl = (id) => (id ? `/_blob/${id}` : '');
 const norm = (s) => String(s || '').trim().toLocaleLowerCase('de');
 const now = () => new Date().toISOString();
@@ -674,14 +694,17 @@ async function readDrawing(file) {
   };
 }
 
-function pickFile() {
+// several: more than one picture may be picked at once
+function pickFiles(several = false) {
   return new Promise((resolve) => {
     const input = $('#file');
     input.value = '';
-    input.onchange = () => resolve(input.files?.[0] || null);
+    input.multiple = several;
+    input.onchange = () => resolve([...(input.files || [])]);
     input.click();
   });
 }
+const pickFile = async () => (await pickFiles(false))[0] || null;
 
 // --- state ------------------------------------------------------------------
 
@@ -698,7 +721,7 @@ const state = {
   sheet: null, // what the open sheet shows, see openTeil / openWish
 };
 
-const covered = (w) => new Set(list(w.teile).map((id) => byId(state.teile, id)?.figur).filter(Boolean));
+const covered = (w) => new Set(list(w.teile).flatMap((id) => figurenOf(byId(state.teile, id)?.figur)));
 function wishStatus(w) {
   if (w.entscheidung === 'nicht') return { id: 'nicht', name: 'Nicht vorgesehen', cls: 'off' };
   const need = list(w.figuren).length ? list(w.figuren) : ['frau'];
@@ -721,7 +744,7 @@ function chipRow(el, options, current, onPick) {
 function renderFilters() {
   const f = state.filter;
   const count = (pred) => state.teile.filter(pred).length;
-  chipRow($('#f-figur'), [{ id: 'alle', name: 'Alle Figuren' }, ...FIGUREN.map((x) => ({ ...x, n: count((t) => t.figur === x.id) }))], f.figur, (id) => { f.figur = id; renderTeile(); });
+  chipRow($('#f-figur'), [{ id: 'alle', name: 'Alle Figuren' }, ...FIGUR_WAHL.map((x) => ({ ...x, n: count((t) => forFigure(t, x.id)) }))], f.figur, (id) => { f.figur = id; renderTeile(); });
   chipRow($('#f-slot'), [{ id: 'alle', name: 'Alle Slots' }, ...SLOTS.map((x) => ({ ...x, n: count((t) => t.slot === x.id) }))], f.slot, (id) => { f.slot = id; renderTeile(); });
   chipRow($('#f-status'), [
     { id: 'alle', name: 'Alle' },
@@ -732,9 +755,12 @@ function renderFilters() {
   ], f.status, (id) => { f.status = id; renderTeile(); });
 }
 
+// Frau and Mann show what fits them, the drawings for both among them; Beide only those.
+const forFigure = (t, f) => (f === 'beide' ? t.figur === 'beide' : figurenOf(t.figur).includes(f));
+
 function matches(t) {
   const f = state.filter;
-  if (f.figur !== 'alle' && t.figur !== f.figur) return false;
+  if (f.figur !== 'alle' && !forFigure(t, f.figur)) return false;
   if (f.slot !== 'alle' && t.slot !== f.slot) return false;
   if (f.status === 'frei' && !t.freigabe) return false;
   if (f.status === 'gesperrt' && t.freigabe) return false;
@@ -748,7 +774,7 @@ function matches(t) {
 function teilCard(t) {
   return h('button', { class: `card${t.freigabe ? '' : ' dim'}`, onclick: () => openTeil(t.id) },
     tile(t.icon, t.slot, [h('span', { class: 'nr' }, `Nr. ${t.nr ?? '–'}`), t.freigabe ? null : h('span', { class: 'lock', title: 'Gesperrt' }, svg('lock'))]),
-    h('p', { class: 'card-name' }, t.name || 'Ohne Namen'),
+    h('p', { class: `card-name${t.name ? '' : ' unnamed'}` }, teilLabel(t)),
     h('p', { class: 'card-meta' }, `${figurName(t.figur)} · ${slotName(t.slot)}`),
     h('div', { class: 'badges' },
       t.imSpiel ? h('span', { class: 'badge live' }, 'Im Spiel') : null,
@@ -853,8 +879,10 @@ function closeSheet(force = false) {
     s.askDiscard?.();
     return;
   }
-  for (const d of [s?.drawing, s?.newIcon]) if (d?.url) URL.revokeObjectURL(d.url);
-  if (s?.drawing?.iconUrl) URL.revokeObjectURL(s.drawing.iconUrl);
+  for (const d of [s?.drawing, s?.newIcon, ...list(s?.rows).map((r) => r.drawing)]) {
+    if (d?.url) URL.revokeObjectURL(d.url);
+    if (d?.iconUrl) URL.revokeObjectURL(d.iconUrl);
+  }
   state.sheet = null;
   $('#sheet-wrap').hidden = true;
   document.body.classList.remove('locked');
@@ -924,7 +952,7 @@ function lookPreview(s) {
   const doll = h('div', { class: 'doll' });
   const drawn = () => {
     const layerSrc = s.drawing?.url || blobUrl(d.bild);
-    const baseId = state.figuren?.[d.figur]?.basis;
+    const baseId = state.figuren?.[d.figur === 'beide' ? (s.previewFigur || 'frau') : d.figur]?.basis;
     const imgs = [];
     const base = s.withFigure && baseId ? h('img', { src: blobUrl(baseId), alt: '' }) : null;
     const layer = layerSrc ? h('img', { src: layerSrc, alt: '' }) : null;
@@ -932,8 +960,14 @@ function lookPreview(s) {
     if (at < 2) imgs.push(layer, base); else imgs.push(base, layer);
     doll.replaceChildren(...imgs.filter(Boolean));
   };
-  s.redrawDoll = drawn;
-  drawn();
+  // for a drawing that fits both: on which figure it is shown
+  const figureChips = h('span', { class: 'chips' });
+  const drawFigureChips = () => fill(figureChips, d.figur === 'beide' ? FIGUREN.map((x) => h('button', {
+    type: 'button', class: `chip${(s.previewFigur || 'frau') === x.id ? ' active' : ''}`,
+    onclick: () => { s.previewFigur = x.id; drawFigureChips(); drawn(); },
+  }, x.name)) : null);
+  s.redrawDoll = () => { drawFigureChips(); drawn(); };
+  s.redrawDoll();
   const iconSrc = s.newIcon?.url || s.drawing?.iconUrl || blobUrl(d.icon);
   const iconTile = h('div', { class: 'tile' });
   const setIcon = (src) => {
@@ -950,7 +984,8 @@ function lookPreview(s) {
   return h('div', { class: 'look' },
     h('div', { class: 'group' }, doll,
       h('div', { class: 'chips' },
-        h('button', { type: 'button', class: `chip${s.withFigure ? ' active' : ''}`, onclick: (e) => { s.withFigure = !s.withFigure; e.currentTarget.classList.toggle('active', s.withFigure); drawn(); } }, 'Mit Figur'))),
+        h('button', { type: 'button', class: `chip${s.withFigure ? ' active' : ''}`, onclick: (e) => { s.withFigure = !s.withFigure; e.currentTarget.classList.toggle('active', s.withFigure); drawn(); } }, 'Mit Figur'),
+        figureChips)),
     h('div', { class: 'look-side' },
       iconTile,
       canWrite ? h('button', { type: 'button', class: 'btn ghost small', onclick: () => replaceDrawing(s) }, s.mode === 'new' ? 'Anderes Bild' : 'Bild ersetzen') : null,
@@ -1079,11 +1114,11 @@ function spielBox(d, s, changed) {
 
 function counterpartField(d, id, changed) {
   const others = state.teile
-    .filter((t) => t.id !== id && t.figur && t.figur !== d.figur && (!d.slot || t.slot === d.slot))
+    .filter((t) => t.id !== id && t.figur && t.figur !== 'beide' && t.figur !== d.figur && (!d.slot || t.slot === d.slot))
     .sort((a, b) => (a.nr ?? 0) - (b.nr ?? 0));
   const select = h('select', { class: 'field', 'aria-label': 'Gegenstück' },
     h('option', { value: '' }, 'Keins'),
-    others.map((t) => h('option', { value: t.id }, `Nr. ${t.nr} · ${t.name}`)));
+    others.map((t) => h('option', { value: t.id }, `Nr. ${t.nr} · ${teilLabel(t)}`)));
   select.value = others.some((t) => t.id === d.gegenstueck) ? d.gegenstueck : '';
   select.addEventListener('change', () => { d.gegenstueck = select.value || null; changed(); });
   return group('Gegenstück für die andere Figur', select);
@@ -1113,7 +1148,9 @@ function rememberFigure(f) {
 
 async function startNew(preset = {}) {
   if (!state.assets) { toast('Hochladen geht nur mit Schreibrecht.', true); return; }
-  const file = await pickFile();
+  const files = await pickFiles(!preset.wunsch);
+  if (files.length > 1) { startBatch(files); return; }
+  const file = files[0];
   if (!file) return;
   let drawing;
   try {
@@ -1137,9 +1174,10 @@ function openTeil(id) {
   showTeil({ mode: 'edit', id, draft, original: clone(draft) });
 }
 
+// A name is not needed; one that is given is unique.
 function nameProblem(d, id) {
   const n = norm(d.name);
-  if (!n) return 'Bitte einen Namen geben.';
+  if (!n) return '';
   const twin = state.teile.find((t) => t.id !== id && norm(t.name) === n);
   return twin ? `Diesen Namen trägt schon Nr. ${twin.nr}.` : '';
 }
@@ -1155,17 +1193,19 @@ function drawTeil(s) {
   const d = s.draft;
   const sheet = $('#sheet');
   const saveBtn = h('button', { class: 'btn primary', type: 'button' }, s.mode === 'new' ? 'Anlegen' : 'Speichern');
-  const nameInput = textField(d.name, (x) => { d.name = x; changed(); }, { placeholder: 'Eindeutiger Name', max: 60 });
+  const nameInput = textField(d.name, (x) => { d.name = x; changed(); }, { placeholder: 'Ohne Namen', max: 60 });
   const nameHint = h('p', { class: 'hint bad' });
   const foot = h('div', { class: 'sheet-foot' });
-  const title = h('h2', {}, d.name || (s.mode === 'new' ? 'Neues Teil' : 'Ohne Namen'));
+  const nr = s.id ? byId(state.teile, s.id)?.nr : null;
+  const unnamed = () => (s.mode === 'new' ? 'Neues Teil' : `Nr. ${nr ?? '–'} · ${slotName(d.slot)}`);
+  const title = h('h2', {}, d.name.trim() || unnamed());
 
   function changed() {
     const problem = nameProblem(d, s.id);
     const showName = s.mode === 'edit' || s.touchedName || d.name;
     nameHint.textContent = showName ? problem : '';
     nameInput.classList.toggle('bad', !!(showName && problem));
-    title.textContent = d.name.trim() || (s.mode === 'new' ? 'Neues Teil' : 'Ohne Namen');
+    title.textContent = d.name.trim() || unnamed();
     const ready = !problem && d.slot && d.figur && (s.mode === 'edit' || s.drawing);
     saveBtn.disabled = !ready || !(s.mode === 'new' || s.dirty());
   }
@@ -1178,7 +1218,7 @@ function drawTeil(s) {
     SLOTS.map((x) => h('option', { value: x.id }, x.name)));
   slotSelect.value = d.slot || '';
   const counterpartBox = h('div');
-  const drawCounterpart = () => counterpartBox.replaceChildren(counterpartField(d, s.id, changed));
+  const drawCounterpart = () => fill(counterpartBox, d.figur === 'beide' ? null : counterpartField(d, s.id, changed));
   const standard = h('option', { value: '' });
   const layerSelect = h('select', { class: 'field', 'aria-label': 'Ebene' },
     standard, EBENEN.map((x) => h('option', { value: x.id }, x.name)));
@@ -1220,11 +1260,11 @@ function drawTeil(s) {
     h('div', { class: 'sheet-body split' },
       h('div', { class: 'left group' }, lookPreview(s), drawingNotes(s)),
       h('div', { class: 'group', style: { gap: '18px' } },
-        group('Name', nameInput, nameHint),
+        group('Name (freiwillig)', nameInput, nameHint),
+        group('Figur', segmented(FIGUR_WAHL, d.figur, (f) => { d.figur = f; if (f === 'beide') d.gegenstueck = null; rememberFigure(f); s.redrawDoll(); drawCounterpart(); changed(); })),
         h('div', { class: 'two' },
-          group('Figur', segmented(FIGUREN, d.figur, (f) => { d.figur = f; rememberFigure(f); s.redrawDoll(); drawCounterpart(); changed(); })),
-          group('Slot', slotSelect)),
-        group('Ebene', layerSelect),
+          group('Slot', slotSelect),
+          group('Ebene', layerSelect)),
         counterpartBox,
         wish ? group('Gehört zu', h('p', {}, `„${wish.titel}“ aus Fehlt noch`)) : null,
         h('div', { class: 'box' },
@@ -1293,6 +1333,174 @@ async function saveTeil(s, btn) {
   }
 }
 const changedSafe = (s) => s.changed?.();
+
+// --- several new items at once ------------------------------------------------
+// A row for every picked picture: its icon, a name (may stay empty) and its
+// slot. Figure, slot and release are set for all at once; the slot can also
+// be set per row. „Alle anlegen“ saves them one after another.
+
+function startBatch(files) {
+  const s = {
+    kind: 'batch',
+    figur: lastFigure(),
+    freigabe: true,
+    rows: files.map((file) => ({ file, drawing: null, name: '', slot: '', failed: false })),
+  };
+  s.dirty = () => s.rows.length > 0;
+  state.sheet = s;
+  openSheet(() => drawBatch(s));
+  readBatch(s);
+}
+
+// reads the pictures one by one and makes their icons
+async function readBatch(s) {
+  for (const row of s.rows) {
+    if (state.sheet !== s) return;
+    try {
+      row.drawing = await readDrawing(row.file);
+    } catch {
+      row.failed = true;
+    }
+    row.refresh?.();
+    s.changed?.();
+  }
+}
+
+function batchNameProblem(s, row) {
+  const n = norm(row.name);
+  if (!n) return '';
+  const twin = state.teile.find((t) => norm(t.name) === n);
+  if (twin) return `Diesen Namen trägt schon Nr. ${twin.nr}.`;
+  return s.rows.some((r) => r !== row && norm(r.name) === n) ? 'Diesen Namen hat schon ein anderes neues Teil.' : '';
+}
+
+function drawBatch(s) {
+  const sheet = $('#sheet');
+  const saveBtn = h('button', { class: 'btn primary', type: 'button' }, 'Alle anlegen');
+  const foot = h('div', { class: 'sheet-foot' });
+  const title = h('h2', {});
+  const rowsBox = h('div', { class: 'batch-list' });
+
+  function changed() {
+    const n = s.rows.length;
+    title.textContent = n === 1 ? '1 neues Teil' : `${n} neue Teile`;
+    const ready = n > 0 && s.rows.every((r) => r.drawing && r.slot && !batchNameProblem(s, r));
+    saveBtn.disabled = !ready;
+  }
+  s.changed = changed;
+
+  const slotAll = h('select', { class: 'field', 'aria-label': 'Slot für alle' },
+    h('option', { value: '' }, 'Je Teil wählen'),
+    SLOTS.map((x) => h('option', { value: x.id }, x.name)));
+  slotAll.addEventListener('change', () => {
+    if (!slotAll.value) return;
+    for (const r of s.rows) r.slot = slotAll.value;
+    s.drawRows();
+  });
+
+  s.drawRows = () => {
+    fill(rowsBox, s.rows.map((row) => {
+      const pic = h('div', { class: 'tile' });
+      const notesBox = h('div');
+      // the picture and what to know about it, once it is read
+      row.refresh = () => {
+        if (row.drawing?.iconUrl) pic.replaceChildren(h('img', { src: row.drawing.iconUrl, alt: '' }));
+        else pic.replaceChildren(row.failed ? svg('close') : h('span', { class: 'muted' }, '…'));
+        const notes = [];
+        if (row.failed) notes.push('Dieses Bild ließ sich nicht lesen.');
+        else if (row.drawing && (row.drawing.size[0] !== 1024 || row.drawing.size[1] !== 1536)) notes.push(`${row.drawing.size[0]} × ${row.drawing.size[1]} statt 1024 × 1536`);
+        if (row.drawing && !row.drawing.transparent) notes.push('Ohne durchsichtigen Hintergrund');
+        notesBox.replaceChildren(...notes.map((n) => h('p', { class: 'hint warn' }, n)));
+      };
+      row.refresh();
+      const nameInput = textField(row.name, (x) => { row.name = x; hint.textContent = batchNameProblem(s, row); nameInput.classList.toggle('bad', !!hint.textContent); changed(); }, { placeholder: 'Ohne Namen', max: 60 });
+      const hint = h('p', { class: 'hint bad' }, batchNameProblem(s, row));
+      const slot = h('select', { class: 'field', 'aria-label': 'Slot' },
+        h('option', { value: '' }, 'Slot wählen'),
+        SLOTS.map((x) => h('option', { value: x.id }, x.name)));
+      slot.value = row.slot;
+      slot.addEventListener('change', () => { row.slot = slot.value; changed(); });
+      return h('div', { class: 'batch-row' },
+        pic,
+        h('div', { class: 'batch-fields' },
+          h('div', { class: 'batch-line' }, nameInput, slot,
+            h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Aus der Liste nehmen', onclick: () => { s.rows = s.rows.filter((r) => r !== row); if (row.drawing?.url) URL.revokeObjectURL(row.drawing.url); if (row.drawing?.iconUrl) URL.revokeObjectURL(row.drawing.iconUrl); s.drawRows(); } }, svg('close'))),
+          hint,
+          notesBox));
+    }));
+    changed();
+  };
+
+  function footDefault() {
+    fill(foot,
+      h('span', { class: 'spacer' }),
+      h('button', { type: 'button', class: 'btn text', onclick: () => closeSheet() }, 'Schließen'),
+      saveBtn);
+  }
+  s.askDiscard = () => {
+    foot.replaceChildren(h('div', { class: 'confirm' },
+      h('p', {}, 'Die neuen Teile nicht anlegen?'),
+      h('button', { type: 'button', class: 'btn text', onclick: footDefault }, 'Weiter bearbeiten'),
+      h('button', { type: 'button', class: 'btn ghost', onclick: () => closeSheet(true) }, 'Verwerfen')));
+  };
+  saveBtn.addEventListener('click', () => saveBatch(s, saveBtn));
+
+  sheet.replaceChildren(
+    h('div', { class: 'sheet-head' },
+      h('div', { class: 't' }, h('p', { class: 'eyebrow' }, 'Neu'), title),
+      h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Schließen', onclick: () => closeSheet() }, svg('close'))),
+    h('div', { class: 'sheet-body' },
+      group('Figur für alle', segmented(FIGUR_WAHL, s.figur, (f) => { s.figur = f; rememberFigure(f); })),
+      h('div', { class: 'two' },
+        group('Slot für alle', slotAll),
+        h('div', { class: 'box' }, toggle('Claude darf sie verwenden', null, s.freigabe, (x) => { s.freigabe = x; }))),
+      rowsBox),
+    foot);
+  footDefault();
+  s.drawRows();
+}
+
+// Saves the new items one after another; what is saved leaves the list, so
+// after a problem only the rest is tried again.
+async function saveBatch(s, btn) {
+  const { db, assets } = state;
+  if (!db || !assets) return;
+  btn.disabled = true;
+  $('#sheet').classList.add('busy');
+  let nr = Math.max(0, ...state.teile.map((t) => Number(t.nr) || 0));
+  const first = nr + 1;
+  const total = s.rows.length;
+  let done = 0;
+  try {
+    for (const row of [...s.rows]) {
+      btn.textContent = `Lege an … ${done + 1} von ${total}`;
+      const body = blankTeil({ figur: s.figur, slot: row.slot });
+      body.name = row.name.trim();
+      body.freigabe = s.freigabe;
+      const up = await assets.upload(row.drawing.file, { type: row.drawing.file.type === 'image/webp' ? 'image/webp' : 'image/png' });
+      body.bild = up.id;
+      body.bildGroesse = row.drawing.size;
+      if (row.drawing.icon) body.icon = (await assets.upload(row.drawing.icon, { type: 'image/png' })).id;
+      nr += 1;
+      body.nr = nr;
+      body.erstellt = now();
+      body.geaendert = body.erstellt;
+      await db.collection('teile').doc().set(body);
+      s.rows = s.rows.filter((r) => r !== row);
+      if (row.drawing.url) URL.revokeObjectURL(row.drawing.url);
+      if (row.drawing.iconUrl) URL.revokeObjectURL(row.drawing.iconUrl);
+      done += 1;
+    }
+    toast(done === 1 ? `Angelegt als Nr. ${first}` : `${done} Teile angelegt, Nr. ${first} bis ${nr}`);
+    closeSheet(true);
+  } catch (e) {
+    toast(`${done ? `${done} angelegt. ` : ''}${problem(e)}`, true);
+    btn.textContent = 'Alle anlegen';
+    s.drawRows();
+  } finally {
+    $('#sheet').classList.remove('busy');
+  }
+}
 
 // Counterparts point at each other.
 async function linkCounterpart(id, before, after) {
@@ -1368,7 +1576,7 @@ function drawWish(s) {
     const candidates = state.teile.filter((t) => !d.teile.includes(t.id) && (!d.slot || t.slot === d.slot));
     const select = h('select', { class: 'field', 'aria-label': 'Teil verbinden' },
       h('option', { value: '' }, 'Vorhandenes Teil verbinden'),
-      candidates.map((t) => h('option', { value: t.id }, `Nr. ${t.nr} · ${t.name} (${figurName(t.figur)})`)));
+      candidates.map((t) => h('option', { value: t.id }, `Nr. ${t.nr} · ${teilLabel(t)} (${figurName(t.figur)})`)));
     select.addEventListener('change', () => {
       if (!select.value) return;
       d.teile.push(select.value);
@@ -1379,7 +1587,7 @@ function drawWish(s) {
       h('p', { class: 'label' }, 'Zeichnungen dazu'),
       ...linked.map((t) => h('div', { class: 'linked' },
         tile(t.icon, t.slot),
-        h('div', { class: 'grow' }, t.name, h('small', {}, `Nr. ${t.nr} · ${figurName(t.figur)}`)),
+        h('div', { class: 'grow' }, teilLabel(t), h('small', {}, `Nr. ${t.nr} · ${figurName(t.figur)}`)),
         h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Verbindung lösen', onclick: () => { d.teile = d.teile.filter((x) => x !== t.id); drawLinked(); changed(); } }, svg('close')))),
       linked.length ? null : h('p', { class: 'muted' }, 'Noch keine.'),
       candidates.length ? select : null,

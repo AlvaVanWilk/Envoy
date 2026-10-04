@@ -270,11 +270,13 @@ mit dem Werkzeug `Artifact` unter derselben Adresse neu veröffentlichen.
 Lesen und Schreiben mit dem Werkzeug `ArtifactData`, Bilder mit `Artifact`
 (`action: read`, `path: <Bild-Id>`). Sammlungen:
 
-- `teile`: eine Zeichnung = ein Eintrag. `nr` und `name` sind eindeutig; wenn die
-  Nutzerin über ein Teil spricht, meint sie diesen Namen oder „Nr. 7“. `figur` (`frau`
-  = Figur `erste`, `mann` = `zweite`), `slot`, `ebene` (leer = wie der Slot), `bild` und
-  `icon` (Bild-Ids), `gegenstueck`
-  (Eintrag der anderen Figur), `freigabe`, `vorgaben` (ihre Wünsche: `verwendung`,
+- `teile`: eine Zeichnung = ein Eintrag. `nr` ist eindeutig, `name` freiwillig (wenn
+  vergeben, ebenfalls eindeutig; ohne Namen heißt ein Teil nach Slot und Nummer); wenn
+  die Nutzerin über ein Teil spricht, meint sie diesen Namen oder „Nr. 7“. `figur`
+  (`frau` = Figur `erste`, `mann` = `zweite`, `beide` = eine Zeichnung für beide Figuren,
+  im Spiel nur in `assets/figur/`, ohne eigene Fassung in `zweite/`), `slot`, `ebene`
+  (leer = wie der Slot), `bild` und `icon` (Bild-Ids), `gegenstueck`
+  (Eintrag der anderen Figur, bei `beide` leer), `freigabe`, `vorgaben` (ihre Wünsche: `verwendung`,
   `questThemen`, `questThemaFrei`, `erfolg`, `bereich`, `stats`, `idee`), `imSpiel`,
   `spiel` (Claudes Angaben: `kennung`, `stufe`, `herkunft`, `voraussetzung`,
   `faehigkeit`, `wirkung`, `seit`, `notiz`).
