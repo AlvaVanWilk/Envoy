@@ -18,6 +18,7 @@ export function renderCreate(game, { onDone, onCancel = null } = {}) {
     haut: current?.haut || SKIN_TONES[0].id,
     haar: current?.haar || HAIR_COLORS[0].id,
     name: current?.name || '',
+    unterhemd: current?.unterhemd !== false,   // switched in the settings, kept here
   };
   let step = 1;
   const root = h('section', { class: 'view create' });

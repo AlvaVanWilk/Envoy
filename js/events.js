@@ -42,7 +42,8 @@
 //                                             running expedition back at once
 //
 // The Envoy itself:
-//   envoy    { name, figur, haut, haar }      name, figure, skin and hair colour (the latest counts)
+//   envoy    { name, figur, haut, haar, unterhemd }  name, figure, skin and hair colour, and
+//                                            unterhemd: false when the undershirt is switched off (the latest counts)
 // (travel and quest from version 2 are still accepted and ignored)
 //
 // Common fields: id, t (timestamp in ms), d (day key), dev (device id).

@@ -19,7 +19,8 @@ const painted = new Map();  // key -> picture address, once ready
 
 // The figure and colours of an Envoy; unknown or missing values fall back
 // to the first of each list. The first colour of each list is the one the
-// figure is drawn in.
+// figure is drawn in. undershirt: whether the figure wears its undershirt
+// (only a figure that has one; worn unless switched off in the settings).
 export function resolveLook(envoy) {
   const figure = FIGURES.find((x) => x.id === envoy?.figur) || FIGURES[0];
   const skin = SKIN_TONES.find((x) => x.id === envoy?.haut) || SKIN_TONES[0];
@@ -28,11 +29,13 @@ export function resolveLook(envoy) {
     figure,
     skin: skin === SKIN_TONES[0] ? { ...skin, rgb: figure.skin } : skin,
     hair: hair === HAIR_COLORS[0] ? { ...hair, rgb: figure.hair } : hair,
+    undershirt: Boolean(figure.undershirt) && envoy?.unterhemd !== false,
   };
 }
 
 export const baseSrc = (look) => versioned(`${look.figure.folder}/basisfigur.png`);
 export const portraitSrc = (look) => versioned(`${look.figure.folder}/portrait.png`);
+export const undershirtSrc = (look) => (look.undershirt ? versioned(`${look.figure.folder}/${look.figure.undershirt}`) : null);
 
 // The picture of an item for this figure: its own version if there is one.
 export function layerSrc(item, look) {

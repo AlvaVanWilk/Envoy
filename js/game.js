@@ -333,11 +333,12 @@ export const game = {
     if (this.state.world.equipped[slot]) this.add([this.event('unequip', { slot })]);
   },
 
-  // Name and look of the Envoy, at the creation or changed later.
-  setEnvoy({ name, figur, haut, haar }) {
+  // Name and look of the Envoy, at the creation or changed later
+  // (unterhemd: false switches the undershirt off, see FIGURES).
+  setEnvoy({ name, figur, haut, haar, unterhemd = true }) {
     const clean = String(name || '').trim();
     if (!clean) return;
-    this.add([this.event('envoy', { name: clean, figur, haut, haar })]);
+    this.add([this.event('envoy', { name: clean, figur, haut, haar, unterhemd: unterhemd !== false })]);
   },
 };
 

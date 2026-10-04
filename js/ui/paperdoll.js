@@ -3,18 +3,21 @@
 // met has already been taken off, so the slot shows the base figure.
 // An item without a picture yet is worn but not drawn.
 // Each item lies at its slot's place unless it names another (EBENEN).
+// A figure may wear an undershirt right over the base figure: no slot, it
+// cannot be taken off, only switched off in the settings.
 // Which figure and which colours: see look.js.
 
 import { h } from './dom.js';
-import { SLOTS, BASE_FIGURE_LAYER, EBENEN } from '../config.js';
-import { resolveLook, baseSrc, layerSrc, showLayer } from './look.js';
+import { SLOTS, BASE_FIGURE_LAYER, UNDERSHIRT_LAYER, EBENEN } from '../config.js';
+import { resolveLook, baseSrc, undershirtSrc, layerSrc, showLayer } from './look.js';
 
 const layerOf = (item, slot) => EBENEN.find((e) => e.id === item.ebene)?.layer ?? slot.layer;
 
-// envoy: { figur, haut, haar } – by default the Envoy of this world.
+// envoy: { figur, haut, haar, unterhemd } – by default the Envoy of this world.
 export function paperdoll(equipped, world, catalog, { className = '', envoy = world.envoy } = {}) {
   const look = resolveLook(envoy);
   const layers = [{ layer: BASE_FIGURE_LAYER, src: baseSrc(look), slot: 'basis', base: true }];
+  if (look.undershirt) layers.push({ layer: UNDERSHIRT_LAYER, src: undershirtSrc(look), slot: 'unterhemd' });
   for (const slot of SLOTS) {
     const entry = world.items[equipped[slot.id]];
     const item = entry && catalog.itemById.get(entry.id);

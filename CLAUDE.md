@@ -237,7 +237,11 @@ und wird **nicht mehr gerendert** — die Figur sieht dort aus, als trüge sie n
 
 Zwei Figuren stehen zur Wahl, beide von der Nutzerin gezeichnet: eine Frau
 (`assets/figur/`) und ein Mann (`assets/figur/zweite/`, mit eigenen Fassungen von
-Hemd, Hose und Handschuhen; seine Icons dazu in `assets/icons/zweite/`). Figur und Ausrüstung zeichnet die Nutzerin; keine eigenen
+Hemd, Hose und Handschuhen; seine Icons dazu in `assets/icons/zweite/`). Der Mann trägt
+wie die Frau etwas obenherum: ein Unterhemd (`assets/figur/zweite/unterhemd.png`, von der
+Nutzerin), direkt über der Basisfigur und unter der Hose, ohne Slot und nicht abzulegen;
+in den Einstellungen lässt es sich abschalten (Feld `unterhemd` im Ereignis `envoy`,
+`undershirt` in `FIGURES`). Figur und Ausrüstung zeichnet die Nutzerin; keine eigenen
 Platzhalter erzeugen. Teile ohne Bild werden nicht gezeichnet, als Icon dient das
 Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`).
 

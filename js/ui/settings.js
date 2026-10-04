@@ -11,6 +11,7 @@ import { toast, openSheet, closeSheet } from './sheet.js';
 import { APP_VERSION } from '../config.js';
 import { dayKey } from '../days.js';
 import { resetTours } from './tours.js';
+import { resolveLook } from './look.js';
 
 const ERRORS = {
   ...ACCOUNT_ERRORS,
@@ -99,11 +100,22 @@ function confirmLogout() {
   });
 }
 
+// A figure with an undershirt (see FIGURES) wears it unless it is switched off here.
+function undershirtSwitch(envoy) {
+  if (!envoy || !resolveLook(envoy).figure.undershirt) return null;
+  const on = envoy.unterhemd !== false;
+  return h('button', {
+    class: 'switch', type: 'button', role: 'switch', 'aria-checked': String(on),
+    onclick: () => game.setEnvoy({ ...envoy, unterhemd: !on }),
+  }, h('span', { class: 'switch-knob' }), 'Unterhemd');
+}
+
 function envoyPanel() {
   const envoy = game.state.world.envoy;
   return h('section', { class: 'panel settings-panel' },
     h('h2', { class: 'section-title' }, 'Envoy'),
     h('p', {}, envoy?.name || 'Envoy'),
+    undershirtSwitch(envoy),
     h('div', { class: 'button-row' },
       h('a', { class: 'btn ghost', href: '#aussehen' }, 'Aussehen und Name ändern'),
       h('button', { class: 'btn ghost', type: 'button', onclick: () => { resetTours(); location.hash = '#envoy'; } }, 'Rundgänge ansehen')));

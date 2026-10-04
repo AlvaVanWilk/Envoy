@@ -870,6 +870,15 @@ sie die der ersten. Für Icons gilt dasselbe: eine eigene Fassung mit gleichem N
 `assets/icons/<Ordner der Figur>/`, sonst das Icon der ersten Figur. Der Mann hat eigene
 Fassungen von Leinenhemd, Leinenhose und Griffhandschuhen, jeweils mit eigenem Icon.
 
+**Unterhemd des Mannes:** Die Frau trägt in ihrer Basisfigur etwas obenherum, der Mann
+deshalb von Anfang an ein Unterhemd (Zeichnung der Nutzerin, `assets/figur/zweite/
+unterhemd.png`, 1024 × 1536). Es liegt direkt über der Basisfigur und unter allem, was
+er anzieht, auch unter der Hose (wie eingesteckt). Es belegt keinen Slot und lässt sich
+nicht ablegen. In den Einstellungen unter „Envoy“ schaltet der Schalter „Unterhemd“ es
+ab und wieder an; die Wahl steht im Ereignis `envoy` (`unterhemd: false`), gilt also auf
+jedem Gerät, und bleibt beim Ändern des Aussehens erhalten. Den Schalter gibt es nur,
+wenn der Envoy der Mann ist.
+
 **Haut- und Haarfarbe** wählt man bei der Erstellung (6 Hauttöne, 7 Haarfarben). Jede
 Figur ist in einer Haut- und einer Haarfarbe gezeichnet; die App färbt diese Stellen im
 Browser um. Die erste Wahl jeder Reihe ist die gezeichnete Farbe der gewählten Figur
@@ -1044,7 +1053,7 @@ Mehrere Menschen können die App nutzen, jede und jeder mit einem eigenen Envoy.
   alle wieder. Für die anderen Seiten (Händler, Handbuch) folgen sie später.
 - **Einstellungen:** angemeldet als, Stand des Abgleichs, „Jetzt abgleichen“,
   „Abmelden“ (die Daten bleiben auf dem Gerät und auf dem Server); ohne Konto „Konto
-  erstellen“ und „Profil wechseln“.
+  erstellen“ und „Profil wechseln“. Unter „Envoy“ beim Mann der Schalter „Unterhemd“.
 
 Im Browser hat jedes Profil (ein Envoy) seinen eigenen Speicher; Geräte-Kennung und die
 Liste der Profile teilt sich das Gerät.

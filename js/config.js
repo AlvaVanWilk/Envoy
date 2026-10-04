@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.5.1';
+export const APP_VERSION = '5.5.2';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -65,6 +65,8 @@ export const SLOTS = [
 ];
 
 export const BASE_FIGURE_LAYER = 2;
+// The undershirt of a figure (FIGURES): over the base figure, under everything worn.
+export const UNDERSHIRT_LAYER = 2.2;
 
 // Slots under an older name, as they may stand in stored events.
 export const OLD_SLOT_NAMES = { umhang: 'accessoire' };
@@ -92,10 +94,12 @@ export const EBENEN = [
 // paints them in the chosen colours (see ui/look.js). hairZone: hair only
 // occurs in this upper share of the picture. Each folder also holds
 // portrait.png, the round picture at the top of the screen; portraitHairZone
-// is the same share for it.
+// is the same share for it. undershirt: a picture in the folder the figure
+// always wears right over its skin (under the trousers), not in a slot and
+// never taken off; the settings can switch it off (see paperdoll.js).
 export const FIGURES = [
   { id: 'erste', name: 'Envoy mit Dutt', folder: 'assets/figur', skin: [240, 176, 128], skinShadow: [184, 128, 88], hair: [224, 192, 136], hairZone: 0.25, portraitHairZone: 0.78 },
-  { id: 'zweite', name: 'Envoy mit kurzem Haar', folder: 'assets/figur/zweite', skin: [240, 176, 130], skinShadow: [182, 130, 90], hair: [190, 178, 118], hairZone: 0.25, portraitHairZone: 0.62 },
+  { id: 'zweite', name: 'Envoy mit kurzem Haar', folder: 'assets/figur/zweite', skin: [240, 176, 130], skinShadow: [182, 130, 90], hair: [190, 178, 118], hairZone: 0.25, portraitHairZone: 0.62, undershirt: 'unterhemd.png' },
 ];
 
 // Choices for skin and hair. The first of each stands for the colour a

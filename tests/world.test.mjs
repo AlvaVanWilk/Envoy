@@ -331,7 +331,7 @@ test('the Envoy: name and look from the latest envoy event, trimmed', () => {
   const first = ev('envoy', { name: '  Mira ', figur: 'erste', haut: 'braun', haar: 'schwarz' }, 0.1);
   const empty = ev('envoy', { name: '   ', figur: 'zweite' }, 0.2);
   const later = ev('envoy', { name: 'Mira Kupfer', figur: 'erste', haut: 'hell', haar: 'kupfer' }, 0.3);
-  assert.deepEqual(replay([first, empty], catalog, DAY, T0 + H).envoy, { name: 'Mira', figur: 'erste', haut: 'braun', haar: 'schwarz' });
+  assert.deepEqual(replay([first, empty], catalog, DAY, T0 + H).envoy, { name: 'Mira', figur: 'erste', haut: 'braun', haar: 'schwarz', unterhemd: true });
   assert.equal(replay([first, empty, later], catalog, DAY, T0 + H).envoy.haar, 'kupfer');
 });
 
@@ -359,6 +359,20 @@ test('an achievement bonus on gathering adds to the pieces, not to the Bannsplit
   assert.equal(boosted.splitter, plain.splitter);
   const explore = catalog.questById.get('q-uferkies');
   assert.equal(yieldBonus(explore, { ...ctxOf(s), bonus: { sammeln: 0.1 } }).pieces, 1);
+});
+
+test('the undershirt: worn by a figure that has one, unless switched off; no slot', () => {
+  assert.equal(resolveLook({ figur: 'erste' }).undershirt, false);
+  assert.equal(resolveLook({ figur: 'zweite' }).undershirt, true);
+  assert.equal(resolveLook({ figur: 'zweite', unterhemd: true }).undershirt, true);
+  assert.equal(resolveLook({ figur: 'zweite', unterhemd: false }).undershirt, false);
+  const on = ev('envoy', { name: 'Jon', figur: 'zweite' }, 0.1);
+  const off = ev('envoy', { name: 'Jon', figur: 'zweite', unterhemd: false }, 0.2);
+  assert.equal(replay([on], catalog, DAY, T0 + H).world.envoy.unterhemd, true);
+  assert.equal(replay([on, off], catalog, DAY, T0 + H).world.envoy.unterhemd, false);
+  assert.equal(replay([on, off, ev('envoy', { name: 'Jon', figur: 'zweite', unterhemd: true }, 0.3)], catalog, DAY, T0 + H).world.envoy.unterhemd, true);
+  // nothing is worn in a slot for it
+  assert.deepEqual(Object.keys(replay([on], catalog, DAY, T0 + H).world.equipped).sort(), ['beine', 'torso']);
 });
 
 test('the second figure wears its own layers and shows its own icons', () => {

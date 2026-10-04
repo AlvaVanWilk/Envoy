@@ -3,7 +3,8 @@
 // the stats of that moment. Everything here only changes `world`.
 //
 // world = {
-//   envoy       { name, figur, haut, haar } or null while the Envoy has not been created
+//   envoy       { name, figur, haut, haar, unterhemd } or null while the Envoy has not been
+//               created; unterhemd is true unless an envoy event says false
 //   expedition  the running expedition or null: { id, day, start, actions, rushed, dropped, leftBehind },
 //               a row of actions, see expedition.js
 //   stamina     { value, at }: bar of Energie at time `at`, refills from there
@@ -397,7 +398,7 @@ export function applyWorldEvent(world, e, ctx) {
       break;
     case 'envoy': {
       const name = String(e.name || '').trim().slice(0, NAME_MAX);
-      if (name) world.envoy = { name, figur: String(e.figur || ''), haut: String(e.haut || ''), haar: String(e.haar || '') };
+      if (name) world.envoy = { name, figur: String(e.figur || ''), haut: String(e.haut || ''), haar: String(e.haar || ''), unterhemd: e.unterhemd !== false };
       break;
     }
     default:
