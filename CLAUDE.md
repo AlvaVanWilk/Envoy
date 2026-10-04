@@ -42,7 +42,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
-  Pilzholz und Bannsplitter dazu, Plan finden, Expedition beenden, `js/ui/testtools.js`);
+  Pilzholz und Bannsplitter dazu, Plan finden, Expedition beenden, die Kleiderkammer öffnen,
+  `js/ui/testtools.js`);
   die echte Fassung nie.
 - Formen der Oberfläche: kreisrund oder rechteckig, nicht oval.
 - **Kein Zugriff auf Apple Health oder die Apple Watch.** Eine Webapp kann das nicht.

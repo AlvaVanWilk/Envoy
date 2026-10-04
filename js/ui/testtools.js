@@ -3,7 +3,9 @@
 // of it. Its buttons fill the Energie or add more beyond the end of the bar
 // (for raising the camp), add Stein, Pilzholz and Bannsplitter, find the next
 // plan for Deko, and bring the Envoy back from an expedition at once, so
-// everything can be tried without waiting. The real app never shows any of it: only the copy in
+// everything can be tried without waiting. A last one opens the Kleiderkammer
+// (the user's page on claude.ai for the drawings of the clothes, see
+// CLAUDE.md) in a new window. The real app never shows any of it: only the copy in
 // the test folder is marked as such while it is uploaded.
 
 import { h, replaceChildren } from './dom.js';
@@ -14,6 +16,7 @@ import { toast } from './sheet.js';
 const MATERIAL_AMOUNT = 25;
 const SPLITTER_AMOUNT = 50;
 const EXTRA_ENERGY = 50;
+const KLEIDERKAMMER = 'https://claude.ai/artifact/92pbHMV3YqemSrC4s86ADj';
 
 function addMaterial(game, key) {
   const before = game.state.world.purse[key] || 0;
@@ -29,8 +32,10 @@ function findPlan(game) {
   toast(found ? `Plan gefunden: ${game.catalog.dekoById.get(found)?.name}` : 'Auf dieser Lagerstufe gibt es keinen Plan mehr zu finden');
 }
 
+const wardrobeLink = () => h('a', { class: 'btn ghost small', href: KLEIDERKAMMER, target: '_blank', rel: 'noopener' }, 'Kleiderkammer');
+
 function actions(game) {
-  if (!game.state?.world?.envoy) return [h('p', { class: 'test-menu-note' }, 'Erst einen Envoy anlegen.')];
+  if (!game.state?.world?.envoy) return [h('p', { class: 'test-menu-note' }, 'Erst einen Envoy anlegen.'), wardrobeLink()];
   const run = (fields, message) => () => { game.add([game.event('test', fields)]); toast(message); };
   const button = (label, onclick, disabled = false) => h('button', { class: 'btn ghost small', type: 'button', disabled, onclick }, label);
   return [
@@ -41,6 +46,7 @@ function actions(game) {
     button(`+${SPLITTER_AMOUNT} ${CURRENCY}`, run({ splitter: SPLITTER_AMOUNT }, `+${SPLITTER_AMOUNT} ${CURRENCY}`)),
     button('Plan finden', () => findPlan(game), game.state.world.camp.stage < 2),
     button('Expedition beenden', run({ fertig: true }, 'Der Envoy ist zurück'), !game.state.world.expedition),
+    wardrobeLink(),
   ];
 }
 
