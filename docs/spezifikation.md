@@ -759,14 +759,17 @@ des Envoy):
   aus ihrer Zeile in die Mitte, erst ist die Rückseite mit dem Zeichen des Werts zu sehen,
   dann die Vorderseite: oben Gewinn und Gesamtzeit, die Übung als bewegte Figur, die sie im
   Takt vormacht (Comic-Stil mit dunkler Umrisslinie wie die Bilder der Nutzerin, Hemd in der
-  Farbe des Bereichs) (je Übung und Stufe, `assets/uebungen/<id>.svg`, gezeichnet mit
+  Farbe des Bereichs, mit Hals und ohne Gesicht: nur das Haar zeigt, wohin der Kopf schaut;
+  meist von der Seite, der Seitstütz von vorn, der Brustöffner („das offene Buch“) vom Kopf
+  her schräg von oben, damit der Bogen des Arms zu sehen ist) (je Übung und Stufe, `assets/uebungen/<id>.svg`, gezeichnet mit
   `tools/uebungsbilder.py`; eine eigene Zeichnung der Nutzerin je Figur ginge vor und würde
   in den Farben des Envoy gezeigt; ohne beides das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
   Namen, dann Name, Stufe („Stufe 1 · Der Fußtipp“), Zeit, wofür sie gut ist und die
   Schritte; unten „Mit Timer“ und „Erledigt“ (und „Das war heute zu viel“, siehe
   Rückfrage). Die Fragen danach füllen die Karte: bei einer Frage genügt ein Tipp, bei
-  mehreren kommt „Fertig“. Dann dreht sich die Karte zurück in ihre Zeile, und der Gewinn
-  steigt dort auf. Die Zeile nennt die Übung oder die kurzen Namen aller („Käfer ·
+  mehreren kommt „Fertig“. Dann dreht sich die Karte zurück und wird dabei kleiner, ohne
+  sich zu verziehen, bis sie über ihrer Zeile verblasst; die Zeile leuchtet kurz auf, und
+  der Gewinn steigt dort auf. Die Zeile nennt die Übung oder die kurzen Namen aller („Käfer ·
   Vogelhund · Seitstütz“), den Gewinn und die Zeit. Der Haken an der Zeile erledigt die
   Aufgabe ohne Karte; gibt es Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
   Aufgabe zeigt auf der Karte „Erledigt“ und „Rückgängig“. Mit

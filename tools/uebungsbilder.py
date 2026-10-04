@@ -5,15 +5,18 @@ stage: assets/uebungen/<id>.svg (the id as in the table of exercises).
 The figure is drawn like the user's pictures: flat colours inside a dark ink
 line. Skin, brown hair, trousers and shoes, the shirt in the colour of the
 area (Kraft orange, Ausdauer green, Beweglichkeit blue, Gelassenheit lilac);
-the limbs on the far side are a little darker. It moves the way the exercise
-goes, in a loop, so that it can be done together with it (SVG animation, it
-plays by itself in the app).
+the limbs on the far side are a little darker. The head has no face, only the
+hair shows which way it is turned. It moves the way the exercise goes, in a
+loop, so that it can be done together with it (SVG animation, it plays by
+itself in the app).
 
 How it works: each exercise is a function that, for a moment t of the loop
 (0 to 1), places the joints. Arms and legs are placed by where hand and foot
 should be; the elbow and the knee follow from the lengths of the limbs (so a
-limb never stretches or shrinks). The loop is sampled at SAMPLES_PER_SECOND
-and written as an animation of the lines.
+limb never stretches or shrinks). Most exercises are seen from the side; the
+side plank and the Brustoeffner are placed in space and seen from the front
+and from the head end (see Camera). The loop is sampled at SAMPLES_PER_SECOND
+and written as an animation of the parts of the body.
 
     python3 tools/uebungsbilder.py           all
     python3 tools/uebungsbilder.py kaefer-1   only these
@@ -33,7 +36,7 @@ FLOOR = 170
 SAMPLES_PER_SECOND = 12
 
 # lengths of the body
-TORSO, NECK, HEAD = 50, 15, 10
+TORSO, NECK, HEAD = 50, 25, 10      # NECK: from the shoulders to the middle of the head
 UPPER_ARM, FOREARM = 25, 25
 THIGH, SHIN, FOOT = 37, 35, 9
 ARM, LEG = UPPER_ARM + FOREARM, THIGH + SHIN
@@ -110,23 +113,46 @@ def hold(*pairs):
 
 # --- a figure at one moment ------------------------------------------------
 # A frame is a list of strokes, back to front: (name, [points], width, colour),
-# and the head: (centre, radius). Every frame of an exercise has the same
-# strokes with the same number of points, so they can be animated.
+# the head: (centre, radius), and where the hair lies on it (see hair_of).
+# Every frame of an exercise has the same strokes with the same number of
+# points, so they can be animated.
 
-def figure(hip, shoulder, head, arms, legs, spine_bend=0.0):
-    """arms, legs: {'far': [points], 'near': [points]}"""
+def figure(hip, shoulder, head, arms, legs, spine_bend=0.0, facing_us=False):
+    """arms, legs: {'far': [points], 'near': [points]}. Seen from the side the
+    face looks the way the chest does; facing_us: it looks at the viewer."""
     mid = ((hip[0] + shoulder[0]) / 2, (hip[1] + shoulder[1]) / 2)
     normal = angle_of(hip, shoulder) - 90
     mid = at(mid, normal, spine_bend)
-    neck = at(shoulder, angle_of(shoulder, head), NECK - HEAD)
     strokes = [
         ("arm-far", arms["far"], LIMB, FAR),
         ("leg-far", legs["far"], LIMB, FAR),
-        ("torso", [hip, mid, shoulder, neck], LIMB + 2, NEAR),
+        ("torso", [hip, mid, shoulder], LIMB + 2, NEAR),
         ("leg-near", legs["near"], LIMB, NEAR),
         ("arm-near", arms["near"], LIMB, NEAR),
     ]
-    return {"strokes": strokes, "head": (head, HEAD)}
+    crown = unit((head[0] - shoulder[0], head[1] - shoulder[1]))
+    face = (0.0, 0.0) if facing_us else (-crown[1], crown[0])
+    return {"strokes": strokes, "head": (head, HEAD), "hair": hair_of(crown, face, 0.0, 1.0 if facing_us else 0.0)}
+
+
+def unit(v):
+    length = math.hypot(*v) or 1.0
+    return tuple(c / length for c in v)
+
+
+# The head is a circle of skin with the hair on it: a second circle, cut to
+# the head and pushed towards the crown and the back of the head. Seen from
+# the side it leaves the face free, from the front the face below the
+# forehead, from behind or from above it covers nearly all.
+def hair_of(crown, face, crown_near, face_near):
+    """(dx, dy, radius) of the hair circle in the head. crown, face: the
+    directions of the crown and the face on the picture (shorter, the more
+    they point towards the viewer); *_near: how much they do (-1 to 1)."""
+    ax, ay = 0.8 * crown[0] - 0.6 * face[0], 0.8 * crown[1] - 0.6 * face[1]
+    near = 0.8 * crown_near - 0.6 * face_near
+    shift = HEAD * (0.8 - 0.5 * near)
+    dx, dy = unit((ax, ay))
+    return (shift * dx, shift * dy, HEAD * (1 + 0.4 * max(near, 0.0)))
 
 
 def leg_to(hip, ankle, bend, foot_angle):
@@ -291,53 +317,175 @@ def katze_kuh():
     return 8.0, frame, mat(40, 230)
 
 
-# Der Seitstütz, seen from the front: forearm on the floor to the left,
-# knees (or feet) on the floor to the right; the hips lift into one line.
-ELBOW = (92, FLOOR - 5)
-PLANK_ARM = 34           # drawn a little longer than the upper arm, so that the lift shows
+# --- seen at an angle -------------------------------------------------------
+# The side plank and the Brustoeffner cannot be seen from the side. Their
+# joints are placed in space: x along the floor, y up, z towards the viewer
+# (from where the camera stands). A camera seen from a little above turns
+# them into points of the picture; what points towards the viewer gets
+# shorter, as in a photo.
+
+def add(a, b):
+    return tuple(x + y for x, y in zip(a, b))
+
+
+def sub(a, b):
+    return tuple(x - y for x, y in zip(a, b))
+
+
+def mul(a, k):
+    return tuple(x * k for x in a)
+
+
+def dot(a, b):
+    return sum(x * y for x, y in zip(a, b))
+
+
+def norm(a):
+    return mul(a, 1 / (math.sqrt(dot(a, a)) or 1.0))
+
+
+class Camera:
+    """yaw: from where it looks, turned around the upright (0: from the front,
+    90: from the left, where the head of a figure lying to the left is);
+    pitch: how far from above. origin: where the point (0, 0, 0) lies on the
+    picture."""
+
+    def __init__(self, yaw, pitch, origin):
+        y, p = math.radians(yaw), math.radians(pitch)
+        self.right = (math.cos(y), 0.0, math.sin(y))
+        self.up = (math.sin(y) * math.sin(p), math.cos(p), -math.cos(y) * math.sin(p))
+        self.toward = (-math.sin(y) * math.cos(p), math.sin(p), math.cos(y) * math.cos(p))
+        self.origin = origin
+
+    def __call__(self, point):
+        return (self.origin[0] + dot(point, self.right), self.origin[1] - dot(point, self.up))
+
+    def direction(self, v):
+        """a direction on the picture, and how much it points towards the viewer"""
+        return (dot(v, self.right), -dot(v, self.up)), dot(v, self.toward)
+
+    def floor(self, x0, x1, z0, z1):
+        """a mat on the floor, seen from the camera, its front edge as the floor line"""
+        corners = [self((x, 0, z)) for x, z in ((x0, z1), (x1, z1), (x1, z0), (x0, z0))]
+        points = " ".join(f"{x:.1f},{y:.1f}" for x, y in corners)
+        (ax, ay), (bx, by) = corners[0], corners[1]
+        return (f'<polygon points="{points}" fill="{MAT}" stroke="{MAT}" stroke-width="6" stroke-linejoin="round"/>'
+                f'<line x1="{ax:.1f}" y1="{ay + 4:.1f}" x2="{bx:.1f}" y2="{by + 4:.1f}" stroke="{LINE}" stroke-width="2" stroke-linecap="round"/>')
+
+
+def planar_limb(root, end, l1, l2, bend):
+    """limb() for points in space whose limb lies in an upright plane along x"""
+    mid, tip = limb((root[0], root[1]), (end[0], end[1]), l1, l2, bend)
+    share = l1 / (l1 + l2)
+    return (mid[0], mid[1], root[2] + (end[2] - root[2]) * share), (tip[0], tip[1], end[2])
+
+
+SHOULDERS, HIPS = 20, 15      # how far apart the shoulders and the hips are
+SLAB = 10                     # the thickness of the body around them
+
+
+def spatial(view, parts, head, crown, face):
+    """A frame from points in space. parts: {stroke name: [points]}, among
+    them 'shoulders' and 'hips' (lower one, upper one) for the body."""
+    sb, st = parts.pop("shoulders")
+    hb, ht = parts.pop("hips")
+    wb, wt = lerp(sb, hb, 0.62), lerp(st, ht, 0.62)
+    centre = lerp(sb, st, 0.5)
+    strokes = [(name, [view(q) for q in points], LIMB, NEAR) for name, points in parts.items()]
+    strokes.append(("neck", [view(centre), view(head)], LIMB, NEAR))
+    slabs = [("trousers", [view(q) for q in (wb, wt, ht, hb)]), ("shirt", [view(q) for q in (sb, st, wt, wb)])]
+    (cx, cy), crown_near = view.direction(crown)
+    (fx, fy), face_near = view.direction(face)
+    return {"strokes": strokes, "slabs": slabs, "head": (view(head), HEAD),
+            "hair": hair_of((cx, cy), (fx, fy), crown_near, face_near)}
+
+
+# Der Seitstütz, seen from the front and a little from above: lying on the
+# side, the head to the left, propped up on the forearm, the elbow under the
+# shoulder. The hips lift until the body is one line from the head to the
+# knees (stages 1 and 2) or to the feet (stage 3), and come down again.
+PLANK = Camera(yaw=0, pitch=16, origin=(0, FLOOR))
+PLANK_ELBOW = (96, 4)          # x, height above the floor
+PLANK_REST = 6                 # height of a knee, a foot or the hip lying on the floor
+PLANK_PROP = UPPER_ARM + 5     # from the elbow to the lower shoulder: the arm and the shoulder itself
 
 
 def side_plank(stage):
-    base_end = {1: THIGH, 2: THIGH, 3: LEG}[stage]
-    # where the knee (stage 1, 2) or the feet (stage 3) rest, so that the body is a straight line when up
-    up_shoulder = at(ELBOW, -90, PLANK_ARM)
-    rise = math.degrees(math.asin((ELBOW[1] - up_shoulder[1]) / (TORSO + base_end)))
-    end = at(up_shoulder, rise, TORSO + base_end)
-    end = (end[0], ELBOW[1])
-    def hip_at(lift):
-        # the hip between shoulder and the resting point, sagging when they come closer
-        shoulder = at(ELBOW, lift, PLANK_ARM)
-        hip, _ = limb(end, shoulder, base_end, TORSO, -1)
+    reach_to = LEG if stage == 3 else THIGH          # from the hip to where the legs rest
+    ex, ey = PLANK_ELBOW
+    upright = (ex, ey + PLANK_PROP)
+    rest = (upright[0] + math.sqrt((TORSO + reach_to) ** 2 - (upright[1] - PLANK_REST) ** 2), PLANK_REST)
+
+    def bottom_line(tilt):
+        """the lower shoulder and hip, the upper arm tilted towards the feet by tilt degrees"""
+        a = math.radians(90 - tilt)
+        shoulder = (ex + PLANK_PROP * math.cos(a), ey + PLANK_PROP * math.sin(a))
+        hip, _ = limb(rest, shoulder, reach_to, TORSO, 1)
         return shoulder, hip
 
-    # the low pose: the shoulder tilts towards the knees until the hips rest just above the floor
-    low, high = -90.0, -20.0
+    # the low pose: the upper arm tilts until the hip lies on the floor
+    low, high = 0.0, 60.0
     for _ in range(40):
-        mid_angle = (low + high) / 2
-        if hip_at(mid_angle)[1][1] < FLOOR - 9:
-            low = mid_angle
+        tilt = (low + high) / 2
+        if bottom_line(tilt)[1][1] > PLANK_REST + 2:
+            low = tilt
         else:
-            high = mid_angle
-    lift = hold((0.1, low), (0.28, -90.0), (0.72, -90.0), (0.9, low))
+            high = tilt
+    lift = hold((0.1, high), (0.3, 0.0), (0.72, 0.0), (0.9, high))
+
+    def upper_points(tilt):
+        shoulder, hip = bottom_line(tilt)
+        along = norm(sub(hip, shoulder))
+        legs = norm(sub(rest, hip))
+        up_body = (-along[1], along[0])
+        up_hips = norm(add(up_body, (-legs[1], legs[0])))
+        return shoulder, hip, along, up_body, up_hips
+
+    # where the upper leg rests: on the lower knee (stages 1, 2: on the lower foot at stage 3)
+    _, hip0, _, _, up0 = upper_points(0.0)
+    top_hip0 = add(hip0, mul(up0, HIPS))
+    if stage == 2:
+        reach_floor = math.sqrt(LEG ** 2 - (top_hip0[1] - PLANK_REST) ** 2 - 14 ** 2) - 1.5
+        top_rest = (top_hip0[0] + reach_floor, PLANK_REST, 14.0)
+    else:
+        top_rest = (rest[0] + up0[0] * 9, rest[1] + up0[1] * 9, 0.0)
 
     def frame(t):
-        shoulder, hip = hip_at(track(lift, t))
-        head = at(shoulder, angle_of(hip, shoulder) - 12, NECK)
-        forearm = [ELBOW, (ELBOW[0] - 20, ELBOW[1] + 1)]
-        lower_arm = [shoulder, ELBOW, forearm[1]]
-        top_arm = arm_to(shoulder, at(hip, -95, 7), 1)
+        shoulder, hip, along, up_body, up_hips = upper_points(track(lift, t))
+        sb = (*shoulder, 0.0)
+        st = (*add(shoulder, mul(up_body, SHOULDERS)), 0.0)
+        hb = (*hip, 0.0)
+        ht = (*add(hip, mul(up_hips, HIPS)), 0.0)
+        centre = lerp(sb, st, 0.5)
+        head = add(centre, (-along[0] * NECK, -along[1] * NECK, 0.0))
+        elbow = (ex, ey, 0.0)
+        hand = add(elbow, mul(norm((-0.55, 0.0, 0.85)), FOREARM))
+        # the upper hand rests on the hip, the arm along the body
+        on_hip = add(lerp(st, ht, 0.92), (0.0, 2.0, 2.0))
+        top_elbow, top_hand = planar_limb(st, on_hip, UPPER_ARM, FOREARM, 1)
+        knee = (*rest, 0.0)
         if stage == 3:
-            lower = [hip, at(hip, angle_of(hip, end), THIGH), end, at(end, -60, FOOT)]
-            upper = leg_to(hip, (end[0] + 8, end[1] - 3), 1, -60)
+            low_leg = [hb, lerp(hb, knee, THIGH / LEG), knee, add(knee, (2.0, -1.0, FOOT))]
+            k, a_ = planar_limb(ht, top_rest, THIGH, SHIN, 1)
+            top_leg = [ht, k, a_, add(a_, (2.0, 0.0, FOOT))]
         else:
-            knee = end
-            lower = [hip, knee, (knee[0] + 9, knee[1] - 1), (knee[0] + 14, knee[1] - 1)]
+            back = norm((0.25, 0.0, -1.0))          # the shins go back, away from the viewer
+            shin_end = add(knee, mul(back, SHIN))
+            low_leg = [hb, knee, shin_end, add(shin_end, mul(back, FOOT))]
             if stage == 1:
-                upper = [hip, knee, (knee[0] + 9, knee[1] - 3), (knee[0] + 14, knee[1] - 3)]
+                top_knee = add(ht, mul(norm(sub(top_rest, ht)), THIGH))
+                top_shin = add(top_knee, mul(back, SHIN))
+                top_leg = [ht, top_knee, top_shin, add(top_shin, mul(back, FOOT))]
             else:
-                upper = leg_to(hip, (end[0] + 40, FLOOR - 7), 1, -50)
-        return figure(hip, shoulder, head, {"far": lower_arm, "near": top_arm}, {"far": lower, "near": upper})
-    return 7.0, frame, mat(50, 262)
+                k, a_ = planar_limb(ht, top_rest, THIGH, SHIN, 1)
+                top_leg = [ht, k, a_, add(a_, (3.0, 0.0, FOOT))]
+        parts = {"arm-far": [sb, elbow, hand], "leg-far": low_leg,
+                 "leg-near": top_leg, "arm-near": [st, top_elbow, top_hand],
+                 "shoulders": (sb, st), "hips": (hb, ht)}
+        crown = (-along[0], -along[1], 0.0)
+        return spatial(PLANK, parts, head, crown, (0.0, 0.0, 1.0))
+
+    return 7.0, frame, PLANK.floor(36, 268, -26, 30)
 
 
 # Treppe: walking up, the stairs move down under the figure.
@@ -408,34 +556,60 @@ def ausfallschritt():
     return 9.0, frame, mat(50, 250) + cushion
 
 
-# Der Brustöffner, seen from the head end: lying on the side, the shoulders
-# one above the other, both arms in front on the floor; the upper arm goes
-# over in a big arc to the floor behind the back, the chest and the head follow.
-OB_LOWER = (150, FLOOR - 7)
-OB_UPPER = (150, FLOOR - 7 - 26)
+# Der Brustöffner („das offene Buch“), seen from in front of the head, from above:
+# lying on the side, the knees bent and on top of each other, both arms
+# stretched out in front on the floor. The upper arm goes over in a big arc to
+# the floor behind the back, like a page that is turned; the chest turns open
+# with it, the head follows, the knees stay together. Then back.
+BOOK = Camera(yaw=60, pitch=40, origin=(150, FLOOR - 10))
+BOOK_REST = 7                  # height of the lower shoulder and hip
 
 
 def brustoeffner():
-    front = math.degrees(math.asin((FLOOR - 4 - OB_UPPER[1]) / ARM))     # hand on the floor in front
-    behind = -180 - front                                                  # on the floor behind, over the top
-    sweep = hold((0.08, front), (0.42, behind), (0.6, behind), (0.92, front))
+    sb = (0.0, BOOK_REST, 0.0)
+    hb = (TORSO, BOOK_REST + 1, 0.0)
+    ht = (TORSO, BOOK_REST + 1 + HIPS, 0.0)
+    knee_b = (TORSO + 4, BOOK_REST - 1, THIGH)
+    knee_t = add(ht, mul(norm(sub((TORSO + 4, BOOK_REST + 10, THIGH - 2), ht)), THIGH))
+    shin = (SHIN, 0.0, -3.0)
+    low_leg = [hb, knee_b, add(knee_b, shin), add(add(knee_b, shin), (FOOT, -1.0, 0.0))]
+    top_leg = [ht, knee_t, add(knee_t, shin), add(add(knee_t, shin), (FOOT, 0.0, 0.0))]
+    low_arm = [sb, (0.0, BOOK_REST - 2, UPPER_ARM), (0.0, BOOK_REST - 3, ARM)]
+    TURN = 78.0                 # how far the chest turns open
+
+    def top_shoulder(s):
+        r = math.radians(TURN * s)
+        return add(sb, (0.0, SHOULDERS * math.cos(r), -SHOULDERS * math.sin(r)))
+
+    # the upper arm: from lying on the lower hand to the floor behind the back
+    start = top_shoulder(0.0)
+    closed = math.degrees(math.atan2(BOOK_REST + 5 - start[1], ARM - 4))
+    end = top_shoulder(1.0)
+    opened = 180 - math.degrees(math.asin((BOOK_REST - 2 - end[1]) / ARM))
+    opening = hold((0.08, 0.0), (0.45, 1.0), (0.6, 1.0), (0.95, 0.0))
+
+    def top_arm(s):
+        st = top_shoulder(s)
+        b = math.radians(closed + (opened - closed) * s)
+        d = (0.0, math.sin(b), math.cos(b))
+        return [st, add(st, mul(d, UPPER_ARM)), add(st, mul(d, ARM))]
 
     def frame(t):
-        a = track(sweep, t)
-        opened = (front - a) / (front - behind)       # 0 closed, 1 open
-        upper = (OB_UPPER[0] - 9 * opened, OB_UPPER[1] + 2 * opened)
-        top_arm = arm_dir(upper, a, 1.0, 1)
-        bottom_arm = [OB_LOWER, (OB_LOWER[0] + UPPER_ARM, OB_LOWER[1] + 1), (OB_LOWER[0] + ARM, OB_LOWER[1] + 2)]
-        head = (OB_LOWER[0] - 16 - 5 * opened, OB_UPPER[1] + 2 - 3 * opened)
-        hidden = [OB_LOWER] * 4
-        return figure(OB_LOWER, upper, head, {"far": bottom_arm, "near": top_arm}, {"far": hidden, "near": hidden})
-    arc_r = ARM
-    a0, a1 = math.radians(front), math.radians(180 - front)
-    x0, y0 = OB_UPPER[0] + arc_r * math.cos(a0), OB_UPPER[1] + arc_r * math.sin(a0)
-    x1, y1 = OB_UPPER[0] + arc_r * math.cos(a1), OB_UPPER[1] + arc_r * math.sin(a1)
-    arc = (f'<path d="M {x0:.1f} {y0:.1f} A {arc_r} {arc_r} 0 1 0 {x1:.1f} {y1:.1f}" fill="none" stroke="{LINE}" '
+        s = track(opening, t)
+        st = top_shoulder(s)
+        centre = lerp(sb, st, 0.5)
+        turn = math.radians(110 * s)               # the face follows the hand
+        head = (-NECK + 3, HEAD + 2, -5 * s)
+        face = (0.0, math.sin(turn), math.cos(turn))
+        parts = {"arm-far": low_arm, "leg-far": low_leg, "leg-near": top_leg, "arm-near": top_arm(s),
+                 "shoulders": (sb, st), "hips": (hb, ht)}
+        return spatial(BOOK, parts, head, norm(sub(head, centre)), face)
+
+    # the way of the hand, as a dotted arc
+    way = [BOOK(top_arm(i / 40)[2]) for i in range(41)]
+    arc = (f'<path d="M ' + " L ".join(f"{x:.1f} {y:.1f}" for x, y in way) + f'" fill="none" stroke="{LINE}" '
            f'stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round"/>')
-    return 9.0, frame, mat(70, 230) + arc
+    return 9.0, frame, BOOK.floor(-30, 100, -85, 62) + arc
 
 
 # Innehalten: sitting cross-legged (stages 1, 2) or lying (stage 3); the
@@ -473,7 +647,7 @@ def innehalten(stage):
                 "near": [right, (right[0] + 12, right[1] + 22), (150 + 34, FLOOR - 16)]}
         legs = {"far": [hip, (150 - 40, FLOOR - 8), (150 + 14, FLOOR - 4), (150 + 22, FLOOR - 5)],
                 "near": [hip, (150 + 40, FLOOR - 8), (150 - 14, FLOOR - 4), (150 - 22, FLOOR - 5)]}
-        f = figure(hip, shoulder, head, arms, legs)
+        f = figure(hip, shoulder, head, arms, legs, facing_us=True)
         f["strokes"].insert(2, ("shoulders", [left, shoulder, right], LIMB, NEAR))
         return f
     glow = (f'<circle cx="150" cy="{FLOOR - 50}" r="52" fill="#aaa4e2" opacity="0.12">'
@@ -495,10 +669,11 @@ EXERCISES = {
 # The figure is drawn like the user's pictures: flat colours with a dark ink
 # line around them. Every part of the body (thigh, shin, shoe, sleeve, forearm
 # with hand, hips, chest, neck, head) is a fixed shape that is moved and turned
-# from moment to moment; the joints come from the poses above. Each layer
-# (the far limbs, the body, the head, the near leg, the near arm) is drawn in
-# two passes, first all its ink outlines, then its colours, so that within a
-# layer the parts join without lines between them.
+# from moment to moment; the joints come from the poses above. A part that
+# points towards the viewer is drawn shorter, its round ends stay round. Each
+# layer (the far limbs, the neck, the body, the head, the near leg, the near
+# arm) is drawn in two passes, first all its ink outlines, then its colours,
+# so that within a layer the parts join without lines between them.
 
 INK = "#10181a"
 INK_WIDTH = 2.2
@@ -510,10 +685,6 @@ SHIRTS = {"kraft": "#f08a3e", "ausdauer": "#a8c48a", "beweglichkeit": "#74b5c4",
 AREAS = {"kaefer": "kraft", "vogelhund": "kraft", "seitstuetz": "kraft", "treppe": "ausdauer",
          "katze-kuh": "beweglichkeit", "ausfallschritt": "beweglichkeit", "brustoeffner": "beweglichkeit",
          "innehalten": "gelassenheit"}
-# how the face is seen: from the side (the face towards the chest side), from the
-# front, or the top of the head only; closed eyes for the quiet exercises
-FACES = {"seitstuetz": ("front", False), "innehalten-1": ("front", True), "innehalten-2": ("front", True),
-         "innehalten-3": ("side", True), "brustoeffner": ("top", False)}
 
 
 def darker(colour, share=0.7):
@@ -545,55 +716,31 @@ def shapes(kind, length, colours):
     if kind == "pelvis":
         return [(capsule(length, 16, 14.5), shirt), (capsule(length * 0.55, 16, 15), trousers)]
     if kind == "chest":
-        return [(capsule(length, 14.5, 17), shirt)]
+        return [(capsule(length, 14.5, 14), shirt)]
     if kind == "bar":
         return [(capsule(length, 13, 11), shirt)]
     if kind == "neck":
-        return [(capsule(length, 7, 7), skin)]
+        return [(capsule(length, 11, 10), skin)]
     raise ValueError(kind)
-
-
-def head_shapes(face, closed, skin, hair):
-    """[(svg, colour or None)] of the head, centred on (0, 0); x points to the
-    crown, y to the side of the face. The ink outline comes separately."""
-    mode, sign = (face, 1) if isinstance(face, str) else face
-    if mode == "top":
-        return [(f'<circle r="{HEAD}" fill="{hair}"/>', None),
-                (f'<path d="M -6 -1 Q 0 2 6 -1" fill="none" stroke="{darker(hair, 0.75)}" stroke-width="1.4" stroke-linecap="round"/>', None)]
-    if mode == "front":
-        eyes = []
-        for side in (-1, 1):
-            if closed:
-                eyes.append(f'<path d="M -1.2 {side * 3.6 - 1.8:.1f} Q -2.6 {side * 3.6:.1f} -1.2 {side * 3.6 + 1.8:.1f}" fill="none" stroke="{INK}" stroke-width="1.1" stroke-linecap="round"/>')
-            else:
-                eyes.append(f'<circle cx="-0.8" cy="{side * 3.6:.1f}" r="1.25" fill="{INK}"/>')
-        return [(f'<circle cx="1.6" cy="0" r="{HEAD}" fill="{hair}"/>', None),
-                (f'<circle cx="-1.4" cy="0" r="{HEAD - 1.4}" fill="{skin}"/>', None)] + [(e, None) for e in eyes]
-    # from the side: hair over the back and the crown, one eye towards the face
-    y = 1  # the face lies towards +y in the head's own direction
-    eye = (f'<path d="M 0.6 {y * 4.2:.1f} q 1.4 {y * 1.2:.1f} 2.8 0" fill="none" stroke="{INK}" stroke-width="1.1" stroke-linecap="round"/>'
-           if closed else f'<circle cx="1.6" cy="{y * 5.2:.1f}" r="1.3" fill="{INK}"/>')
-    return [(f'<circle cx="1.2" cy="{-y * 1.8:.1f}" r="{HEAD}" fill="{hair}"/>', None),
-            (f'<circle cx="-0.9" cy="{y * 1.6:.1f}" r="{HEAD - 2}" fill="{skin}"/>', None),
-            (eye, None)]
 
 
 # the parts of the figure, by the strokes of a frame: (stroke, from, to, kind)
 PARTS = {
     "far": [("arm-far", 0, 1, "upper"), ("arm-far", 1, 2, "fore"),
             ("leg-far", 0, 1, "thigh"), ("leg-far", 1, 2, "shin"), ("leg-far", 2, 3, "foot")],
+    "neck": [("neck", 0, 1, "neck")],
     "body": [("shoulders", 0, 1, "bar"), ("shoulders", 1, 2, "bar"),
-             ("torso", 0, 1, "pelvis"), ("torso", 1, 2, "chest"), ("neck", 0, 1, "neck")],
+             ("torso", 0, 1, "pelvis"), ("torso", 1, 2, "chest")],
     "leg-near": [("leg-near", 0, 1, "thigh"), ("leg-near", 1, 2, "shin"), ("leg-near", 2, 3, "foot")],
     "arm-near": [("arm-near", 0, 1, "upper"), ("arm-near", 1, 2, "fore")],
 }
-LAYERS = ["far", "body", "head", "leg-near", "arm-near"]
+LAYERS = ["far", "neck", "body", "head", "leg-near", "arm-near"]
 
 
 def lines_of(frame):
     lines = {name: points for name, points, _, _ in frame["strokes"]}
-    torso = lines["torso"]
-    lines["neck"] = [torso[2], frame["head"][0]]
+    if "neck" not in lines:
+        lines["neck"] = [lines["torso"][2], frame["head"][0]]
     return lines
 
 
@@ -608,43 +755,78 @@ def unwrap(angles):
     return out
 
 
-def moving(seconds, xs, ys, angles, scales=None):
-    """The animations that place a part: moved to (x, y), turned by angle, maybe stretched."""
-    anim = f'dur="{seconds}s" repeatCount="indefinite"'
+def repeat(seconds):
+    return f'dur="{seconds}s" repeatCount="indefinite"'
+
+
+def moving(seconds, xs, ys, angles=None, scales=None):
+    """The animations that place a part: moved to (x, y), maybe turned by
+    angle and stretched a little along its length."""
     out = (f'<animateTransform attributeName="transform" type="translate" values="'
-           + ";".join(f"{x:.1f} {y:.1f}" for x, y in zip(xs, ys)) + f'" {anim}/>'
-           + f'<animateTransform attributeName="transform" type="rotate" values="'
-           + ";".join(f"{a:.1f}" for a in angles) + f'" additive="sum" {anim}/>')
+           + ";".join(f"{x:.1f} {y:.1f}" for x, y in zip(xs, ys)) + f'" {repeat(seconds)}/>')
+    if angles:
+        out += (f'<animateTransform attributeName="transform" type="rotate" values="'
+                + ";".join(f"{a:.1f}" for a in angles) + f'" additive="sum" {repeat(seconds)}/>')
     if scales:
         out += (f'<animateTransform attributeName="transform" type="scale" values="'
-                + ";".join(f"{k:.3f} 1" for k in scales) + f'" additive="sum" {anim}/>')
+                + ";".join(f"{k:.3f} 1" for k in scales) + f'" additive="sum" {repeat(seconds)}/>')
     return out
+
+
+def path(shapes_of_frames, seconds, attributes):
+    """A path whose shape may change from moment to moment (all with the same steps)."""
+    first = shapes_of_frames[0]
+    if all(d == first for d in shapes_of_frames):
+        return f'<path d="{first}" {attributes}/>'
+    return (f'<path d="{first}" {attributes}><animate attributeName="d" values="'
+            + ";".join(shapes_of_frames) + f'" {repeat(seconds)}/></path>')
+
+
+def value(name, values, seconds):
+    """an attribute that stays, or changes from moment to moment"""
+    if max(values) - min(values) < 0.05:
+        return f'{name}="{values[0]:.1f}"', ""
+    return f'{name}="{values[0]:.1f}"', (f'<animate attributeName="{name}" values="'
+                                          + ";".join(f"{v:.1f}" for v in values) + f'" {repeat(seconds)}/>')
+
+
+def head_svg(frames, seconds):
+    """the head: an ink ring, the skin, the hair cut to the head (see hair_of)"""
+    centres = [f["head"][0] for f in frames]
+    placed = moving(seconds, [c[0] for c in centres], [c[1] for c in centres])
+    attributes, animations = zip(*(value(name, [f["hair"][i] for f in frames], seconds)
+                                   for i, name in enumerate(("cx", "cy", "r"))))
+    hair = f'<circle {" ".join(attributes)} fill="{HAIR}" clip-path="url(#head)">{"".join(animations)}</circle>'
+    return f'<g>{placed}<circle r="{HEAD + INK_WIDTH}" fill="{INK}"/><circle r="{HEAD}" fill="{SKIN}"/>{hair}</g>'
+
+
+INK_ATTRIBUTES = f'fill="{INK}" stroke="{INK}" stroke-width="{2 * INK_WIDTH}" stroke-linejoin="round"'
+
+
+def slab_shape(points):
+    return "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in points) + " Z"
 
 
 def figure_svg(name, seconds, frames):
     key = name.rsplit("-", 1)[0]
     area = AREAS[key]
-    face = FACES.get(name) or FACES.get(key) or ("side", False)
-    mode, closed = face
     near = (SHIRTS[area], TROUSERS, SKIN, SHOES)
     far = tuple(darker(c) for c in near)
+    colours_by_name = {"shirt": SHIRTS[area], "trousers": TROUSERS}
     lines = [lines_of(f) for f in frames]
     out = []
     for layer in LAYERS:
         if layer == "head":
-            centres = [f["head"][0] for f in frames]
-            necks = [l["torso"][2] for l in lines]
-            angles = unwrap([angle_of(n, c) for n, c in zip(necks, centres)])
-            if mode == "front":
-                angles = [-90.0] * len(angles)      # facing the viewer, the crown up
-            # the face towards the chest side when lying on the back or kneeling: flip if needed
-            flip = ' transform="scale(1 -1)"' if mode == "side" and FLIP.get(key) else ""
-            placed = moving(seconds, [c[0] for c in centres], [c[1] for c in centres], angles)
-            parts = "".join(svg_part for svg_part, _ in head_shapes((mode, 1), closed, SKIN, HAIR))
-            out.append(f'<g>{placed}<circle r="{HEAD + INK_WIDTH}" fill="{INK}"/><g{flip}>{parts}</g></g>')
+            out.append(head_svg(frames, seconds))
             continue
         colours = far if layer == "far" else near
         inks, fills = [], []
+        if layer == "body" and "slabs" in frames[0]:
+            # a body seen at an angle: the hips and the chest as rounded slabs between their corners
+            for k, (colour, _) in enumerate(frames[0]["slabs"]):
+                shapes_of_frames = [slab_shape(f["slabs"][k][1]) for f in frames]
+                inks.append(path(shapes_of_frames, seconds, f'fill="{INK}" stroke="{INK}" stroke-width="{SLAB + 2 * INK_WIDTH}" stroke-linejoin="round"'))
+                fills.append(path(shapes_of_frames, seconds, f'fill="{colours_by_name[colour]}" stroke="{colours_by_name[colour]}" stroke-width="{SLAB}" stroke-linejoin="round"'))
         for stroke, i, j, kind in PARTS[layer]:
             if stroke not in lines[0]:
                 continue
@@ -653,19 +835,24 @@ def figure_svg(name, seconds, frames):
             lengths = [dist(a, b) for a, b in zip(starts, ends)]
             if max(lengths) < 0.5:
                 continue                             # a part that is not seen from here
-            base = max(lengths)
             angles = unwrap([angle_of(a, b) for a, b in zip(starts, ends)])
-            scales = [l / base for l in lengths] if max(lengths) - min(lengths) > 0.8 else None
+            longest = max(lengths)
+            scales = None
+            if min(lengths) < 0.85 * longest:
+                # seen much shorter at times: drawn anew each moment, so its ends stay round
+                drawn = [shapes(kind, length, colours) for length in lengths]
+            else:
+                drawn = [shapes(kind, longest, colours)]
+                if longest - min(lengths) > 0.8:
+                    scales = [length / longest for length in lengths]
             placed = moving(seconds, [a[0] for a in starts], [a[1] for a in starts], angles, scales)
-            for path, colour in shapes(kind, base, colours):
-                inks.append(f'<g>{placed}<path d="{path}" fill="{INK}" stroke="{INK}" stroke-width="{2 * INK_WIDTH}" stroke-linejoin="round"/></g>')
-                fills.append(f'<g>{placed}<path d="{path}" fill="{colour}"/></g>')
+            for k, (_, colour) in enumerate(drawn[0]):
+                shapes_of_frames = [d[k][0] for d in drawn]
+                inks.append(f'<g>{placed}{path(shapes_of_frames, seconds, INK_ATTRIBUTES)}</g>')
+                filled = path(shapes_of_frames, seconds, f'fill="{colour}"')
+                fills.append(f'<g>{placed}{filled}</g>')
         out += inks + fills
     return out
-
-
-# lying on the back or kneeling, the face looks the other way round than the head's direction suggests
-FLIP = {}
 
 
 def view_of(frames, least_width=190, pad=20):
@@ -673,14 +860,15 @@ def view_of(frames, least_width=190, pad=20):
     up, standing on the floor at the bottom, in 3:2."""
     xs, ys = [], []
     for f in frames:
-        for _, points, _, _ in f["strokes"]:
-            xs += [x for x, _ in points]
-            ys += [y for _, y in points]
+        points = [q for _, line, _, _ in f["strokes"] for q in line]
+        points += [q for _, corners in f.get("slabs", []) for q in corners]
+        xs += [x for x, _ in points]
+        ys += [y for _, y in points]
         (cx, cy), r = f["head"]
         xs += [cx - r, cx + r]
         ys += [cy - r, cy + r]
     x0, x1 = min(xs) - pad, max(xs) + pad
-    bottom = FLOOR + 12
+    bottom = max(FLOOR + 12, max(ys) + pad * 0.6)
     width = max(x1 - x0, least_width, (bottom - (min(ys) - pad)) * 1.5)
     height = width / 1.5
     left = (x0 + x1) / 2 - width / 2
@@ -694,7 +882,8 @@ def svg(name, seconds, frame, behind="", front=""):
     n = max(2, min(MAX_SAMPLES, round(seconds * SAMPLES_PER_SECOND)))
     frames = [frame(i / n) for i in range(n)] + [frame(0)]
     x, y, w, h = view_of(frames)
-    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{x:.0f} {y:.0f} {w:.0f} {h:.0f}" width="600" height="400">', behind]
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{x:.0f} {y:.0f} {w:.0f} {h:.0f}" width="600" height="400">',
+           f'<defs><clipPath id="head"><circle r="{HEAD}"/></clipPath></defs>', behind]
     out += figure_svg(name, seconds, frames)
     out.append(front)
     out.append("</svg>")

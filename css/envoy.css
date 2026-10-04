@@ -1114,6 +1114,15 @@ button.task-check:hover { color: var(--stat); }
   transform-style: preserve-3d;
   transition: transform 0.52s cubic-bezier(0.2, 0.75, 0.25, 1);
 }
+/* closing: turning over into its row, small and unsqueezed, fading there */
+.card.is-leaving { transition: transform 0.52s cubic-bezier(0.45, 0, 0.6, 1); }
+/* the faces fade, not the card: a see-through card would lose its back side */
+.card.is-leaving .card-face { opacity: 0; transition: opacity 0.2s ease-in 0.3s; }
+.card-landed { animation: card-landed 0.7s ease-out; }
+@keyframes card-landed {
+  from { background: color-mix(in srgb, var(--stat) 22%, transparent); }
+  to { background: transparent; }
+}
 .card-face { -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 16px; }
 .card-front {
   position: relative;
@@ -1187,7 +1196,7 @@ button.task-check:hover { color: var(--stat); }
 .tc-actions .btn.text { margin-right: auto; padding-left: 0; }
 .task-card .feedback-row { margin-bottom: 2px; }
 @media (prefers-reduced-motion: reduce) {
-  .card { transition: none; }
+  .card, .card.is-leaving, .card.is-leaving .card-face { transition: none; }
   .tc-body > * { animation: none; }
 }
 

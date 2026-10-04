@@ -242,7 +242,7 @@ ohne Feuer, bisher nur tag, die anderen Zeiten tönt die App; Stufe 1 = Lagerfeu
 Portrait des Envoy
 `portrait.png` im Ordner jeder Figur (quadratisch, freigestellt, wird umgefärbt), die Übungen
 als bewegte Figuren `assets/uebungen/<id>.svg` (auf Wunsch der Nutzerin von Claude gezeichnet,
-mit `tools/uebungsbilder.py`: Comic-Stil mit Umrisslinie, Hemd in der Farbe des Bereichs; auf der Karte der Aufgabe und im Timer; eine Zeichnung
+mit `tools/uebungsbilder.py`: Comic-Stil mit Umrisslinie, Hemd in der Farbe des Bereichs, ohne Gesicht; auf der Karte der Aufgabe und im Timer; eine Zeichnung
 der Nutzerin `uebungen/<id>.png` im Ordner einer Figur ginge vor), Icon einer
 Deko `assets/icons/icon_einrichtung_<id>.png` (256 × 256; ohne Bild das Deko-Zeichen),
 Ebenen des Lagerbilds (1792 × 672, transparent, von der Nutzerin auf dem Tagesbild an

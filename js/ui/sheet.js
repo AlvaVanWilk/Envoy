@@ -72,6 +72,17 @@ function turnedOnto(card, element) {
   return `translate(${dx}px, ${dy}px) scale(${b.width / a.width}, ${b.height / a.height}) rotateY(180deg)`;
 }
 
+// On closing: turned over, small and in its own proportions, over the middle
+// of the element, so that nothing on it is squeezed; it fades out there.
+function turnedInto(card, element) {
+  const a = card.getBoundingClientRect();
+  const b = element.getBoundingClientRect();
+  const dx = b.left + b.width / 2 - (a.left + a.width / 2);
+  const dy = b.top + b.height / 2 - (a.top + a.height / 2);
+  const s = Math.min(b.width / a.width, (1.6 * b.height) / a.height);
+  return `translate(${dx}px, ${dy}px) scale(${s}) rotateY(180deg)`;
+}
+
 export function openCard({ label, front, back, from = null, className = '' }) {
   closeSheet();
   const root = document.getElementById('sheet-root');
@@ -101,11 +112,17 @@ export function openCard({ label, front, back, from = null, className = '' }) {
   });
   card.querySelector('.card-front button')?.focus({ preventScroll: true });
 
-  // on closing: back onto the element, turning over again
+  // on closing: back into the element, turning over again; the element
+  // lights up briefly as the card arrives
   const leave = () => {
     const target = !still() && from ? from() : null;
     if (!target) return 220;
-    card.style.transform = turnedOnto(card, target);
+    card.classList.add('is-leaving');
+    card.style.transform = turnedInto(card, target);
+    setTimeout(() => {
+      target.classList.add('card-landed');
+      setTimeout(() => target.classList.remove('card-landed'), 700);
+    }, TURN_MS - 140);
     return TURN_MS;
   };
   current = { layer, onKey, onClose: null, previousFocus, leave };
