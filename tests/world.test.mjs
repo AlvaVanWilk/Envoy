@@ -46,13 +46,14 @@ function expeditionEvent(events, questId, hoursAfter) {
 }
 const total = (e) => e.out + e.act + e.back;
 
-test('start: at the camp, full bar, the start outfit worn without gloves, the backpack empty, no camp yet', () => {
+test('start: at the camp, full bar, the start outfit worn without gloves and shoes, the backpack empty, no camp yet', () => {
   const s = replay([], catalog, DAY, T0);
   assert.equal(s.world.expedition, null);
   assert.equal(s.world.stamina.value, maxStamina(s.stats));
   assert.equal(s.world.equipped.torso, 'start:torso_leinenhemd_1');
   assert.equal(s.world.equipped.beine, 'start:beine_leinenhose_1');
-  assert.equal(s.world.equipped.schuhe, 'start:schuhe_bastsandalen_1');
+  // the first shoes come from a quest in the Pilzhain (q-bastsandalen)
+  assert.equal(s.world.equipped.schuhe, undefined);
   // the first gloves come from a quest on the Trümmerfeld (q-handwickel)
   assert.equal(s.world.equipped.handschuhe, undefined);
   assert.equal(s.world.items['start:handschuhe_handwickel_1'], undefined);

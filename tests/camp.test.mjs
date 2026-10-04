@@ -190,6 +190,21 @@ test('the first day: the Lagerfeuer is sure to be built with the 10 Energie of t
   }
 });
 
+test('the first shoes: a quest in the Pilzhain without conditions, a short way from the camp', () => {
+  const s = replay([], catalog, DAY, T0);
+  assert.equal(s.world.equipped.schuhe, undefined);
+  const quest = questById('q-bastsandalen', ctxOf(s));
+  assert.deepEqual(quest.conditions, []);
+  assert.deepEqual(quest.reward.items, ['schuhe_bastsandalen_1']);
+  assert.equal(quest.repeatable, false);
+  const plan = planExpedition(quest, ctxOf(s), 'x', { energy: 10 });
+  assert.equal(plan.out + plan.act + plan.back, 4);   // one Energie each way, two there
+  const e = expeditionEvent([], 'q-bastsandalen', 0.1);
+  const back = replay([e], catalog, DAY, T0 + 0.1 * H + total(e) * 60000 + 1000);
+  const sandals = Object.values(back.world.items).find((i) => i.id === 'schuhe_bastsandalen_1');
+  assert.equal(sandals.where, 'rucksack');
+});
+
 test('gathering and building in play: from the empty start to the Lagerfeuer in one day', () => {
   let events = [];
   let hours = 0.1;

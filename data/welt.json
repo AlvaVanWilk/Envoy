@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T16:23:44Z",
+ "generated": "2026-10-04T16:32:41Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -552,6 +552,42 @@
   }
  ],
  "quests": [
+  {
+   "id": "q-bastsandalen",
+   "name": "Bast aus dem Pilzhain",
+   "place": "pilzhain",
+   "kind": "erkunden",
+   "text": "Die alten Pilzstiele lassen lange, zähe Fasern los. Geflochten und um die Füße gebunden, tragen sie über Stein und Splitter.",
+   "monsters": [],
+   "conditions": [],
+   "speedStats": [],
+   "yieldStats": [],
+   "consumes": {},
+   "cost": 2,
+   "reward": {
+    "splitter": [
+     0,
+     0
+    ],
+    "pilzholz": [
+     0,
+     0
+    ],
+    "stein": [
+     0,
+     0
+    ],
+    "items": [
+     "schuhe_bastsandalen_1"
+    ],
+    "plans": [],
+    "unlocks": [],
+    "rest": false
+   },
+   "repeatable": false,
+   "cooldown": 0,
+   "active": true
+  },
   {
    "id": "q-pilzholz-klein",
    "name": "Pilzholz auflesen",

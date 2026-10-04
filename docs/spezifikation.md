@@ -413,7 +413,9 @@ schlecht:
   10 Energie des Starts immer zu schaffen: 8 Stein kosten höchstens 4 Energie (4 × 2
   Stück), 2 Pilzholz höchstens 1, dazu 2 zum Bauen. Das sind höchstens 7 von 10, auch bei
   schlechtesten Würfen. Die 2 Energie für die ersten Handwickel („Stoff zwischen den
-  Trümmern“) passen noch dazu.
+  Trümmern“) passen noch dazu. Die Bastsandalen („Bast aus dem Pilzhain“, 4 Energie mit
+  dem Weg) kommen je nach Würfeln nach etwas Erholung, noch am selben Tag (die Leiste
+  füllt sich in 8 Stunden).
 
 **Weitere Sammelorte.** Am Pilzhain und im Steinbruch gibt es noch je drei Quests mit
 festem Ertrag und Weg (je 1 Energie hin und zurück). Sie folgen derselben Rechnung wie
@@ -499,10 +501,12 @@ alles für ein Drittel des Preises zurück.
 
 Der Rucksack hat von Anfang an **5 Plätze** und der Envoy hat ihn immer bei sich. Er ist
 nur für Dinge (Kleidung, Fundstücke). Getragenes zählt nicht mit. Das Startoutfit
-(Leinenhemd, Leinenhose, Bastsandalen) trägt er von Anfang an, der Rucksack ist am Start
-leer. Handschuhe hat er am Anfang keine: Die ersten Handwickel bringt die Quest „Stoff
-zwischen den Trümmern“ auf dem Trümmerfeld, ohne Voraussetzung, für 2 Energie und ohne
-Weg. Sie landen im Rucksack und werden von dort angelegt.
+(Leinenhemd, Leinenhose) trägt er von Anfang an, der Rucksack ist am Start leer.
+Handschuhe und Schuhe hat er am Anfang keine, er geht barfuß. Die ersten Handwickel bringt
+die Quest „Stoff zwischen den Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung,
+2 Energie, ohne Weg), die Bastsandalen die Quest „Bast aus dem Pilzhain“ (ohne
+Voraussetzung, 2 Energie und je 1 Energie Weg). Beides landet im Rucksack und wird von
+dort angelegt.
 
 **Pilzholz und Stein liegen im Vorrat**, nicht im Rucksack: was der Envoy sammelt oder
 findet, ist dort, sobald die Arbeit getan ist, auch wenn er noch unterwegs ist. Das wird
@@ -714,6 +718,7 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 | --- | --- |
 | Karte, Quests, Begegnungen, Rucksack, Handbuch | von Anfang an |
 | Handwickel (die ersten Handschuhe) | Quest „Stoff zwischen den Trümmern“ auf dem Trümmerfeld, ohne Voraussetzung |
+| Bastsandalen (die ersten Schuhe) | Quest „Bast aus dem Pilzhain“, ohne Voraussetzung |
 | Lagerstufe 1, die vier Einrichtungen | Quest „Ein Lagerfeuer errichten“ (die erste Quest) |
 | Lagerstufen 2 bis 5, höhere Stufen der Einrichtungen, Deko | Hygge (siehe Das Lager) |
 | Händler | Quest „Der Händler im Nebel“ |
@@ -876,12 +881,13 @@ Fingerspitzen in fingerlosen Handschuhen. Die gezeichneten Farben stehen in
 eingetragen.
 
 **Startoutfit:** Leinenhemd und Leinenhose, ohne Voraussetzung und ohne Fähigkeit. Der
-Envoy trägt sie von Anfang an (Herkunft `angezogen`), ebenso die Bastsandalen, damit
-der Rucksack am Start leer ist (Herkunft `start` legt Dinge in den Rucksack; es gibt
-vorerst keine). Handschuhe trägt er am Anfang nicht: Die Handwickel (Zeichnungen der
-Nutzerin, Nr. 7 und 8 der Kleiderkammer) sind die Belohnung der Quest „Stoff zwischen den
-Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung, 2 Energie), die Griffhandschuhe die
-für die Brücke über die Schlucht.
+Envoy trägt sie von Anfang an (Herkunft `angezogen`), damit der Rucksack am Start leer
+ist (Herkunft `start` legt Dinge in den Rucksack; es gibt vorerst keine). Handschuhe und
+Schuhe trägt er am Anfang nicht: Die Handwickel (Zeichnungen der Nutzerin, Nr. 7 und 8
+der Kleiderkammer) sind die Belohnung der Quest „Stoff zwischen den Trümmern“ auf dem
+Trümmerfeld, die Bastsandalen (Nr. 9, für beide Figuren dieselbe Zeichnung, sie passt
+an beide Füße) die der Quest „Bast aus dem Pilzhain“, beide ohne Voraussetzung. Die
+Griffhandschuhe sind die Belohnung für die Brücke über die Schlucht.
 
 **Teile ohne Bild:** Fehlt die Ebene eines Teils noch, wird es getragen, aber nicht
 gezeichnet; fehlt sein Icon, zeigt die App das Symbol des Slots. Die Umwandlung listet

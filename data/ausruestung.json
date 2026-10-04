@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T16:23:44Z",
+ "generated": "2026-10-04T16:32:41Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -57,13 +57,13 @@
    "faehigkeit": null,
    "effekt": {},
    "herkunft": [
-    "angezogen",
+    "quest",
     "haendler"
    ],
    "preis": null,
-   "figur": "",
+   "figur": "assets/figur/schuhe_bastsandalen_1.png",
    "figuren": {},
-   "icon": "",
+   "icon": "assets/icons/icon_schuhe_bastsandalen_1.png",
    "icons": {},
    "ebene": null
   },

@@ -97,8 +97,10 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   (Grundbild der Stufe, ab Stufe 2 das Gebäude, Einrichtungen, Deko, Vordergrund; ein Tipp
   zeigt es groß); Rundgänge durch Tageswerk und Abenteuer (je beim ersten Besuch)
   und Lager (nach dem Feuer)
-- Startoutfit ohne Handschuhe; die ersten Handwickel bringt die Quest „Stoff zwischen den
-  Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung, 2 Energie, am ersten Tag zu schaffen)
+- Startoutfit ohne Handschuhe und ohne Schuhe; die ersten Handwickel bringt die Quest „Stoff
+  zwischen den Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung, 2 Energie, am ersten Tag
+  zu schaffen), die Bastsandalen die Quest „Bast aus dem Pilzhain“ (ohne Voraussetzung,
+  2 Energie und je 1 Energie Weg)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
   (gesammeltes ist sofort dort, ohne Erklärung); Händler, Kompendium der getroffenen Geister
