@@ -985,6 +985,9 @@ Kleidungsteile. Quelltext in `tools/kleiderkammer.html`.
   Zufallsbeute, Händlerware, Startausrüstung), Fortschritt (Anfänger 1–10, frühes
   Midgame 10–50, spätes Midgame 50–100, Endgame 100+; da die Stats bei 100 enden,
   heißt 100+: am Ziel), wichtige Werte und eine freie Idee.
+- **Filter** nach Figur, Slot und Stand: freigegeben, gesperrt, im Spiel, nicht im Spiel,
+  ohne Gegenstück (ein Teil für Frau oder Mann, dessen Fassung für die andere Figur
+  nicht verknüpft ist; Teile für beide brauchen keins).
 - **Freigabe.** Nur freigegebene Teile verwendet Claude.
 - **Im Spiel.** Claude trägt ein, ob und wie ein Teil verwendet wird (Kennung,
   Voraussetzung, Fundort, Wirkung). Diese Angaben sind verdeckt und werden erst auf

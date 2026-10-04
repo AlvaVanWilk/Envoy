@@ -752,11 +752,16 @@ function renderFilters() {
     { id: 'gesperrt', name: 'Gesperrt', n: count((t) => !t.freigabe) },
     { id: 'spiel', name: 'Im Spiel', n: count((t) => t.imSpiel) },
     { id: 'offen', name: 'Nicht im Spiel', n: count((t) => !t.imSpiel) },
+    { id: 'einzeln', name: 'Ohne Gegenstück', n: count(lacksCounterpart) },
   ], f.status, (id) => { f.status = id; renderTeile(); });
 }
 
 // Frau and Mann show what fits them, the drawings for both among them; Beide only those.
 const forFigure = (t, f) => (f === 'beide' ? t.figur === 'beide' : figurenOf(t.figur).includes(f));
+
+// A drawing for one figure whose counterpart for the other is not linked
+// (or no longer there). A drawing for both needs none.
+const lacksCounterpart = (t) => t.figur !== 'beide' && !byId(state.teile, t.gegenstueck);
 
 function matches(t) {
   const f = state.filter;
@@ -766,6 +771,7 @@ function matches(t) {
   if (f.status === 'gesperrt' && t.freigabe) return false;
   if (f.status === 'spiel' && !t.imSpiel) return false;
   if (f.status === 'offen' && t.imSpiel) return false;
+  if (f.status === 'einzeln' && !lacksCounterpart(t)) return false;
   const q = norm(f.q).replace(/^nr\.?\s*/, '');
   if (q && !norm(t.name).includes(q) && String(t.nr) !== q) return false;
   return true;
