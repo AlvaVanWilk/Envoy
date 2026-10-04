@@ -1,7 +1,7 @@
 // Recalculates the complete game state from the list of events.
 // It walks through every calendar day from the first event until today:
 //   1. apply the day's events in the order they happened: XP for finished
-//      tasks, intensity changes, and everything done in the world
+//      tasks, the stages of their exercises, and everything done in the world
 //   2. when the day is over: malus for every stat whose task was not done,
 //      then take off equipment whose requirements are no longer met.
 // Achievements are checked along the way; a bonus they give counts from
@@ -10,18 +10,18 @@
 
 import {
   STAT_IDS, MALUS_AVERAGE_WINDOW, INTENSITY_UP_AFTER, INTENSITY_DOWN_AFTER,
-  INTENSITY_DOWN_AFTER_MISSED_DAYS, RATIO_GOOD, RATIO_HARD, FEEDBACK,
+  INTENSITY_DOWN_AFTER_MISSED_DAYS, TOO_MUCH,
 } from './config.js';
 import { addXp, removeXp, malusFactor, average } from './formulas.js';
 import { dayRange, addDays, dayStartMs } from './days.js';
 import { compareEvents } from './events.js';
 import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance, startOfDay } from './world/worldstate.js';
 import { checkAchievements, bonusOf, withBonus } from './achievements.js';
+import { taskFor, taskOfDone, resultOf } from './tasks.js';
 
 export { unmetRequirements } from './world/items.js';
 
 const HISTORY_DAYS = 30;
-const HARD_FEEDBACK = new Set(FEEDBACK.filter((f) => f.hard).map((f) => f.id));
 const TASK_TYPES = new Set(['plan', 'done', 'undo', 'mode']);
 
 function initialStats() {
@@ -30,28 +30,18 @@ function initialStats() {
   return stats;
 }
 
-function initialIntensity() {
+// The stage of every exercise (by its key, see tasks.js), all at 1 to begin with.
+// fresh: the stage changed and the exercise was not done since.
+function initialIntensity(catalog) {
   const intensity = {};
-  for (const id of STAT_IDS) intensity[id] = { level: 1, good: 0, hard: 0, fresh: false };
+  for (const stat of STAT_IDS) {
+    for (const exercise of catalog.units?.[stat] || []) intensity[exercise.key] = { level: 1, good: 0, hard: 0, fresh: false };
+  }
   return intensity;
 }
 
-// How a finished task counts for the intensity: 'good', 'hard', 'neutral',
-// or null when it does not count (Krankheitsmodus).
-export function runResult(done) {
-  if (done.sick) return null;
-  const value = done.m && done.mk ? done.m[done.mk] : undefined;
-  if (typeof value === 'number' && done.z > 0) {
-    const ratio = value / done.z;
-    if (ratio >= RATIO_GOOD) return 'good';
-    if (ratio < RATIO_HARD) return 'hard';
-    return 'neutral';
-  }
-  if (done.fb) return HARD_FEEDBACK.has(done.fb) ? 'hard' : 'good';
-  return 'good';
-}
-
-// Slowly up, quickly down.
+// Up after two good runs in a row, down after two too hard ones in a row;
+// a run that is neither breaks the row.
 function applyResult(entry, result, maxLevel) {
   const next = { ...entry, fresh: false };
   if (result === 'hard') {
@@ -89,20 +79,18 @@ export function replay(events, catalog, today, now = Date.now()) {
   }
 
   const stats = initialStats();
-  const intensity = initialIntensity();
+  const intensity = initialIntensity(catalog);
+  const stagesOf = new Map(STAT_IDS.flatMap((stat) => (catalog.units?.[stat] || []).map((x) => [x.key, x.stages.length])));
   let intensityAtDayStart = intensity;
   let statsAtDayStart = { ...stats };
   const recentGains = Object.fromEntries(STAT_IDS.map((id) => [id, []]));
   const history = Object.fromEntries(STAT_IDS.map((id) => [id, []]));
-  const lastUsed = {};              // exercise id -> last day it was assigned or done
-  const doneCount = {};             // exercise id -> how often it was done
-  const dayExercise = {};           // day -> stat -> exercise id
-  const log = [];                   // every day: which exercise, done or not, and the gain
-  const totals = { km: 0, stockwerke: 0 };
+  const log = [];                   // every day: which exercises, done or not, and the gain
+  // real totals: minutes of stairs (an old floor counts as one), kilometres from earlier versions
+  const totals = { treppe_min: 0, km: 0, stockwerke: 0 };
   const earned = {};                // achievement id -> { day, t }
   let lastT = 0;                    // moment of the latest event so far
   let sick = false;
-  let todayPlan = {};
   let todayDone = {};
 
   const firstEvent = sorted.find((e) => e.d <= today);
@@ -114,7 +102,6 @@ export function replay(events, catalog, today, now = Date.now()) {
   for (const day of dayRange(firstDay, today)) {
     intensityAtDayStart = { ...intensity };
     statsAtDayStart = { ...stats };
-    const plan = {};
     const done = {};
     if (day !== firstDay) startOfDay(world, dayStartMs(day), ctx);
 
@@ -124,8 +111,8 @@ export function replay(events, catalog, today, now = Date.now()) {
         applyWorldEvent(world, e, ctx);
         checkAchievements(earned, { world, stats, totals }, day, e.t);
       } else if (e.type === 'plan') {
-        // the latest assignment counts, as long as the task is still open
-        if (!done[e.stat] && catalog.exerciseById.has(e.ex)) plan[e.stat] = e;
+        // from earlier versions, when the exercise of a day was picked
+        // ahead; the task of an area now follows from its stages
       } else if (e.type === 'mode') {
         sick = Boolean(e.sick);
       } else if (e.type === 'done') {
@@ -133,31 +120,40 @@ export function replay(events, catalog, today, now = Date.now()) {
         const gain = withBonus(e.xp, bonusOf(earned, 'tageswerk', e.t));
         done[e.stat] = { ...e, gain };
         stats[e.stat] = addXp(stats[e.stat], gain);
-        doneCount[e.ex] = (doneCount[e.ex] || 0) + 1;
+        // measured values from earlier versions
         if (e.m) {
           totals.km += Number(e.m.strecke_km) || 0;
           totals.stockwerke += Number(e.m.stockwerke) || 0;
+          totals.treppe_min += Number(e.m.stockwerke) || 0;
         }
-        const result = runResult(e);
-        if (result) intensity[e.stat] = applyResult(intensity[e.stat], result, catalog.maxIntensity[e.stat] || 1);
+        if (e.stat === 'ausdauer') totals.treppe_min += (taskOfDone(e, catalog)?.seconds || 0) / 60;
+        // every exercise of the task: its answer counts for its stage
+        // („zu viel“ for all of them), nothing in Krankheitsmodus
+        for (const id of Array.isArray(e.teile) ? e.teile : []) {
+          const row = catalog.exerciseById.get(id);
+          if (!row || !intensity[row.uebung]) continue;
+          const entry = { ...intensity[row.uebung], fresh: false };
+          const result = e.sick ? null : resultOf(e.zuviel ? TOO_MUCH : e.antworten?.[id]);
+          intensity[row.uebung] = result ? applyResult(entry, result, stagesOf.get(row.uebung)) : entry;
+        }
         if (e.stat === 'gelassenheit') restFromTask(world, e.t, ctx);
       }
     }
 
-    dayExercise[day] = {};
+    // what was done; on the last day also what is still open
+    // teile: the rows of the exercises; ex: the exercise of an earlier version
     const tasks = {};
     for (const stat of STAT_IDS) {
-      const ex = done[stat]?.ex || plan[stat]?.ex;
-      if (ex) {
-        dayExercise[day][stat] = ex;
-        lastUsed[ex] = day;
-        tasks[stat] = { ex, done: Boolean(done[stat]), gain: done[stat]?.gain || 0 };
+      if (done[stat]) {
+        tasks[stat] = { teile: done[stat].teile || null, ex: done[stat].ex || null, done: true, gain: done[stat].gain };
+      } else if (day === today) {
+        const open = taskFor(stat, intensityAtDayStart, sick, catalog);
+        if (open) tasks[stat] = { teile: open.parts.map((p) => p.row.id), ex: null, done: false, gain: 0 };
       }
     }
     if (Object.keys(tasks).length > 0) log.push({ day, tasks, sick });
 
     if (day === today) {
-      todayPlan = plan;
       todayDone = done;
       for (const stat of STAT_IDS) {
         if (done[stat]) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: stats[stat].level });
@@ -179,9 +175,13 @@ export function replay(events, catalog, today, now = Date.now()) {
         const after = malus > 0 ? removeXp(before, malus) : before;
         stats[stat] = { ...after, missed };
         if (day >= historyFrom) history[stat].push({ day, kind: 'missed', missed, xp: -malus, level: after.level });
-        // A long break lowers the exercise intensity, so coming back is easy.
-        if (missed % INTENSITY_DOWN_AFTER_MISSED_DAYS === 0 && intensity[stat].level > 1) {
-          intensity[stat] = { level: intensity[stat].level - 1, good: 0, hard: 0, fresh: true };
+        // A long break lowers the stage of every exercise of the area, so
+        // coming back is easy.
+        if (missed % INTENSITY_DOWN_AFTER_MISSED_DAYS === 0) {
+          for (const exercise of catalog.units?.[stat] || []) {
+            const entry = intensity[exercise.key];
+            if (entry.level > 1) intensity[exercise.key] = { level: entry.level - 1, good: 0, hard: 0, fresh: true };
+          }
         }
       }
     }
@@ -200,14 +200,10 @@ export function replay(events, catalog, today, now = Date.now()) {
     intensity,
     intensityAtDayStart,
     sick,
-    todayPlan,
     todayDone,
     history,
     log,
-    lastUsed,
-    doneCount,
     totals,
-    yesterdayExercise: dayExercise[addDays(today, -1)] || {},
     world,
     achievements: earned,
     envoy: world.envoy,

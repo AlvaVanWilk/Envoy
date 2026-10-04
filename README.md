@@ -1,7 +1,7 @@
 # Envoy
 
-Webapp, die eine gesunde Alltagsroutine als Rollenspiel belohnt. Jeden Tag teilt die
-App vier reale Übungen zu, eine je Bereich. Nur davon steigen die Werte des Envoy. Mit
+Webapp, die eine gesunde Alltagsroutine als Rollenspiel belohnt. Jeden Tag gibt die
+App vier reale Aufgaben vor, eine je Bereich, jede eine kleine Einheit von Übungen. Nur davon steigen die Werte des Envoy. Mit
 diesen Werten zieht er durch eine Welt aus Orten, Quests und Geistern. Jede und jeder,
 die mitspielt, hat ein eigenes Konto und einen eigenen Envoy.
 
@@ -92,7 +92,7 @@ mit demselben Namen und Passwort **Anmelden**; der Spielstand kommt vom Server.
 
 Die Quellen sind drei Tabellen in `data/`, jede mit einem Blatt **Erklärung**:
 
-- `uebungen.xlsx` — Übungskatalog mit Stufen, XP, Messwert und Ziel
+- `uebungen.xlsx` — Übungen je Bereich mit ihren Stufen, Zeit, Frage, Ansagen und XP
 - `ausruestung.xlsx` — Ausrüstung mit Voraussetzungen, Fähigkeiten, Herkunft, Preis
 - `welt.xlsx` — Orte der Karte, Monster, Quests (mit `aktiv`: nein nimmt eine Quest vorerst aus
   dem Spiel, ohne sie zu löschen), Lagerstufen, Einrichtungen (mit Hygge), Deko
@@ -144,10 +144,10 @@ eine neue Zeichnung einer Figur bei denselben Farben, ist nichts zu tun.
 | `js/config.js` | alle Zahlen der Regeln an einer Stelle |
 | `js/formulas.js` | Levelkurve, Malus, Bodensatz |
 | `js/replay.js` | berechnet den Spielstand aus allen Einträgen |
-| `js/planner.js` | wählt die Übungen des Tages |
+| `js/tasks.js` | die Aufgabe jedes Bereichs: seine Übungen auf ihrer Stufe, Fragen danach, XP |
 | `js/world/` | Karte, Expeditionen, Energie, Kampf, Quests, Händler, Inventar, Lager |
 | `js/achievements.js` | die Erfolge und ihre Belohnungen |
-| `js/ui/` | die Ansichten; `topbar.js` die Leiste oben, `camp.js` das Lager (sein Bild aus Ebenen, ein Tipp zeigt es groß), `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“, `deko.js` die Deko-Liste, `upgrade.js` „Lager aufwerten“, `testtools.js` das Menü am Schild „Test“, das nur die Testfassung zeigt; `journey.js` die Leiste einer laufenden Expedition mit ihrer Reihe und den Bericht; `js/world/expedition.js` Expeditionen als Reihe von Aktionen (Wege, Zeiten, Fortschritt), der Ablauf unterwegs steht in `js/world/worldstate.js`; `js/world/camp.js` das Lager (Stufen, Einrichtungen, Deko, Hygge), `js/world/plans.js` das Finden der Pläne für Deko, `js/daylight.js` die Tageszeit |
+| `js/ui/` | die Ansichten; `today.js` das Tageswerk, `taskcard.js` die Karte einer Aufgabe (dreht sich auf, Reiter je Übung, Fragen), `timer.js` der geführte Timer, `voice.js` seine Stimme, `topbar.js` die Leiste oben, `camp.js` das Lager (sein Bild aus Ebenen, ein Tipp zeigt es groß), `handbook.js` das Handbuch (`room.js` rechnet aus, wie viele Einträge auf eine Seite passen), `tour.js` und `tours.js` die Rundgänge, `worldmap.js` die Karte mit dem Fächer der Quests, `questsheet.js` das Fenster einer Quest, `facilities.js` „Lager einrichten“, `deko.js` die Deko-Liste, `upgrade.js` „Lager aufwerten“, `testtools.js` das Menü am Schild „Test“, das nur die Testfassung zeigt; `journey.js` die Leiste einer laufenden Expedition mit ihrer Reihe und den Bericht; `js/world/expedition.js` Expeditionen als Reihe von Aktionen (Wege, Zeiten, Fortschritt), der Ablauf unterwegs steht in `js/world/worldstate.js`; `js/world/camp.js` das Lager (Stufen, Einrichtungen, Deko, Hygge), `js/world/plans.js` das Finden der Pläne für Deko, `js/daylight.js` die Tageszeit |
 | `sync.php` | Geräteabgleich |
 | `data/` | Tabellen (Quelle) und JSON (für die App) |
 | `tools/` | Umwandlung der Tabellen; `tools/lager_ebenen.py` hält die Reihenfolge der Ebenen im Lagerbild (`ORDER`, von hinten nach vorn) und macht aus den Teilen in `tools/lager-ausschnitte/` die Ausschnitte für jede Tageszeit |

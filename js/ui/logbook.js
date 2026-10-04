@@ -1,5 +1,5 @@
 // The looking-back parts of the Handbuch:
-//   Tageswerk  today first, then every earlier day: which exercise, done or not
+//   Tageswerk  today first, then every earlier day: which exercises, done or not
 //   Quests     every finished expedition, newest first, and how it went
 //   Erfolge    what the Envoy has reached, with its reward
 
@@ -7,7 +7,7 @@ import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
 import { STATS, MATERIALS } from '../config.js';
 import { formatDayLong, formatDayShort } from '../days.js';
-import { statEmblem } from './stats.js';
+import { statEmblem, statInfo } from './stats.js';
 import { RESULT_TEXT } from './journey.js';
 import { ACHIEVEMENTS, BONUS_TEXT } from '../achievements.js';
 import { chunks, perPage } from './room.js';
@@ -21,11 +21,19 @@ const NOTE = 30;
 
 // --- Tageswerk ----------------------------------------------------------------
 
+// The exercises of a task; a task from before the exercises were units
+// names its area (its exercise is no longer in the table).
+function taskName(stat, task, game) {
+  const rows = (task.teile || []).map((id) => game.catalog.exerciseById.get(id)).filter(Boolean);
+  if (rows.length > 1) return rows.map((r) => r.kurz).join(' · ');
+  if (rows.length === 1) return rows[0].name;
+  return statInfo(stat).area;
+}
+
 function taskLine(stat, task, game) {
-  const exercise = game.catalog.exerciseById.get(task.ex);
   return h('li', { class: `log-task ${task.done ? 'done' : ''}`, 'data-stat': stat },
     statEmblem(stat, 'tiny'),
-    h('span', { class: 'log-task-name' }, exercise ? exercise.name : task.ex),
+    h('span', { class: 'log-task-name' }, taskName(stat, task, game)),
     h('span', { class: 'log-task-state' }, task.done ? `+${task.gain}` : '–'));
 }
 

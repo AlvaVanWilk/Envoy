@@ -4,12 +4,16 @@
 // devices only need to exchange the events the other one is missing.
 //
 // Event types of the daily tasks:
-//   plan     { stat, ex, sick? }              exercise `ex` assigned for the day (the latest one counts)
-//   done     { stat, ex, xp, mk?, z?, m?, fb?, sick? }
-//                                             task finished: measured value m[mk] against target z,
-//                                             or feedback fb; sick = done in Krankheitsmodus
+//   done     { stat, teile, xp, antworten?, zuviel?, sick? }
+//                                             task finished: teile = the rows of its exercises (ids
+//                                             in the table), antworten = { row id: answer id } to the
+//                                             questions after it, zuviel = „Das war heute zu viel“,
+//                                             sick = done in Krankheitsmodus
+//            from before: { stat, ex, xp, mk?, z?, m?, fb?, sick? } (one exercise, measured value
+//                                             or feedback); its XP counts, its exercise is gone
 //   undo     { ref }                          takes back the `done` event with id `ref`
 //   mode     { sick }                         Krankheitsmodus on or off
+//   plan     { stat, ex, sick? }              from before: the exercise picked for a day; ignored now
 //
 // Event types of the world (see world/worldstate.js):
 //   expedition { q, place, title, least, outcome }

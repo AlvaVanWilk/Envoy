@@ -1149,10 +1149,33 @@ button.task-check:hover { color: var(--stat); }
 }
 .tc-img { width: 100%; height: 100%; object-fit: contain; }
 .tc-picture.empty .stat-emblem { --size: 84px; opacity: 0.8; }
-.tc-titles { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; margin: 14px 0 10px; }
-.tc-title { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.2; }
+.tc-meta { margin: 0 0 8px; font-size: 14px; color: var(--text-2); }
 .tc-gain { font-weight: 700; color: var(--stat); }
+/* the exercises of a unit: one tab each */
+.tc-tabs { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; }
+.tc-tab {
+  flex: 1 0 auto; min-height: 38px; padding: 6px 12px;
+  border-radius: 8px; border: 1px solid var(--line); background: rgba(0, 0, 0, 0.2);
+  color: var(--text-2); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+}
+.tc-tab.on { border-color: color-mix(in srgb, var(--stat) 60%, transparent); background: color-mix(in srgb, var(--stat) 16%, #132023); color: var(--text); }
+.tc-part { display: grid; gap: 6px; margin: 12px 0 10px; }
+.tc-title { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.2; }
+.tc-stage { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0; font-size: 14px; color: var(--stat); }
+.tc-stage > span:not(.pill) + span:not(.pill)::before { content: '·'; margin-right: 12px; color: var(--muted); }
+.tc-new { font-size: 12px; }
+.tc-why { margin: 0; font-size: 14px; color: var(--text-2); }
 .tc-body { display: grid; gap: 10px; }
+.tc-body:empty { display: none; }
+/* the questions after the task take the whole card */
+.task-card[data-view="questions"] :is(.tc-picture, .tc-tabs, .tc-part) { display: none; }
+.tc-question { display: grid; gap: 2px; padding: 12px 0; border-top: 1px solid var(--line); }
+.tc-question:first-child { border-top: 0; padding-top: 4px; }
+.tc-question-part { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stat); }
+.tc-question .sheet-question { margin-bottom: 8px; }
+.feedback-row.answers-2 { grid-template-columns: repeat(2, 1fr); }
+.btn.feedback[aria-pressed="true"] { border-color: var(--stat); background: color-mix(in srgb, var(--stat) 22%, #131d20); }
+.tc-too-much { margin-right: auto; padding-left: 0; color: var(--text-2); font-size: 14px; }
 .tc-body > * { animation: tc-in 0.25s var(--ease); }
 @keyframes tc-in { from { opacity: 0; transform: translateY(4px); } }
 .tc-actions {
@@ -1162,7 +1185,6 @@ button.task-check:hover { color: var(--stat); }
   background: rgba(0, 0, 0, 0.18);
 }
 .tc-actions .btn.text { margin-right: auto; padding-left: 0; }
-.tc-actions .btn.ghost:first-child:not(:last-child) { margin-right: auto; }
 .task-card .feedback-row { margin-bottom: 2px; }
 @media (prefers-reduced-motion: reduce) {
   .card { transition: none; }
@@ -1216,6 +1238,7 @@ button.task-check:hover { color: var(--stat); }
 .rest-title { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--ivory-bright); }
 .tomorrow { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; }
 .tomorrow li { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); }
+.tomorrow-new { color: var(--stat); }
 .today.all-done .task-list { opacity: 0.8; }
 
 /* 9. timer --------------------------------------------------------------- */
@@ -1234,6 +1257,11 @@ button.task-check:hover { color: var(--stat); }
 .timer-overlay.open { opacity: 1; }
 .timer-inner { display: grid; justify-items: center; gap: 14px; width: min(420px, 100%); text-align: center; }
 .timer-title { font-family: var(--font-display); font-size: 22px; }
+.timer-part { min-height: 16px; margin: 0 0 -8px; color: var(--copper-bright); }
+.timer-figure { width: min(320px, 70vw); aspect-ratio: 3 / 2; }
+.timer-img { width: 100%; height: 100%; object-fit: contain; }
+.timer-figure:not([hidden]) ~ .timer-stage { width: min(220px, 56vw); margin: 4px 0; }
+.timer-rest { margin: -6px 0 0; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .timer-stage { position: relative; width: min(290px, 78vw); aspect-ratio: 1; margin: 14px 0; }
 .timer-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
 .ring-track { fill: none; stroke: rgba(244, 236, 222, 0.07); stroke-width: 5; }

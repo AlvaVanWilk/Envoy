@@ -35,9 +35,9 @@ export function describeCondition(c, ctx) {
   if (c.type === 'quest') return `„${ctx.catalog.questById.get(c.id)?.name || c.id}“`;
   if (c.type === 'total') {
     const now = ctx.totals[c.key] || 0;
-    return c.key === 'km'
-      ? `${c.min} km real gegangen oder gefahren (bisher ${now.toFixed(1).replace('.', ',')})`
-      : `${c.min} Stockwerke real gestiegen (bisher ${Math.floor(now)})`;
+    if (c.key === 'km') return `${c.min} km real gegangen oder gefahren (bisher ${now.toFixed(1).replace('.', ',')})`;
+    if (c.key === 'stockwerke') return `${c.min} Stockwerke real gestiegen (bisher ${Math.floor(now)})`;
+    return `${c.min} Minuten Treppe im Tageswerk (bisher ${Math.floor(now)})`;
   }
   if (c.type === 'material') return `${c.min} ${MATERIALS[c.key]}`;
   if (c.type === 'camp') {

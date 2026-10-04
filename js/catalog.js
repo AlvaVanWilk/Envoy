@@ -18,6 +18,23 @@ function withVersions(list, fields) {
   });
 }
 
+// Each area is one unit: its exercises in the order of `teil`, each with its
+// stages (the rows of the table, by `stufe`).
+// -> { kraft: [{ key, teil, stages: [row, …] }, …], … }
+function unitsOf(exercises) {
+  const units = {};
+  for (const stat of STAT_IDS) {
+    const byKey = new Map();
+    for (const row of exercises.filter((x) => x.stat === stat)) {
+      if (!byKey.has(row.uebung)) byKey.set(row.uebung, { key: row.uebung, teil: row.teil, stages: [] });
+      byKey.get(row.uebung).stages.push(row);
+    }
+    for (const exercise of byKey.values()) exercise.stages.sort((a, b) => a.stufe - b.stufe);
+    units[stat] = [...byKey.values()].sort((a, b) => a.teil - b.teil);
+  }
+  return units;
+}
+
 export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORLD) {
   const exercises = withVersions(exerciseData.exercises || [], []);
   const equipment = withVersions(equipmentData.equipment || [], ['figur', 'icon']);
@@ -29,16 +46,11 @@ export function buildCatalog(exerciseData, equipmentData, worldData = EMPTY_WORL
     camp: { ...camp, layers: withVersions(camp.layers, ['bild']) },
     deko: withVersions(given.deko || [], ['icon', 'bild']),
   };
-  const maxIntensity = {};
-  for (const stat of STAT_IDS) {
-    const levels = exercises.filter((x) => x.stat === stat).map((x) => x.stufe);
-    maxIntensity[stat] = levels.length > 0 ? Math.max(...levels) : 1;
-  }
   const byId = (list) => new Map(list.map((x) => [x.id, x]));
   return {
     exercises,
+    units: unitsOf(exercises),
     equipment,
-    maxIntensity,
     exerciseById: byId(exercises),
     itemById: byId(equipment),
     places: world.places,

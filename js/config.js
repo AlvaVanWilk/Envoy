@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '4.18.0';
+export const APP_VERSION = '5.0.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -10,7 +10,7 @@ export const versioned = (path) => (path ? `${path}?v=${APP_VERSION}` : path);
 // The four stats, in display order. `area` is the real-life daily task.
 export const STATS = [
   { id: 'kraft',         name: 'Kraft',         area: 'Tiefenmuskulatur' },
-  { id: 'ausdauer',      name: 'Ausdauer',      area: 'Spazieren, Treppe, Rad' },
+  { id: 'ausdauer',      name: 'Ausdauer',      area: 'Treppe' },
   { id: 'beweglichkeit', name: 'Beweglichkeit', area: 'Stretching und Mobility' },
   { id: 'gelassenheit',  name: 'Gelassenheit',  area: 'Entspannung' },
 ];
@@ -30,15 +30,21 @@ export const MALUS_AVERAGE_WINDOW = 7;     // last seven active days
 // Floor: 60 % of the highest level ever reached.
 export const FLOOR_SHARE = 0.6;
 
-// Exercise intensity: up after three good runs in a row, down after two too hard.
-export const INTENSITY_UP_AFTER = 3;
+// What a task brings: 14 to 28 XP, after its size (see the table of exercises).
+export const XP_MIN = 14;
+export const XP_MAX = 28;
+
+// The stage of each exercise: up after two good runs in a row, down after two
+// too hard in a row. What counts as good or too hard follows from the answer
+// after the exercise (see ANSWERS).
+export const INTENSITY_UP_AFTER = 2;
 export const INTENSITY_DOWN_AFTER = 2;
-// With a measured value: from 90 % of the target a run counts as good,
-// below 70 % as too hard, in between as neither.
-export const RATIO_GOOD = 0.9;
-export const RATIO_HARD = 0.7;
-// After every 7 missed days in a row the intensity goes down one level.
+// After every 7 missed days in a row each exercise of the area goes down one stage.
 export const INTENSITY_DOWN_AFTER_MISSED_DAYS = 7;
+
+// Krankheitsmodus: every exercise at stage 1; one that has only one stage
+// takes this share of its time. Such a task brings XP_MIN.
+export const SICK_TIME_SHARE = 0.5;
 
 // A day starts at 03:00 local time, so a late evening session still
 // counts for the day it belongs to.
@@ -115,22 +121,26 @@ export const NAME_MAX = 24;
 
 export const SLOT_IDS = SLOTS.map((s) => s.id);
 
-// Feedback after an exercise without a measured value. It is only asked
-// the first time an exercise is done and after the intensity changed.
-export const FEEDBACK = [
-  { id: 'leicht',  label: 'Leicht',  hard: false },
-  { id: 'passend', label: 'Passend', hard: false },
-  { id: 'zuviel',  label: 'Zu viel', hard: true },
-];
-
-// Values that must be entered after an exercise that has one.
-export const MEASUREMENTS = {
-  strecke_km:     { question: 'Welche Strecke?',         unit: 'km',   decimals: true },
-  stockwerke:     { question: 'Wie viele Stockwerke hinauf?', unit: 'Stockwerke', decimals: false },
-  haltezeit_s:    { question: 'Längste Haltezeit?',      unit: 'Sek.', decimals: false },
-  wiederholungen: { question: 'Wie viele Wiederholungen?', unit: '',   decimals: false },
-  dauer_min:      { question: 'Wie lange?',              unit: 'Min.', decimals: false },
+// The answers to the question after an exercise (column `antwort` of the
+// table) and how a run counts for its stage: good, neither, or too hard.
+export const ANSWERS = {
+  'ja-nein': [
+    { id: 'ja', label: 'Ja', result: 'good' },
+    { id: 'nein', label: 'Nein', result: 'neutral' },
+  ],
+  anstrengung: [
+    { id: 'locker', label: 'Locker', result: 'good' },
+    { id: 'fordernd', label: 'Gut fordernd', result: 'neutral' },
+    { id: 'zuviel', label: 'Zu viel', result: 'hard' },
+  ],
 };
+// „Das war heute zu viel“ on the card: too hard, for every exercise of the unit.
+export const TOO_MUCH = 'zuviel';
+
+// The guided timer: time to get ready before the first exercise, and to
+// change to the next one (seconds), per area.
+export const TIMER_PREP = { kraft: 10, ausdauer: 5, beweglichkeit: 10, gelassenheit: 0 };
+export const TIMER_SWITCH = 10;
 
 export const DATA_FILES = {
   exercises: 'data/uebungen.json',

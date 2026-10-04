@@ -129,6 +129,9 @@ export const UI_ICONS = {
   search: line('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>'),
   soundOn: line('<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4Z"/><path d="M15.5 9.2a4 4 0 0 1 0 5.6"/><path d="M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/>'),
   soundOff: line('<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4Z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>'),
+  // the voice of the timer: a speech bubble, crossed out when off
+  voiceOn: line('<path d="M5 5h14a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 19 16h-8l-4.5 3.5V16H5a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 5 5Z"/><path d="M8 9.5h8M8 12.5h5"/>'),
+  voiceOff: line('<path d="M5 5h14a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 19 16h-8l-4.5 3.5V16H5a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 5 5Z"/><path d="M4 3l16 18"/>'),
   book: line('<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/>'),
   // an hourglass for the exercise timer
   timer: emblem(`<path d="M5.5 2h13v2.2h-1.2c0 3.6-2.4 5.4-3.8 7.8c1.4 2.4 3.8 4.2 3.8 7.8h1.2V22h-13v-2.2h1.2c0-3.6 2.4-5.4 3.8-7.8C9.1 9.6 6.7 7.8 6.7 4.2H5.5Z"/>${engFill('M9 5h6c-.4 2-1.8 3.4-3 5c-1.2-1.6-2.6-3-3-5Z')}${engFill('M8.8 19.6c.4-2 1.8-3.6 3.2-4.8c1.4 1.2 2.8 2.8 3.2 4.8Z')}`),

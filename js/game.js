@@ -4,7 +4,7 @@
 
 import { createEvent, mergeEvents, newDeviceId, isValidEvent } from './events.js';
 import { replay, unmetRequirements } from './replay.js';
-import { missingPlans, replans } from './planner.js';
+import { taskFor, taskOfDone } from './tasks.js';
 import { dayKey } from './days.js';
 import { store } from './store.js';
 import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour, sleepBonus } from './world/hero.js';
@@ -40,16 +40,9 @@ export const game = {
     this.refresh();
   },
 
-  // Recalculate, plan today's open tasks, notify views.
+  // Recalculate, notify views.
   refresh() {
     this.state = replay(this.events, this.catalog, dayKey(), Date.now());
-    const plans = { ...missingPlans(this.state, this.catalog), ...replans(this.state, this.catalog) };
-    const newEvents = Object.entries(plans).map(([stat, exercise]) =>
-      this.event('plan', { stat, ex: exercise.id, ...(this.state.sick ? { sick: true } : {}) }));
-    if (newEvents.length > 0) {
-      this.add(newEvents);
-      return;
-    }
     for (const fn of listeners) fn(this.state);
   },
 
@@ -88,17 +81,18 @@ export const game = {
 
   // --- daily tasks --------------------------------------------------------
 
-  todayExercise(stat) {
-    const plan = this.state.todayPlan[stat];
+  // The task of an area today (see tasks.js): as it was done, or with the
+  // stages of the morning (in Krankheitsmodus all at stage 1).
+  todayTask(stat) {
     const done = this.state.todayDone[stat];
-    const id = done ? done.ex : plan ? plan.ex : null;
-    return id ? this.catalog.exerciseById.get(id) || null : null;
+    const task = done ? taskOfDone(done, this.catalog) : null;
+    return task || taskFor(stat, this.state.intensityAtDayStart, this.state.sick, this.catalog);
   },
 
-  // What finishing the exercise brings now: its points with the bonus of
-  // the achievements that still count.
-  gainFor(exercise) {
-    return withBonus(exercise.xp, bonusOf(this.state.achievements, 'tageswerk', Date.now()));
+  // What finishing the task brings now: its points with the bonus of the
+  // achievements that still count.
+  gainFor(task) {
+    return withBonus(task.xp, bonusOf(this.state.achievements, 'tageswerk', Date.now()));
   },
 
   // Time-limited bonuses running now: [{ achievement, end }], for the display.
@@ -106,23 +100,16 @@ export const game = {
     return runningBonuses(this.state.achievements, Date.now());
   },
 
-  // Feedback is only asked when there is no measured value, and only for an
-  // exercise done for the first time or right after the intensity changed.
-  needsFeedback(stat) {
-    const exercise = this.todayExercise(stat);
-    if (!exercise || exercise.messung || this.state.sick) return false;
-    return !(this.state.doneCount[exercise.id] > 0) || this.state.intensity[stat].fresh;
-  },
-
-  complete(stat, { value = null, feedback = null } = {}) {
-    const exercise = this.todayExercise(stat);
-    if (!exercise || this.state.todayDone[stat]) return;
-    const fields = { stat, ex: exercise.id, xp: exercise.xp };
-    if (exercise.messung) {
-      if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) return;
-      Object.assign(fields, { mk: exercise.messung, z: exercise.ziel, m: { [exercise.messung]: value } });
-    }
-    if (feedback) fields.fb = feedback;
+  // antworten: { row id: answer id } for the questions asked (see tasks.js);
+  // zuviel: „Das war heute zu viel“.
+  complete(stat, { antworten = {}, zuviel = false } = {}) {
+    const task = this.todayTask(stat);
+    if (!task || this.state.todayDone[stat]) return;
+    const teile = task.parts.map((p) => p.row.id);
+    const fields = { stat, teile, xp: task.xp };
+    const given = Object.fromEntries(Object.entries(antworten).filter(([id, a]) => teile.includes(id) && typeof a === 'string'));
+    if (Object.keys(given).length > 0) fields.antworten = given;
+    if (zuviel) fields.zuviel = true;
     if (this.state.sick) fields.sick = true;
     this.add([this.event('done', fields)]);
   },

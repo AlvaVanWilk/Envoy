@@ -39,81 +39,84 @@ Erfahrung: es gibt kein Helden-XP und kein Heldenlevel. XP existiert nur pro Sta
 | Stat | Reale Entsprechung | Rolle in der Welt |
 | --- | --- | --- |
 | Kraft | Tiefenmuskulatur, Rumpf | Schaden je Treffer, Zugang, schnelleres Arbeiten und mehr Ertrag beim Sammeln |
-| Ausdauer | Spazieren, Treppe, Rad | Leben im Kampf (tiefer in Höhlen), Größe der Energieleiste (10 Energie je Level), kürzere Wege |
+| Ausdauer | Treppe | Leben im Kampf (tiefer in Höhlen), Größe der Energieleiste (10 Energie je Level), kürzere Wege |
 | Beweglichkeit | Dehnen, Mobility | Treffer- und Ausweichchance, Zugang zu schwierigem Gelände |
 | Gelassenheit | Atemübungen, Entspannung | Füllgeschwindigkeit der Energie, Geister beruhigen, Zugang zu stillen Orten |
 
 ## Tagesaufgaben
 
-Jeden Tag gibt die App genau vier Aufgaben(päckchen) vor, eine je Bereich. Sie sind
-**nicht auswählbar**.
+Jeden Tag gibt die App genau vier Aufgaben vor, eine je Bereich. Sie sind **nicht
+auswählbar**. Jeder Bereich ist **eine Einheit**: alle seine Übungen, jeden Tag, in
+derselben Reihenfolge. Nichts rotiert; Konstanz trägt. Die App entscheidet, auf welcher
+Stufe jede Übung gemacht wird.
 
-| Bereich | Stat | Beispiele |
-| --- | --- | --- |
-| Tiefenmuskulatur | Kraft | Beckenboden, Rumpfstabilität |
-| Stretching / Mobility | Beweglichkeit | Strecken, Fuß im Sitzen aufs Knie |
-| Ausdauer | Ausdauer | 10 / 20 / 30 Minuten spazieren, Treppe, Rad |
-| Entspannung | Gelassenheit | 3 Minuten Atemübung, Augen schließen |
+| Bereich | Stat | Einheit | Stufen |
+| --- | --- | --- | --- |
+| Tiefenmuskulatur | Kraft | Der halbe Käfer, Der Vogelhund, Der Seitstütz, je 1 Minute | je Übung 3 |
+| Treppe | Ausdauer | Treppensteigen: 3 Minuten, 5 Minuten, 5 Minuten mit Tempowechsel | 3 |
+| Stretching / Mobility | Beweglichkeit | Katze und Kuh 1 Minute, kniender Ausfallschritt und Brustöffner je Seite 1 Minute | keine |
+| Entspannung | Gelassenheit | Innehalten: Ankommen 2 Minuten, Der Atem 3 Minuten, Durch den Körper 5 Minuten | 3 |
 
-### Auswahl der Übung
+Spazieren und Rad gibt es vorerst nicht im Tageswerk; sie können später über den
+Talentbaum dazukommen. Die Übungen stehen in `data/uebungen.xlsx`, eine Zeile je Übung
+und Stufe (siehe Tabellen).
 
-1. Übungen der aktuellen Intensitätsstufe des Bereichs. Gibt es dort keine, gilt die
-   nächstniedrigere vorhandene.
-2. Nicht dieselbe Übung wie gestern, sofern es eine andere gibt.
-3. Nicht dieselbe Muskelgruppe (bei Beweglichkeit: Körperregion) wie gestern, sofern
-   es eine andere gibt.
-4. Von den übrigen die, die am längsten nicht dran war.
-5. Gleichstand entscheidet eine aus dem Datum abgeleitete Zahl, damit alle Geräte
-   dieselbe Übung zeigen.
+### Feste Zeit statt Menge
 
-Einmal zugeteilt, bleibt die Übung für den Tag. Nur der Krankheitsmodus teilt offene
-Aufgaben neu zu.
+Jede Übung hat eine feste Zeit, keine Wiederholungszahl. Gemacht wird langsam und nur
+so viel, wie sauber geht; Pausen sind in Ordnung. Ein **geführter Timer** läuft durch
+die ganze Einheit: kurz bereit machen, jede Übung, eine Seite und die andere, der
+Wechsel zur nächsten (siehe Timer). Messwerte werden nicht mehr eingetragen.
 
-### Messwerte und Rückfrage
+### Rückfrage nach der Übung
 
-Werte werden nicht freiwillig erfasst. Entweder eine Übung hat einen Messwert, dann ist
-er Pflicht, oder sie hat keinen.
+Nach „Erledigt“ fragt die App je Übung eine Frage, aber nur, solange es für diese Übung
+eine nächste Stufe gibt, und nie im Krankheitsmodus. Die Fragen sind konkret, damit man
+nicht überlegen muss, was gemeint ist:
 
-- **Mit Messwert** (z. B. „15 Minuten spazieren“ → Strecke, „7 Minuten Treppe“ →
-  Stockwerke, „Unterarmstütz so lange es angenehm geht“ → längste Haltezeit): Nach
-  „Erledigt“ wird genau dieser Wert eingetragen. Er wird mit einem Ziel verglichen,
-  das nie angezeigt wird. Ab 90 % des Ziels zählt der Durchgang als erfolgreich,
-  unter 70 % als zu schwer, dazwischen als keins von beiden.
-- **Ohne Messwert:** Ein Tippen genügt. „Wie war es?“ (Leicht / Passend / Zu viel)
-  wird nur gefragt, wenn die Übung zum ersten Mal dran ist oder sich die
-  Intensitätsstufe des Bereichs gerade geändert hat.
+- Kraft, je Übung Ja oder Nein: „Blieb der untere Rücken die ganze Minute am Boden?“,
+  „Blieb der Rücken die ganze Minute ruhig und flach?“, „Blieb das Becken auf beiden
+  Seiten bis zum Ende oben?“. Ja zählt als guter Durchgang, Nein zählt nicht.
+- Treppe: „Wie war es?“ mit Locker (gut), Gut fordernd (zählt nicht), Zu viel (zu schwer).
+- Gelassenheit: „Hätten es auch ein paar Minuten mehr sein dürfen?“ Ja oder Nein. Ob die
+  Gedanken abgeschweift sind, wird nicht gefragt; das wäre eine Bewertung.
+- Beweglichkeit: keine Frage, ein Tipp genügt.
 
-Die Ziele sind großzügig gesetzt (Spazieren: 3,5 km/h, Rad: 12 km/h, Treppe: ein
-Stockwerk pro Minute), damit ruhiges Gehen als erfolgreich zählt.
-
-Gesammelte Strecken und Stockwerke fließen zusätzlich in die Welt ein
-(„kumulierte reale Leistung“, siehe Quests).
+Steht eine Übung der Einheit über Stufe 1, gibt es auf der Karte dazu „Das war heute zu
+viel“: Das erledigt die Aufgabe und zählt für jede Übung der Einheit als zu schwer.
 
 ### Steigerung der Übungsintensität
 
-- Hoch nach drei erfolgreichen Durchgängen in Folge, runter schon nach zwei zu
-  schweren. Langsam hoch, schnell runter. Ein Durchgang „keins von beiden“ beginnt die
-  Zählung neu.
-- Nach 7 ausgelassenen Tagen in Folge geht die Intensität eine Stufe runter (nach 14
-  Tagen noch eine usw.), damit der Wiedereinstieg leicht ist.
-- Die neue Stufe gilt ab dem nächsten Tag. Sie wird nirgends als Zahl angezeigt.
+- Jede Übung hat ihre eigene Stufe. **Hoch nach zwei guten Durchgängen in Folge, runter
+  nach zwei zu schweren in Folge.** Ein Durchgang, der keins von beiden ist, beginnt die
+  Zählung neu. Gezählt werden Durchgänge, nicht Kalendertage: Ein ausgelassener Tag
+  setzt nichts zurück.
+- Nach 7 ausgelassenen Tagen in Folge geht jede Übung des Bereichs eine Stufe runter
+  (nach 14 Tagen noch eine usw.), damit der Wiedereinstieg leicht ist.
+- Die neue Stufe gilt ab dem nächsten Tag. Auf der Karte steht sie mit ihrem Namen
+  („Stufe 1 · Der Fußtipp“), nach einem Wechsel mit „Neue Stufe“. Die höchste Stufe ist
+  kein Ende: Die Übung geht dort einfach weiter.
+- Wer vor diesem Umbau schon Übungen gemacht hat, beginnt die neuen auf Stufe 1; die XP
+  von damals bleiben.
 
 ### Krankheitsmodus
 
 Es gibt keine Pausenregel für den Malus: Die Grundaufgaben sind absichtlich so
 niedrigschwellig, dass sie auch bei kleiner Krankheit machbar sind. Der
-Krankheitsmodus (Schalter auf der Tageswerk-Seite) verlegt die Aufgaben auf die niedrigste
-Stufe. Die XP sinken dabei von selbst, weil die Übungen kleiner sind (14 statt bis zu
-28). Durchgänge im Krankheitsmodus zählen nicht für die Intensität. Der Modus bleibt
-an, bis er ausgeschaltet wird.
+Krankheitsmodus (Schalter auf der Tageswerk-Seite) setzt jede Übung auf Stufe 1; eine
+Übung mit nur einer Stufe (Beweglichkeit) bekommt die halbe Zeit. Jede Aufgabe bringt
+dann 14 XP. Es wird nichts gefragt, und Durchgänge im Krankheitsmodus zählen nicht für
+die Stufen. Der Modus bleibt an, bis er ausgeschaltet wird.
 
 ## XP und Levelkurve
 
 Jede erledigte Tagesaufgabe gibt XP auf ihren Stat. Der Stat steigt eine Stufe,
 sobald die XP-Leiste voll ist.
 
-**XP pro Übung: 14 bis 28, Schnitt 20.** Die Höhe hängt am Umfang der konkreten
-Übung, nicht am Bereich. 10 Minuten spazieren = 14, 20 Minuten = 20, 30 Minuten = 28.
+**XP pro Aufgabe: 14 bis 28, Schnitt 20.** Die Höhe hängt am Umfang, nicht am Bereich.
+Jede Übung trägt ihren Anteil bei (Spalte `xp`), die Aufgabe bringt die Summe ihrer
+Übungen, bei jeder Mischung der Stufen zwischen 14 und 28: Kraft 14 (alle auf Stufe 1)
+bis 26 (alle auf Stufe 3), Treppe 14, 20, 24, Beweglichkeit 20, Gelassenheit 14, 18, 24.
 
 ```latex
 \text{XP}(n \rightarrow n+1) = 45 \cdot n^{0{,}45} \cdot \left(1 + \left(\frac{\max(0,\; n-9)}{6}\right)^{2}\right)
@@ -368,7 +371,8 @@ Quests stehen an festen Orten. Arten:
 | Höhle | mehrere Geister nacheinander | so viele, wie die Kraft des Envoy reicht |
 
 Voraussetzungen: Mindestwerte in Stats, erledigte Quests oder reale Leistung (Summe
-echter Kilometer oder Stockwerke aus den Tagesaufgaben). Manche Quests sind
+der Minuten Treppe aus dem Tageswerk; ein Stockwerk aus früheren Versionen zählt als
+eine Minute). „Der Turm der Stufen“ braucht 60 Minuten, „Die lange Straße“ 150. Manche Quests sind
 wiederholbar, mit Abklingzeit in Tagen.
 
 Ein Bonus wird bei kleinen Mengen zufällig auf- oder abgerundet: 1 Stück mit +30 %
@@ -421,7 +425,7 @@ Ort und haben eine Abklingzeit.
 
 **Tempo der Wirtschaft.** Die Erträge sind bewusst klein, damit schnelle Quests nicht
 alles in wenigen Tagen öffnen. Die Quests der Welt bleiben an die Werte und an echte
-Kilometer und Stockwerke gebunden. Der Start ist bewusst eng (10 Energie, 10 Stück
+Minuten Treppe gebunden. Der Start ist bewusst eng (10 Energie, 10 Stück
 tragbar); es ist leichter, später etwas zu vereinfachen, als es nachträglich
 schwerer zu machen.
 
@@ -753,20 +757,34 @@ des Envoy):
 - **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+15 Kraft“) und
   einem Haken zum Erledigen. **Antippen dreht eine Aufgabe um wie eine Karte**: Sie wächst
   aus ihrer Zeile in die Mitte, erst ist die Rückseite mit dem Zeichen des Werts zu sehen,
-  dann die Vorderseite: oben das Bild des Envoy bei der Übung (von der Nutzerin gezeichnet,
-  je Übung und Figur, in den Farben des Envoy wie das Portrait; ohne Bild das Zeichen des
-  Werts), der Name, der Gewinn, die Schritte und unten Timer und „Erledigt“. Fragt die
-  Übung etwas (ein Messwert, „Wie war es?“), steht die Frage auf der Karte; danach dreht sie
-  sich zurück in ihre Zeile, und der Gewinn steigt dort auf. Der Haken an der Zeile erledigt
-  die Aufgabe ohne Karte; braucht sie eine Antwort, öffnet er die Karte bei der Frage. Eine
-  erledigte Aufgabe zeigt auf der Karte, was eingetragen wurde, und „Rückgängig“. Mit
+  dann die Vorderseite: oben Gewinn und Gesamtzeit, das Bild des Envoy bei der Übung (von
+  der Nutzerin gezeichnet, je Übung, Stufe und Figur, in den Farben des Envoy wie das
+  Portrait; ohne Bild das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
+  Namen, dann Name, Stufe („Stufe 1 · Der Fußtipp“), Zeit, wofür sie gut ist und die
+  Schritte; unten „Mit Timer“ und „Erledigt“ (und „Das war heute zu viel“, siehe
+  Rückfrage). Die Fragen danach füllen die Karte: bei einer Frage genügt ein Tipp, bei
+  mehreren kommt „Fertig“. Dann dreht sich die Karte zurück in ihre Zeile, und der Gewinn
+  steigt dort auf. Die Zeile nennt die Übung oder die kurzen Namen aller („Käfer ·
+  Vogelhund · Seitstütz“), den Gewinn und die Zeit. Der Haken an der Zeile erledigt die
+  Aufgabe ohne Karte; gibt es Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
+  Aufgabe zeigt auf der Karte „Erledigt“ und „Rückgängig“. Mit
   reduzierter Bewegung erscheint die Karte ohne Drehen. Ein Fragezeichen klappt eine kurze Erklärung auf
   (wozu das Tageswerk da ist, dass Werte bei liegengebliebenen Aufgaben langsam sinken,
   aber nie ganz verloren gehen) mit Verweis ins Handbuch. Läuft ein befristeter Bonus,
   steht er mit seinem Ende in einer Zeile darüber. Ist alles erledigt, steht oben
-  „Das Tageswerk ist erledigt.“ und ein Ausblick auf die vier Übungen von morgen.
-- **Timer**: Ring mit Restzeit, bei Übungen mit Atemtakt ein Kreis, der wächst und
-  schrumpft. Solange die Zeit läuft, spielt ein ruhiger Klang: leises Rauschen wie
+  „Das Tageswerk ist erledigt.“ und ein Ausblick auf morgen, mit den Übungen, die dann
+  auf einer neuen Stufe sind.
+- **Timer**: führt durch die ganze Einheit, Teil für Teil: kurz bereit machen (Kraft und
+  Beweglichkeit 10 Sekunden, Treppe 5), jede Übung, ihre Abschnitte (eine Seite, die andere;
+  normal, zügig), dazwischen 10 Sekunden Wechsel. Groß stehen der Name der Übung und die
+  Restzeit des Teils in einem Ring, darüber das Bild des Envoy bei der Übung, darunter
+  „Insgesamt noch …“. Bei jedem neuen Teil klingt ein leiser Ton, und eine Stimme sagt an,
+  was kommt („Als Nächstes: Der Vogelhund.“, „Andere Seite“, „Zügig“). Bei der
+  Gelassenheit spricht sie die Sätze der Übung zu ihrer Sekunde (Spalte `ansagen`), denn
+  die Augen sind zu; die Schritte auf der Karte liest man vorher. Die Stimme ist die
+  deutsche Stimme des Geräts, braucht kein Internet und lässt sich im Timer abschalten
+  („Stimme“); die Wahl bleibt gespeichert. Bei Übungen mit Atemtakt ein Kreis, der wächst
+  und schrumpft. Solange die Zeit läuft, spielt ein ruhiger Klang: leises Rauschen wie
   Wellen, ein tiefer Akkord, ab und zu eine Klangschale. Mit Atemtakt kommen und gehen
   die Wellen mit dem Atem. Am Ende verklingt der Hintergrund und ein Ton sagt, dass die
   Zeit um ist. Der Klang lässt sich im Timer abschalten; die Wahl bleibt gespeichert.
@@ -858,8 +876,12 @@ Alle drei Tabellen sind Quelle, nie Ziel. `tools/convert_data.py` liest sie und
 schreibt `data/*.json`. Bei einem Fehler wird nichts geschrieben. Jede Tabelle hat ein
 Blatt „Erklärung“ mit allen Spalten.
 
-- `data/uebungen.xlsx`: id, bereich, stufe, name, xp, anleitung, muskelgruppe,
-  messung, ziel, timer_min, atemtakt, aktiv, notiz
+- `data/uebungen.xlsx`: eine Zeile je Übung und Stufe: id (Übung-Stufe, etwa
+  `kaefer-1`; zugleich der Name des Bilds), bereich, teil (Platz in der Einheit), name,
+  kurz, stufe, stufenname, xp (Anteil an der Aufgabe), zeit (Sekunden, auch in
+  Abschnitten: „Erste Seite 30 | Andere Seite 30“), anleitung, wofuer, frage, antwort
+  (ja-nein oder anstrengung), ansagen („0 Augen zu. | 30 Schultern fallen lassen.“),
+  atemtakt, aktiv, notiz
 - `data/ausruestung.xlsx`: id, slot, name, stufe, req_kraft, req_ausdauer,
   req_gelassenheit, req_beweglichkeit, faehigkeit, effekt, herkunft, preis,
   datei_figur, datei_icon, notiz
@@ -1020,10 +1042,12 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 
 | Punkt | Entscheidung |
 | --- | --- |
-| Messwerte | Pflicht, wenn die Übung einen hat; sonst keine Eingabe |
-| Rückfrage | nur bei neuer Übung oder nach Stufenwechsel |
-| Lange Pause | nach je 7 Fehltagen eine Intensitätsstufe runter |
-| Krankheitsmodus | niedrigste Stufe, zählt nicht für die Intensität, kein Malus-Erlass |
+| Tagesaufgaben | je Bereich eine Einheit, jeden Tag dieselben Übungen, Stufe je Übung; nur Treppe für Ausdauer |
+| Zeit statt Menge | feste Zeit je Übung, langsam und nur so viel wie sauber geht; geführter Timer mit Stimme |
+| Rückfrage | je Übung, solange es eine nächste Stufe gibt; nicht im Krankheitsmodus |
+| Stufen | hoch nach zwei guten Durchgängen in Folge, runter nach zwei zu schweren in Folge; Durchgänge, nicht Kalendertage |
+| Lange Pause | nach je 7 Fehltagen jede Übung des Bereichs eine Stufe runter |
+| Krankheitsmodus | Stufe 1, Übungen ohne Stufen halbe Zeit, 14 XP, zählt nicht für die Stufen, kein Malus-Erlass |
 | Plateau | ergibt sich aus der Levelkurve, Formel unverändert |
 | Tabellenwerte der Levelkurve | so, wie die Formel rechnet (304, 756, 2755) |
 | Bodensatz | Level mit Nachkommastelle |

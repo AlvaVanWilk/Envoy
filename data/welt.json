@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-03T16:36:10Z",
+ "generated": "2026-10-04T12:01:59Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -1339,8 +1339,8 @@
    "conditions": [
     {
      "type": "total",
-     "key": "stockwerke",
-     "min": 100
+     "key": "treppe_min",
+     "min": 60
     }
    ],
    "speedStats": [
@@ -1380,13 +1380,13 @@
    "name": "Die lange Straße",
    "place": "langestrasse",
    "kind": "erkunden",
-   "text": "Die Straße endet nur für die, die schon viele Kilometer in den Beinen haben.",
+   "text": "Die Straße endet nur für die, die schon viele Stufen in den Beinen haben.",
    "monsters": [],
    "conditions": [
     {
      "type": "total",
-     "key": "km",
-     "min": 30
+     "key": "treppe_min",
+     "min": 150
     }
    ],
    "speedStats": [

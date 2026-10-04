@@ -2,21 +2,18 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { replay } from '../js/replay.js';
 import { buildCatalog } from '../js/catalog.js';
-import { missingPlans, tomorrowPlans } from '../js/planner.js';
 import { addDays } from '../js/days.js';
 import { mergeEvents } from '../js/events.js';
 import { bonusOf, runningBonuses } from '../js/achievements.js';
 
+const exercise = (id, stat, xp) => ({ id, uebung: id.split('-')[0], stat, teil: 1, stufe: 1, name: id, kurz: id, xp,
+  phasen: [{ label: '', s: 60 }], steps: [], frage: null, antwort: null, ansagen: [], bilder: {} });
 const catalog = buildCatalog({
   exercises: [
-    { id: 'k1a', stat: 'kraft', stufe: 1, name: 'A', xp: 14, muskelgruppe: 'beckenboden' },
-    { id: 'k1b', stat: 'kraft', stufe: 1, name: 'B', xp: 14, muskelgruppe: 'rumpf' },
-    { id: 'k1c', stat: 'kraft', stufe: 1, name: 'C', xp: 14, muskelgruppe: 'beckenboden' },
-    { id: 'k2a', stat: 'kraft', stufe: 2, name: 'D', xp: 20 },
-    { id: 'k3a', stat: 'kraft', stufe: 3, name: 'E', xp: 28 },
-    { id: 'a1', stat: 'ausdauer', stufe: 1, name: 'Gehen', xp: 14 },
-    { id: 'b1', stat: 'beweglichkeit', stufe: 1, name: 'Strecken', xp: 14 },
-    { id: 'g1', stat: 'gelassenheit', stufe: 1, name: 'Atmen', xp: 14 },
+    exercise('k-1', 'kraft', 14),
+    exercise('a-1', 'ausdauer', 14),
+    exercise('b-1', 'beweglichkeit', 14),
+    exercise('g-1', 'gelassenheit', 14),
   ],
 }, {
   equipment: [
@@ -93,35 +90,6 @@ test('floor: never below 60 % of the best level', () => {
   assert.equal(s.stats.kraft.xp, 0);
 });
 
-test('intensity: up after three good runs, down after two too hard', () => {
-  const events = [];
-  for (let i = 0; i < 3; i += 1) events.push(done(addDays(START, i), 'kraft', 14, 'passend'));
-  let s = replay(events, catalog, addDays(START, 3));
-  assert.equal(s.intensityAtDayStart.kraft.level, 2);
-
-  events.push(done(addDays(START, 3), 'kraft', 20, 'zuviel'));
-  events.push(done(addDays(START, 4), 'kraft', 20, 'zuviel'));
-  s = replay(events, catalog, addDays(START, 5));
-  assert.equal(s.intensityAtDayStart.kraft.level, 1);
-});
-
-test('intensity never above the highest level in the catalog', () => {
-  const events = [];
-  for (let i = 0; i < 30; i += 1) events.push(done(addDays(START, i), 'kraft', 14, 'leicht'));
-  const s = replay(events, catalog, addDays(START, 30));
-  assert.equal(s.intensityAtDayStart.kraft.level, 3);
-});
-
-test('today\'s feedback does not change today\'s plan level', () => {
-  const events = [];
-  for (let i = 0; i < 3; i += 1) events.push(done(addDays(START, 2), 'kraft', 14));
-  events.length = 0;
-  events.push(done(START, 'kraft', 14), done(addDays(START, 1), 'kraft', 14), done(addDays(START, 2), 'kraft', 14));
-  const s = replay(events, catalog, addDays(START, 2));
-  assert.equal(s.intensityAtDayStart.kraft.level, 1);
-  assert.equal(s.intensity.kraft.level, 2);
-});
-
 test('equipment needs its requirements and falls off when they are no longer met', () => {
   const events = [ev(START, 'equip', { slot: 'handschuhe', item: 'wickel' })];
   assert.equal(replay(events, catalog, START).equipped.handschuhe, undefined);
@@ -146,32 +114,14 @@ test('equipment needs its requirements and falls off when they are no longer met
   assert.equal(later.dropped[0].item, 'wickel');
 });
 
-test('planner: same plan on every device, avoids yesterday and its muscle group', () => {
-  const day1 = START;
-  const s1 = replay([], catalog, day1);
-  const p1 = missingPlans(s1, catalog);
-  assert.equal(Object.keys(p1).length, 4);
-  assert.deepEqual(missingPlans(s1, catalog), p1);
-
-  const planEvent = ev(day1, 'plan', { stat: 'kraft', ex: p1.kraft.id });
-  const s2 = replay([planEvent], catalog, addDays(day1, 1));
-  const p2 = missingPlans(s2, catalog);
-  assert.notEqual(p2.kraft.id, p1.kraft.id);
-  if (p1.kraft.muskelgruppe === 'beckenboden') assert.equal(p2.kraft.id, 'k1b');
-});
-
-test('planner: existing plan is kept', () => {
-  const s = replay([ev(START, 'plan', { stat: 'kraft', ex: 'k1c' })], catalog, START);
-  assert.equal(s.todayPlan.kraft.ex, 'k1c');
-  assert.equal(missingPlans(s, catalog).kraft, undefined);
-});
-
-test('merging keeps each event once; the latest plan counts', () => {
-  const a = [ev(START, 'plan', { stat: 'kraft', ex: 'k1a' })];
-  const b = [a[0], ev(START, 'plan', { stat: 'kraft', ex: 'k1b' })];
+test('merging keeps each event once', () => {
+  const a = [done(START, 'kraft', 20)];
+  const b = [a[0], done(START, 'ausdauer', 14)];
   const merged = mergeEvents(b, a);
   assert.equal(merged.length, 2);
-  assert.equal(replay(merged, catalog, START).todayPlan.kraft.ex, 'k1b');
+  const s = replay(merged, catalog, START);
+  assert.equal(s.stats.kraft.xp, 20);
+  assert.equal(s.stats.ausdauer.xp, 14);
 });
 
 test('events from before the accessory slot, when it was the cloak slot, still count', () => {
@@ -214,13 +164,3 @@ test('the time-limited bonus is asked for by time', () => {
   assert.equal(bonusOf({}, 'tageswerk', 0), 0);
 });
 
-test('the look at tomorrow names the exercises the next day will bring', () => {
-  const events = [done(START, 'kraft', 14)];
-  const s = replay(events, catalog, START);
-  const next = tomorrowPlans(s, catalog);
-  assert.equal(Object.keys(next).length, 4);
-  // tomorrow the app actually picks the same
-  const s2 = replay(events, catalog, addDays(START, 1));
-  const picked = missingPlans(s2, catalog);
-  for (const stat of Object.keys(next)) assert.equal(picked[stat].id, next[stat].id);
-});

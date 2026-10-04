@@ -129,7 +129,7 @@ solange nicht ausdrücklich danach gefragt wird.
 | Stat | Tagesaufgabe | Kampfrolle (Phase 2) |
 | --- | --- | --- |
 | Kraft | Tiefenmuskulatur | Schadenshöhe |
-| Ausdauer | Spazieren, Treppe, Rad | max. Leben, Energieleiste |
+| Ausdauer | Treppe (Spazieren und Rad später über den Talentbaum) | max. Leben, Energieleiste |
 | Beweglichkeit | Stretching, Mobility | Treffer- und Ausweichchance |
 | Gelassenheit | Entspannung, Atemübung | verkürzt Ruhezeiten |
 
@@ -137,8 +137,9 @@ Start bei 1, Obergrenze 100.
 
 ## Kernformeln
 
-**XP pro Übung:** 14 bis 28, Schnitt 20. Hängt am Umfang der konkreten Übung, nicht
-am Bereich. Erfolge können darauf einen Bonus geben (so gewünscht): „Angekommen“
+**XP pro Aufgabe:** 14 bis 28, Schnitt 20. Hängt am Umfang, nicht am Bereich: Jede
+Übung trägt ihren Anteil bei (Spalte `xp`), die Aufgabe bringt die Summe ihrer Übungen,
+bei jeder Mischung der Stufen zwischen 14 und 28. Erfolge können darauf einen Bonus geben (so gewünscht): „Angekommen“
 +10 %, gerundet (14 → 15), aber nur in den ersten 15 Minuten nach dem Start. Angezeigt
 wird immer der Gewinn mit Bonus.
 
@@ -166,14 +167,21 @@ dort rückwärts weiter.
 
 **Bodensatz:** 60 % des jemals höchsten erreichten Levels. Untergrenze Level 1, 0 XP.
 
-**Steigerung der Übungsintensität:** hoch nach drei erfolgreichen Durchgängen in Folge,
-runter schon nach zwei zu schweren. Langsam hoch, schnell runter. Ob ein Durchgang
-erfolgreich war, ergibt sich wo möglich aus dem Pflicht-Messwert (ab 90 % des Ziels gut,
-unter 70 % zu schwer). Ohne Messwert wird nur bei neuen Übungen und nach einem
-Stufenwechsel gefragt. Nach 7 ausgelassenen Tagen in Folge eine Stufe runter.
+**Tagesaufgaben:** Jeder Bereich ist eine Einheit: alle seine Übungen, jeden Tag, in
+derselben Reihenfolge (Kraft: Käfer, Vogelhund, Seitstütz; Ausdauer: Treppe;
+Beweglichkeit: Katze-Kuh, kniender Ausfallschritt, Brustöffner; Gelassenheit:
+Innehalten). Feste Zeit statt Menge, ein geführter Timer mit Stimme. Die App entscheidet
+die Stufe jeder Übung.
 
-**Krankheitsmodus:** Tagesaufgaben auf der niedrigsten Stufe, XP entsprechend dem
-kleineren Umfang, zählt nicht für die Intensität. Keine Pausenregel für den Malus.
+**Steigerung der Übungsintensität:** je Übung. Hoch nach zwei guten Durchgängen in Folge,
+runter nach zwei zu schweren in Folge; gezählt werden Durchgänge, nicht Kalendertage.
+Gut oder zu schwer ergibt sich aus der Frage nach der Übung (Ja = gut, Nein = zählt nicht;
+Treppe: Locker = gut, Gut fordernd = zählt nicht, Zu viel = zu schwer; „Das war heute zu
+viel“ = zu schwer für die ganze Einheit). Gefragt wird nur, solange es eine nächste
+Stufe gibt. Nach 7 ausgelassenen Tagen in Folge jede Übung des Bereichs eine Stufe runter.
+
+**Krankheitsmodus:** jede Übung auf Stufe 1, Übungen ohne Stufen halbe Zeit, jede
+Aufgabe 14 XP, keine Fragen, zählt nicht für die Stufen. Keine Pausenregel für den Malus.
 
 **Energie:** Größe der Leiste = 10 × Ausdauer. Alles, was der Envoy tut, kostet Energie,
 eine Energie ist eine Minute. Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) muss am

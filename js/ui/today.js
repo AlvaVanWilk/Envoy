@@ -1,6 +1,6 @@
-// "Tageswerk": the four tasks the app has chosen for today.
+// "Tageswerk": the four tasks of today, one per area (see tasks.js).
 // Each task is one short row. Tapping it turns it over into a card with the
-// Envoy doing the exercise, the steps, the timer and „Erledigt“ (see
+// Envoy doing the exercises, the steps, the guided timer and „Erledigt“ (see
 // taskcard.js); the tick on the row finishes it at once. A question mark
 // explains what the Tageswerk is for. Once all four are done, the page rests
 // and shows what tomorrow brings.
@@ -12,15 +12,15 @@ import { formatDayLong } from '../days.js';
 import { statRow, statEmblem, statInfo } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { viewHead, sectionTitle } from './parts.js';
-import { tomorrowPlans } from '../planner.js';
-import { openTaskCard, finishTask, gainText, gainOf } from './taskcard.js';
+import { taskFor } from '../tasks.js';
+import { openTaskCard, finishTask, gainText, gainOf, taskTitle, formatSeconds } from './taskcard.js';
 
 let helpOpen = false;
 
 // What the Tageswerk is for, in a few calm lines. The Handbuch says more.
 function helpPanel() {
   return h('div', { class: 'panel help-panel', id: 'tageswerk-hilfe' },
-    h('p', {}, 'Das Tageswerk sind vier Aufgaben, eine für jeden Wert des Envoy. Die App wählt sie jeden Tag neu aus.'),
+    h('p', {}, 'Das Tageswerk sind vier Aufgaben, eine für jeden Wert des Envoy. Die App gibt sie vor, auch wie schwer sie sind.'),
     h('p', {}, 'Nur das Tageswerk stärkt den Envoy. Jede erledigte Aufgabe bringt ihrem Wert Fortschritt; ist der Ring am Portrait voll, steigt der Wert um ein Level.'),
     h('p', {}, 'Bleibt eine Aufgabe länger als einen Tag liegen, sinkt ihr Wert langsam. Ganz verloren geht er nie.'),
     h('a', { class: 'btn text small', href: '#handbuch/anleitung/tageswerk' }, icon(UI_ICONS.book), 'Mehr im Handbuch'));
@@ -47,14 +47,22 @@ function bonusNote(game) {
   return h('p', { class: 'bonus-note' }, `${tasks[0].achievement.name}: +${share} % auf jeden Gewinn, bis ${clock(end)} Uhr.`);
 }
 
-// All four done: a calm note and the exercises of tomorrow.
+// All four done: a calm note and the tasks of tomorrow, with the exercises
+// that will be done at a new stage.
 function restPanel(game) {
-  const next = tomorrowPlans(game.state, game.catalog);
+  const { state, catalog } = game;
+  const line = (stat) => {
+    const next = taskFor(stat, state.intensity, state.sick, catalog);
+    if (!next) return null;
+    const changed = next.parts.filter((p) => p.level !== (state.intensityAtDayStart[p.key]?.level || 1));
+    return h('li', { 'data-stat': stat }, statEmblem(stat, 'tiny'),
+      h('span', {}, taskTitle(next),
+        changed.map((p) => h('span', { class: 'tomorrow-new' }, ` · ${p.row.kurz}: neue Stufe`))));
+  };
   return h('section', { class: 'panel rest-panel' },
     h('p', { class: 'rest-title' }, 'Das Tageswerk ist erledigt.'),
     h('p', { class: 'muted' }, 'Morgen ab 3 Uhr'),
-    h('ul', { class: 'tomorrow' }, STATS.filter((st) => next[st.id]).map((st) =>
-      h('li', { 'data-stat': st.id }, statEmblem(st.id, 'tiny'), h('span', {}, next[st.id].name)))));
+    h('ul', { class: 'tomorrow' }, STATS.map((st) => line(st.id))));
 }
 
 export function renderToday(game) {
@@ -86,10 +94,10 @@ export function renderToday(game) {
 
 function taskRow(stat, game) {
   const info = statInfo(stat);
-  const exercise = game.todayExercise(stat);
+  const task = game.todayTask(stat);
   const done = game.state.todayDone[stat];
 
-  if (!exercise) {
+  if (!task) {
     return h('article', { class: 'task-row empty', 'data-stat': stat },
       h('div', { class: 'task-summary' }, statEmblem(stat),
         h('span', { class: 'task-title' }, h('span', { class: 'task-name' }, info.name), h('span', { class: 'task-meta' }, 'Keine Übung im Katalog.'))));
@@ -98,13 +106,13 @@ function taskRow(stat, game) {
   const summary = h('button', { class: 'task-summary', 'aria-haspopup': 'dialog', onclick: () => openTaskCard(stat, game) },
     statEmblem(stat),
     h('span', { class: 'task-title' },
-      h('span', { class: 'task-name' }, exercise.name),
-      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, gainText(stat, gainOf(stat, exercise, game))), h('span', { class: 'task-area' }, ` · ${info.area}`))),
+      h('span', { class: 'task-name' }, taskTitle(task)),
+      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, gainText(stat, gainOf(stat, task, game))), h('span', { class: 'task-area' }, ` · ${formatSeconds(task.seconds)}`))),
     icon(UI_ICONS.chevron, 'icon task-chevron'));
 
   const quick = done
     ? h('span', { class: 'task-check done', 'aria-label': 'Erledigt' }, icon(UI_ICONS.check))
-    : h('button', { class: 'task-check', 'aria-label': `${exercise.name} erledigt`, onclick: () => finishTask(stat, game) }, icon(UI_ICONS.check));
+    : h('button', { class: 'task-check', 'aria-label': `${taskTitle(task)} erledigt`, onclick: () => finishTask(stat, game) }, icon(UI_ICONS.check));
 
   return h('article', { class: `task-row ${done ? 'done' : ''}`, 'data-stat': stat },
     h('div', { class: 'task-line' }, summary, quick));

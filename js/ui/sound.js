@@ -2,6 +2,7 @@
 // simple tones and noise: there are no sound files.
 //
 // - chime(): the soft tone when the time is up.
+// - ping(): one soft tone when the timer goes on to the next part.
 // - startAmbience(): a calm background while the timer runs, so that it is
 //   audible with closed eyes that the time is still running. Three layers:
 //   waves (filtered noise that swells and ebbs, following the breath when
@@ -53,6 +54,24 @@ export function chime() {
       osc.start(now + delay);
       osc.stop(now + delay + 1.7);
     }
+  } catch { /* no sound available */ }
+}
+
+export function ping() {
+  const c = context();
+  if (!c) return;
+  try {
+    const now = c.currentTime;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 659.25;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.14, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+    osc.connect(gain).connect(c.destination);
+    osc.start(now);
+    osc.stop(now + 1.2);
   } catch { /* no sound available */ }
 }
 

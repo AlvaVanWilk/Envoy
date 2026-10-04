@@ -27,15 +27,15 @@ const CHAPTERS = [
     id: 'tageswerk',
     title: 'Das Tageswerk',
     text: [
-      'Jeden Tag wählt die App vier Aufgaben aus, eine für jeden Wert. Auswählen musst du nichts. Ein neuer Tag beginnt um 3 Uhr.',
-      'Tippe auf eine Aufgabe, um sie zu öffnen. Dort stehen die Anleitung und, wo es passt, ein Zeitmesser. Manche Aufgaben fragen danach nach einem Messwert, etwa der Strecke.',
+      'Jeden Tag gibt die App vier Aufgaben vor, eine für jeden Wert. Auswählen musst du nichts. Ein neuer Tag beginnt um 3 Uhr.',
+      'Tippe auf eine Aufgabe: Sie dreht sich um wie eine Karte. Dort stehen die Übungen mit ihren Schritten und ein Timer, der durch alles führt und ansagt, was kommt.',
     ],
   },
   {
     id: 'stufe',
     title: 'Die Stufe der Übungen',
     text: [
-      'Nach drei guten Durchgängen in Folge wird es etwas mehr, nach zwei zu schweren gleich wieder weniger. Bei einer neuen Übung fragt die App einmal, wie es war.',
+      'Jede Übung hat ihre Stufe. Danach fragt die App kurz, wie es ging. Zweimal in Folge gut, und die Übung geht eine Stufe weiter; zweimal in Folge zu viel, und sie geht eine Stufe zurück.',
       'Nach einer Woche Pause geht es eine Stufe leichter weiter.',
     ],
   },

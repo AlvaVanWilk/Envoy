@@ -45,7 +45,6 @@ LAYERS = {
     "ueber_oberteil": "Über dem Oberteil",
     "vorn": "Ganz vorn",
 }
-MEASUREMENTS = ["strecke_km", "stockwerke", "haltezeit_s", "wiederholungen", "dauer_min"]
 EFFECTS = ["schaden", "treffer", "ausweichen", "beruhigen", "reise", "erholung", "glueck"]
 ORIGINS = ["start", "angezogen", "haendler", "beute", "quest"]
 PLACE_TYPES = ["lager", "truemmerfeld", "wild", "sammeln", "ort", "hoehle"]
@@ -61,7 +60,9 @@ MATERIALS = ["pilzholz", "stein", "splitter"]
 # older names still read: Holz and Quarz became Pilzholz; Glimmer and Äther became Bannsplitter
 MATERIAL_ALIASES = {"holz": "pilzholz", "quarz": "pilzholz", "glimmer": "splitter", "aether": "splitter",
                     "äther": "splitter", "traumsplitter": "splitter", "bannsplitter": "splitter"}
-TOTALS = {"summe_km": "km", "summe_stockwerke": "stockwerke"}
+# real totals a quest may need: minutes of stairs in the Tageswerk (and, from
+# earlier versions, measured kilometres and floors)
+TOTALS = {"summe_treppe_min": "treppe_min", "summe_km": "km", "summe_stockwerke": "stockwerke"}
 XP_MIN, XP_MAX = 14, 28
 
 PICTURES = {
@@ -321,7 +322,7 @@ def parse_conditions(report, row, value):
         if m:
             conditions.append({"type": "camp", "min": int(m.group(1))})
             continue
-        report.error(row, f"bedingung: '{part}' nicht verstanden (z. B. kraft>=3, quest:q-spalt, summe_km>=30, lager>=1)")
+        report.error(row, f"bedingung: '{part}' nicht verstanden (z. B. kraft>=3, quest:q-spalt, summe_treppe_min>=60, lager>=1)")
     return conditions
 
 
@@ -407,11 +408,12 @@ def unique_id(report, row, value, seen):
 
 # --- exercises --------------------------------------------------------------
 
-# The Envoy doing an exercise, drawn by the user: one picture per exercise
-# and figure, in the figure's folder (assets/figur/uebungen/<id>.png for the
-# first figure, assets/figur/zweite/uebungen/<id>.png for the second).
+# The Envoy doing an exercise, drawn by the user: one picture per exercise,
+# stage and figure, in the figure's folder (assets/figur/uebungen/<id>.png
+# for the first figure, assets/figur/zweite/uebungen/<id>.png for the second).
 # Any size; the card shows it whole. -> {'erste': path, 'zweite': path}
 EXERCISE_FIGURES = {"erste": "assets/figur", "zweite": "assets/figur/zweite"}
+ANSWER_KINDS = ["ja-nein", "anstrengung"]
 
 
 def exercise_pictures(ex_id):
@@ -420,7 +422,30 @@ def exercise_pictures(ex_id):
             if (ROOT / folder / "uebungen" / f"{ex_id}.png").exists()}
 
 
+def timed_parts(report, row, cell, what):
+    """'60' or 'Erste Seite 30 | Andere Seite 30' -> [{'label', 's'}].
+    what: 'zeit' (label, then seconds) or 'ansagen' (second, then text)."""
+    parts = []
+    for piece in [p.strip() for p in text(cell).split("|") if p.strip()]:
+        if what == "zeit":
+            m = re.fullmatch(r"(.*?)\s*(\d+)", piece)
+            if not m or int(m.group(2)) <= 0:
+                report.error(row, f"zeit: „{piece}“ braucht Sekunden am Ende, etwa „Erste Seite 30“")
+                continue
+            parts.append({"label": m.group(1).strip(), "s": int(m.group(2))})
+        else:
+            m = re.fullmatch(r"(\d+)\s+(.+)", piece, re.S)
+            if not m:
+                report.error(row, f"ansagen: „{piece}“ braucht vorn die Sekunde, etwa „30 Schultern fallen lassen.“")
+                continue
+            parts.append({"at": int(m.group(1)), "text": m.group(2).strip()})
+    return parts
+
+
 def convert_exercises(path):
+    """One row per exercise and stage (sheet Übungen). Each area is one unit:
+    all its exercises, in the order of `teil`, every day. The id is
+    <exercise>-<stage>; the part before the last dash names the exercise."""
     report = Report(path.name)
     exercises = []
     seen = set()
@@ -428,8 +453,9 @@ def convert_exercises(path):
         ex_id = unique_id(report, row, r.get("id", ""), seen)
         if ex_id is None:
             continue
-        if not re.fullmatch(r"[a-z0-9_-]+", ex_id):
-            report.warn(row, f"id '{ex_id}' enthält Zeichen außer a–z, 0–9, - und _")
+        if not re.fullmatch(r"[a-z0-9-]+-\d+", ex_id):
+            report.error(row, f"id '{ex_id}' wie kaefer-1: Übung, Bindestrich, Stufe (nur a–z, 0–9 und -)")
+            continue
         if not is_yes(r.get("aktiv", ""), default=True):
             continue
 
@@ -438,32 +464,34 @@ def convert_exercises(path):
             report.error(row, f"unbekannter Bereich '{text(r.get('bereich', ''))}'")
 
         level = whole_number(r.get("stufe", ""))
+        key, suffix = ex_id.rsplit("-", 1)
         if not isinstance(level, int) or level < 1:
             report.error(row, "stufe muss eine ganze Zahl ab 1 sein")
+        elif int(suffix) != level:
+            report.error(row, f"id '{ex_id}' endet nicht auf die Stufe {level}")
+
+        part = whole_number(r.get("teil", ""))
+        if not isinstance(part, int) or part < 1:
+            report.error(row, "teil muss eine ganze Zahl ab 1 sein")
 
         xp = whole_number(r.get("xp", ""))
-        if not isinstance(xp, int) or not XP_MIN <= xp <= XP_MAX:
-            report.error(row, f"xp muss zwischen {XP_MIN} und {XP_MAX} liegen")
+        if not isinstance(xp, int) or not 1 <= xp <= XP_MAX:
+            report.error(row, f"xp muss eine ganze Zahl von 1 bis {XP_MAX} sein")
 
         name = text(r.get("name", ""))
         if not name:
             report.error(row, "name fehlt")
 
-        steps = [s.strip() for s in re.split(r"\r?\n|\|", text(r.get("anleitung", ""))) if s.strip()]
+        phases = timed_parts(report, row, r.get("zeit", ""), "zeit")
+        if not phases:
+            report.error(row, "zeit fehlt (Sekunden, etwa 60)")
 
-        measurement = text(r.get("messung", "")).lower() or None
-        target = number(r.get("ziel", ""))
-        if measurement and measurement not in MEASUREMENTS:
-            report.error(row, f"unbekannte Messung '{measurement}' (möglich: {', '.join(MEASUREMENTS)})")
-        if measurement and (target is None or target == "invalid" or target <= 0):
-            report.error(row, "ziel fehlt: bei einer Messung braucht es ein Ziel größer 0")
-        if not measurement:
-            target = None
-
-        timer_min = number(r.get("timer_min", ""))
-        if timer_min == "invalid" or (timer_min is not None and timer_min <= 0):
-            report.error(row, "timer_min muss eine Zahl größer 0 sein")
-            timer_min = None
+        question = text(r.get("frage", ""))
+        answers = text(r.get("antwort", "")).lower() or None
+        if question and answers not in ANSWER_KINDS:
+            report.error(row, f"antwort muss {' oder '.join(ANSWER_KINDS)} sein, wenn es eine frage gibt")
+        if not question:
+            answers = None
 
         rhythm = text(r.get("atemtakt", ""))
         breath = None
@@ -475,22 +503,45 @@ def convert_exercises(path):
 
         exercises.append({
             "id": ex_id,
+            "uebung": key,
             "stat": stat,
+            "teil": part,
             "stufe": level,
             "name": name,
+            "kurz": text(r.get("kurz", "")) or name,
+            "stufenname": text(r.get("stufenname", "")) or None,
             "xp": xp,
-            "steps": steps,
-            "muskelgruppe": slug(r.get("muskelgruppe", "")) or None,
-            "messung": measurement,
-            "ziel": target,
-            "timer_min": timer_min,
+            "phasen": phases,
+            "steps": [s.strip() for s in re.split(r"\r?\n|\|", text(r.get("anleitung", ""))) if s.strip()],
+            "wofuer": text(r.get("wofuer", "")) or None,
+            "frage": question or None,
+            "antwort": answers,
+            "ansagen": timed_parts(report, row, r.get("ansagen", ""), "ansagen"),
             "atemtakt": breath,
             "bilder": exercise_pictures(ex_id),
         })
 
+    # the exercises of an area, their stages, and what the unit brings
     for stat in STATS:
-        if not any(x["stat"] == stat for x in exercises):
+        own = [x for x in exercises if x["stat"] == stat]
+        if not own:
             report.error("-", f"keine aktive Übung im Bereich {stat}")
+            continue
+        by_key = {}
+        for x in own:
+            by_key.setdefault(x["uebung"], []).append(x)
+        for key, rows in by_key.items():
+            levels = sorted(x["stufe"] for x in rows if isinstance(x["stufe"], int))
+            if levels != list(range(1, len(levels) + 1)):
+                report.error("-", f"{key}: die Stufen müssen bei 1 beginnen und lückenlos sein ({levels})")
+            if len({x["teil"] for x in rows}) > 1:
+                report.error("-", f"{key}: alle Stufen brauchen denselben teil")
+        if any(not isinstance(x["xp"], int) for x in own):
+            continue
+        least = sum(min(x["xp"] for x in rows) for rows in by_key.values())
+        most = sum(max(x["xp"] for x in rows) for rows in by_key.values())
+        if least < XP_MIN or most > XP_MAX:
+            report.error("-", f"{stat}: die Einheit bringt {least} bis {most} XP, erlaubt sind {XP_MIN} bis {XP_MAX}")
     return {"exercises": exercises}, report
 
 
