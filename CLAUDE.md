@@ -80,7 +80,11 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   weiter, nur solange die Energie mit dem Rückweg reicht; Sammeln plant mit den besten
   Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus; die Kosten als ein Block
   mit Weg-Anteil in der Energie-Leiste),
-  Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
+  Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein;
+  eine Expedition lässt sich live mitverfolgen (Weg, Kampf Runde für Runde, Sammeln,
+  Tagebuch, Wörter auf der Karte, `js/ui/scene.js`), der Bericht entfaltet sich Fund für
+  Fund; nach einer erledigten Aufgabe fliegt ein Licht zum Ring ihres Werts, der wächst
+  und mit dem Portrait aufglimmt; Sammeln auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne
   Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)
 - Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); fünf Lagerstufen
   (Provisorisches Lager, Unterstand, Wackelige Hütte, Stabile Hütte, Steinhäuschen),

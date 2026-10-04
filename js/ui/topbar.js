@@ -5,6 +5,9 @@
 //           on the way to the next level. Pointing at a ring (or touching
 //           it) tells the level and what is missing; tapping the portrait
 //           opens the Envoy (on the Envoy's own page it stays where it is).
+//           When a task of the Tageswerk is done, its ring grows from the old
+//           value to the new one and glows, and the portrait glows with it
+//           (see celebrateStat).
 //   middle  the Tageswerk. While tasks are open an orange glow pulses around
 //           it; once all four are done it rests, quiet, with the emblem of
 //           the app and its name side by side.
@@ -28,14 +31,123 @@ const share = (s) => (s.level >= STAT_MAX_LEVEL ? 1 : s.xp / xpToNext(s.level));
 // The hint at a ring: the stat and its value (1.375, see statValue).
 export const ringText = (stat, s) => `${stat.name} ${statText(s)}`;
 
+// --- a ring that has just grown ---------------------------------------------
+// holdRing() keeps a ring at its old value while the task is being finished;
+// celebrateStat() then lets it grow to the new value once the light of the
+// task arrives (after `delay`): full and on from the start after a new
+// level. Ring and portrait glow meanwhile. The bar may be drawn anew at any
+// time; it then continues where the motion is.
+const GROW_MS = 1100;
+const GLOW_MS = 1700;
+const celebrations = new Map(); // stat -> { from, to, levelUp, start }
+
+export function holdRing(stat, before) {
+  celebrations.set(stat, { from: share(before), to: share(before), levelUp: false, start: Infinity });
+}
+
+export function releaseRing(stat) {
+  if (celebrations.get(stat)?.start === Infinity) celebrations.delete(stat);
+}
+
+export function celebrateStat(stat, before, now, delay = 0) {
+  celebrations.set(stat, { from: share(before), to: share(now), levelUp: now.level > before.level, start: Date.now() + delay });
+  setTimeout(() => requestAnimationFrame(play), Math.max(0, delay));
+}
+
+const ease = (k) => 1 - (1 - k) ** 3;
+
+// The share a celebrated ring shows at time t (null: none is celebrated).
+function shownShare(c, t) {
+  const k = Math.min(1, Math.max(0, (t - c.start) / GROW_MS));
+  if (k <= 0) return c.from;
+  const way = c.levelUp ? (1 - c.from) + c.to : c.to - c.from;
+  const p = ease(k) * way;
+  if (!c.levelUp) return c.from + p;
+  return p < 1 - c.from ? c.from + p : p - (1 - c.from);
+}
+
+// The bright point at the end of a growing ring.
+function sparkAt(n, filled) {
+  const a = ((filled / 100) * 360 - 90) * (Math.PI / 180);
+  return { x: 50 + RING_R[n] * Math.cos(a), y: 50 + RING_R[n] * Math.sin(a) };
+}
+
+function setFill(el, filled) {
+  el.setAttribute('stroke-dasharray', `${filled} 100`);
+  // a ring at nought would show a dot (round ends)
+  el.style.visibility = filled < 0.3 ? 'hidden' : '';
+}
+
+// One frame of every celebrated ring in the bar as it is now.
+function play() {
+  const t = Date.now();
+  let more = false;
+  for (const [stat, c] of celebrations) {
+    if (c.start === Infinity) continue;
+    if (t >= c.start + GLOW_MS) { celebrations.delete(stat); }
+    else more = true;
+    const n = STATS.findIndex((st) => st.id === stat);
+    const filled = Math.round((t >= c.start + GROW_MS ? c.to : shownShare(c, t)) * 1000) / 10;
+    const lit = t >= c.start && t < c.start + GLOW_MS;
+    document.querySelectorAll(`.topbar .stat-ring-fill[data-stat="${stat}"]`).forEach((el) => {
+      setFill(el, filled);
+      el.classList.toggle('is-lit', lit);
+    });
+    document.querySelectorAll(`.topbar .ring-spark[data-stat="${stat}"]`).forEach((el) => {
+      const at = sparkAt(n, filled);
+      el.setAttribute('cx', at.x.toFixed(2));
+      el.setAttribute('cy', at.y.toFixed(2));
+      el.classList.toggle('on', t >= c.start && t < c.start + GROW_MS + 200);
+    });
+    document.querySelectorAll('.topbar .portrait-rings').forEach((wrap) => glow(wrap, stat, t - c.start));
+  }
+  if (more) requestAnimationFrame(play);
+}
+
+// The glow of ring and portrait, `since` ms after it began (a new drawing
+// of the bar picks it up where it was).
+function glow(wrap, stat, since) {
+  const on = since >= 0 && since < GLOW_MS;
+  let el = wrap.querySelector(`.ring-glow[data-stat="${stat}"]`);
+  if (on && !el) {
+    el = h('span', { class: 'ring-glow', 'data-stat': stat, style: { 'animation-delay': `${-since}ms` } });
+    wrap.prepend(el);
+    wrap.classList.add('is-glowing');
+    wrap.dataset.stat = stat;
+    const link = wrap.querySelector('.portrait-link');
+    if (link) link.style.animationDelay = `${-since}ms`;
+  }
+  if (!on && el) {
+    el.remove();
+    wrap.classList.remove('is-glowing');
+    delete wrap.dataset.stat;
+  }
+}
+
 function rings(stats) {
+  const t = Date.now();
   const circle = (r, cls, extra = '') => `<circle cx="50" cy="50" r="${r}" class="${cls}" pathLength="100" ${extra}/>`;
   const body = STATS.map((st, n) => {
-    const filled = Math.round(share(stats[st.id]) * 1000) / 10;
+    const c = celebrations.get(st.id);
+    const value = c && !(t >= c.start + GROW_MS) ? shownShare(c, t) : share(stats[st.id]);
+    const filled = Math.round(value * 1000) / 10;
+    const spark = c ? sparkAt(n, filled) : null;
+    const lit = c && t >= c.start && t < c.start + GLOW_MS;
     return circle(RING_R[n], 'stat-ring-track', `data-stat="${st.id}"`)
-      + (filled > 0 ? circle(RING_R[n], 'stat-ring-fill', `data-stat="${st.id}" stroke-dasharray="${filled} 100"`) : '');
+      + circle(RING_R[n], `stat-ring-fill${lit ? ' is-lit' : ''}`, `data-stat="${st.id}" stroke-dasharray="${filled} 100"${filled < 0.3 ? ' style="visibility:hidden"' : ''}`)
+      + (spark ? `<circle class="ring-spark" data-stat="${st.id}" cx="${spark.x.toFixed(2)}" cy="${spark.y.toFixed(2)}" r="2.4"/>` : '');
   }).join('');
   return `<svg class="rings" viewBox="0 0 100 100" aria-hidden="true">${body}</svg>`;
+}
+
+// Where the light of a finished task flies to: the top of the stat's ring.
+export function ringTarget(stat) {
+  const wrap = document.querySelector('.topbar .portrait-rings');
+  const n = STATS.findIndex((st) => st.id === stat);
+  if (!wrap || n < 0) return null;
+  const box = wrap.getBoundingClientRect();
+  if (box.width === 0) return null;
+  return { x: box.left + box.width / 2, y: box.top + box.height / 2 - (RING_R[n] / 100) * box.width };
 }
 
 // Which ring a point belongs to (index into STATS), or -1 for the portrait.
@@ -59,6 +171,8 @@ function portraitRings(game, current, badge) {
     h('a', { class: `portrait-link ${current === 'envoy' ? 'active' : ''}`, href: '#envoy', 'aria-label': `${world.envoy?.name || 'Envoy'} öffnen. ${levels}` }, img),
     badge ? h('span', { class: 'portrait-badge', title: 'Ein Teil wurde abgelegt' }) : null,
     tip);
+  // a glow that is still going on goes on in the new drawing
+  for (const [stat, c] of celebrations) if (c.start !== Infinity) glow(wrap, stat, Date.now() - c.start);
 
   let hideTimer = 0;
   const show = (n) => {

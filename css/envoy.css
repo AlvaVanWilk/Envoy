@@ -667,6 +667,46 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
 }
+/* A ring that has just grown (topbar.js, celebrateStat): it fills up with a
+   bright point at its end, glows in its colour, and the portrait with it. */
+.stat-ring-fill { transition: stroke-width 0.4s var(--ease); }
+.stat-ring-fill.is-lit { stroke-width: 4; stroke: color-mix(in srgb, var(--stat) 70%, #fff); }
+.ring-spark { fill: #fffaf0; stroke: var(--stat); stroke-width: 1.2; opacity: 0; transition: opacity 0.25s; }
+.ring-spark.on { opacity: 1; }
+.ring-glow {
+  position: absolute;
+  inset: -9%;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle closest-side, transparent 52%, color-mix(in srgb, var(--stat) 75%, transparent) 68%, color-mix(in srgb, var(--stat) 30%, transparent) 84%, transparent 100%);
+  animation: ring-glow 1.7s var(--ease) both;
+}
+@keyframes ring-glow {
+  0% { opacity: 0; transform: scale(0.9); }
+  30% { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+.portrait-rings.is-glowing .portrait-link { animation: portrait-glow 1.7s var(--ease) both; }
+@keyframes portrait-glow {
+  0%, 100% { box-shadow: 0 0 0 1.5px #04070a, 0 4px 14px rgba(0, 0, 0, 0.7); filter: none; }
+  30% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--stat) 80%, #fff), 0 0 26px 8px color-mix(in srgb, var(--stat) 65%, transparent); filter: brightness(1.22) saturate(1.1); }
+}
+/* the light of a finished task on its way to the ring (taskcard.js) */
+.gain-spark {
+  position: fixed;
+  z-index: 72;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, #fffaf0 0 22%, var(--stat) 45%, color-mix(in srgb, var(--stat) 0%, transparent) 72%);
+  box-shadow: 0 0 18px 6px color-mix(in srgb, var(--stat) 60%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ring-glow, .portrait-rings.is-glowing .portrait-link { animation: none; }
+}
 .portrait-link {
   position: absolute;
   inset: 19.5%;
@@ -1698,6 +1738,102 @@ button.task-check:hover { color: var(--stat); }
 .journey-remove .icon, .journey-remove svg { width: 100%; height: 100%; display: block; }
 .journey-until { color: var(--muted); }
 
+/* What the Envoy is doing right now (scene.js) ---------------------------- */
+.journey-scene:empty { display: none; }
+.scene { position: relative; display: grid; gap: 8px; padding: 12px; border-radius: 8px; background: radial-gradient(circle at 50% 0%, rgba(126, 163, 164, 0.12), transparent 70%), #0f1c20; border: 1px solid #08100f; box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.04); }
+.scene-text { margin: 0; font-size: 14px; color: var(--text-2); text-align: center; }
+.scene-carried { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.scene-find { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 3px 4px; border-radius: 6px; background: rgba(244, 236, 222, 0.05); border: 1px solid var(--line); font-size: 13px; }
+.scene-find .icon, .scene-find .res-icon, .scene-thing { width: 22px; height: 22px; }
+
+/* on the way: a little path with the Envoy on it */
+.way-track { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; }
+.way-line { position: relative; height: 4px; margin: 0 4px; border-radius: 2px; background: repeating-linear-gradient(90deg, rgba(244, 236, 222, 0.22) 0 4px, transparent 4px 10px); }
+.way-done { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 2px; background: linear-gradient(90deg, rgba(232, 121, 31, 0.3), var(--copper-bright)); transition: width 1s linear; }
+.scene-way[data-home="true"] .way-done { background: linear-gradient(90deg, rgba(143, 192, 156, 0.3), var(--ok)); }
+.way-hero { position: absolute; top: 50%; left: 0; width: 28px; height: 28px; margin: -27px 0 0 -14px; color: var(--copper-bright); --engrave: #10181a; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.7)); transition: left 1s linear; animation: hero-walk 0.9s ease-in-out infinite; }
+.way-hero svg { width: 100%; height: 100%; display: block; }
+@keyframes hero-walk { 50% { transform: translateY(-3px) rotate(-3deg); } }
+
+/* a fight: both with their life, round by round */
+.scene-fight { grid-template-columns: 1fr auto 1fr; align-items: start; }
+.scene-fight .fight-line { grid-column: 1 / -1; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: var(--ivory); }
+.scene-fight[data-result="won"] .fight-line { color: var(--kraft); }
+.scene-fight[data-result="calmed"] .fight-line { color: var(--gelassenheit); }
+.scene-fight[data-result="driven"] .fight-line { color: var(--muted); }
+.fight-vs { align-self: center; font-family: var(--font-display); font-size: 12px; color: var(--muted); }
+.fighter { position: relative; display: grid; justify-items: center; gap: 5px; min-width: 0; }
+.fighter-pic { display: block; width: 64px; height: 64px; overflow: hidden; border-radius: 50%; background: radial-gradient(circle at 45% 35%, #2e4a50, #15252a 72%); box-shadow: 0 0 0 1.5px #04070a, 0 4px 12px rgba(0, 0, 0, 0.6); }
+.fighter-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fighter-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-display); font-size: 13px; font-weight: 700; }
+.life { position: relative; width: 100%; max-width: 120px; height: 7px; overflow: hidden; border-radius: 2px; background: #090c11; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8); }
+.life-fill { position: absolute; inset: 0 auto 0 0; width: 100%; background: linear-gradient(180deg, #c8e2b0, var(--ausdauer) 55%, #5c7a44); transition: width 0.6s var(--ease); }
+.is-spirit .life-fill { background: linear-gradient(180deg, #d8d2ff, var(--gelassenheit) 55%, #5d578f); }
+.fighter.is-struck .fighter-pic { animation: struck 0.45s ease-out; }
+@keyframes struck {
+  20% { transform: translateX(-5px); box-shadow: 0 0 0 2px #ef8d6d, 0 0 16px 4px rgba(239, 141, 109, 0.6); }
+  45% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+}
+.fighter.is-calmed .fighter-pic { animation: calmed 1.6s var(--ease) forwards; }
+@keyframes calmed {
+  40% { box-shadow: 0 0 0 2px var(--gelassenheit), 0 0 24px 8px rgba(170, 164, 226, 0.6); }
+  100% { box-shadow: 0 0 0 2px var(--gelassenheit), 0 0 12px 2px rgba(170, 164, 226, 0.4); opacity: 0.55; filter: saturate(0.4) brightness(1.3); }
+}
+.scene-fight[data-result="won"] .is-spirit .fighter-pic { opacity: 0.4; filter: grayscale(0.8); transition: opacity 0.8s, filter 0.8s; }
+.scene-fight[data-result="driven"] .is-hero .fighter-pic { opacity: 0.6; transition: opacity 0.8s; }
+.fighter-pops { position: absolute; top: 18px; left: 50%; width: 0; height: 0; pointer-events: none; }
+.fight-pop { position: absolute; left: 0; top: 0; transform: translate(-50%, 0); white-space: nowrap; font-family: var(--font-display); font-size: 17px; font-weight: 700; text-shadow: 0 1px 2px #000, 0 0 6px rgba(0, 0, 0, 0.8); animation: pop-rise 1.3s var(--ease) forwards; }
+.fight-pop.is-hit { color: #ffb08f; font-size: 20px; }
+.fight-pop.is-miss { color: var(--text-2); font-size: 13px; }
+.fight-pop.is-calm { color: var(--gelassenheit); }
+@keyframes pop-rise {
+  0% { opacity: 0; transform: translate(-50%, 6px) scale(0.7); }
+  18% { opacity: 1; transform: translate(-50%, -6px) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(1); }
+}
+
+/* gathering: the pieces come in */
+.scene-gather { justify-items: center; }
+.gather-pic { position: relative; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle, rgba(244, 236, 222, 0.08), transparent 70%); }
+.gather-pic .res-icon { width: 40px; height: 40px; animation: gather-bob 1.6s ease-in-out infinite; }
+@keyframes gather-bob { 50% { transform: translateY(-3px) rotate(4deg); } }
+.gather-pops { position: absolute; top: 0; left: 50%; width: 0; height: 0; }
+.gather-pop { position: absolute; left: 0; top: 0; transform: translate(-50%, 0); font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ivory-bright); text-shadow: 0 1px 2px #000; animation: pop-rise 1.3s var(--ease) forwards; }
+.gather-count { margin: 0; font-family: var(--font-display); font-size: 15px; color: var(--text-2); }
+.gather-n { display: inline-block; font-size: 24px; font-weight: 700; color: var(--ivory-bright); }
+.gather-count.is-up .gather-n { animation: count-up 0.6s var(--ease); }
+@keyframes count-up { 35% { transform: scale(1.3); color: var(--copper-bright); } }
+
+/* searching or building at the place */
+.scene-work { justify-items: center; }
+.work-pic { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; color: var(--ivory); background: radial-gradient(circle, rgba(126, 163, 164, 0.18), transparent 70%); }
+.work-pic .icon, .work-pic svg { width: 30px; height: 30px; animation: search-sway 2.4s ease-in-out infinite; }
+@keyframes search-sway { 25% { transform: translate(-3px, -1px) rotate(-8deg); } 75% { transform: translate(3px, 1px) rotate(8deg); } }
+.work-bar { position: relative; width: min(220px, 80%); height: 4px; overflow: hidden; border-radius: 2px; background: #090c11; }
+.work-fill { position: absolute; inset: 0 auto 0 0; width: 0; background: linear-gradient(90deg, #4f7f86, #e3f4f4); transition: width 1s linear; }
+
+/* the diary of the trip */
+.diary { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.diary:empty { display: none; }
+.diary-line { display: grid; grid-template-columns: 3.4em 1fr; gap: 8px; font-size: 13px; color: var(--muted); }
+.diary-line:last-child { color: var(--text); }
+.diary-time { font-variant-numeric: tabular-nums; }
+.diary-line.is-new { animation: diary-in 0.9s var(--ease); }
+@keyframes diary-in { 0% { opacity: 0; transform: translateY(6px); } 40% { color: var(--copper-bright); } }
+
+/* words rising from the Envoy on the map */
+.map-pop { position: absolute; z-index: 4; transform: translate(-50%, -260%); white-space: nowrap; padding: 3px 9px; border-radius: 6px; background: rgba(9, 15, 17, 0.85); border: 1px solid rgba(246, 161, 82, 0.6); font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--ivory-bright); pointer-events: none; animation: map-pop 2.6s var(--ease) forwards; }
+@keyframes map-pop {
+  0% { opacity: 0; transform: translate(-50%, -180%) scale(0.8); }
+  15% { opacity: 1; transform: translate(-50%, -260%) scale(1.05); }
+  75% { opacity: 1; transform: translate(-50%, -300%); }
+  100% { opacity: 0; transform: translate(-50%, -360%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .way-hero, .gather-pic .res-icon, .work-pic svg { animation: none; }
+}
+
 /* the window of a quest */
 .quest-sheet .sheet-body { display: grid; gap: 14px; }
 .quest-text { display: grid; gap: 8px; font-size: 14px; color: var(--text-2); }
@@ -2014,6 +2150,23 @@ button.task-check:hover { color: var(--stat); }
 .sheet-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
 .report-summary { font-size: 15px; }
+.report-sheet .sheet-title { animation: title-glow 1.8s var(--ease); }
+@keyframes title-glow { 30% { text-shadow: 0 0 18px rgba(246, 161, 82, 0.85), 0 0 2px rgba(246, 161, 82, 0.6); } }
+/* the report unfolds, part by part (journey.js, reveal) */
+.report-sheet .is-revealed { animation: reveal-in 0.6s var(--ease) both; animation-delay: calc(0.25s + var(--i) * 0.18s); }
+@keyframes reveal-in { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: none; } }
+.report-sheet .loot > .is-revealed { animation-name: loot-in; animation-duration: 0.75s; }
+@keyframes loot-in {
+  0% { opacity: 0; transform: scale(0.6); }
+  50% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 0 1px rgba(246, 161, 82, 0.75), 0 0 20px 5px rgba(246, 161, 82, 0.45); }
+  100% { opacity: 1; transform: none; }
+}
+.report-sheet .report-unlock.is-revealed { animation-name: unlock-in; animation-duration: 1.2s; }
+@keyframes unlock-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  40% { opacity: 1; transform: none; text-shadow: 0 0 14px rgba(246, 161, 82, 0.8); }
+  100% { opacity: 1; }
+}
 .report-stop { display: grid; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
 .report-stop:first-child { padding-top: 0; border-top: 0; }
 .report-stop-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; margin: 0; font-family: var(--font-display); font-size: 16px; font-weight: 700; }

@@ -26,6 +26,7 @@ import { openCard, closeSheet, toast } from './sheet.js';
 import { openTimer } from './timer.js';
 import { resolveLook, showLayer } from './look.js';
 import { questionsOf, canBeTooMuch } from '../tasks.js';
+import { holdRing, releaseRing, celebrateStat, ringTarget } from './topbar.js';
 
 const TURN_MS = 520;   // as long as the card takes to turn back (sheet.js)
 
@@ -65,22 +66,46 @@ export function finishTask(stat, game) {
 }
 
 // Runs what finishes something of the task. Once the whole task is done,
-// the card turns back into its row and the gain rises there; returns
-// whether it is.
+// the card turns back into its row and the new value rises there; a light
+// flies from the row to the stat's ring at the portrait, which then grows
+// and glows (topbar.js). Returns whether the task is done.
+const FLIGHT_MS = 750;
+const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 function settle(stat, game, onCard, action) {
-  const before = game.state.stats[stat].level;
+  const before = { ...game.state.stats[stat] };
+  holdRing(stat, before);   // the ring keeps its old value until the light arrives
   action();
-  if (!game.state.todayDone[stat]) return false;
+  if (!game.state.todayDone[stat]) { releaseRing(stat); return false; }
   const now = game.state.stats[stat];
   if (onCard) closeSheet();
   const wait = onCard ? TURN_MS : 0;
+  const flight = still() ? 0 : FLIGHT_MS;
+  celebrateStat(stat, before, now, wait + flight);
   // the new value rises from the row (not how much it grew)
   setTimeout(() => {
     const anchor = document.querySelector(`.task-row[data-stat="${stat}"] .task-gain`);
-    if (anchor) floatGain([`${statInfo(stat).name} `, statNumber(now)], anchor.getBoundingClientRect(), stat);
+    if (!anchor) return;
+    const rect = anchor.getBoundingClientRect();
+    floatGain([`${statInfo(stat).name} `, statNumber(now)], rect, stat);
+    if (flight) flyToRing(stat, rect);
   }, wait);
-  if (now.level > before) setTimeout(() => toast(`${statInfo(stat).name} erreicht ${now.level}`, { tone: 'level' }), wait + 700);
+  if (now.level > before.level) setTimeout(() => toast(`${statInfo(stat).name} erreicht ${now.level}`, { tone: 'level' }), wait + flight + 700);
   return true;
+}
+
+// A small light from the row up to the ring of its stat, in a gentle arc.
+function flyToRing(stat, rect) {
+  const target = ringTarget(stat);
+  if (!target) return;
+  const from = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  const mid = { x: (from.x + target.x) / 2 + 40, y: Math.min(from.y, target.y) + (Math.abs(from.y - target.y) * 0.25) };
+  const el = h('div', { class: 'gain-spark', 'data-stat': stat, style: { left: '0px', top: '0px' } });
+  document.body.append(el);
+  const at = (p, scale, opacity = 1) => ({ transform: `translate(${p.x}px, ${p.y}px) scale(${scale})`, opacity });
+  el.animate([at(from, 0.4, 0), at(from, 1.1), at(mid, 1), at(target, 0.7, 0.9)], {
+    duration: FLIGHT_MS, easing: 'cubic-bezier(0.45, 0, 0.3, 1)', fill: 'forwards',
+  }).finished.then(() => el.remove(), () => el.remove());
 }
 
 const commit = (stat, answer, game, onCard) => settle(stat, game, onCard, () => game.complete(stat, answer));

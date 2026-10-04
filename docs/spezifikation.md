@@ -160,6 +160,11 @@ die Zahl vorn ist immer das Level. Beim Höchstwert steht nur 100. Neben der Zah
 Balken, der dasselbe zeigt. Wie viel eine Aufgabe bringt, steht nirgends als Zahl, denn
 „+14 Kraft“ neben „Kraft 1.375“ wäre irreführend; eine Aufgabe zeigt nur, wofür sie zählt
 („für Kraft“). Nach dem Erledigen steigt der neue Wert aus ihrer Zeile auf („Kraft 1.375“),
+ein kleines Licht in der Farbe des Werts fliegt von der Zeile zu seinem Ring am Portrait,
+der Ring wächst dort sichtbar vom alten zum neuen Stand (nach einem neuen Level erst voll,
+dann von vorn), mit einem hellen Punkt an seinem Ende, und Ring und Portrait glimmen kurz
+in dieser Farbe auf (`topbar.js`, `celebrateStat`; ohne Bewegung, wenn das Gerät es so
+eingestellt hat),
 der Verlauf eines Werts zeigt je Tag „Erledigt“ oder „Pause“ und den Wert danach. Es gibt
 kein Helden-XP und kein Heldenlevel, nur XP und Level je Stat.
 
@@ -280,8 +285,25 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
 - Das Ergebnis wird beim Aufbruch berechnet und als Ereignis gespeichert und zählt,
   sobald die Arbeit dort getan ist: Material liegt dann schon im Vorrat, auch wenn der
   Envoy noch unterwegs ist. Material zum Bauen nimmt er mit, wenn er dafür aufbricht.
+- **Mitverfolgen.** Über der Leiste zeigt ein Bild, was der Envoy gerade tut
+  (`js/ui/scene.js`): auf dem Weg ein kleiner Pfad vom einen Ort zum nächsten, auf dem er
+  läuft; bei einem Kampf er und der Geist mit ihren Lebensleisten, Runde für Runde
+  (Treffer und Gegentreffer steigen als Zahl auf, wer getroffen wird, wackelt; ein
+  beruhigter Geist leuchtet auf und verblasst; die Zeile darunter sagt, was in der Runde
+  geschah, am Ende „besiegt“, „beruhigt“ oder „Der Envoy zieht sich zurück“); beim Sammeln
+  ein Zähler, der jede Minute um den Wurf wächst; sonst die Suche (oder das Bauen) mit
+  einer Leiste; auf dem Rückweg, was er trägt. Unter der Leiste das **Tagebuch** der Reise
+  mit Uhrzeit: Aufbruch, Ankunft, Geist taucht auf, wie der Kampf ausging, gesammelt,
+  gefunden, Rückweg (die letzten vier Zeilen, die neueste hebt sich kurz hervor). Auf der
+  Karte steigt bei jedem Fund und jedem überstandenen Kampf ein kurzes Wort vom Envoy auf
+  („+3 Stein“, „Nebelwicht besiegt“). Alles folgt aus dem beim Aufbruch berechneten
+  Ergebnis: Kämpfe füllen gut vier Fünftel der Zeit vor Ort, die Runden gleichmäßig verteilt,
+  Funde erscheinen am Ende der Arbeit. Es ist auf jedem Gerät und nach jedem Neuladen
+  gleich und ändert nichts am Spiel.
 - Zurück im Lager erscheint einmal ein Bericht: Kämpfe, Mitgebrachtes, Neues im
-  Kompendium, bei zu wenig Platz auch, was liegen blieb. Nach mehreren Stationen ein
+  Kompendium, bei zu wenig Platz auch, was liegen blieb. Er entfaltet sich: erst die Geister,
+  dann jeder Fund einzeln, der kurz aufleuchtet, die Mengen zählen hoch, Neues (das
+  Lagerfeuer, der Händler) leuchtet zuletzt. Nach mehreren Stationen ein
   Bericht mit einem Abschnitt je Station; im Handbuch steht jede Quest einzeln.
 
 **In Reihe.** Solange der Envoy unterwegs ist, lässt sich ihm alles anhängen, was er tun

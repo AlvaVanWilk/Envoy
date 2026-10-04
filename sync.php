@@ -38,8 +38,9 @@ const LOCK_MINUTES = 15;
 
 const MAX_BODY_BYTES = 2000000;
 const MAX_EVENT_BYTES = 16000;
+// The same list as KNOWN_TYPES in js/events.js (a test compares them).
 const EVENT_TYPES = [
-    'plan', 'done', 'undo', 'mode',
+    'plan', 'done', 'teil', 'undo', 'mode',
     'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
     'envoy', 'travel', 'quest', 'test',
 ];

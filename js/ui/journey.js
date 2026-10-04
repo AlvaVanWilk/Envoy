@@ -5,6 +5,9 @@
 // Several: one block for every action (its way part tinted) and the way home,
 // and below the bar the row: done, now, waiting (the last one waiting can be
 // taken out). Building at the camp is „fertig“ at a time, all else back at a time.
+// Above the bar the scene of what the Envoy is doing right now, below it the
+// diary of the trip (see scene.js); on the map, short words rise from the
+// Envoy as things happen.
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
@@ -14,6 +17,7 @@ import { resource, itemIcon, dekoIcon, formatMinutes, MATERIAL_KEYS } from './pa
 import { progressAt, heroPosition, timeline, timesOf, nextStep } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
 import { facilityRow, stageRow } from '../world/camp.js';
+import { updateScene, updateDiary, freshEvents } from './scene.js';
 
 const PART_NAMES = { way: 'Hinweg', work: 'Vor Ort', home: 'Rückweg' };
 // Without a way the work itself is named.
@@ -141,16 +145,20 @@ export function journeyPanel(exp, game) {
     h('div', { class: 'journey-head' },
       h('span', { class: 'journey-title' }, single(exp) ? exp.actions[0].title : currentTitle(exp)),
       h('span', { class: 'journey-place' }, wayLine(exp, game))),
+    h('div', { class: 'journey-scene' }),
     progressBar(exp),
     h('div', { class: 'journey-foot' },
       h('span', { class: 'journey-phase' }, ''),
       h('span', { class: 'journey-until' }, `${atCamp ? 'fertig um' : 'zurück um'} ${clockTime(timesOf(exp).end)}`)),
-    single(exp) ? null : actionRow(exp, game));
-  updateJourney(el, exp, Date.now());
+    single(exp) ? null : actionRow(exp, game),
+    h('ol', { class: 'diary', 'aria-label': 'Unterwegs' }));
+  updateJourney(el, exp, Date.now(), game);
   return el;
 }
 
-function updateJourney(el, exp, t) {
+function updateJourney(el, exp, t, game) {
+  updateScene(el.querySelector('.journey-scene'), exp, game, t);
+  updateDiary(el.querySelector('.diary'), exp, game, t);
   const p = progressAt(exp, t);
   const parts = timeline(exp);
   const current = p.phase === 'done' ? parts.length : parts.findIndex((part) => part.kind === p.phase && part.i === p.i);
@@ -177,15 +185,26 @@ export function updateJourneys(game) {
   const exp = game.state.world.expedition;
   if (!exp) return false;
   const t = Date.now();
-  document.querySelectorAll(`[data-journey="${exp.id}"]`).forEach((el) => updateJourney(el, exp, t));
+  document.querySelectorAll(`[data-journey="${exp.id}"]`).forEach((el) => updateJourney(el, exp, t, game));
   const pos = heroPosition(exp, t, game.catalog);
   const gathering = heroClass(exp, t) !== '';
+  const fresh = freshEvents(exp, game, t).filter((e) => e.pop);
   document.querySelectorAll('.hero-token').forEach((el) => {
     el.style.left = `${pos.x}%`;
     el.style.top = `${pos.y}%`;
     el.classList.toggle('is-gathering', gathering);
+    fresh.forEach((e, n) => setTimeout(() => mapPop(el, e.pop), n * 700));
   });
   return t >= nextStep(exp).time;
+}
+
+// A short word rising from the Envoy on the map (a find, a spirit overcome).
+function mapPop(token, text) {
+  const canvas = token.parentElement;
+  if (!canvas) return;
+  const el = h('span', { class: 'map-pop', style: { left: token.style.left, top: token.style.top } }, text);
+  canvas.append(el);
+  el.addEventListener('animationend', () => el.remove());
 }
 
 // --- report --------------------------------------------------------------
@@ -252,7 +271,7 @@ export function openReport(report, game) {
   const several = report.stops.length > 1;
   const onlyAtCamp = report.stops.length === 1 && outcomes[0].kind === 'bauen' && game.catalog.placeById.get(report.stops[0].place)?.typ === 'lager';
 
-  openSheet({
+  const { panel } = openSheet({
     title: expeditionTitle(report),
     eyebrow: onlyAtCamp ? 'Im Lager' : 'Zurück im Lager',
     className: 'report-sheet',
@@ -275,6 +294,42 @@ export function openReport(report, game) {
     ],
     onClose: () => game.markReportSeen(report.id),
   });
+  reveal(panel);
+}
+
+// The report unfolds: the spirits met, then what he brought, one after the
+// other, each lighting up; the amounts count up.
+const REVEAL_FIRST = 250;
+const REVEAL_STEP = 180;
+const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function reveal(panel) {
+  if (still()) return;
+  const parts = [...panel.querySelectorAll('.report-summary, .report-fight, .loot > *, .report-unlock')];
+  parts.forEach((el, n) => {
+    el.classList.add('is-revealed');
+    el.style.setProperty('--i', String(n));
+    const amount = el.querySelector('.res-amount');
+    if (amount) countUp(amount, REVEAL_FIRST + n * REVEAL_STEP);
+  });
+}
+
+function countUp(el, delay) {
+  const match = /^([+]?)(\d+)$/.exec(el.textContent.trim());
+  if (!match) return;
+  const [, sign, digits] = match;
+  const to = Number(digits);
+  const duration = Math.min(900, 300 + to * 40);
+  el.textContent = `${sign}0`;
+  setTimeout(() => {
+    const begin = performance.now();
+    const step = (now) => {
+      const k = Math.min(1, (now - begin) / duration);
+      el.textContent = `${sign}${Math.round(to * (1 - (1 - k) ** 2))}`;
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, delay);
 }
 
 // Shows the oldest report this device has not shown yet.

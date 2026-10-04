@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdtempSync, copyFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, copyFileSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -34,6 +34,16 @@ async function startServer(t) {
 }
 
 const event = (id, type = 'envoy') => ({ id, t: 1, d: '2026-09-27', type, name: 'Mira' });
+
+// Every kind of event the app writes must also be kept by the server, or it
+// would be lost on the way to another device.
+test('server: knows every type of event the app knows', async () => {
+  const { KNOWN_TYPES } = await import('../js/events.js');
+  const php = readFileSync(new URL('../sync.php', import.meta.url), 'utf8');
+  const list = /const EVENT_TYPES = \[([^\]]*)\]/.exec(php)[1];
+  const server = new Set([...list.matchAll(/'([a-z]+)'/g)].map((m) => m[1]));
+  assert.deepEqual([...KNOWN_TYPES].sort(), [...server].sort());
+});
 
 test('server: accounts, login and sync between devices', { skip: !hasPhp && 'PHP ist nicht installiert' }, async (t) => {
   const call = await startServer(t);
