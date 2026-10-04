@@ -153,11 +153,15 @@ Wert zusätzlich in einem Gleichgewicht.
 
 ### Anzeige
 
-Unter jedem Stat steht der Fortschritt als Zahl (z. B. 4 / 45), darüber ein Balken.
-Gewinne stehen mit dem Namen ihres Stats: „+14 Kraft“, ein Abzug „Pause · −5 Kraft“.
-So ist sofort sichtbar, welcher Stat wächst. „XP“ darf in der Oberfläche stehen, aber nur
-für einen Stat (etwa „noch 30 XP bis Level 2“ an den Ringen), nie für den Helden selbst:
-Es gibt kein Helden-XP und kein Heldenlevel, nur XP und Level je Stat.
+Ein Stat steht als Zahl mit drei Stellen nach dem Punkt, etwa **1.375**: vorn groß das
+Level, hinter dem Punkt klein, wie weit es bis zum nächsten ist (der Anteil der XP dieses
+Levels, in Tausendsteln). Es wird nie aufgerundet: Kurz vor dem nächsten Level steht 1.999,
+die Zahl vorn ist immer das Level. Beim Höchstwert steht nur 100. Neben der Zahl liegt ein
+Balken, der dasselbe zeigt. Wie viel eine Aufgabe bringt, steht nirgends als Zahl, denn
+„+14 Kraft“ neben „Kraft 1.375“ wäre irreführend; eine Aufgabe zeigt nur, wofür sie zählt
+(„für Kraft“). Nach dem Erledigen steigt der neue Wert aus ihrer Zeile auf („Kraft 1.375“),
+der Verlauf eines Werts zeigt je Tag „Erledigt“ oder „Pause“ und den Wert danach. Es gibt
+kein Helden-XP und kein Heldenlevel, nur XP und Level je Stat.
 
 ## Malus bei Nichterledigung
 
@@ -733,8 +737,8 @@ des Envoy):
   ist. Um das Portrait liegen vier dünne Ringe, innen
   Kraft, dann Ausdauer, Beweglichkeit, Gelassenheit, jeder in seiner Farbe. Ein Ring
   füllt sich auf dem Weg zum nächsten Level; ist er voll, steigt der Wert. Zeigen
-  (Maus) oder Berühren (Touch) eines Rings nennt Level und Rest („Kraft · Level 1 ·
-  noch 30 XP bis Level 2“); ein Antippen des Rings tut sonst nichts. Das Portrait öffnet
+  (Maus) oder Berühren (Touch) eines Rings nennt den Wert („Kraft 1.375“); ein Antippen
+  des Rings tut sonst nichts. Das Portrait öffnet
   den Envoy.
 - in der Mitte das **Tageswerk** als großer Knopf in dunklem Stein wie Sims und Boxen,
   mit „2 / 4“. Solange Aufgaben offen sind, pulsiert ein großer oranger Schimmer um ihn;
@@ -758,10 +762,10 @@ des Envoy):
   vor bis 80 Minuten nach dem Aufgang), Tag, Sonnenuntergang (von 90 Minuten vor bis 40
   nach dem Untergang), Nacht. Ohne Feuer gibt es bisher nur das Tagesbild; zu anderen
   Zeiten wird es dunkler oder wärmer getönt, bis die Nutzerin Bilder dafür hat.
-- **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem Gewinn („+15 Kraft“) und
+- **Tageswerk**: die vier Aufgaben als schmale Zeilen mit dem, wofür sie zählen („für Kraft“), und
   einem Haken zum Erledigen. **Antippen dreht eine Aufgabe um wie eine Karte**: Sie wächst
   aus ihrer Zeile in die Mitte, erst ist die Rückseite mit dem Zeichen des Werts zu sehen,
-  dann die Vorderseite: oben Gewinn und Gesamtzeit, die Übung als bewegte Figur, die sie im
+  dann die Vorderseite: oben wofür sie zählt und die Gesamtzeit, die Übung als bewegte Figur, die sie im
   Takt vormacht (Comic-Stil mit dunkler Umrisslinie wie die Bilder der Nutzerin, Hemd in der
   Farbe des Bereichs, mit Hals und ohne Gesicht: nur das Haar zeigt, wohin der Kopf schaut;
   meist von der Seite, der Seitstütz von vorn, der Brustöffner („das offene Buch“) vom Kopf
@@ -778,8 +782,8 @@ des Envoy):
   Karte: bei einer Frage genügt ein Tipp, bei mehreren kommt „Fertig“. Ist die letzte Übung
   erledigt, dreht sich die Karte zurück und wird dabei kleiner, ohne
   sich zu verziehen, bis sie über ihrer Zeile verblasst; die Zeile leuchtet kurz auf, und
-  der Gewinn steigt dort auf. Die Zeile nennt die Übung oder die kurzen Namen aller („Käfer ·
-  Vogelhund · Seitstütz“), den Gewinn, die Zeit und, wenn schon ein Teil erledigt ist, wie
+  der neue Wert steigt dort auf („Kraft 1.375“). Die Zeile nennt die Übung oder die kurzen
+  Namen aller („Käfer · Vogelhund · Seitstütz“), wofür sie zählt, die Zeit und, wenn schon ein Teil erledigt ist, wie
   viel („2 von 3“). Der Haken an der Zeile erledigt, was von der Aufgabe noch offen ist, ohne
   Karte; gibt es dazu Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
   Aufgabe zeigt auf der Karte „Erledigt“ und „Rückgängig“. Mit
@@ -825,7 +829,7 @@ des Envoy):
     Talentbaum) und tragen „Neu“, bis sie
     gelesen sind. Das Handbuch im Menü glüht, bis man es geöffnet hat.
   - **Tageswerk**: zuerst heute, dann alle früheren Tage, so viele je Seite, wie passen:
-    welche Übung, erledigt oder nicht, mit Gewinn.
+    welche Übung, erledigt oder nicht (ohne Zahl).
   - **Quests**: jede beendete Quest, neueste zuerst, mit Ort, Zeit und Ausgang (die
     Quests einer Reihe einzeln).
   - **Kompendium**: siehe oben.
@@ -955,10 +959,10 @@ Der Bonus ist stark befristet: Er soll dazu bringen, die App gleich nach dem Ein
 zu nutzen. Er zählt ab dem Moment, in dem der Erfolg erreicht wurde, 15 Minuten lang
 (`bonusMinutes` in `js/achievements.js`). Für eine erledigte Aufgabe zählt der Zeitpunkt,
 zu dem sie erledigt wurde, für eine Sammel-Expedition der des Aufbruchs. Die Tageswerk-Seite
-nennt ihn mit Uhrzeit, solange er läuft; danach steht der normale Gewinn da.
+nennt ihn mit Uhrzeit, solange er läuft.
 
 Der Bonus aufs Tageswerk wird auf die Punkte der Übung gerechnet und gerundet (14 → 15,
-20 → 22, 28 → 31); angezeigt wird immer der Gewinn mit Bonus. Da der Malus am
+20 → 22, 28 → 31); als Zahl angezeigt wird der Gewinn nicht (siehe Anzeige). Da der Malus am
 durchschnittlichen Tagesgewinn hängt, wirkt der kurze Bonus dort kaum nach.
 
 Weitere Erfolge (etwa „100 Steine gesammelt“, „an jedem Slot ein Teil“, später auch für
@@ -1113,6 +1117,6 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Expeditionen | echte Zeit für Hinweg, vor Ort und Rückweg, eine zur Zeit, beliebig verlängerbar; das Ergebnis zählt, sobald die Arbeit getan ist |
 | Kampfergebnis | beim Aufbruch berechnet und gespeichert, zählt bei der Rückkehr |
 | Startansicht | Lager; nur direkt nach dem ersten Erstellen eines Envoy die Envoy-Seite mit Rundgang |
-| Wortwahl | „XP“ und „Level“ gibt es nur je Stat, nie für den Helden; Gewinne heißen „+14 Kraft“ |
+| Wortwahl | „XP“ und „Level“ gibt es nur je Stat, nie für den Helden; ein Wert steht als 1.375 (Punkt, drei Stellen, nie aufgerundet); Gewinne ohne Zahl, nur „für Kraft“ |
 | Talentbaum | Schild mit Schloss statt ausgegraut; eigene Seite, kein Fenster über der alten Ansicht |
 | Rückgängig | nur für Tagesaufgaben am selben Tag |

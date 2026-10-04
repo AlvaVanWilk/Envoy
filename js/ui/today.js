@@ -13,7 +13,7 @@ import { statRow, statEmblem, statInfo } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { viewHead, sectionTitle } from './parts.js';
 import { taskFor } from '../tasks.js';
-import { openTaskCard, finishTask, gainText, gainOf, taskTitle, formatSeconds } from './taskcard.js';
+import { openTaskCard, finishTask, countsFor, taskTitle, formatSeconds } from './taskcard.js';
 
 let helpOpen = false;
 
@@ -109,7 +109,7 @@ function taskRow(stat, game) {
     statEmblem(stat),
     h('span', { class: 'task-title' },
       h('span', { class: 'task-name' }, taskTitle(task)),
-      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, gainText(stat, gainOf(stat, task, game))), h('span', { class: 'task-area' }, ` · ${formatSeconds(task.seconds)}`),
+      h('span', { class: 'task-meta' }, h('span', { class: 'task-gain' }, countsFor(stat)), h('span', { class: 'task-area' }, ` · ${formatSeconds(task.seconds)}`),
         partsDone > 0 ? h('span', { class: 'task-progress' }, ` · ${partsDone} von ${task.parts.length}`) : null)),
     icon(UI_ICONS.chevron, 'icon task-chevron'));
 

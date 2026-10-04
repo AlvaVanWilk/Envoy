@@ -142,8 +142,8 @@ Start bei 1, Obergrenze 100.
 **XP pro Aufgabe:** 14 bis 28, Schnitt 20. Hängt am Umfang, nicht am Bereich: Jede
 Übung trägt ihren Anteil bei (Spalte `xp`), die Aufgabe bringt die Summe ihrer Übungen,
 bei jeder Mischung der Stufen zwischen 14 und 28. Erfolge können darauf einen Bonus geben (so gewünscht): „Angekommen“
-+10 %, gerundet (14 → 15), aber nur in den ersten 15 Minuten nach dem Start. Angezeigt
-wird immer der Gewinn mit Bonus.
++10 %, gerundet (14 → 15), aber nur in den ersten 15 Minuten nach dem Start. Als Zahl
+angezeigt wird der Gewinn nie, nur wofür eine Aufgabe zählt („für Kraft“).
 
 **XP bis zum nächsten Level:**
 
@@ -305,7 +305,9 @@ Regeln für Claude:
   können, um Vertrauen zu haben.
 - Deutsche UI-Texte knapp und ohne erklärende Kleingedruckte. Keine Motivationssprüche,
   keine Ausrufezeichen, kein Coaching-Ton.
-- „XP“ und „Level“ gibt es nur je Stat, nie für den Helden selbst (Punkt 4 oben). Damit
-  darf „XP“ in der Oberfläche stehen, wenn es um einen Stat geht („noch 30 XP bis
-  Level 2“). Gewinne heißen weiterhin nach ihrem Stat („+14 Kraft“).
+- „XP“ und „Level“ gibt es nur je Stat, nie für den Helden selbst (Punkt 4 oben). Ein Wert
+  steht als Zahl mit Punkt und drei Stellen, „1.375“: vorn groß das Level, dahinter klein,
+  wie weit es bis zum nächsten ist, nie aufgerundet (`statValue` in `js/formulas.js`).
+  Gewinne stehen nicht als Zahl da („+14 Kraft“ wäre neben „Kraft 1.375“ irreführend);
+  eine Aufgabe zeigt nur, wofür sie zählt („für Kraft“).
 - In der Spielwelt scheitert nichts. Stats bestimmen Zugang, Dauer und Ertrag.

@@ -1,11 +1,12 @@
-// Stat display: emblem, level, bar and progress as a number (e.g. 4 / 45:
-// points of this stat collected on the way to the next level).
+// Stat display: emblem, name, the value as a number (1.375: the level big,
+// after the point small how far it is to the next one, see statValue in
+// formulas.js) and the bar beside it, which shows the same.
 // Remembers what was shown last, so a change animates the bar.
 
 import { h, icon } from './dom.js';
 import { STAT_ICONS } from './icons.js';
 import { STATS, STAT_MAX_LEVEL } from '../config.js';
-import { xpToNext } from '../formulas.js';
+import { xpToNext, statValue, statText } from '../formulas.js';
 
 const lastShown = {};
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -20,26 +21,27 @@ export function statEmblem(id, size = '') {
   return h('span', { class: `stat-emblem ${size}`, 'data-stat': id }, icon(STAT_ICONS[id]));
 }
 
-export function statRow(id, stat, { onclick = null, showLabel = true } = {}) {
+// The value of a stat: the level big, the thousandths after the point small.
+export function statNumber(stat, className = '') {
+  const { whole, part } = statValue(stat);
+  return h('span', { class: `stat-value ${className}` },
+    h('span', { class: 'stat-whole' }, whole),
+    part ? h('span', { class: 'stat-part' }, part) : null);
+}
+
+export function statRow(id, stat, { onclick = null } = {}) {
   const info = statInfo(id);
   const fill = h('span', { class: 'stat-fill' });
-  const levelNumber = h('span', { class: 'stat-level-num' }, String(stat.level));
-  const progress = stat.level >= STAT_MAX_LEVEL
-    ? 'max'
-    : `${Math.floor(stat.xp)} / ${xpToNext(stat.level)}`;
 
   const row = h(onclick ? 'button' : 'div', {
     class: 'stat-row', 'data-stat': id, onclick,
-    'aria-label': `${info.name}, Level ${stat.level}, ${progress}`,
+    'aria-label': `${info.name} ${statText(stat)}`,
   },
   statEmblem(id),
   h('span', { class: 'stat-main' },
     h('span', { class: 'stat-name' }, info.name),
-    h('span', { class: 'stat-bar' }, fill),
-    h('span', { class: 'stat-progress' }, progress)),
-  h('span', { class: 'stat-level' },
-    showLabel ? h('span', { class: 'stat-level-label' }, 'Level') : null,
-    levelNumber));
+    statNumber(stat),
+    h('span', { class: 'stat-bar' }, fill)));
 
   animate(id, stat, fill, row);
   return row;

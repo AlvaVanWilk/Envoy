@@ -587,7 +587,7 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
 
 .stat-row {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: 12px;
   width: 100%;
@@ -600,17 +600,19 @@ select.field { appearance: none; -webkit-appearance: none; padding-right: 32px;
 }
 button.stat-row { cursor: pointer; }
 button.stat-row:hover { background: rgba(244, 236, 222, 0.025); }
-.stat-main { display: grid; gap: 4px; min-width: 0; }
-.stat-name { font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.05em; }
+/* the name above; the value, then the bar beside it */
+.stat-main { display: grid; grid-template-columns: 4.6em 1fr; align-items: center; column-gap: 8px; row-gap: 2px; min-width: 0; }
+.stat-name { grid-column: 1 / -1; font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: 0.05em; }
+/* the level big, after the point small (1.375) */
+.stat-value { font-family: var(--font-display); font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
+.stat-whole { font-size: 24px; font-weight: 700; }
+/* in the plain font, so the point is clearly seen */
+.stat-part { font-family: var(--font-body); font-size: 14px; font-weight: 600; letter-spacing: 0.02em; color: var(--text-2); }
 .stat-bar { position: relative; height: 7px; border-radius: 2px; background: #090c11; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8); }
 .stat-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 2px; background: linear-gradient(180deg, color-mix(in srgb, var(--stat) 70%, #fff), var(--stat) 50%, color-mix(in srgb, var(--stat) 70%, #000)); transition: width 0.65s var(--ease); }
-.stat-progress { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.stat-level { display: grid; justify-items: end; line-height: 1; }
-.stat-level-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
-.stat-level-num { font-family: var(--font-display); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .stat-row.gain .stat-fill { animation: fill-flash 1s var(--ease); }
 .stat-row.level-up { animation: level-flash 1.4s var(--ease); }
-.stat-row.level-up .stat-level-num { animation: level-pop 0.9s var(--ease); color: var(--stat); }
+.stat-row.level-up .stat-whole { display: inline-block; animation: level-pop 0.9s var(--ease); color: var(--stat); }
 @keyframes fill-flash { 30% { filter: brightness(1.5); } }
 @keyframes level-flash { 25% { background: color-mix(in srgb, var(--stat) 14%, transparent); } }
 @keyframes level-pop { 35% { transform: scale(1.35); } }
@@ -1208,6 +1210,8 @@ button.task-check:hover { color: var(--stat); }
   .tc-body > * { animation: none; }
 }
 
+.gain-float .stat-whole { font-size: inherit; }
+.gain-float .stat-part { font-size: 14px; color: inherit; }
 .gain-float {
   position: fixed;
   z-index: 70;
@@ -1758,6 +1762,8 @@ button.task-check:hover { color: var(--stat); }
 .talent-bar { height: 7px; overflow: hidden; border-radius: 2px; background: #090c11; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8); }
 .talent-bar span { display: block; height: 100%; background: var(--stat); }
 .talent-level { font-variant-numeric: tabular-nums; color: var(--muted); }
+.talent-level .stat-whole { font-size: 17px; color: var(--text); }
+.talent-level .stat-part { font-size: 12px; }
 
 /* 12b. handbook ------------------------------------------------------- */
 

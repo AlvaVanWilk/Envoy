@@ -16,12 +16,12 @@
 // ran). The answers move the stages (two good runs in a row up, two too hard
 // ones down). „Das war heute zu viel“ finishes the whole task and counts as
 // too hard for every exercise of the unit. Then the card turns back into its
-// row and the gain rises from there.
+// row and the new value rises from there.
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
 import { TIMER_PREP, TIMER_SWITCH, TOO_MUCH } from '../config.js';
-import { statEmblem, statInfo } from './stats.js';
+import { statEmblem, statInfo, statNumber } from './stats.js';
 import { openCard, closeSheet, toast } from './sheet.js';
 import { openTimer } from './timer.js';
 import { resolveLook, showLayer } from './look.js';
@@ -30,9 +30,8 @@ import { questionsOf, canBeTooMuch } from '../tasks.js';
 const TURN_MS = 520;   // as long as the card takes to turn back (sheet.js)
 
 const rowOf = (stat) => document.querySelector(`.task-row[data-stat="${stat}"] .task-line`);
-export const gainText = (stat, xp) => `+${xp} ${statInfo(stat).name}`;
-// The gain of a task: what it brought, or what it brings now.
-export const gainOf = (stat, task, game) => game.state.todayDone[stat]?.gain ?? game.gainFor(task);
+// What a task counts for („für Kraft“); how much it brings is not shown.
+export const countsFor = (stat) => `für ${statInfo(stat).name}`;
 
 // 45 -> „45 Sek.“, 90 -> „1,5 Min.“, 180 -> „3 Min.“
 export function formatSeconds(seconds) {
@@ -69,19 +68,18 @@ export function finishTask(stat, game) {
 // the card turns back into its row and the gain rises there; returns
 // whether it is.
 function settle(stat, game, onCard, action) {
-  const task = game.todayTask(stat);
-  const gain = game.gainFor(task);
   const before = game.state.stats[stat].level;
   action();
   if (!game.state.todayDone[stat]) return false;
-  const after = game.state.stats[stat].level;
+  const now = game.state.stats[stat];
   if (onCard) closeSheet();
   const wait = onCard ? TURN_MS : 0;
+  // the new value rises from the row (not how much it grew)
   setTimeout(() => {
     const anchor = document.querySelector(`.task-row[data-stat="${stat}"] .task-gain`);
-    if (anchor) floatGain(gainText(stat, gain), anchor.getBoundingClientRect(), stat);
+    if (anchor) floatGain([`${statInfo(stat).name} `, statNumber(now)], anchor.getBoundingClientRect(), stat);
   }, wait);
-  if (after > before) setTimeout(() => toast(`${statInfo(stat).name} · Level ${after}`, { tone: 'level' }), wait + 700);
+  if (now.level > before) setTimeout(() => toast(`${statInfo(stat).name} erreicht ${now.level}`, { tone: 'level' }), wait + 700);
   return true;
 }
 
@@ -148,7 +146,7 @@ export function openTaskCard(stat, game, start = null) {
       h('p', { class: 'eyebrow' }, `${info.name} · ${info.area}`),
       h('button', { class: 'icon-btn', type: 'button', 'aria-label': 'Schließen', onclick: () => closeSheet() }, icon(UI_ICONS.close))),
     h('div', { class: 'tc-scroll' },
-      h('p', { class: 'tc-meta' }, h('span', { class: 'tc-gain' }, gainText(stat, gainOf(stat, task, game))), ` · ${formatSeconds(task.seconds)}`),
+      h('p', { class: 'tc-meta' }, h('span', { class: 'tc-gain' }, countsFor(stat)), ` · ${formatSeconds(task.seconds)}`),
       pictureBox, tabs, partBox, body),
     actions,
   ];

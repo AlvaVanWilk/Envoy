@@ -34,7 +34,7 @@ function taskLine(stat, task, game) {
   return h('li', { class: `log-task ${task.done ? 'done' : ''}`, 'data-stat': stat },
     statEmblem(stat, 'tiny'),
     h('span', { class: 'log-task-name' }, taskName(stat, task, game)),
-    h('span', { class: 'log-task-state' }, task.done ? `+${task.gain}` : '–'));
+    h('span', { class: 'log-task-state', 'aria-label': task.done ? 'erledigt' : 'nicht erledigt' }, task.done ? icon(UI_ICONS.check) : '–'));
 }
 
 function dayBlock(entry, game, { withDate = true } = {}) {

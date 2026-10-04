@@ -12,7 +12,7 @@
 
 import { h } from './dom.js';
 import { STATS, STAT_MAX_LEVEL, versioned } from '../config.js';
-import { xpToNext } from '../formulas.js';
+import { xpToNext, statText } from '../formulas.js';
 import { resolveLook, portraitSrc, showLayer } from './look.js';
 import { shield } from './shield.js';
 import { NAV_ICONS } from './icons.js';
@@ -25,11 +25,8 @@ const BAND = 2.2; // half the width of a band
 
 const share = (s) => (s.level >= STAT_MAX_LEVEL ? 1 : s.xp / xpToNext(s.level));
 
-export function ringText(stat, s) {
-  if (s.level >= STAT_MAX_LEVEL) return `${stat.name} · Level ${s.level}`;
-  const missing = Math.max(1, Math.ceil(xpToNext(s.level) - s.xp));
-  return `${stat.name} · Level ${s.level} · noch ${missing} XP bis Level ${s.level + 1}`;
-}
+// The hint at a ring: the stat and its value (1.375, see statValue).
+export const ringText = (stat, s) => `${stat.name} ${statText(s)}`;
 
 function rings(stats) {
   const circle = (r, cls, extra = '') => `<circle cx="50" cy="50" r="${r}" class="${cls}" pathLength="100" ${extra}/>`;
@@ -55,7 +52,7 @@ function portraitRings(game, current, badge) {
   const img = h('img', { class: 'portrait-img', alt: '', draggable: 'false' });
   showLayer(img, portraitSrc(look), look, 'portrait');
   const tip = h('span', { class: 'ring-tip', role: 'status' });
-  const levels = STATS.map((st) => `${st.name} ${stats[st.id].level}`).join(', ');
+  const levels = STATS.map((st) => `${st.name} ${statText(stats[st.id])}`).join(', ');
   const art = h('span', { class: 'rings-art', html: rings(stats) });
   const wrap = h('div', { class: 'portrait-rings' },
     art,

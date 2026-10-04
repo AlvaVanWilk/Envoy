@@ -59,8 +59,9 @@ const CHAPTERS = [
     id: 'werte',
     title: 'Werte und Level',
     text: [
-      'Der Envoy hat vier Werte: Kraft, Ausdauer, Beweglichkeit und Gelassenheit. Jeder beginnt bei Level 1.',
-      'Die vier Ringe um das Portrait zeigen, wie weit es bis zum nächsten Level ist. Ist ein Ring voll, steigt der Wert. Zeigst du auf einen Ring oder berührst ihn, steht dort das Level und wie viele XP noch fehlen.',
+      'Der Envoy hat vier Werte: Kraft, Ausdauer, Beweglichkeit und Gelassenheit. Jeder beginnt bei 1.',
+      'Ein Wert steht als Zahl wie 1.375: vorn groß das Level, hinter dem Punkt klein, wie weit es bis zum nächsten ist. Jede erledigte Aufgabe zahlt auf ihren Wert ein.',
+      'Die vier Ringe um das Portrait zeigen dasselbe. Ist ein Ring voll, steigt das Level. Zeigst du auf einen Ring oder berührst ihn, steht dort der Wert.',
     ],
   },
   {

@@ -13,6 +13,21 @@ export function xpToNext(n) {
   return Math.round(raw);
 }
 
+// A stat as a number, as it is shown: the level, and after the point how far
+// it is to the next one, in thousandths (1.375). Never rounded up, so the
+// number before the point is always the level (1.999 is still level 1). At
+// the highest level only the level. -> { whole: '1', part: '.375' }
+export function statValue({ level, xp }) {
+  if (level >= STAT_MAX_LEVEL) return { whole: String(level), part: '' };
+  const thousandths = Math.max(0, Math.min(999, Math.floor((1000 * xp) / xpToNext(level))));
+  return { whole: String(level), part: `.${String(thousandths).padStart(3, '0')}` };
+}
+
+export const statText = (stat) => {
+  const { whole, part } = statValue(stat);
+  return whole + part;
+};
+
 // Share of the average daily gain that is lost on the given missed day.
 // missedDay 1 = first day in a row without the task.
 export function malusFactor(missedDay) {

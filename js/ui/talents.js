@@ -6,7 +6,8 @@ import { h } from './dom.js';
 import { STATS } from '../config.js';
 import { NAV_ICONS } from './icons.js';
 import { shield } from './shield.js';
-import { statEmblem } from './stats.js';
+import { statEmblem, statNumber } from './stats.js';
+import { statText } from '../formulas.js';
 import { viewHead } from './parts.js';
 
 export const TALENT_LEVEL = 10;
@@ -25,11 +26,12 @@ export function renderTalents(game) {
         ? 'Alle vier Werte haben Level 10 erreicht. Der Talentbaum folgt.'
         : 'Öffnet sich, wenn alle vier Werte Level 10 erreichen.'),
       h('ul', { class: 'talent-progress' }, STATS.map((st) => {
-        const level = game.state.stats[st.id].level;
-        return h('li', { 'data-stat': st.id, class: level >= TALENT_LEVEL ? 'reached' : '' },
+        const stat = game.state.stats[st.id];
+        const value = Number(statText(stat));   // 1.375: the level and the way to the next one
+        return h('li', { 'data-stat': st.id, class: stat.level >= TALENT_LEVEL ? 'reached' : '' },
           statEmblem(st.id, 'small'),
           h('span', { class: 'talent-name' }, st.name),
-          h('span', { class: 'talent-bar' }, h('span', { style: { width: `${Math.min(100, (100 * level) / TALENT_LEVEL)}%` } })),
-          h('span', { class: 'talent-level' }, `${Math.min(level, TALENT_LEVEL)} / ${TALENT_LEVEL}`));
+          h('span', { class: 'talent-bar' }, h('span', { style: { width: `${Math.min(100, (100 * value) / TALENT_LEVEL)}%` } })),
+          h('span', { class: 'talent-level' }, stat.level >= TALENT_LEVEL ? `${TALENT_LEVEL}` : statNumber(stat), ` / ${TALENT_LEVEL}`));
       }))));
 }

@@ -1,9 +1,11 @@
-// Details of one stat: progress, best level, floor and the last days.
+// Details of one stat: its value, best level, floor and the last days (what
+// was done and the value after each day; how much it rose or fell is not
+// shown as a number).
 
 import { h } from './dom.js';
 import { openSheet } from './sheet.js';
 import { statRow, statInfo } from './stats.js';
-import { floorPosition } from '../formulas.js';
+import { floorPosition, statText } from '../formulas.js';
 import { formatDayShort } from '../days.js';
 
 const DAYS_SHOWN = 14;
@@ -14,22 +16,11 @@ export function openStatDetail(stat, game) {
   const entries = [...game.state.history[stat]].reverse().slice(0, DAYS_SHOWN);
 
   const rows = entries.map((e) => {
-    let text;
-    let tone;
-    if (e.kind === 'gain') {
-      text = `+${e.xp} ${info.name}`;
-      tone = 'gain';
-    } else if (e.xp < 0) {
-      text = `Pause · −${Math.abs(e.xp)} ${info.name}`;
-      tone = 'loss';
-    } else {
-      text = 'Pause';
-      tone = 'rest';
-    }
+    const tone = e.kind === 'gain' ? 'gain' : e.xp < 0 ? 'loss' : 'rest';
     return h('li', { class: `history-row ${tone}` },
       h('span', { class: 'history-day' }, e.day === game.state.today ? 'Heute' : formatDayShort(e.day)),
-      h('span', { class: 'history-text' }, text),
-      h('span', { class: 'history-level' }, `Level ${e.level}`));
+      h('span', { class: 'history-text' }, e.kind === 'gain' ? 'Erledigt' : 'Pause'),
+      h('span', { class: 'history-level' }, e.levelXp === undefined ? String(e.level) : statText({ level: e.level, xp: e.levelXp })));
   });
 
   openSheet({
@@ -40,7 +31,7 @@ export function openStatDetail(stat, game) {
       statRow(stat, s),
       h('dl', { class: 'facts' },
         h('div', {}, h('dt', {}, 'Höchstes Level'), h('dd', {}, String(s.maxLevel))),
-        h('div', {}, h('dt', {}, 'Untergrenze'), h('dd', {}, `Level ${Math.floor(floorPosition(s.maxLevel))}`))),
+        h('div', {}, h('dt', {}, 'Untergrenze'), h('dd', {}, String(Math.floor(floorPosition(s.maxLevel)))))),
       rows.length > 0
         ? h('div', {}, h('h3', { class: 'section-title' }, 'Letzte Tage'), h('ul', { class: 'history' }, rows))
         : null,

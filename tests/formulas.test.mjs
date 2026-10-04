@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { xpToNext, malusFactor, addXp, removeXp, floorPosition } from '../js/formulas.js';
+import { xpToNext, malusFactor, addXp, removeXp, floorPosition, statValue, statText } from '../js/formulas.js';
 
 test('curve matches the specification', () => {
   assert.equal(xpToNext(1), 45);
@@ -63,4 +63,13 @@ test('cap at level 100', () => {
   const s = addXp({ level: 99, xp: 0, maxLevel: 99 }, 10_000_000);
   assert.equal(s.level, 100);
   assert.equal(s.xp, 0);
+});
+
+test('a stat as a number: the level, then the thousandths to the next one, never rounded up', () => {
+  assert.equal(statText({ level: 1, xp: 0 }), '1.000');
+  assert.equal(statText({ level: 1, xp: 15 }), '1.333');
+  assert.equal(statText({ level: 1, xp: 44.99 }), '1.999');
+  assert.equal(statText({ level: 3, xp: 6 }), `3.${String(Math.floor((6000) / xpToNext(3))).padStart(3, '0')}`);
+  assert.deepEqual(statValue({ level: 12, xp: 0 }), { whole: '12', part: '.000' });
+  assert.deepEqual(statValue({ level: 100, xp: 50 }), { whole: '100', part: '' });
 });

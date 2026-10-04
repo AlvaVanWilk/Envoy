@@ -163,7 +163,7 @@ export function replay(events, catalog, today, now = Date.now()) {
       todayDone = done;
       todayParts = Object.fromEntries(Object.entries(parts).filter(([stat]) => !done[stat]));
       for (const stat of STAT_IDS) {
-        if (done[stat]) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: stats[stat].level });
+        if (done[stat]) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: stats[stat].level, levelXp: stats[stat].xp });
       }
       break;
     }
@@ -175,13 +175,13 @@ export function replay(events, catalog, today, now = Date.now()) {
         recentGains[stat].push(done[stat].gain);
         if (recentGains[stat].length > MALUS_AVERAGE_WINDOW) recentGains[stat].shift();
         stats[stat] = { ...before, missed: 0 };
-        if (day >= historyFrom) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: before.level });
+        if (day >= historyFrom) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: before.level, levelXp: before.xp });
       } else {
         const missed = before.missed + 1;
         const malus = Math.round(malusFactor(missed) * average(recentGains[stat]));
         const after = malus > 0 ? removeXp(before, malus) : before;
         stats[stat] = { ...after, missed };
-        if (day >= historyFrom) history[stat].push({ day, kind: 'missed', missed, xp: -malus, level: after.level });
+        if (day >= historyFrom) history[stat].push({ day, kind: 'missed', missed, xp: -malus, level: after.level, levelXp: after.xp });
         // A long break lowers the stage of every exercise of the area, so
         // coming back is easy.
         if (missed % INTENSITY_DOWN_AFTER_MISSED_DAYS === 0) {
