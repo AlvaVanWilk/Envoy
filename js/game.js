@@ -38,6 +38,9 @@ export const game = {
       store.saveDeviceId(this.deviceId);
     }
     this.events = store.loadEvents().filter(isValidEvent);
+    // when this device first opened this Envoy (see unseenReports)
+    const ui = store.loadUi();
+    if (!ui.since) store.saveUi({ ...ui, since: Date.now() });
     this.refresh();
   },
 
@@ -278,16 +281,23 @@ export const game = {
   },
 
   // Finished expeditions of the last two days this device has not shown yet.
+  // A report shows once: not again on this device, nor on another one once
+  // it was seen anywhere (event `gesehen`), and never one that was over
+  // before this device first opened this Envoy.
   unseenReports() {
-    const seen = new Set(store.loadUi().seenReports || []);
-    const since = Date.now() - REPORT_HOURS * 3600000;
-    return this.state.world.reports.filter((r) => !seen.has(r.id) && r.end >= since);
+    const ui = store.loadUi();
+    const seen = new Set(ui.seenReports || []);
+    const since = Math.max(Date.now() - REPORT_HOURS * 3600000, ui.since || 0);
+    return this.state.world.reports.filter((r) => !seen.has(r.id) && !this.state.world.seen[r.id] && r.end >= since);
   },
 
   markReportSeen(id) {
     const ui = store.loadUi();
-    ui.seenReports = [...(ui.seenReports || []), id].slice(-60);
-    store.saveUi(ui);
+    if (!(ui.seenReports || []).includes(id)) {
+      ui.seenReports = [...(ui.seenReports || []), id].slice(-60);
+      store.saveUi(ui);
+    }
+    if (!this.state.world.seen[id]) this.add([this.event('gesehen', { ref: id })]);
   },
 
   offers() {

@@ -27,6 +27,7 @@
 //              from before: { q, place, title, out, act, back, cost, outcome } (one quest, all
 //                                             parts and the cost fixed) or { stops: […], back, cost }
 //   unqueue  { ref }                          the last action of the row taken out again
+//   gesehen  { ref }                          the report of the expedition `ref` was shown (on any device)
 //   buy      { offer, kind, thing, price }    bought at the trader (kind item, or plan: the plan of a Deko)
 //   sell     { inst, price }                  sold to the trader
 //   drop     { inst }                         left behind
@@ -106,7 +107,7 @@ export const KNOWN_TYPES = new Set([
   'plan', 'done', 'teil', 'undo', 'mode',
   'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
   'envoy', 'travel', 'quest', 'test',
-  'kampf', 'abbild', 'ruhmkauf',
+  'kampf', 'abbild', 'ruhmkauf', 'gesehen',
 ]);
 
 // Minimal shape check for events coming from outside (sync, backup file).

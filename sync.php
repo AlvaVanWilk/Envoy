@@ -44,7 +44,7 @@ const EVENT_TYPES = [
     'plan', 'done', 'teil', 'undo', 'mode',
     'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
     'envoy', 'travel', 'quest', 'test',
-    'kampf', 'abbild', 'ruhmkauf',
+    'kampf', 'abbild', 'ruhmkauf', 'gesehen',
 ];
 
 header('Content-Type: application/json; charset=utf-8');

@@ -30,6 +30,7 @@ import { startTourIfNew } from './ui/tours.js';
 import { IS_TEST, APP_NAME } from './stage.js';
 import { mountTestTools } from './ui/testtools.js';
 import { updateTripSign } from './ui/tripsign.js';
+import { showGates, markNewsSeen, gateOpen } from './ui/gate.js';
 
 // The menu at the bottom, left to right. The camp in the middle is the
 // start. `feature` = unlocked in the game.
@@ -117,7 +118,8 @@ function renderCreation() {
   document.body.classList.remove('has-topbar');
   replaceChildren(navRoot);
   replaceChildren(topRoot);
-  creating = renderCreate(game, { onDone: () => { creating = null; location.hash = '#envoy'; render(); } });
+  // a new Envoy does not need the news of this version
+  creating = renderCreate(game, { onDone: () => { creating = null; markNewsSeen(); location.hash = '#envoy'; render(); } });
   replaceChildren(viewRoot, creating);
   document.title = APP_NAME;
   lastView = null;
@@ -132,6 +134,7 @@ function scheduleBonusEnd() {
 }
 
 let lastView = null;
+let tourWaiting = null;
 function render() {
   if (!game.state.world.envoy) {
     renderCreation();
@@ -150,8 +153,13 @@ function render() {
   replaceChildren(viewRoot, view);
   renderNav();
   updateTripSign(game);
-  if (name !== lastView && ['envoy', 'tageswerk', 'abenteuer', 'lager'].includes(name) && (name !== 'lager' || game.state.world.camp.stage >= 1)) {
-    startTourIfNew(name, game, () => currentView() === name);
+  showGates(game);
+  // a tour of the page begins on the first visit; while something lies over
+  // the whole screen (news, the age), it waits for the next drawing
+  const tourHere = ['envoy', 'tageswerk', 'abenteuer', 'lager'].includes(name) && (name !== 'lager' || game.state.world.camp.stage >= 1);
+  if (tourHere && (name !== lastView || tourWaiting === name)) {
+    tourWaiting = gateOpen() ? name : null;
+    if (!tourWaiting) startTourIfNew(name, game, () => currentView() === name);
   }
   if (name !== lastView) {
     window.scrollTo(0, 0);

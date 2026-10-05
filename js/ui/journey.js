@@ -295,8 +295,9 @@ export function openReport(report, game) {
       fresh.length > 0 ? h('p', { class: 'muted' }, `Neu im Kompendium: ${fresh.join(', ')}`) : null,
       h('div', { class: 'sheet-actions' }, h('button', { class: 'btn primary', onclick: closeSheet }, 'Weiter')),
     ],
-    onClose: () => game.markReportSeen(report.id),
   });
+  // seen once it is open, so it does not come again on any device
+  game.markReportSeen(report.id);
   reveal(panel);
 }
 

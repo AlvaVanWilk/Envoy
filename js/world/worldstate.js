@@ -24,6 +24,7 @@
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
 //   bought      { offerId: true }
+//   seen        { report id: true }: reports shown on some device (event `gesehen`)
 //   reports     finished expeditions, newest last (the latest 30, with all details):
 //               { id, start, end, stops: [{ q, place, title, outcome }], dropped, leftBehind }
 //   journal     every finished quest in short, oldest first (for the Handbuch)
@@ -72,6 +73,7 @@ export function initialWorld(catalog, startTime, stats) {
     bestiary: {},
     bought: {},
     reports: [],
+    seen: {},
     journal: [],
     dropped: [],
   };
@@ -409,6 +411,9 @@ export function applyWorldEvent(world, e, ctx) {
     }
     case 'test':
       testHelp(world, e, ctx);
+      break;
+    case 'gesehen':
+      if (typeof e.ref === 'string') world.seen[e.ref] = true;
       break;
     case 'kampf':
     case 'abbild':
