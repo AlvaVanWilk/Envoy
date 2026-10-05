@@ -79,34 +79,36 @@ in jedem Bereich eine Einheit von 14 bis 28 XP; der Konverter prüft das für je
 
 Die Kinderübungen sind bildhaft und ohne Becken-Anweisungen (Tiere, Springen, ein
 Kuscheltier auf dem Bauch); Jugendliche haben teils die Übungen der Erwachsenen, statt
-Käfer, Ausfallschritt und Brustöffner aber einfachere. Stufen, Fragen und XP gelten wie für
-alle; bei Kindern lautet die Frage meist „War das leicht?“. Die Hampel-Runden wechseln
+Käfer, Ausfallschritt und Brustöffner aber einfachere. XP gelten wie für alle. Kinder (bis
+12) werden nach einer Übung nichts gefragt: Jeder Durchgang zählt als gut, nach drei
+Durchgängen auf einer Stufe kommt die nächste („Das war heute zu viel“ gibt es auch für
+sie). Jugendliche ab 13 werden gefragt wie Erwachsene. Die Hampel-Runden wechseln
 Hampelmann, Laufen und Knie hoch; jeder Abschnitt hat im Timer seine eigene Figur. Ein Envoy
-ohne Alter (aus der Zeit davor) bekommt die Übungen der Erwachsenen, und das Tageswerk fragt
-einmal: „Wie alt bist du?“. Das Alter lässt sich in den Einstellungen ändern (Aussehen, Name
-und Alter).
+ohne Alter (aus der Zeit davor) wird beim ersten Start einmal gefragt: „Wie alt bist du?“.
+Das Fenster liegt über allem und lässt sich nicht wegklicken; mit der Antwort richtet sich
+das offene Tageswerk sofort nach dem Alter. Das Alter lässt sich in den Einstellungen
+ändern (Aussehen, Name und Alter).
 
 ### Feste Zeit statt Menge
 
 Jede Übung hat eine feste Zeit, keine Wiederholungszahl. Gemacht wird langsam und nur
-so viel, wie sauber geht; Pausen sind in Ordnung. Ein **geführter Timer** läuft durch
-die ganze Einheit: kurz bereit machen, jede Übung, eine Seite und die andere, der
-Wechsel zur nächsten (siehe Timer). Messwerte werden nicht mehr eingetragen.
+so viel, wie sauber geht; Pausen sind in Ordnung. Ein **geführter Timer** begleitet
+jeweils eine Übung: kurz bereit machen, die Übung, eine Seite und die andere (siehe
+Timer). Die nächste Übung beginnt erst mit einem eigenen Tipp, damit Zeit bleibt, zu
+lesen, wie sie geht. Messwerte werden nicht mehr eingetragen.
 
 ### Rückfrage nach der Übung
 
 Jede Übung einer Einheit wird für sich abgehakt („Käfer erledigt“), damit keine aus
 Versehen mit erledigt wird; die letzte erledigt die Aufgabe. Gleich nach einer Übung
-fragt die App ihre Frage (nach dem Timer die Fragen aller Übungen, die er durchlaufen
-hat), aber nur, solange es für diese Übung eine nächste Stufe gibt, und nie im
-Krankheitsmodus. Die Antworten zählen für die Stufen, sobald die ganze Aufgabe erledigt
-ist; eine halb erledigte Aufgabe zählt am nächsten Tag nicht. Die Fragen sind konkret,
-damit man nicht überlegen muss, was gemeint ist:
+(auch nach dem Timer) fragt die App ihre Frage, aber nur, solange es für diese Übung eine
+nächste Stufe gibt, nie im Krankheitsmodus und nie Kinder (siehe Kinder und Jugendliche).
+Die Antworten zählen für die Stufen, sobald die ganze Aufgabe erledigt ist; eine halb
+erledigte Aufgabe zählt am nächsten Tag nicht. Die Fragen fragen nach dem Empfinden,
+nicht danach, ob die Übung richtig gemacht wurde; jede Antwort ist eine ehrliche:
 
-- Kraft, je Übung Ja oder Nein: „Blieb der untere Rücken die ganze Minute am Boden?“,
-  „Blieb der Rücken die ganze Minute ruhig und flach?“, „Blieb das Becken auf beiden
-  Seiten bis zum Ende oben?“. Ja zählt als guter Durchgang, Nein zählt nicht.
-- Treppe: „Wie war es?“ mit Locker (gut), Gut fordernd (zählt nicht), Zu viel (zu schwer).
+- Kraft (auch Brett, Bärengang, Flieger, Froschsprünge) und Treppe: „Wie war es?“ mit
+  Locker (gut), Gut fordernd (zählt nicht), Zu viel (zu schwer).
 - Gelassenheit: „Hätten es auch ein paar Minuten mehr sein dürfen?“ Ja oder Nein. Ob die
   Gedanken abgeschweift sind, wird nicht gefragt; das wäre eine Bewertung.
 - Beweglichkeit: keine Frage, ein Tipp genügt.
@@ -449,8 +451,10 @@ wächst. Der Knopf heißt „Aufbrechen“, beim Bauen am Lager „Errichten“,
   einer langen Leiste je 5, 10 oder 20.
 - Sie füllt sich in etwa 8 Stunden, schneller mit Gelassenheit (+3 % je Level) und
   Erholung aus der Ausrüstung.
-- Die erledigte Gelassenheits-Aufgabe ist eine echte Rast: +50 % der Leiste.
-- Der **Schlafplatz** gibt dem Envoy jeden Morgen (ab 3 Uhr, mit dem neuen Tag) einmal
+- Jede erledigte Aufgabe des Tageswerks gibt ein Achtel der Leiste dazu, auch über ihr
+  Ende hinaus: Wer sein Tageswerk morgens mit voller Leiste macht, verschenkt nichts.
+  Alle vier zusammen sind eine halbe Leiste.
+- Der **Schlafplatz** gibt dem Envoy jeden Morgen um 6 Uhr einmal
   Energie dazu, über das Ende der Leiste hinaus, je nach Stufe 20 bis 40 % der Leiste:
   beim Raspelnest und 10 Energie wären es 12 von 10. Der
   Zusatz wird verbraucht, bevor die Leiste unter ihr Ende sinkt; während des Tages füllt
@@ -458,6 +462,8 @@ wächst. Der Knopf heißt „Aufbrechen“, beim Bauen am Lager „Errichten“,
   sammelt sich nicht über mehrere Nächte. Die Leiste zeigt den Zusatz als kupferfarbenes
   Ende und darunter „Ausgeschlafen: 2 extra“. Was in der Testfassung über die Test-Knöpfe
   darüber hinausgeht, heißt dort „32 über der Leiste“ und wird morgens nicht gekürzt.
+  Ein Schlafplatz, der in der Nacht (vor 6 Uhr) gebaut wird, zählt schon an diesem Morgen;
+  das Tageswerk lässt sich bis 3 Uhr erledigen, der Schlafbonus kommt danach.
   (Der Schlafplatz gibt Energie, keine Werte: Werte steigen nur durch die echten Aufgaben.)
 
 ### Quests
@@ -826,6 +832,58 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 | Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
 | Talentbaum | alle vier Stats auf 10 (Inhalt Phase 2) |
 
+## Arena und Ruhmeshalle
+
+Ein Ort für alle Envoys auf dem eigenen Server (nur mit Konto, ab dem Lagerfeuer), erreichbar
+über „Arena“ oben auf der Abenteuer-Seite. Niemand kämpft gegen eine Person, sondern gegen
+ihr **Abbild**: Name, Aussehen, getragene Kleidung (mit Farbe), die vier Werte, eine Haltung
+und ein Titel. Die App schickt das Abbild bei jedem Abgleich mit, so ist es immer so stark wie
+der Envoy. Echte Übungen, Tageswerk oder Serien zeigt die Arena nie, und die Werte der anderen
+auch nicht. Der Server (`arena.php`, Teil von `sync.php`) entscheidet jeden Kampf selbst und
+hält die Werte nie höher, als die erledigten Aufgaben des Kontos erlauben.
+
+**Die Rangliste läuft ständig** (eine Forderungsrangliste wie im Sportverein):
+
+- Wer ein Abbild aufstellt, beginnt am Ende. Herausfordern lassen sich die Abbilder bis drei
+  Plätze über oder unter dem eigenen, jedes einmal am Tag. Eine Herausforderung kostet
+  5 Energie; unterwegs geht es nicht.
+- Wer gegen jemanden weiter oben gewinnt, nimmt dessen Platz; die dazwischen rücken einen
+  nach unten. Unentschieden oder unterlegen ändert nichts an der Liste.
+- Wessen App 14 Tage nicht offen war, dessen Abbild ruht: Es verlässt die Liste und beginnt
+  wieder am Ende, sobald die App zurück ist. Zurückziehen geht jederzeit.
+
+**Der Kampf**: ein Übungskampf über acht Runden, Runde für Runde zu sehen (Lebensleisten,
+Treffer, Ausweichen). Beide Seiten werden aneinander gemessen, Wert für Wert: doppelt so viel
+Kraft trifft etwa ein Fünftel härter, doppelt so viel Ausdauer hält etwa ein Fünftel länger,
+mehr Beweglichkeit trifft und weicht öfter aus, mehr Gelassenheit lässt ein Abbild, das
+zurückliegt, sich in Ehren verbeugen (unentschieden). Kleidung wirkt mit ihren Fähigkeiten.
+Steht nach der letzten Runde noch jeder, gewinnt nur ein klarer Vorsprung (mehr als ein
+Fünftel des Lebens) nach Punkten, sonst ist es unentschieden. Gleich starke: etwa die
+Hälfte unentschieden, je ein Viertel Sieg; ein Fünftel stärker: etwa 45 % Sieg, 45 %
+unentschieden, 10 % unterlegen; doppelt so stark: etwa 90 % Sieg. Die **Haltung** (Angriff,
+Abwehr, Ruhe) gibt einen kleinen Vorteil: Abwehr fängt Angriff ab, Ruhe löst Abwehr auf,
+Angriff überrumpelt Ruhe. Die eigene gilt, wenn das Abbild herausgefordert wird; wer
+herausfordert, wählt seine für diesen Kampf, ohne die des anderen zu kennen. Am Ende
+verbeugen sich beide.
+
+**Ruhm** ist die Währung der Arena und nur dort: herausfordern bringt 3 für einen Sieg,
+2 für unentschieden, 1 fürs Antreten; das herausgeforderte Abbild bekommt 2, wenn es hält,
+sonst 1. Ruhm geht nie verloren, macht den Envoy nie stärker und ist kein Heldenlevel. Für
+Ruhm gibt es: ein färbbares Kleidungsstück in einer der zwölf Farben oder wieder wie
+gezeichnet (8 Ruhm) und Titel für das Abbild („mit leisem Schritt“, 10 bis 30 Ruhm). Jeder
+Kampf steht als Ereignis `kampf` in der Liste des eigenen Kontos (die Id kommt vom Server,
+so schreibt jedes Gerät denselben), Haltung und Titel als `abbild`, Käufe als `ruhmkauf`.
+Kämpfe, die das eigene Abbild erlebt hat, kommen mit dem nächsten Abgleich und stehen in der
+Halle als neu.
+
+## Neuigkeiten beim Start
+
+Beim ersten Start einer neuen Fassung erscheint einmal über allem, was neu ist: oben
+„Liebe Envoys!“ und ein kurzer Gruß, dann je Neuerung eine große Überschrift mit ein, zwei
+kurzen Sätzen (`js/ui/news.js`, je Fassung eine eigene Id). Ein neu erstellter Envoy bekommt
+sie nicht. Danach fragt die App, falls nötig, nach dem Alter (siehe Kinder und
+Jugendliche). Rundgänge warten, bis diese Fenster zu sind.
+
 ## Menü und Ansichten
 
 **Unten** ein Sims aus Stein mit einer Kupferleiste; die fünf Menüpunkte sind runde
@@ -883,7 +941,7 @@ des Envoy):
   Farben des Envoy gezeigt, bei der Gelassenheit die Frau und der Mann im Schneidersitz;
   ohne beides das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
   Namen, dann Name, Stufe („Stufe 1 · Der Fußtipp“), Zeit, wofür sie gut ist und die
-  Schritte; unten „Mit Timer“ (für das, was von der Einheit noch offen ist) und bei
+  Schritte; unten „Mit Timer“ (für die gezeigte Übung) und bei
   mehreren Übungen ein Knopf mit dem Namen der gezeigten („Käfer erledigt“), bei einer
   „Erledigt“ (und „Das war heute zu viel“ für die ganze Aufgabe, siehe Rückfrage). Eine
   erledigte Übung bekommt einen Haken an ihrem Reiter, die Karte geht zur nächsten offenen;
@@ -895,16 +953,18 @@ des Envoy):
   Namen aller („Käfer · Vogelhund · Seitstütz“), wofür sie zählt, die Zeit und, wenn schon ein Teil erledigt ist, wie
   viel („2 von 3“). Der Haken an der Zeile erledigt, was von der Aufgabe noch offen ist, ohne
   Karte; gibt es dazu Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
-  Aufgabe zeigt auf der Karte „Erledigt“ und „Rückgängig“. Mit
+  Aufgabe zeigt auf der Karte „Erledigt“, die Energie, die sie gebracht hat („+4 Energie“),
+  und „Rückgängig“. Mit
   reduzierter Bewegung erscheint die Karte ohne Drehen. Ein Fragezeichen klappt eine kurze Erklärung auf
   (wozu das Tageswerk da ist, dass Werte bei liegengebliebenen Aufgaben langsam sinken,
   aber nie ganz verloren gehen) mit Verweis ins Handbuch. Läuft ein befristeter Bonus,
   steht er mit seinem Ende in einer Zeile darüber. Ist alles erledigt, steht oben
   „Das Tageswerk ist erledigt.“ und ein Ausblick auf morgen, mit den Übungen, die dann
   auf einer neuen Stufe sind.
-- **Timer**: führt durch die ganze Einheit, Teil für Teil: kurz bereit machen (Kraft und
-  Beweglichkeit 10 Sekunden, Treppe 5), jede Übung, ihre Abschnitte (eine Seite, die andere;
-  normal, zügig), dazwischen 10 Sekunden Wechsel. Groß stehen der Name der Übung und die
+- **Timer**: führt durch eine Übung, Teil für Teil: kurz bereit machen (Kraft und
+  Beweglichkeit 10 Sekunden, Treppe 5), dann ihre Abschnitte (eine Seite, die andere;
+  normal, zügig). Danach kommt ihre Frage, und die Karte zeigt die nächste Übung; deren
+  Timer beginnt erst mit einem neuen Tipp. Groß stehen der Name der Übung und die
   Restzeit des Teils in einem Ring, darüber die Figur, die die Übung mitmacht, darunter
   „Insgesamt noch …“. Bei jedem neuen Teil klingt ein leiser Ton, und eine Stimme sagt an,
   was kommt („Als Nächstes: Der Vogelhund.“, „Andere Seite“, „Zügig“). Bei der
@@ -1205,9 +1265,14 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | --- | --- |
 | Tagesaufgaben | je Bereich eine Einheit, jeden Tag dieselben Übungen, Stufe je Übung; nur Treppe für Ausdauer |
 | Zeit statt Menge | feste Zeit je Übung, langsam und nur so viel wie sauber geht; geführter Timer mit Stimme |
-| Rückfrage | je Übung gleich nach ihr, solange es eine nächste Stufe gibt; nicht im Krankheitsmodus |
+| Rückfrage | je Übung gleich nach ihr, solange es eine nächste Stufe gibt; nicht im Krankheitsmodus, nicht bei Kindern bis 12; „Wie war es?“ statt „richtig gemacht?“ |
+| Timer | je Übung; die nächste beginnt mit eigenem Tipp |
 | Erledigen | jede Übung einer Einheit für sich („Käfer erledigt“), die letzte erledigt die Aufgabe; Haken der Zeile: alles Offene |
-| Stufen | hoch nach zwei guten Durchgängen in Folge, runter nach zwei zu schweren in Folge; Durchgänge, nicht Kalendertage |
+| Stufen | hoch nach zwei guten Durchgängen in Folge, runter nach zwei zu schweren in Folge; Durchgänge, nicht Kalendertage; Kinder: hoch nach drei Durchgängen |
+| Energie vom Tageswerk | jede erledigte Aufgabe ein Achtel der Leiste, auch über ihr Ende hinaus |
+| Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
+| Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden, Ruhm als eigene Währung (Farben, Titel) |
+| Berichte | jeder nur einmal, auch über Geräte hinweg |
 | Lange Pause | nach je 7 Fehltagen jede Übung des Bereichs eine Stufe runter |
 | Krankheitsmodus | Stufe 1, Übungen ohne Stufen halbe Zeit, 14 XP, zählt nicht für die Stufen, kein Malus-Erlass |
 | Plateau | ergibt sich aus der Levelkurve, Formel unverändert |

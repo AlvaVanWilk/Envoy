@@ -42,7 +42,7 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
-  Pilzholz und Bannsplitter dazu, Plan finden, Kleidung finden, Expedition beenden, die Kleiderkammer in Safari
+  Pilzholz, Bannsplitter und Ruhm dazu, Plan finden, Kleidung finden, Expedition beenden, die Kleiderkammer in Safari
   öffnen oder ihren Link kopieren,
   `js/ui/testtools.js`);
   die echte Fassung nie.
@@ -119,6 +119,17 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   (gesammeltes ist sofort dort, ohne Erklärung); Händler, Kompendium der getroffenen Geister
 - Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
   15 Minuten nach dem Start)
+- Arena (so gewünscht): Ruhmeshalle mit laufender Rangliste der Abbilder aller Konten auf dem
+  Server (Forderungsrangliste: bis drei Plätze über oder unter dem eigenen, jedes einmal am
+  Tag; Sieg gegen weiter oben nimmt den Platz), Kämpfe entscheidet der Server (`arena.php`)
+  aus den Werten (nie höher, als die erledigten Aufgaben erlauben), der Haltung und der
+  Kleidung, acht Runden, danach nach Punkten, gleich starke etwa zur Hälfte unentschieden;
+  Ruhm als eigene Währung nur der Arena, geht nie verloren (Farben für färbbare Kleidung,
+  Titel); keine echten Übungsdaten sichtbar
+- Neuigkeiten beim ersten Start einer neuen Fassung (`js/ui/news.js`, im Ton der Nutzerin:
+  „Liebe Envoys!“, große Überschriften, ein, zwei Sätze); ein Envoy ohne Alter wird danach
+  gefragt, das Fenster lässt sich nicht wegklicken
+- Berichte einer Expedition erscheinen nur einmal, auch über Geräte hinweg (Ereignis `gesehen`)
 
 Freischaltung: Karte und Quests von Anfang an. Lagerfeuer und Händler über Quests,
 Lagerausbau über Hygge.
@@ -129,7 +140,7 @@ Talentbaum bei allen vier Stats auf 10 (Inhalt folgt).
 - Talentbaum: existiert nur als Rundschild mit Schloss im Menü; Antippen öffnet eine eigene
   Seite, die den Abstand der vier Werte zu Level 10 zeigt, sonst keine Funktion dahinter
 - Rundgänge für die anderen Seiten (folgen später)
-- Arena, Mehrspieler, Freunde
+- Mehrspieler über die Arena hinaus, Freunde, Chat
 - Ernährungsmodul
 - Weitere Erfolge (etwa „100 km spaziert“) und Freischaltungen über Erfolge: nach dem
   Konzept der Nutzerin; Erfolge für echte Übungen zählen nur Summen, nie Serien
@@ -201,16 +212,21 @@ Schmetterling; Innehalten. Das Alter kommt aus der Erstellung (Geburtsjahr im Er
 
 **Steigerung der Übungsintensität:** je Übung. Hoch nach zwei guten Durchgängen in Folge,
 runter nach zwei zu schweren in Folge; gezählt werden Durchgänge, nicht Kalendertage.
-Gut oder zu schwer ergibt sich aus der Frage nach der Übung (Ja = gut, Nein = zählt nicht;
-Treppe: Locker = gut, Gut fordernd = zählt nicht, Zu viel = zu schwer; „Das war heute zu
-viel“ = zu schwer für die ganze Einheit). Gefragt wird nur, solange es eine nächste
-Stufe gibt. Nach 7 ausgelassenen Tagen in Folge jede Übung des Bereichs eine Stufe runter.
+Gut oder zu schwer ergibt sich aus der Frage gleich nach der Übung, die nach dem Empfinden
+fragt, nicht nach richtiger Ausführung (Kraft und Treppe „Wie war es?“: Locker = gut, Gut
+fordernd = zählt nicht, Zu viel = zu schwer; Gelassenheit Ja = gut, Nein = zählt nicht; „Das
+war heute zu viel“ = zu schwer für die ganze Einheit). Gefragt wird nur, solange es eine
+nächste Stufe gibt. Kinder bis 12 werden nicht gefragt (so gewünscht): Jeder Durchgang
+zählt als gut, hoch nach drei. Nach 7 ausgelassenen Tagen in Folge jede Übung des Bereichs
+eine Stufe runter. Der Timer begleitet je eine Übung; die nächste beginnt mit eigenem Tipp.
 
 **Krankheitsmodus:** jede Übung auf Stufe 1, Übungen ohne Stufen halbe Zeit, jede
 Aufgabe 14 XP, keine Fragen, zählt nicht für die Stufen. Keine Pausenregel für den Malus.
 
 **Energie:** Größe der Leiste = 10 × Ausdauer. Alles, was der Envoy tut, kostet Energie,
-eine Energie ist eine Minute. Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) muss am
+eine Energie ist eine Minute. Jede erledigte Aufgabe des Tageswerks gibt ein Achtel der
+Leiste dazu, auch über ihr Ende hinaus (so gewünscht). Der Schlafplatz gibt seine Energie um
+6 Uhr morgens; ein nachts gebauter zählt am selben Morgen. Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) muss am
 ersten Tag mit den 10 Energie des Starts sicher zu schaffen sein, auch bei den schlechtesten
 Würfen und zusammen mit den ersten Handwickeln (2 Energie): 8 Stein höchstens 4 Energie,
 2 Pilzholz höchstens 1.

@@ -1,8 +1,19 @@
 # Arena und Ruhmeshalle – Entwurf
 
-Stand: Idee, noch nicht entschieden und nicht gebaut. Gehört nicht zu Phase 1
-(siehe CLAUDE.md, „Arena, Mehrspieler, Freunde“). Bevor gebaut wird, entscheidet die
-Nutzerin die offenen Fragen am Ende.
+Stand: gebaut in Version 5.11.0, so wie in der Spezifikation („Arena und Ruhmeshalle“)
+beschrieben. Dieser Entwurf bleibt als Hintergrund. Was anders kam als hier gedacht (die
+Nutzerin: „mach das mal so, wie du es gut findest“, eine laufende Liste, Ruhm als Währung,
+die Arena für sich):
+
+- Statt Klassen und Saisons eine laufende Forderungsrangliste: herausfordern bis drei
+  Plätze über oder unter dem eigenen, jedes Abbild einmal am Tag; ein Sieg gegen weiter
+  oben nimmt den Platz. Wer 14 Tage nicht da war, ruht und beginnt wieder am Ende.
+- Das Abbild geht mit jedem Abgleich mit, der Server deckelt die Werte nach den erledigten
+  Aufgaben und entscheidet den Kampf (acht Runden, danach nach Punkten; gleich starke
+  gehen etwa zur Hälfte unentschieden aus, so gewünscht).
+- Ruhm kauft vorerst Farben für färbbare Kleidung und Titel; Arena-Kleidung, Trophäen
+  und eine Chronik können später dazukommen.
+- Die Halle zeigt Platz, Name, Titel und das Abbild mit Kleidung; keine Werte.
 
 ## Grundgedanke: Sparring mit Abbildern
 
