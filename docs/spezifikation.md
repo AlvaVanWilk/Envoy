@@ -280,6 +280,10 @@ sind, bleiben wenige (Handwickel, Bastsandalen, Griffhandschuhe, Leichte Stiefel
   sofort tragbar, jeder weitere spätestens nach 66 Energie ohne Fund (doppelter Schnitt).
   Welches Teil: eines, das zur Stärke des Envoy passt (±3 Level) und zu seiner Figur, meist
   (drei von vier) eines, das er gleich anziehen kann. `world.clothes` zählt mit.
+- **Fußballtrikots:** Die drei Trikots der Kleiderkammer (Nr. 54, 65 und 81, mit echten
+  Logos; die Nutzerin will sie drin haben, die App ist für die Familie) sind Fundstücke wie
+  die anderen, aber immer wie gezeichnet (`faerbbar` nein): „Trikot mit der Acht“ (nur die
+  Frau) und „Trikot mit der Null“ (beide Figuren). Wird die App größer, kommen sie wieder heraus.
 - **Farben:** Ein Teil mit `faerbbar` bekommt beim Fund oder im Angebot des Händlers eine
   eigene Farbe, eine von zwölf (Moosgrün, Salbei, Petrol, Nachtblau, Taubenblau, Pflaume,
   Rostrot, Kupfer, Ocker, Sand, Altrosa, Schiefer) oder wie gezeichnet, alle gleich wahrscheinlich.

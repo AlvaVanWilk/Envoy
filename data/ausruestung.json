@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T23:01:32Z",
+ "generated": "2026-10-05T11:26:37Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -2066,6 +2066,63 @@
     "zweite"
    ],
    "faerbbar": true
+  },
+  {
+   "id": "torso_trikotmitderacht_2",
+   "slot": "torso",
+   "name": "Trikot mit der Acht",
+   "stufe": 2,
+   "req": {
+    "kraft": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_trikotmitderacht_2.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_torso_trikotmitderacht_2.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
+   ],
+   "faerbbar": false
+  },
+  {
+   "id": "torso_trikotmitdernull_2",
+   "slot": "torso",
+   "name": "Trikot mit der Null",
+   "stufe": 2,
+   "req": {
+    "ausdauer": 3
+   },
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/torso_trikotmitdernull_2.png",
+   "figuren": {
+    "zweite": "assets/figur/zweite/torso_trikotmitdernull_2.png"
+   },
+   "icon": "assets/icons/icon_torso_trikotmitdernull_2.png",
+   "icons": {
+    "zweite": "assets/icons/zweite/icon_torso_trikotmitdernull_2.png"
+   },
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": false
   }
  ]
 }

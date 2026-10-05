@@ -139,8 +139,9 @@ test('a piece drawn for the other figure: not put on, not drawn', () => {
 test('the table: every piece found on the way has a drawing and an icon for each figure it fits, and no ability', () => {
   const found = catalog.equipment.filter((i) => i.herkunft.includes('fund'));
   assert.ok(found.length >= 50, String(found.length));
+  // all come in colours of their own, except the football jerseys (always as drawn)
+  assert.deepEqual(found.filter((i) => !i.faerbbar).map((i) => i.id), ['torso_trikotmitderacht_2', 'torso_trikotmitdernull_2']);
   for (const item of found) {
-    assert.ok(item.faerbbar, item.id);
     assert.deepEqual(item.effekt, {}, item.id);
     assert.equal(item.faehigkeit, null, item.id);
     for (const figur of item.passt) {
