@@ -178,7 +178,8 @@ export const STAMINA_BASE = 0;
 export const STAMINA_PER_AUSDAUER = 10;
 export const STAMINA_REFILL_HOURS = 8;
 export const STAMINA_BONUS_PER_GELASSENHEIT = 0.03;   // +3 % speed per level
-export const STAMINA_REST_TASK_SHARE = 0.5;           // Gelassenheit task: half a bar
+export const STAMINA_PER_TASK = 1 / 8;                // each task of the Tageswerk: an eighth of the bar, also beyond its end
+export const SLEEP_BONUS_HOUR = 6;                    // the Schlafplatz gives its Energie in the morning, at this hour
 
 // Time follows stamina: every point of stamina an expedition costs is one
 // minute away from the camp. Short trips are quick; a long one costs as

@@ -30,7 +30,7 @@
 //   dropped     equipment taken off because a stat fell below its requirement
 // }
 
-import { STAMINA_REST_TASK_SHARE, NAME_MAX, OLD_SLOT_NAMES, MINUTES_PER_STAMINA } from '../config.js';
+import { STAMINA_PER_TASK, NAME_MAX, OLD_SLOT_NAMES, MINUTES_PER_STAMINA } from '../config.js';
 import { effects, maxStamina, staminaAt, sleepBonus } from './hero.js';
 import {
   stow, removeEntry, hasSpace, atCamp, reachable, roomFor, overloaded, entriesIn, LIMITED_MATERIALS,
@@ -454,19 +454,21 @@ function testHelp(world, e, ctx) {
   }
 }
 
-// Finishing the Gelassenheit task is a real rest: half a bar back.
+// Each task of the Tageswerk done gives an eighth of the bar back, also
+// beyond its end (whoever does the Tageswerk in the morning with a full bar
+// keeps it).
 export function restFromTask(world, t, ctx) {
   advance(world, t, ctx);
   settle(world, t, ctx);
-  const max = maxStamina(ctx.stats);
-  world.stamina.value = Math.max(world.stamina.value, Math.min(max, world.stamina.value + max * STAMINA_REST_TASK_SHARE));
+  world.stamina.value += maxStamina(ctx.stats) * STAMINA_PER_TASK;
 }
 
-// A new day: with a Schlafplatz the Envoy starts it with extra Energie, once,
-// even beyond the end of the bar (up to the end of the bar and the bonus).
-// Spent, it does not come back until the next morning. It never takes Energie
-// away that is already beyond that (from the test menu).
-export function startOfDay(world, t, ctx) {
+// The morning (SLEEP_BONUS_HOUR): with a Schlafplatz the Envoy wakes up with
+// extra Energie, once, even beyond the end of the bar (up to the end of the
+// bar and the bonus). A Schlafplatz built in the night counts. Spent, it does
+// not come back until the next morning. It never takes Energie away that is
+// already beyond that (from tasks or the test menu).
+export function wakeUp(world, t, ctx) {
   advance(world, t, ctx);
   settle(world, t, ctx);
   const bonus = sleepBonus(world, ctx.catalog, ctx.stats);

@@ -77,7 +77,7 @@ const CHAPTERS = [
     title: 'Energie',
     text: [
       'Alles, was dein Envoy tut, kostet Energie: eine Energie ist eine Minute. Wege, Sammeln, Bauen und Kämpfe zählen alle.',
-      'Je Level Ausdauer hat die Leiste zehn Energie. Sie füllt sich in etwa acht Stunden von selbst; die Aufgabe für Gelassenheit füllt sie zur Hälfte auf.',
+      'Je Level Ausdauer hat die Leiste zehn Energie. Sie füllt sich in etwa acht Stunden von selbst. Jede erledigte Aufgabe des Tageswerks gibt ein Achtel der Leiste dazu, auch über ihr Ende hinaus.',
     ],
   },
   {
@@ -168,7 +168,7 @@ const CHAPTERS = [
     when: (game) => game.state.world.camp.stage >= 1,
     text: [
       'Mit dem Lagerfeuer hat das Lager Stufe 1. Jetzt lassen sich vier Einrichtungen errichten: Steinstapel, Pilzholzstapel, Krempelplatz und Raspelnest. Jede gibt Hygge. Mit genug Hygge lässt sich das Lager aufwerten.',
-      'Der Krempelplatz gibt Plätze für Gegenstände und Kleidung; unterwegs sieht der Envoy dort nur nach. Das Raspelnest gibt am Morgen einmal Energie dazu, auch über das Ende der Leiste hinaus.',
+      'Der Krempelplatz gibt Plätze für Gegenstände und Kleidung; unterwegs sieht der Envoy dort nur nach. Das Raspelnest gibt morgens um 6 Uhr einmal Energie dazu, auch über das Ende der Leiste hinaus. Auch in der Nacht gebaut zählt es schon am nächsten Morgen.',
     ],
   },
   {

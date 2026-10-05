@@ -1,7 +1,7 @@
 // Calendar days as plain strings "YYYY-MM-DD".
 // A day begins at DAY_START_HOUR local time, not at midnight.
 
-import { DAY_START_HOUR } from './config.js';
+import { DAY_START_HOUR, SLEEP_BONUS_HOUR } from './config.js';
 
 const pad = (n) => String(n).padStart(2, '0');
 
@@ -14,6 +14,12 @@ export function dayKey(date = new Date()) {
 export function dayStartMs(key) {
   const [y, m, d] = key.split('-').map(Number);
   return new Date(y, m - 1, d, DAY_START_HOUR).getTime();
+}
+
+// The morning of a day (when the Envoy wakes up rested, see the Schlafplatz).
+export function morningMs(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d, SLEEP_BONUS_HOUR).getTime();
 }
 
 // Day arithmetic in UTC, so daylight saving time never skips or repeats a day.

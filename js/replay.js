@@ -13,9 +13,9 @@ import {
   INTENSITY_DOWN_AFTER_MISSED_DAYS, TOO_MUCH,
 } from './config.js';
 import { addXp, removeXp, malusFactor, average } from './formulas.js';
-import { dayRange, addDays, dayStartMs } from './days.js';
+import { dayRange, addDays, morningMs } from './days.js';
 import { compareEvents } from './events.js';
-import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance, startOfDay } from './world/worldstate.js';
+import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance, wakeUp } from './world/worldstate.js';
 import { checkAchievements, bonusOf, withBonus } from './achievements.js';
 import { taskFor, taskOfDone, resultOf, ageOn, isChild } from './tasks.js';
 
@@ -106,9 +106,17 @@ export function replay(events, catalog, today, now = Date.now()) {
     statsAtDayStart = { ...stats };
     const done = {};
     const parts = {};
-    if (day !== firstDay) startOfDay(world, dayStartMs(day), ctx);
+    // the morning: with a Schlafplatz the Envoy wakes up rested (not on the first day)
+    let awake = day === firstDay;
+    const morning = morningMs(day);
+    const wake = (t) => {
+      if (awake || t < morning) return;
+      awake = true;
+      wakeUp(world, morning, ctx);
+    };
 
     for (const e of byDay.get(day) || []) {
+      wake(e.t);
       lastT = e.t;
       if (!TASK_TYPES.has(e.type)) {
         applyWorldEvent(world, e, ctx);
@@ -148,9 +156,12 @@ export function replay(events, catalog, today, now = Date.now()) {
             ? applyResult(entry, result, stagesOf.get(row.uebung), child ? CHILD_UP_AFTER : INTENSITY_UP_AFTER)
             : entry;
         }
-        if (e.stat === 'gelassenheit') restFromTask(world, e.t, ctx);
+        restFromTask(world, e.t, ctx);
       }
     }
+
+    // no event after the morning: it came all the same (today only if it is past)
+    wake(day === today ? now : Infinity);
 
     // what was done; on the last day also what is still open
     // teile: the rows of the exercises; ex: the exercise of an earlier version

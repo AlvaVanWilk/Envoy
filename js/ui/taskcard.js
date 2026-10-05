@@ -21,7 +21,7 @@
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
-import { TIMER_PREP, TOO_MUCH } from '../config.js';
+import { TIMER_PREP, TOO_MUCH, STAMINA_PER_TASK } from '../config.js';
 import { statEmblem, statInfo, statNumber } from './stats.js';
 import { openCard, closeSheet, toast } from './sheet.js';
 import { openTimer } from './timer.js';
@@ -262,7 +262,7 @@ export function openTaskCard(stat, game, start = null) {
         h('span', { class: 'pill' }, 'Erledigt'),
         done?.zuviel ? h('span', { class: 'pill' }, 'Zu viel') : null,
         done?.sick ? h('span', { class: 'pill' }, 'Krankheitsmodus') : null,
-        stat === 'gelassenheit' ? h('span', { class: 'pill' }, 'Rast: Energie halb aufgefüllt') : null));
+        h('span', { class: 'pill' }, `+${Math.round(game.stamina().max * STAMINA_PER_TASK)} Energie`)));
       fill(actions,
         h('button', { class: 'btn text', type: 'button', onclick: () => { closeSheet(); game.undo(stat); } }, icon(UI_ICONS.undo), 'Rückgängig'));
     }

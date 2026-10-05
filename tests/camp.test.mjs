@@ -9,7 +9,7 @@ import { gatherChance, gatherEstimate, gatherRoll, runQuest } from '../js/world/
 import { planExpedition } from '../js/world/expedition.js';
 import { roomFor, storeCapacity, materialLimit, hasSpace, stow } from '../js/world/inventory.js';
 import { seededRandom } from '../js/world/rng.js';
-import { addDays } from '../js/days.js';
+import { addDays, dayKey } from '../js/days.js';
 import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE, GATHER_BASE, GATHER_DICE, GATHER_FIND_CHANCE } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
@@ -346,4 +346,29 @@ test('the test menu: Bannsplitter added, a running expedition back at once', () 
   assert.equal(s.world.purse.stein, 2);
   assert.equal(s.world.purse.splitter, 50);
   assert.equal(s.world.reports.length, 1);
+});
+
+test('the Schlafplatz gives its Energie in the morning (6 Uhr), also when it was built in the night', () => {
+  const at = (day, hour) => Date.parse(`${day}T${String(hour).padStart(2, '0')}:00:00`);
+  const builtAt = (t) => Object.assign(gift({ unlocks: ['lagerfeuer', 'schlafplatz:1'] }, 0), { t, d: dayKey(new Date(t)) });
+  // before the morning: nothing yet; from 6 Uhr: 12 of 10
+  const early = builtAt(T0);
+  assert.equal(replay([early], catalog, NEXT, at(NEXT, 5)).world.stamina.value, 10);
+  assert.equal(replay([early], catalog, NEXT, at(NEXT, 7)).world.stamina.value, 12);
+  // built at 1 Uhr in the night (still the day before) or at 4 Uhr: rested in the morning
+  for (const hour of [1, 4]) {
+    const night = builtAt(at(NEXT, hour));
+    const s = replay([ev('envoy', { name: 'Ida', figur: 'erste' }), night], catalog, NEXT, at(NEXT, 7));
+    assert.equal(Math.round(s.world.stamina.value), 12, `built at ${hour} Uhr`);
+  }
+  // built after the morning: only the next one
+  const late = builtAt(at(NEXT, 8));
+  const s = replay([ev('envoy', { name: 'Ida', figur: 'erste' }), late], catalog, NEXT, at(NEXT, 9));
+  assert.equal(Math.round(s.world.stamina.value), 10);
+});
+
+test('each task of the Tageswerk gives an eighth of the bar back, also beyond its end', () => {
+  const task = (stat, minutes) => Object.assign(ev('done', { stat, teile: [], xp: 14 }, minutes / 60), {});
+  const s = replay([ev('envoy', { name: 'Ida', figur: 'erste' }), task('kraft', 10), task('gelassenheit', 20)], catalog, DAY, T0 + H);
+  assert.equal(s.world.stamina.value, 10 + 2 * (10 / 8));
 });
