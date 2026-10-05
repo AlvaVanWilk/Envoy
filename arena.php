@@ -2,11 +2,15 @@
 // Envoy – the arena. A part of sync.php, not called on its own.
 //
 // Nobody fights a person, only the Abbild of their Envoy: name, look, the
-// clothes worn, the four stats and a Haltung. The app sends it along with
-// every sync, so it is always as strong as the Envoy itself. The server
-// checks the stats against the tasks in the account's own list (never more
-// than the XP of the tasks done allow) and decides every fight itself, so
-// all devices see the same.
+// clothes worn (only to be seen), a Haltung and a Titel. The app sends it
+// along with every sync. The server decides every fight itself, so all
+// devices see the same.
+//
+// What makes an Abbild strong is diligence, not talent: for each of the four
+// areas, on how many of the last 28 days its task was done. The server counts
+// that in the account's own list of events. Every task counts the same, at
+// any stage, for children as for adults: who finds the exercises easy rises
+// to higher stages and more XP, but not to more strength in the arena.
 //
 // The list runs all the time (a challenge list as in a sports club):
 // - Who sets up an Abbild starts at the end.
@@ -44,6 +48,7 @@ const ARENA_REST_DAYS = 14;
 const ARENA_KEEP_DAYS = 90;
 const ARENA_ROUNDS = 8;
 const ARENA_MARGIN = 0.2;         // a lead smaller than a fifth of the life is a draw
+const ARENA_WINDOW_DAYS = 28;     // the strength: tasks done in this many days, up to today
 const ARENA_NAME_MAX = 24;
 const ARENA_STATS = ['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit'];
 const ARENA_HALTUNGEN = ['angriff', 'abwehr', 'ruhe'];
@@ -56,10 +61,10 @@ const ARENA_OTHER_VIEW = ['sieg' => 'niederlage', 'remis' => 'remis', 'niederlag
 
 // --- the fight ----------------------------------------------------------------
 // A sparring bout of eight rounds. Both sides are measured against each other,
-// stat by stat: twice the Kraft hits about a fifth harder, twice the Ausdauer
-// lasts about a fifth longer, more Beweglichkeit hits and dodges more often,
-// more Gelassenheit lets an Abbild that is behind bow out in honour (a draw).
-// Worn clothing adds its abilities. Who still stands after the last round
+// area by area (the strength from diligence, see effortOf): twice as many
+// days of Kraft hit about a fifth harder, of Ausdauer last about a fifth
+// longer, of Beweglichkeit hit and dodge more often, of Gelassenheit let an
+// Abbild that is behind bow out in honour (a draw). Who still stands after the last round
 // wins on points only with a clear lead (more than a fifth of the life);
 // otherwise it is a draw. Equally strong: about half the bouts end in a
 // draw, a quarter each in a win; a fifth stronger: about 45 % win, 45 %
@@ -77,14 +82,13 @@ function chance(): float
 
 function fightSide(array $self, array $other, bool $edge): array
 {
-    $x = fn(string $stat) => log($self['stats'][$stat] / $other['stats'][$stat]);
-    $fx = $self['fx'];
+    $x = fn(string $stat) => log($self['strength'][$stat] / $other['strength'][$stat]);
     return [
         'life' => (int)round(40 * exp(0.25 * $x('ausdauer'))),
-        'damage' => 5 * exp(0.25 * $x('kraft')) * (1 + 0.1 * $fx['schaden']),
-        'hit' => clampTo(0.7 + 0.12 * $x('beweglichkeit') + $fx['treffer'] / 100 + ($edge ? 0.1 : 0), 0.35, 0.95),
-        'dodge' => clampTo(0.1 + 0.06 * $x('beweglichkeit') + $fx['ausweichen'] / 100 + ($edge ? 0.05 : 0), 0, 0.4),
-        'calm' => clampTo(0.02 + 0.06 * $x('gelassenheit') + $fx['beruhigen'] / 100, 0, 0.3),
+        'damage' => 5 * exp(0.25 * $x('kraft')),
+        'hit' => clampTo(0.7 + 0.12 * $x('beweglichkeit') + ($edge ? 0.1 : 0), 0.35, 0.95),
+        'dodge' => clampTo(0.1 + 0.06 * $x('beweglichkeit') + ($edge ? 0.05 : 0), 0, 0.4),
+        'calm' => clampTo(0.02 + 0.06 * $x('gelassenheit'), 0, 0.3),
     ];
 }
 
@@ -145,40 +149,31 @@ function fightOut(array $a, array $b, string $ha, string $hb): array
 
 // --- the Abbild -----------------------------------------------------------------
 
-function xpToNext(int $n): float
-{
-    return 45 * $n ** 0.45 * (1 + (max(0, $n - 9) / 6) ** 2);
-}
-
-function levelFor(float $xp): int
-{
-    $n = 1;
-    while ($n < 100 && $xp >= xpToNext($n)) {
-        $xp -= xpToNext($n);
-        $n++;
-    }
-    return $n;
-}
-
-// The highest level each stat could have with the tasks in the account's
-// list: all their XP, a little more for bonuses, nothing taken off.
-function statCeiling(string $accountId): array
+// The strength of an account in each area: 1 + the days of the last 28 on
+// which its task was done (taken back ones do not count). Every task counts
+// the same, whatever its stage; one a day per area.
+function effortOf(string $accountId, ?float $now = null): array
 {
     $data = readJson(eventsFile($accountId)) ?? ['events' => []];
+    $today = new DateTime('@' . (int)floor(($now ?? nowMs()) / 1000 - 3 * 3600));
+    $today->setTimezone(new DateTimeZone('Europe/Berlin'));
+    $from = (clone $today)->modify('-' . (ARENA_WINDOW_DAYS - 1) . ' days')->format('Y-m-d');
+    $until = $today->format('Y-m-d');
     $undone = [];
     foreach ($data['events'] as $entry) {
         $e = $entry['e'];
         if (($e['type'] ?? '') === 'undo' && is_string($e['ref'] ?? null)) $undone[$e['ref']] = true;
     }
-    $xp = array_fill_keys(ARENA_STATS, 0.0);
+    $days = array_fill_keys(ARENA_STATS, []);
     foreach ($data['events'] as $entry) {
         $e = $entry['e'];
         if (($e['type'] ?? '') !== 'done' || isset($undone[$e['id']])) continue;
         $stat = $e['stat'] ?? '';
-        if (!is_string($stat) || !isset($xp[$stat])) continue;
-        $xp[$stat] += ceil(max(0, (float)($e['xp'] ?? 0)) * 1.1) + 1;
+        $day = $e['d'] ?? '';
+        if (!is_string($stat) || !isset($days[$stat]) || !is_string($day) || $day < $from || $day > $until) continue;
+        $days[$stat][$day] = true;
     }
-    return array_map('levelFor', $xp);
+    return array_map(fn($d) => 1 + count($d), $days);
 }
 
 // The clothing of the game (data/ausruestung.json), by id.
@@ -199,22 +194,16 @@ function word($value, int $max): string
 }
 
 // What the app sent, made safe: a name, the look, the clothes (only real
-// ones, fitting the figure, with their requirements met), the stats (no
-// higher than the tasks allow), Haltung and Titel.
-function cleanAbbild($raw, string $accountId): ?array
+// ones, fitting the figure; in the arena they are only to be seen), Haltung
+// and Titel. Stats the app may send are not taken: the strength is counted
+// on the server (effortOf).
+function cleanAbbild($raw): ?array
 {
     if (!is_array($raw)) return null;
     $name = is_string($raw['name'] ?? null) ? $raw['name'] : '';
     $name = trim(preg_replace('/\s+/u', ' ', preg_replace('/\p{C}+/u', '', $name) ?? '') ?? '');
     $name = mb_substr($name, 0, ARENA_NAME_MAX, 'UTF-8');
     if ($name === '') return null;
-
-    $ceiling = statCeiling($accountId);
-    $stats = [];
-    foreach (ARENA_STATS as $stat) {
-        $level = $raw['stats'][$stat] ?? 1;
-        $stats[$stat] = max(1, min(100, is_numeric($level) ? (int)$level : 1, $ceiling[$stat]));
-    }
 
     $figur = word($raw['figur'] ?? '', 20);
     $items = equipmentById();
@@ -223,9 +212,6 @@ function cleanAbbild($raw, string $accountId): ?array
         $item = is_array($w) && is_string($w['id'] ?? null) ? ($items[$w['id']] ?? null) : null;
         if ($item === null || isset($worn[$item['slot']])) continue;
         if (!empty($item['passt']) && !in_array($figur, $item['passt'], true)) continue;
-        foreach (($item['req'] ?? []) as $stat => $need) {
-            if (($stats[$stat] ?? 0) < $need) continue 2;
-        }
         $worn[$item['slot']] = ['id' => $item['id'], 'farbe' => word($w['farbe'] ?? '', 12)];
     }
 
@@ -237,23 +223,9 @@ function cleanAbbild($raw, string $accountId): ?array
         'haar' => word($raw['haar'] ?? '', 20),
         'unterhemd' => ($raw['unterhemd'] ?? true) !== false,
         'worn' => array_values($worn),
-        'stats' => $stats,
         'haltung' => in_array($haltung, ARENA_HALTUNGEN, true) ? $haltung : 'abwehr',
         'titel' => word($raw['titel'] ?? '', 30),
     ];
-}
-
-// The abilities of the worn clothes that count in a fight.
-function abilitiesOf(array $abbild): array
-{
-    $fx = ['schaden' => 0, 'treffer' => 0, 'ausweichen' => 0, 'beruhigen' => 0];
-    $items = equipmentById();
-    foreach ($abbild['worn'] as $w) {
-        foreach (($items[$w['id']]['effekt'] ?? []) as $key => $value) {
-            if (isset($fx[$key]) && is_numeric($value)) $fx[$key] += $value;
-        }
-    }
-    return $fx;
 }
 
 // --- the list -------------------------------------------------------------------
@@ -357,7 +329,7 @@ function fightsOf(array $arena, string $pid, int $since): array
 }
 
 // What the hall shows: the list in order (name, look, clothes, Titel; never
-// stats or Haltung of others), the own Abbild, and its fights after $since.
+// strength or Haltung of others), the own Abbild, and its fights after $since.
 function hall(array $arena, ?string $me, int $since): array
 {
     $myPlace = $me === null ? null : placeOf($arena, $me);
@@ -402,7 +374,7 @@ function arenaRequest(array $request, string $action): void
         $arena = arenaLoad();
         tidy($arena);
         $me = fighterOf($arena, $id);
-        $abbild = array_key_exists('abbild', $request) ? cleanAbbild($request['abbild'], $id) : null;
+        $abbild = array_key_exists('abbild', $request) ? cleanAbbild($request['abbild']) : null;
         $since = sinceFor($arena, $request, 'since');
         $extra = [];
 
@@ -440,7 +412,9 @@ function challenge(array &$arena, ?string $me, array $request): array
 
     $a = $arena['fighters'][$me]['abbild'];
     $b = $arena['fighters'][$other]['abbild'];
-    $fight = fightOut($a + ['fx' => abilitiesOf($a)], $b + ['fx' => abilitiesOf($b)], $haltung, $b['haltung']);
+    $strengthA = effortOf($arena['fighters'][$me]['account']);
+    $strengthB = effortOf($arena['fighters'][$other]['account']);
+    $fight = fightOut(['strength' => $strengthA], ['strength' => $strengthB], $haltung, $b['haltung']);
     $result = $fight['ergebnis'];
 
     // A win against someone above: that place is taken, the others move down one.
@@ -485,7 +459,7 @@ function arenaOnSync(string $id, array $request): ?array
         $me = fighterOf($arena, $id);
         if ($me === null) return null;
         tidy($arena);
-        refresh($arena, $me, array_key_exists('abbild', $request) ? cleanAbbild($request['abbild'], $id) : null);
+        refresh($arena, $me, array_key_exists('abbild', $request) ? cleanAbbild($request['abbild']) : null);
         writeJson(ARENA_FILE, $arena);
         $since = sinceFor($arena, $request, 'arenaSince');
         return ['id' => $arena['id'], 'seq' => $arena['seq'], 'fights' => fightsOf($arena, $me, $since)];

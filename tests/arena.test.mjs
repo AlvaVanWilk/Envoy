@@ -85,7 +85,7 @@ test('arena: a piece that can be dyed takes another colour for Ruhm, and the Abb
   assert.equal(s.world.items[other].farbe, undefined);
   assert.equal(s.world.arena.ruhm, DYE_PRICE);
   assert.deepEqual(abbildOf(s).worn.find((w) => w.id === piece.id), { id: piece.id, farbe: 'petrol' });
-  assert.deepEqual(abbildOf(s).stats, { kraft: 1, ausdauer: 1, beweglichkeit: 1, gelassenheit: 1 });
+  assert.equal(abbildOf(s).stats, undefined);   // the strength is counted on the server
   // back to its own colour
   events.push(ev('ruhmkauf', { ware: 'farbe', inst, farbe: '', preis: DYE_PRICE }, 9));
   assert.equal(replay(events, catalog, DAY, T0 + 10 * 60000).world.items[inst].farbe, undefined);

@@ -8,9 +8,10 @@ die Arena für sich):
 - Statt Klassen und Saisons eine laufende Forderungsrangliste: herausfordern bis drei
   Plätze über oder unter dem eigenen, jedes Abbild einmal am Tag; ein Sieg gegen weiter
   oben nimmt den Platz. Wer 14 Tage nicht da war, ruht und beginnt wieder am Ende.
-- Das Abbild geht mit jedem Abgleich mit, der Server deckelt die Werte nach den erledigten
-  Aufgaben und entscheidet den Kampf (acht Runden, danach nach Punkten; gleich starke
-  gehen etwa zur Hälfte unentschieden aus, so gewünscht).
+- Stark macht Fleiß, nicht Begabung: Der Server zählt je Bereich die Tage der letzten
+  28 mit erledigter Aufgabe; Stufe, XP, Werte und Kleidung zählen in der Arena nicht. Er
+  entscheidet den Kampf (acht Runden, danach nach Punkten; gleich fleißige gehen etwa zur
+  Hälfte unentschieden aus, so gewünscht).
 - Ruhm kauft vorerst Farben für färbbare Kleidung und Titel; Arena-Kleidung, Trophäen
   und eine Chronik können später dazukommen.
 - Die Halle zeigt Platz, Name, Titel und das Abbild mit Kleidung; keine Werte.

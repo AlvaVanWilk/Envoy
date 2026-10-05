@@ -10,7 +10,7 @@
 //   titles   { id: true } the Titel bought
 //   fights   the latest fights, newest last: { id, t, rolle, gegner, ergebnis, ruhm, platz }
 
-import { ARENA_ENERGY, HALTUNGEN, TITLES, DYES, STAT_IDS } from '../config.js';
+import { ARENA_ENERGY, HALTUNGEN, TITLES, DYES } from '../config.js';
 
 const KEEP_FIGHTS = 40;
 const RESULTS = ['sieg', 'remis', 'niederlage'];
@@ -65,10 +65,11 @@ export function applyArenaEvent(world, e, ctx) {
 }
 
 // The Abbild as the server gets it: name and look, the clothes worn (with
-// their colour), the four stats now, Haltung and Titel. Nothing about the
-// tasks themselves.
+// their colour), Haltung and Titel. No stats: its strength in the arena is
+// how often the tasks were done lately, which the server counts itself
+// (see arena.php), so talent does not win, diligence does.
 export function abbildOf(state) {
-  const { world, stats } = state;
+  const { world } = state;
   if (!world.envoy) return null;
   const worn = Object.values(world.equipped).map((inst) => world.items[inst]).filter(Boolean)
     .map((entry) => ({ id: entry.id, ...(entry.farbe ? { farbe: entry.farbe } : {}) }));
@@ -79,7 +80,6 @@ export function abbildOf(state) {
     haar: world.envoy.haar,
     unterhemd: world.envoy.unterhemd,
     worn,
-    stats: Object.fromEntries(STAT_IDS.map((id) => [id, stats[id].level])),
     haltung: world.arena.haltung,
     titel: world.arena.titel,
   };

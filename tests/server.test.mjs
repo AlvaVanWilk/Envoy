@@ -167,28 +167,35 @@ test('server: arena list, challenges, Ruhm and fights for the challenged', { ski
   assert.equal(back.me.platz, 3);
 });
 
-// The stats of an Abbild are never higher than the tasks in the account's list allow.
-test('server: arena stats are capped by the tasks done', { skip: !hasPhp && 'PHP ist nicht installiert' }, () => {
+// The strength in the arena is diligence, not talent: on how many of the last
+// 28 days each task was done, whatever its stage and XP; stats sent are ignored.
+test('server: arena strength counts the days with the task done, not the stage', { skip: !hasPhp && 'PHP ist nicht installiert' }, () => {
   const dir = mkdtempSync(join(tmpdir(), 'envoy-arena-'));
   try {
-    const done = (id, stat, xp) => ({ s: 1, e: { id, type: 'done', stat, xp } });
-    writeFileSync(join(dir, 'konto.events.json'), JSON.stringify({ seq: 3, events: [
-      done('a', 'kraft', 600), done('b', 'kraft', 28), done('c', 'ausdauer', 50), { s: 4, e: { id: 'u', type: 'undo', ref: 'c' } },
-    ] }));
+    const now = Date.parse('2026-10-05T12:00:00Z');
+    const day = (n) => new Date(now - n * 86400000).toISOString().slice(0, 10);
+    const done = (id, stat, d, xp) => ({ s: 1, e: { id, type: 'done', stat, d, xp } });
+    const events = [
+      done('a', 'kraft', day(0), 26), done('b', 'kraft', day(1), 14), done('b2', 'kraft', day(1), 14),   // twice on one day counts once
+      done('c', 'kraft', day(40), 26),                                                                // too long ago
+      done('d', 'ausdauer', day(2), 24), { s: 2, e: { id: 'u', type: 'undo', ref: 'd' } },            // taken back
+      done('e', 'gelassenheit', day(3), 14),
+    ];
+    writeFileSync(join(dir, 'konto.events.json'), JSON.stringify({ seq: 3, events }));
     const php = `
       const DATA_DIR = ${JSON.stringify(dir)};
       define('ENVOY_SYNC', true);
       function readJson($f) { return file_exists($f) ? json_decode(file_get_contents($f), true) : null; }
       function eventsFile($id) { return DATA_DIR . '/' . $id . '.events.json'; }
       require ${JSON.stringify(fileURLToPath(new URL('../arena.php', import.meta.url)))};
-      echo json_encode(cleanAbbild(['name' => 'Kim', 'figur' => 'erste', 'stats' => ['kraft' => 50, 'ausdauer' => 50, 'beweglichkeit' => 'x', 'gelassenheit' => 1]], 'konto'));
+      echo json_encode(['strength' => effortOf('konto', ${now}),
+        'abbild' => cleanAbbild(['name' => 'Kim', 'figur' => 'erste', 'stats' => ['kraft' => 50]])]);
     `;
     const out = spawnSync('php', ['-r', php], { encoding: 'utf8' });
     const result = JSON.parse(out.stdout);
-    assert.ok(result.stats.kraft > 1 && result.stats.kraft < 50, `kraft ${result.stats.kraft}`);
-    assert.equal(result.stats.ausdauer, 1);      // its task was taken back
-    assert.equal(result.stats.beweglichkeit, 1);
-    assert.equal(result.haltung, 'abwehr');
+    assert.deepEqual(result.strength, { kraft: 3, ausdauer: 1, beweglichkeit: 1, gelassenheit: 2 });
+    assert.equal(result.abbild.stats, undefined);
+    assert.equal(result.abbild.haltung, 'abwehr');
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

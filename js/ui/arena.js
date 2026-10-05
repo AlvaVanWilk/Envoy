@@ -119,7 +119,7 @@ function listPanel(game, hall) {
   return h('section', { class: 'panel arena-ranks' },
     sectionTitle('Rangliste'),
     body,
-    standing ? h('p', { class: 'arena-hint' }, `Herausfordern lassen sich die Abbilder bis ${ARENA_REACH} Plätze über und unter deinem, jedes einmal am Tag.`) : null);
+    standing ? h('p', { class: 'arena-hint' }, `Herausfordern lassen sich die Abbilder bis ${ARENA_REACH} Plätze über und unter deinem, jedes einmal am Tag. Stark macht im Kampf, wie oft das Tageswerk in den letzten vier Wochen erledigt wurde, nicht wie leicht es fällt.`) : null);
 }
 
 function listRow(x, game) {

@@ -836,11 +836,18 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 
 Ein Ort für alle Envoys auf dem eigenen Server (nur mit Konto, ab dem Lagerfeuer), erreichbar
 über „Arena“ oben auf der Abenteuer-Seite. Niemand kämpft gegen eine Person, sondern gegen
-ihr **Abbild**: Name, Aussehen, getragene Kleidung (mit Farbe), die vier Werte, eine Haltung
-und ein Titel. Die App schickt das Abbild bei jedem Abgleich mit, so ist es immer so stark wie
-der Envoy. Echte Übungen, Tageswerk oder Serien zeigt die Arena nie, und die Werte der anderen
-auch nicht. Der Server (`arena.php`, Teil von `sync.php`) entscheidet jeden Kampf selbst und
-hält die Werte nie höher, als die erledigten Aufgaben des Kontos erlauben.
+ihr **Abbild**: Name, Aussehen, getragene Kleidung (mit Farbe, nur zum Ansehen), eine Haltung
+und ein Titel. Die App schickt das Abbild bei jedem Abgleich mit. Echte Übungen, Tageswerk,
+Werte oder Serien zeigt die Arena nie. Der Server (`arena.php`, Teil von `sync.php`)
+entscheidet jeden Kampf selbst.
+
+**Stark macht Fleiß, nicht Begabung** (so gewünscht): Die Stärke eines Abbilds in jedem der
+vier Bereiche ist, an wie vielen der letzten 28 Tage die Aufgabe dieses Bereichs erledigt
+wurde. Der Server zählt das in der Ereignisliste des Kontos; zurückgenommene Aufgaben zählen
+nicht, eine Aufgabe je Bereich und Tag. Jede Aufgabe zählt gleich, auf jeder Stufe, für Kinder
+wie für Erwachsene: Wem die Übungen leichter fallen, der kommt auf höhere Stufen und mehr XP,
+aber nicht zu mehr Stärke in der Arena. Die Werte (Level) und die Fähigkeiten der Kleidung
+spielen in der Arena keine Rolle.
 
 **Die Rangliste läuft ständig** (eine Forderungsrangliste wie im Sportverein):
 
@@ -853,14 +860,15 @@ hält die Werte nie höher, als die erledigten Aufgaben des Kontos erlauben.
   wieder am Ende, sobald die App zurück ist. Zurückziehen geht jederzeit.
 
 **Der Kampf**: ein Übungskampf über acht Runden, Runde für Runde zu sehen (Lebensleisten,
-Treffer, Ausweichen). Beide Seiten werden aneinander gemessen, Wert für Wert: doppelt so viel
-Kraft trifft etwa ein Fünftel härter, doppelt so viel Ausdauer hält etwa ein Fünftel länger,
-mehr Beweglichkeit trifft und weicht öfter aus, mehr Gelassenheit lässt ein Abbild, das
-zurückliegt, sich in Ehren verbeugen (unentschieden). Kleidung wirkt mit ihren Fähigkeiten.
-Steht nach der letzten Runde noch jeder, gewinnt nur ein klarer Vorsprung (mehr als ein
-Fünftel des Lebens) nach Punkten, sonst ist es unentschieden. Gleich starke: etwa die
-Hälfte unentschieden, je ein Viertel Sieg; ein Fünftel stärker: etwa 45 % Sieg, 45 %
-unentschieden, 10 % unterlegen; doppelt so stark: etwa 90 % Sieg. Die **Haltung** (Angriff,
+Treffer, Ausweichen). Beide Seiten werden aneinander gemessen, Bereich für Bereich (Stärke =
+1 + Tage mit erledigter Aufgabe): doppelt so viel Kraft trifft etwa ein Fünftel härter,
+doppelt so viel Ausdauer hält etwa ein Fünftel länger, mehr Beweglichkeit trifft und weicht
+öfter aus, mehr Gelassenheit lässt ein Abbild, das zurückliegt, sich in Ehren verbeugen
+(unentschieden). Steht nach der letzten Runde noch jeder, gewinnt nur ein klarer Vorsprung
+(mehr als ein Fünftel des Lebens) nach Punkten, sonst ist es unentschieden. Bei gleich
+fleißigen geht etwa die Hälfte unentschieden aus, je ein Viertel ist ein Sieg; 28 gegen 21
+Tage in allen Bereichen: etwa 56 % Sieg, 38 % unentschieden, 6 % unterlegen; 28 gegen 14:
+etwa 87 % Sieg, 12 % unentschieden. Die **Haltung** (Angriff,
 Abwehr, Ruhe) gibt einen kleinen Vorteil: Abwehr fängt Angriff ab, Ruhe löst Abwehr auf,
 Angriff überrumpelt Ruhe. Die eigene gilt, wenn das Abbild herausgefordert wird; wer
 herausfordert, wählt seine für diesen Kampf, ohne die des anderen zu kennen. Am Ende
@@ -1271,7 +1279,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Stufen | hoch nach zwei guten Durchgängen in Folge, runter nach zwei zu schweren in Folge; Durchgänge, nicht Kalendertage; Kinder: hoch nach drei Durchgängen |
 | Energie vom Tageswerk | jede erledigte Aufgabe ein Achtel der Leiste, auch über ihr Ende hinaus |
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
-| Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden, Ruhm als eigene Währung (Farben, Titel) |
+| Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden; Stärke = Tage mit erledigter Aufgabe in den letzten 28 Tagen je Bereich (Fleiß, nicht Begabung); Ruhm als eigene Währung (Farben, Titel) |
 | Berichte | jeder nur einmal, auch über Geräte hinweg |
 | Lange Pause | nach je 7 Fehltagen jede Übung des Bereichs eine Stufe runter |
 | Krankheitsmodus | Stufe 1, Übungen ohne Stufen halbe Zeit, 14 XP, zählt nicht für die Stufen, kein Malus-Erlass |

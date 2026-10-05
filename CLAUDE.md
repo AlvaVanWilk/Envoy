@@ -122,8 +122,10 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 - Arena (so gewünscht): Ruhmeshalle mit laufender Rangliste der Abbilder aller Konten auf dem
   Server (Forderungsrangliste: bis drei Plätze über oder unter dem eigenen, jedes einmal am
   Tag; Sieg gegen weiter oben nimmt den Platz), Kämpfe entscheidet der Server (`arena.php`)
-  aus den Werten (nie höher, als die erledigten Aufgaben erlauben), der Haltung und der
-  Kleidung, acht Runden, danach nach Punkten, gleich starke etwa zur Hälfte unentschieden;
+  aus dem Fleiß, nicht der Begabung (so gewünscht): Stärke je Bereich = Tage mit erledigter
+  Aufgabe in den letzten 28 Tagen, jede Aufgabe zählt gleich, egal welche Stufe; Werte und
+  Kleidung zählen dort nicht; dazu die Haltung; acht Runden, danach nach Punkten, gleich
+  fleißige etwa zur Hälfte unentschieden;
   Ruhm als eigene Währung nur der Arena, geht nie verloren (Farben für färbbare Kleidung,
   Titel); keine echten Übungsdaten sichtbar
 - Neuigkeiten beim ersten Start einer neuen Fassung (`js/ui/news.js`, im Ton der Nutzerin:
