@@ -27,6 +27,29 @@ function gear() {
   return `<path fill-rule="evenodd" d="${d}ZM12 8.4a3.6 3.6 0 1 0 0 7.2a3.6 3.6 0 1 0 0-7.2Z"/>${eng('M12 5.6a6.4 6.4 0 1 1 0 12.8a6.4 6.4 0 1 1 0-12.8', 0.9)}`;
 }
 
+// A wreath of laurel: two stems from the bottom up, open at the top, with
+// pairs of leaves that grow upwards and lean out and in.
+function laurel() {
+  let body = '';
+  for (const side of [-1, 1]) {
+    const [x0, y0] = polar(7.6, side < 0 ? 98 : 82);
+    const [x1, y1] = polar(7.6, side < 0 ? 232 : -52);
+    body += `<path d="M${x0} ${y0}A7.6 7.6 0 0 ${side < 0 ? 1 : 0} ${x1} ${y1}" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>`;
+    for (let i = 0; i < 5; i += 1) {
+      const deg = side < 0 ? 110 + i * 29 : 70 - i * 29;
+      for (const out of [1, -1]) {
+        const theta = side < 0 ? deg + 180 - out * 34 : deg + out * 34;
+        const a = (theta * Math.PI) / 180;
+        const [sx, sy] = polar(7.6, out < 0 ? deg + side * -6 : deg);
+        const x = round(sx + Math.sin(a) * 1.9);
+        const y = round(sy - Math.cos(a) * 1.9);
+        body += `<ellipse cx="${x}" cy="${y}" rx="0.9" ry="2" transform="rotate(${round(theta)} ${x} ${y})"/>`;
+      }
+    }
+  }
+  return body;
+}
+
 const HOOD = 'M12 1.8C7.4 1.8 5 5.4 5 10c0 2.6-.8 4.6-2 6v6.2h18V16c-1.2-1.4-2-3.4-2-6c0-4.6-2.4-8.2-7-8.2Z';
 const FACE = 'M12 6.4c-2.4 0-3.7 2.1-3.7 4.6c0 2.7 1.7 4.5 3.7 4.5s3.7-1.8 3.7-4.5c0-2.5-1.3-4.6-3.7-4.6Z';
 const FIST = [
@@ -51,6 +74,7 @@ export const NAV_ICONS = {
   // a closed book with an eye on the cover: the Handbuch
   handbuch: emblem(`<path d="M5 4.6a2.1 2.1 0 0 1 2.1-2.1h12.4V18H7.1A2.1 2.1 0 0 0 5 20.1Z"/><path d="M7.1 18.8h12.4v2.7H7.1a1.35 1.35 0 0 1 0-2.7Z" opacity="0.6"/>${eng('M8.6 10.2q3.7-3.8 7.4 0q-3.7 3.8-7.4 0Z', 1.1)}${engFill('M12.3 8.9a1.3 1.3 0 1 0 0 2.6a1.3 1.3 0 1 0 0-2.6Z')}`),
   einstellungen: emblem(gear()),
+  arena: emblem(laurel()),
 };
 
 export const STAT_ICONS = {

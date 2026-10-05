@@ -1,7 +1,8 @@
 // Only in the test copy of the app (see stage.js): the small „Test“ sign at
 // the top opens a menu that lies over the page, so no page changes because
 // of it. Its buttons fill the Energie or add more beyond the end of the bar
-// (for raising the camp), add Stein, Pilzholz and Bannsplitter, find the next
+// (for raising the camp), add Stein, Pilzholz, Bannsplitter and Ruhm (for the
+// arena), find the next
 // plan for Deko or a piece of clothing (in a colour of its own), and bring the Envoy back from an expedition at once, so
 // everything can be tried without waiting. The last ones open the Kleiderkammer
 // (the user's page on claude.ai for the drawings of the clothes, see
@@ -20,6 +21,7 @@ import { thingName } from '../world/clothes.js';
 
 const MATERIAL_AMOUNT = 25;
 const SPLITTER_AMOUNT = 50;
+const RUHM_AMOUNT = 30;
 const EXTRA_ENERGY = 50;
 const KLEIDERKAMMER = 'https://claude.ai/artifact/92pbHMV3YqemSrC4s86ADj';
 
@@ -73,6 +75,7 @@ function actions(game) {
     button(`+${MATERIAL_AMOUNT} ${MATERIALS.stein}`, () => addMaterial(game, 'stein')),
     button(`+${MATERIAL_AMOUNT} ${MATERIALS.pilzholz}`, () => addMaterial(game, 'pilzholz')),
     button(`+${SPLITTER_AMOUNT} ${CURRENCY}`, run({ splitter: SPLITTER_AMOUNT }, `+${SPLITTER_AMOUNT} ${CURRENCY}`)),
+    button(`+${RUHM_AMOUNT} Ruhm`, run({ ruhm: RUHM_AMOUNT }, `+${RUHM_AMOUNT} Ruhm`)),
     button('Plan finden', () => findPlan(game), game.state.world.camp.stage < 2),
     button('Kleidung finden', () => findClothes(game)),
     button('Expedition beenden', run({ fertig: true }, 'Der Envoy ist zurück'), !game.state.world.expedition),

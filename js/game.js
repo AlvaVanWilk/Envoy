@@ -14,7 +14,8 @@ import { addition, legStamina, progressAt } from './world/expedition.js';
 import { camp } from './world/map.js';
 import { runQuest, siteStamina, gatherEstimate } from './world/run.js';
 import { projectedWorld } from './world/worldstate.js';
-import { MINUTES_PER_STAMINA } from './config.js';
+import { MINUTES_PER_STAMINA, DYE_PRICE } from './config.js';
+import { titleById } from './world/arena.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
 import { bonusOf, withBonus, runningBonuses } from './achievements.js';
@@ -332,6 +333,32 @@ export const game = {
 
   unequip(slot) {
     if (this.state.world.equipped[slot]) this.add([this.event('unequip', { slot })]);
+  },
+
+  // --- the arena: the own Abbild and what Ruhm buys (the fights come from the server, see arena.js) ---
+
+  // Haltung and Titel of the own Abbild ('' = without Titel).
+  setAbbild({ haltung, titel } = {}) {
+    const own = this.state.world.arena;
+    const fields = {};
+    if (haltung && haltung !== own.haltung) fields.haltung = haltung;
+    if (typeof titel === 'string' && titel !== own.titel) fields.titel = titel;
+    if (Object.keys(fields).length > 0) this.add([this.event('abbild', fields)]);
+  },
+
+  buyTitle(id) {
+    const title = titleById(id);
+    const own = this.state.world.arena;
+    if (!title || own.titles[id] || own.ruhm < title.price) return;
+    this.add([this.event('ruhmkauf', { ware: 'titel', titel: id, preis: title.price })]);
+  },
+
+  // A piece of clothing in another colour ('' = its own colour again).
+  dye(inst, farbe) {
+    const entry = this.state.world.items[inst];
+    const item = entry && this.catalog.itemById.get(entry.id);
+    if (!item?.faerbbar || (entry.farbe || '') === farbe || this.state.world.arena.ruhm < DYE_PRICE) return;
+    this.add([this.event('ruhmkauf', { ware: 'farbe', inst, farbe, preis: DYE_PRICE })]);
   },
 
   // Name and look of the Envoy, at the creation or changed later

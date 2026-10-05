@@ -303,13 +303,18 @@ function dyeLayer({ data }, dye, under) {
   const meanS = ws / w;
   const meanL = Math.min(0.98, Math.max(0.02, wl / w));
   const mainH = (Math.atan2(hy, hx) * 180) / Math.PI;
-  const gamma = Math.min(2.5, Math.max(0.4, Math.log(ld) / Math.log(meanL)));
+  // the lightness of the dye (a little of the drawing's own kept), the
+  // shading of the drawing kept around it
+  const target = ld * 0.8 + meanL * 0.2;
+  const shade = (l) => (target <= meanL
+    ? target * (l / meanL) ** 0.9
+    : 1 - (1 - target) * ((1 - l) / (1 - meanL)) ** 0.9);
   // how much the piece keeps its own hues: 0 plain … 1 colourful
   const own = clamp01((wc / w - PLAIN_UP_TO) / (COLOURFUL_FROM - PLAIN_UP_TO));
   for (let i = 0; i < data.length; i += 4) {
     const [h, s, l] = hsl(data[i], data[i + 1], data[i + 2]);
     if (skip(i, l)) continue;
-    const nl = clamp01(l) ** gamma;
+    const nl = clamp01(shade(clamp01(l)));
     const plain = rgbOf(hd, clamp01(sd * (0.75 + s)), nl);
     const turned = own > 0 ? rgbOf((((h + hd - mainH) % 360) + 360) % 360, clamp01((s * sd) / Math.max(meanS, 0.01)), nl) : plain;
     data[i] = Math.round(plain[0] + (turned[0] - plain[0]) * own);

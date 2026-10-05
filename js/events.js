@@ -36,10 +36,22 @@
 //   place, unplace, build                     from earlier versions (furniture, extending the home); ignored now
 //
 // Only from the test copy of the app (see stage.js), to try things out:
-//   test     { energie?, mehrEnergie?, stein?, pilzholz?, splitter?, plan?, fertig? }
+//   test     { energie?, mehrEnergie?, stein?, pilzholz?, splitter?, ruhm?, plan?, kleidung?, fertig? }
 //                                             Energie full or more of it; material added, as much as
-//                                             fits; Bannsplitter added; the next plan for Deko; the
-//                                             running expedition back at once
+//                                             fits; Bannsplitter or Ruhm added; the next plan for Deko;
+//                                             a piece of clothing; the running expedition back at once
+//
+// The arena (see world/arena.js; the fights are decided by the server, arena.php):
+//   kampf    { kampf, rolle, gegner, ergebnis, ruhm, platz, energie?, haltung?, gegnerHaltung?, entscheid?, leben?, runden? }
+//                                             a fight of the own Abbild: rolle 'fordert' (it challenged,
+//                                             costs `energie`) or 'verteidigt' (it was challenged);
+//                                             ergebnis 'sieg' | 'remis' | 'niederlage' from its view,
+//                                             ruhm = what it brought, platz = [before, after] in the list;
+//                                             its id comes from the server, the same on every device
+//   abbild   { haltung?, titel? }             Haltung and Titel of the own Abbild (the latest counts)
+//   ruhmkauf { ware, preis, inst?, farbe?, titel? }
+//                                             bought with Ruhm: ware 'farbe' (the piece `inst` in the colour
+//                                             `farbe`, '' = its own again) or 'titel'
 //
 // The Envoy itself:
 //   envoy    { name, figur, haut, haar, unterhemd }  name, figure, skin and hair colour, and
@@ -94,6 +106,7 @@ export const KNOWN_TYPES = new Set([
   'plan', 'done', 'teil', 'undo', 'mode',
   'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
   'envoy', 'travel', 'quest', 'test',
+  'kampf', 'abbild', 'ruhmkauf',
 ]);
 
 // Minimal shape check for events coming from outside (sync, backup file).

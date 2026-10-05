@@ -56,6 +56,10 @@ export const store = {
   loadUi: () => read(`${prefix}ui`, {}),
   saveUi: (ui) => write(`${prefix}ui`, ui),
 
+  // The arena: which list on the server, and up to which fight its fights are written down.
+  loadArena: () => read(`${prefix}arena`, { id: null, since: 0 }),
+  saveArena: (state) => write(`${prefix}arena`, state),
+
   loadDeviceId: () => read(GLOBAL.device, null),
   saveDeviceId: (id) => write(GLOBAL.device, id),
 

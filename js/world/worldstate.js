@@ -19,6 +19,7 @@
 //   plans       { found, search }: plans for Deko found, and the search for the others; see plans.js
 //   clothes     { since, found }: Energie of work since the last piece of clothing found on
 //               the way, and how many were found; see clothes.js
+//   arena       { ruhm, haltung, titel, titles, fights }: the own Abbild in the arena; see arena.js
 //   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
@@ -37,6 +38,7 @@ import {
 import { emptyCamp, FACILITY_IDS } from './camp.js';
 import { emptyPlans } from './plans.js';
 import { emptyClothes, countClothes, fits, figureOf } from './clothes.js';
+import { emptyArena, applyArenaEvent } from './arena.js';
 import { lootThing } from './run.js';
 import { seededRandom } from './rng.js';
 import { unmetRequirements } from './items.js';
@@ -64,6 +66,7 @@ export function initialWorld(catalog, startTime, stats) {
     camp: emptyCamp(),
     plans: emptyPlans(),
     clothes: emptyClothes(),
+    arena: emptyArena(),
     quests: {},
     encountersDone: {},
     bestiary: {},
@@ -407,6 +410,11 @@ export function applyWorldEvent(world, e, ctx) {
     case 'test':
       testHelp(world, e, ctx);
       break;
+    case 'kampf':
+    case 'abbild':
+    case 'ruhmkauf':
+      applyArenaEvent(world, e, ctx);
+      break;
     case 'envoy': {
       const name = String(e.name || '').trim().slice(0, NAME_MAX);
       const born = Number.isInteger(e.geburtsjahr) ? e.geburtsjahr : null;
@@ -420,7 +428,7 @@ export function applyWorldEvent(world, e, ctx) {
 
 // Help while trying things out, only offered in the test copy (see ui/testtools.js):
 // the bar full again (or more Energie, beyond the end of the bar), material
-// added (as much as fits, like after a trip), Bannsplitter added, the next
+// added (as much as fits, like after a trip), Bannsplitter and Ruhm added, the next
 // plan not found yet, or the running expedition over at once, every action done.
 function testHelp(world, e, ctx) {
   if (e.energie) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
@@ -439,6 +447,7 @@ function testHelp(world, e, ctx) {
     if (amount > 0) world.purse[key] += Math.min(amount, roomFor(world, ctx.catalog, key));
   }
   world.purse.splitter += Math.max(0, Math.floor(Number(e.splitter) || 0));
+  world.arena.ruhm += Math.max(0, Math.floor(Number(e.ruhm) || 0));
   if (e.fertig && world.expedition) {
     world.expedition.rushed = e.t;
     advance(world, e.t, ctx);

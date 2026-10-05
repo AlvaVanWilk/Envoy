@@ -2531,3 +2531,114 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 .ql-go { width: 16px; height: 16px; color: var(--muted); }
 .ql-empty { padding: 14px 6px; font-size: 14px; color: var(--muted); }
 .ql-filters .chip small { margin-left: 6px; font-size: 12px; opacity: 0.7; }
+
+/* --- Arena: the Ruhmeshalle ---------------------------------------------------- */
+.arena-link { min-height: 40px; padding: 0 14px; }
+.arena-link .icon { color: var(--warn); }
+.arena-link.news { box-shadow: 0 0 0 2px rgba(246, 161, 82, 0.55), 0 0 14px rgba(246, 161, 82, 0.35); }
+.arena-grid { display: grid; gap: 14px; align-items: start; }
+.ruhm { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-display); font-weight: 700; color: var(--ivory-bright); white-space: nowrap; }
+.ruhm-icon { width: 18px; height: 18px; color: var(--warn); }
+.ruhm-amount { font-variant-numeric: tabular-nums; }
+.ruhm-name { font-family: var(--font-body); font-size: 12px; font-weight: 400; color: var(--text-2); }
+.section-title .ruhm { order: 2; font-size: 14px; letter-spacing: 0; text-transform: none; }
+
+.arena-own-body { display: grid; grid-template-columns: minmax(96px, 34%) 1fr; gap: 14px; align-items: start; }
+.arena-own-figure .paperdoll { max-width: 180px; }
+.arena-own-info { display: grid; gap: 10px; min-width: 0; }
+.arena-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ivory-bright); overflow-wrap: anywhere; }
+.arena-title { font-family: var(--font-body); font-size: 14px; font-weight: 400; font-style: italic; color: var(--ivory); }
+.arena-place { margin: 0; font-size: 14px; color: var(--text-2); }
+.arena-place.is-standing { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--warn); }
+.arena-label { margin: 0 0 6px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.arena-edge { margin: 6px 0 0; font-size: 13px; color: var(--text-2); }
+.chips.wrap { flex-wrap: wrap; overflow: visible; }
+.arena-hint { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
+
+.arena-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.arena-row { display: grid; grid-template-columns: 30px auto 1fr auto; align-items: center; gap: 10px; width: 100%; padding: 6px 10px 6px 6px; border: 1px solid var(--line); border-radius: 8px; background: rgba(244, 236, 222, 0.03); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.arena-row:hover, .arena-row:focus-visible { border-color: var(--copper-bright); }
+.arena-row.is-me { border-color: rgba(234, 183, 92, 0.6); background: rgba(234, 183, 92, 0.08); }
+.arena-row.is-reachable .arena-no { color: var(--copper-bright); }
+.arena-no { font-family: var(--font-display); font-size: 18px; font-weight: 700; text-align: center; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.arena-pic { display: block; width: 46px; height: 46px; overflow: hidden; border-radius: 50%; background: radial-gradient(circle at 45% 35%, #2e4a50, #15252a 72%); box-shadow: 0 0 0 1.5px #04070a; }
+.arena-pic.small { width: 38px; height: 38px; }
+.arena-pic img, .arena-fight-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.arena-row-name { min-width: 0; font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ivory-bright); overflow-wrap: anywhere; }
+.arena-row-name .arena-title { font-size: 13px; }
+.arena-mark { padding: 2px 8px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
+.arena-mark.is-me { color: #10181a; background: var(--warn); font-weight: 700; }
+.arena-mark.is-open { color: #10181a; background: var(--copper-bright); font-weight: 700; }
+.arena-mark.is-done { color: var(--muted); background: rgba(244, 236, 222, 0.06); }
+
+.arena-sheet-figure .paperdoll { max-width: 240px; }
+.arena-title-line { margin: -6px 0 4px; text-align: center; font-style: italic; color: var(--ivory); }
+.arena-challenge { display: grid; gap: 12px; margin-top: 8px; padding-top: 14px; border-top: 1px solid var(--line); }
+.arena-cost { display: flex; align-items: center; gap: 6px; margin: 0; font-family: var(--font-display); font-weight: 700; }
+.arena-cost .energy-icon { width: 18px; height: 18px; }
+.arena-why { margin: 0; font-size: 13px; color: var(--warn); }
+
+.arena-fight { margin-top: 4px; }
+.fighter.is-foe .life-fill { background: linear-gradient(180deg, #f2c58f, var(--kraft) 55%, #8f4a1c); }
+.arena-fight-pic { display: block; width: 100%; height: 100%; }
+.arena-fight[data-result="sieg"] .fight-line { color: var(--warn); }
+.arena-fight[data-result="remis"] .fight-line { color: var(--gelassenheit); }
+.arena-fight[data-result="niederlage"] .fight-line { color: var(--text-2); }
+.arena-fight[data-result] .fighter-pic { animation: bow 1.4s var(--ease) 1 both; }
+@keyframes bow { 40% { transform: translateY(6px) scale(0.96); } 100% { transform: none; } }
+.arena-play { display: grid; gap: 12px; justify-items: center; }
+.arena-play .scene { width: 100%; }
+.arena-end { display: grid; gap: 6px; justify-items: center; text-align: center; }
+.arena-end-result { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--ivory-bright); }
+.arena-end p { margin: 0; }
+.arena-end-gain .ruhm { font-size: 20px; }
+.arena-end-gain .ruhm-icon { width: 26px; height: 26px; }
+.arena-end-place { color: var(--warn); }
+
+.arena-shop-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(244, 236, 222, 0.03); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.arena-shop-row:hover, .arena-shop-row:focus-visible { border-color: var(--copper-bright); }
+.arena-shop > .arena-shop-row { margin-bottom: 14px; }
+.arena-shop-main { display: grid; gap: 2px; min-width: 0; }
+.arena-shop-name { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ivory-bright); }
+.arena-title-list .arena-shop-name { font-family: var(--font-body); font-size: 15px; font-weight: 400; font-style: italic; color: var(--ivory); }
+.arena-shop-sub { font-size: 12px; color: var(--muted); }
+.arena-owned { font-size: 12px; color: var(--ok); }
+.arena-title-list { display: grid; gap: 6px; }
+.arena-title-preview { margin: 6px 0 14px; text-align: center; }
+.arena-title-preview .arena-name { font-size: 20px; }
+.arena-title-sheet .btn .ruhm { color: inherit; }
+.arena-title-sheet .btn .ruhm-icon { color: inherit; }
+.arena-title-sheet .btn .ruhm-name { color: inherit; }
+
+.arena-dye-row { width: 100%; border-width: 0 0 1px; border-style: solid; border-color: var(--line); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.arena-dye-name { margin: 0 0 12px; text-align: center; font-family: var(--font-display); font-weight: 700; color: var(--ivory-bright); }
+.arena-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; margin-bottom: 14px; }
+.arena-swatch { aspect-ratio: 1; max-width: 100%; border: 2px solid #04070a; border-radius: 50%; cursor: pointer; box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.18), inset 0 -3px 5px rgba(0, 0, 0, 0.35); }
+.arena-swatch.is-own { background: conic-gradient(from 45deg, #e4d3b9, #7ea3a4, #e8791f, #e4d3b9); }
+.arena-swatch.active { border-color: var(--ivory-bright); box-shadow: 0 0 0 2px var(--copper), inset 0 2px 4px rgba(255, 255, 255, 0.18); }
+.arena-dye-actions { display: flex; justify-content: space-between; gap: 10px; }
+
+.arena-fight-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.arena-fight-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.arena-fight-row.is-new { background: linear-gradient(90deg, rgba(246, 161, 82, 0.14), transparent 70%); }
+.arena-fight-main { display: grid; gap: 2px; min-width: 0; }
+.arena-fight-text { font-size: 14px; }
+.arena-fight-meta { display: flex; gap: 10px; font-size: 12px; color: var(--muted); }
+.arena-result { font-family: var(--font-display); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.arena-fight-row.is-sieg .arena-result { color: var(--warn); }
+.arena-fight-row.is-remis .arena-result { color: var(--gelassenheit); }
+
+@media (min-width: 760px) {
+  .arena-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1100px) {
+  .arena-grid { grid-template-columns: 1fr 1.3fr 1fr; }
+  .arena-fights { grid-column: 1 / 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arena-fight[data-result] .fighter-pic { animation: none; }
+}
+.view-head > div:first-child { min-width: 0; }
+@media (max-width: 480px) {
+  .arena-link { min-height: 36px; padding: 0 10px; font-size: 12px; }
+}

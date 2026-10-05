@@ -11,11 +11,13 @@
 // (questlist.js); a tap there lights up the place and fans out its quests.
 
 import { h, icon } from './dom.js';
-import { PLACE_ICONS, UI_ICONS, SLOT_ICONS } from './icons.js';
+import { PLACE_ICONS, UI_ICONS, SLOT_ICONS, NAV_ICONS } from './icons.js';
 import { versioned } from '../config.js';
 import { viewHead, sectionTitle, supplies, staminaBar, materialLimits, resourceIcon } from './parts.js';
 import { journeyPanel, heroClass } from './journey.js';
 import { questListPanel } from './questlist.js';
+import { newFights } from './arena.js';
+import { arena } from '../arena.js';
 import { openQuest } from './questsheet.js';
 import { questsAt, questState, placeUnlocked, describeCondition } from '../world/quests.js';
 import { heroPosition } from '../world/expedition.js';
@@ -112,6 +114,12 @@ function expeditionSide(game) {
       : h('p', { class: 'muted' }, 'Der Envoy ist im Lager. Einen Ort antippen, um aufzubrechen.'));
 }
 
+// The way into the arena (see arena.js), once the Lagerfeuer burns.
+function arenaLink(game) {
+  if (!arena.open()) return null;
+  return h('a', { class: `btn ghost arena-link${newFights(game).length > 0 ? ' news' : ''}`, href: '#arena' }, icon(NAV_ICONS.arena), 'Arena');
+}
+
 export function renderMap(game) {
   const c = game.ctx();
   const exp = c.world.expedition;
@@ -148,7 +156,7 @@ export function renderMap(game) {
   });
 
   return h('section', { class: 'view world' },
-    viewHead('Abenteuer', 'Die Zwischenwelt'),
+    viewHead('Abenteuer', 'Die Zwischenwelt', arenaLink(game)),
     h('div', { class: 'world-grid' },
       h('div', { class: 'world-supplies panel' },
         sectionTitle('Vorrat'),

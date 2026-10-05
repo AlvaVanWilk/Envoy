@@ -247,6 +247,33 @@ export const DYES = [
   { id: 'schiefer', name: 'Schiefer', rgb: [78, 84, 92] },
 ];
 
+// The arena (see arena.php and world/arena.js): open from this Lagerstufe on,
+// and only with an account, since the Abbilder of the others lie on the server.
+export const ARENA_FROM_STAGE = 1;
+export const ARENA_ENERGY = 5;         // a challenge costs this much Energie
+export const ARENA_REACH = 3;          // places above or below that may be challenged (as on the server)
+// The Haltung of an Abbild; each one has the edge over another.
+export const HALTUNGEN = [
+  { id: 'angriff', name: 'Angriff', edge: 'überrumpelt Ruhe' },
+  { id: 'abwehr', name: 'Abwehr', edge: 'fängt Angriff ab' },
+  { id: 'ruhe', name: 'Ruhe', edge: 'löst Abwehr auf' },
+];
+// For Ruhm: a piece of clothing in another colour, and Titel for the Abbild
+// (shown after its name, the same for every figure).
+export const DYE_PRICE = 8;
+export const TITLES = [
+  { id: 'leiser-schritt', name: 'mit leisem Schritt', price: 10 },
+  { id: 'ruhige-hand', name: 'mit ruhiger Hand', price: 10 },
+  { id: 'morgenstunde', name: 'aus der Morgenstunde', price: 15 },
+  { id: 'truemmerfeld', name: 'vom Trümmerfeld', price: 15 },
+  { id: 'pilzhain', name: 'aus dem Pilzhain', price: 15 },
+  { id: 'langer-atem', name: 'mit langem Atem', price: 20 },
+  { id: 'offenes-herz', name: 'mit offenem Herzen', price: 20 },
+  { id: 'stille', name: 'aus der Stille', price: 25 },
+  { id: 'sturm', name: 'aus dem Sturm', price: 25 },
+  { id: 'tausend-schritte', name: 'der tausend Schritte', price: 30 },
+];
+
 // Where the camp lies, for the time of day in its picture (middle of Germany).
 export const CAMP_LATITUDE = 51;
 export const CAMP_LONGITUDE = 10;

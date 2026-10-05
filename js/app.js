@@ -22,6 +22,8 @@ import { renderTopbar } from './ui/topbar.js';
 import { renderSettings } from './ui/settings.js';
 import { renderCreate } from './ui/create.js';
 import { renderTalents, talentsOpen } from './ui/talents.js';
+import { renderArena, newFights } from './ui/arena.js';
+import { arena } from './arena.js';
 import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
 import { startTourIfNew } from './ui/tours.js';
@@ -48,6 +50,7 @@ const VIEWS = Object.fromEntries([
   { id: 'envoy', label: 'Envoy', render: renderCharacter },
   { id: 'inventar', label: 'Inventar', render: renderInventory },
   { id: 'einstellungen', label: 'Einstellungen', render: renderSettings },
+  { id: 'arena', label: 'Arena', render: renderArena },
   { id: 'aussehen', label: 'Aussehen', render: changeLook, keep: true, topbar: false },
 ].map((v) => [v.id, v]));
 // Names of views from earlier versions, so old links and bookmarks still work.
@@ -67,13 +70,14 @@ function currentView() {
 }
 
 function badgeFor(id) {
-  if (id === 'abenteuer') return game.unseenReports().length > 0;
+  if (id === 'abenteuer') return game.unseenReports().length > 0 || newFights(game).length > 0;
   if (id === 'handbuch') return handbookBadge(game);
   return false;
 }
 
 function dockItem(item) {
-  const active = currentView() === item.id;
+  // The arena is reached from the Abenteuer page.
+  const active = currentView() === item.id || (item.id === 'abenteuer' && currentView() === 'arena');
   const locked = (item.feature && !game.unlocked(item.feature)) || (item.id === 'talente' && !talentsOpen(game));
   const art = shield(NAV_ICONS[item.id], { locked });
   const attrs = {
@@ -199,6 +203,9 @@ async function start() {
   sync.subscribe(() => {
     if (currentView() === 'einstellungen') render();
     else renderNav();
+  });
+  arena.subscribe(() => {
+    if (currentView() === 'arena' && !isSheetOpen()) render();
   });
   window.addEventListener('hashchange', render);
   render();

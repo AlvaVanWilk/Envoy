@@ -175,7 +175,8 @@ function updateWay(el, p, home) {
   el.dataset.home = home ? 'true' : '';
 }
 
-function fighterCard(kind, name, picture) {
+// A fighter with picture, name and life (also for the arena, see arena.js).
+export function fighterCard(kind, name, picture) {
   return h('div', { class: `fighter is-${kind}` },
     h('span', { class: 'fighter-pic' }, picture),
     h('span', { class: 'fighter-name' }, name),
@@ -226,14 +227,14 @@ function roundText(r) {
   return r.dodged ? `${blow}, ausgewichen` : blow;
 }
 
-function pop(el, text, cls) {
+export function pop(el, text, cls) {
   const box = el.querySelector('.fighter-pops');
   const p = h('span', { class: `fight-pop ${cls}` }, text);
   box.append(p);
   p.addEventListener('animationend', () => p.remove());
 }
 
-function shake(el) {
+export function shake(el) {
   el.classList.remove('is-struck');
   void el.offsetWidth; // start the motion again
   el.classList.add('is-struck');

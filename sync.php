@@ -11,6 +11,7 @@
 //   login    { user, password }             -> { ok, user, token }
 //   logout   { user, token }                -> { ok }
 //   sync     { user, token, since, events } -> { ok, seq, events }
+//   arena, arena_join, arena_leave, arena_fight: the arena, see arena.php
 // Without "action", the older form with a device key still works:
 //   { key, since, events }                  -> { ok, seq, events }
 // The app uses it only once, to take a game from before the accounts along.
@@ -43,6 +44,7 @@ const EVENT_TYPES = [
     'plan', 'done', 'teil', 'undo', 'mode',
     'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
     'envoy', 'travel', 'quest', 'test',
+    'kampf', 'abbild', 'ruhmkauf',
 ];
 
 header('Content-Type: application/json; charset=utf-8');
@@ -294,7 +296,11 @@ function syncAccount(array $request): void
     $id = accountOf($request);
     $since = max(0, (int)($request['since'] ?? 0));
     $incoming = is_array($request['events'] ?? null) ? $request['events'] : [];
-    reply(200, exchangeEvents(eventsFile($id), $since, $incoming));
+    $result = exchangeEvents(eventsFile($id), $since, $incoming);
+    // With an Abbild in the arena: keep it up to date, bring its fights along.
+    $arena = arenaOnSync($id, $request);
+    if ($arena !== null) $result['arena'] = $arena;
+    reply(200, $result);
 }
 
 // The older form: one list per device key.
@@ -331,11 +337,17 @@ if (!is_array($request)) {
 }
 
 ensureDirs();
+define('ENVOY_SYNC', true);
+require __DIR__ . '/arena.php';
 switch ($request['action'] ?? '') {
     case 'register': register($request); break;
     case 'login': login($request); break;
     case 'logout': logout($request); break;
     case 'sync': syncAccount($request); break;
+    case 'arena':
+    case 'arena_join':
+    case 'arena_leave':
+    case 'arena_fight': arenaRequest($request, $request['action']); break;
     case '': syncKey($request); break;
     default: fail(400, 'bad_request');
 }

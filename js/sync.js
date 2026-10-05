@@ -6,6 +6,8 @@
 import { game, onLocalEvents } from './game.js';
 import { store } from './store.js';
 import { account, post } from './account.js';
+import { arena } from './arena.js';
+import { abbildOf } from './world/arena.js';
 
 const RETRY_DELAY_MS = 2000;
 
@@ -59,8 +61,14 @@ export const sync = {
     const outbox = new Set(this.settings.outbox);
     const sending = game.events.filter((e) => outbox.has(e.id));
     try {
-      const body = await post({ action: 'sync', user: profile.user, token: profile.token, since: this.settings.since, events: sending });
+      // The Abbild goes along; the server keeps it only if it stands in the arena.
+      const known = store.loadArena();
+      const body = await post({
+        action: 'sync', user: profile.user, token: profile.token, since: this.settings.since, events: sending,
+        abbild: abbildOf(game.state), arenaId: known.id, arenaSince: known.since,
+      });
       game.receive(body.events || []);
+      if (body.arena) arena.record(body.arena.id, body.arena.fights);
       const sent = new Set(sending.map((e) => e.id));
       if (body.seq < this.settings.since) {
         // The server lost data: send everything this device knows again.
