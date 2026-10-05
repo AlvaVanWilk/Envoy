@@ -19,7 +19,7 @@
 // Krankheitsmodus: every exercise at stage 1; one with only one stage takes
 // half its time. Answers given then do not count for the stages.
 
-import { XP_MIN, SICK_TIME_SHARE, ANSWERS, TOO_MUCH } from './config.js';
+import { XP_MIN, SICK_TIME_SHARE, ANSWERS, TOO_MUCH, CHILD_UNTIL } from './config.js';
 
 const sum = (list, f) => list.reduce((total, x) => total + f(x), 0);
 
@@ -74,8 +74,11 @@ export function taskFor(stat, levels, sick, catalog, age = null) {
     const level = sick ? 1 : Math.min(Math.max(1, entry?.level || 1), exercise.stages.length);
     return part(exercise, level, sick, !sick && entry?.fresh);
   });
-  return parts.length > 0 ? taskOf(stat, parts, sick) : null;
+  return parts.length > 0 ? { ...taskOf(stat, parts, sick), child: isChild(age) } : null;
 }
+
+// A child is not asked after an exercise (see CHILD_UNTIL).
+export const isChild = (age) => age !== null && age <= CHILD_UNTIL;
 
 // The task as it was done (from its `done` event), or null for a task from
 // before the exercises were units (its exercise is not in the table anymore).
@@ -91,10 +94,10 @@ export function taskOfDone(done, catalog) {
 }
 
 // The questions after a task: one for each exercise that has one and a
-// higher stage to go to. None in Krankheitsmodus.
+// higher stage to go to. None in Krankheitsmodus, none for children.
 // -> [{ part, answers: [{ id, label, result }] }]
 export function questionsOf(task) {
-  if (task.sick) return [];
+  if (task.sick || task.child) return [];
   return task.parts
     .filter((p) => p.row.frage && !p.top && ANSWERS[p.row.antwort])
     .map((p) => ({ part: p, answers: ANSWERS[p.row.antwort] }));

@@ -5,22 +5,23 @@
 // one of them at a time, chosen with a row of tabs: the Envoy doing it (a
 // picture by the user for the figure, painted in the Envoy's colours like the
 // portrait, else the moving figure, else the emblem of the area), its name
-// and stage, its time and the steps. Below: the guided timer for what is
-// still open of the unit (timer.js) and the button that finishes the
-// exercise shown, with its name on it („Käfer erledigt“): each exercise is
-// done on its own, its tab gets a tick and the card goes on to the next one;
-// the last one finishes the task. A unit of one exercise just has „Erledigt“.
+// and stage, its time and the steps. Below: the guided timer for the
+// exercise shown (timer.js) and the button that finishes it, with its name
+// on it („Käfer erledigt“): each exercise is done on its own, its tab gets a
+// tick and the card goes on to the next one, which begins with a tap of its
+// own; the last one finishes the task. A unit of one exercise just has
+// „Erledigt“.
 //
 // Each exercise that has a higher stage to go to has a question; it comes
-// right after the exercise (after the timer: those of all the exercises it
-// ran). The answers move the stages (two good runs in a row up, two too hard
-// ones down). „Das war heute zu viel“ finishes the whole task and counts as
+// right after the exercise (children are not asked, see tasks.js). The
+// answers move the stages (two good runs in a row up, two too hard ones
+// down). „Das war heute zu viel“ finishes the whole task and counts as
 // too hard for every exercise of the unit. Then the card turns back into its
 // row and the new value rises from there.
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
-import { TIMER_PREP, TIMER_SWITCH, TOO_MUCH } from '../config.js';
+import { TIMER_PREP, TOO_MUCH } from '../config.js';
 import { statEmblem, statInfo, statNumber } from './stats.js';
 import { openCard, closeSheet, toast } from './sheet.js';
 import { openTimer } from './timer.js';
@@ -52,8 +53,7 @@ const fill = (el, ...children) => el.replaceChildren(...children.filter(Boolean)
 const tooMuchLink = (task, questions) =>
   canBeTooMuch(task) && !questions.some((q) => q.answers.some((a) => a.id === TOO_MUCH));
 
-// The exercises of the task not done yet today, and their questions.
-const openParts = (task, game) => task.parts.filter((p) => !game.partsDone(task.stat)[p.row.id]);
+// The questions of the exercises not done yet today.
 const openQuestions = (task, game) => questionsOf(task).filter((q) => !game.partsDone(task.stat)[q.part.row.id]);
 
 // The tick on the row: what is still open of the task done at once, or the
@@ -133,21 +133,20 @@ function figure(part, game, className, phase = null) {
   return part.row.skizze ? h('img', { class: `${className} is-sketch`, src: part.row.skizze, alt, draggable: 'false' }) : null;
 }
 
-// The parts of the guided timer: getting ready, every exercise (one side,
-// the other side …), the change to the next one; what the voice says.
-function timerSegments(task, game) {
+// The parts of the guided timer for one exercise: getting ready, then the
+// exercise (one side, the other side …); what the voice says. The timer
+// runs one exercise at a time: after it comes its question, and the next
+// one begins only with a tap, so there is time to read how it goes.
+function timerSegments(stat, part, game) {
   const segments = [];
-  const prep = TIMER_PREP[task.stat] || 0;
-  task.parts.forEach((part, i) => {
-    const name = part.row.name;
-    if (i === 0 && prep > 0) segments.push({ name, label: 'Gleich geht es los', seconds: prep, say: `Gleich geht es los: ${name}.`, figure: figure(part, game, 'timer-img') });
-    if (i > 0) segments.push({ name, label: 'Wechsel', seconds: TIMER_SWITCH, say: `Als Nächstes: ${name}.`, figure: figure(part, game, 'timer-img') });
-    part.phases.forEach((phase, j) => {
-      const prompts = j === 0 ? part.row.ansagen : [];
-      const spokenAtStart = prompts.some((p) => p.at === 0);
-      const start = phase.label || (spokenAtStart || (i === 0 && prep === 0) ? '' : 'Los.');
-      segments.push({ name, label: phase.label, seconds: phase.s, say: start, prompts, figure: figure(part, game, 'timer-img', phase) });
-    });
+  const prep = TIMER_PREP[stat] || 0;
+  const name = part.row.name;
+  if (prep > 0) segments.push({ name, label: 'Gleich geht es los', seconds: prep, say: `Gleich geht es los: ${name}.`, figure: figure(part, game, 'timer-img') });
+  part.phases.forEach((phase, j) => {
+    const prompts = j === 0 ? part.row.ansagen : [];
+    const spokenAtStart = prompts.some((p) => p.at === 0);
+    const start = phase.label || (spokenAtStart || prep === 0 ? '' : 'Los.');
+    segments.push({ name, label: phase.label, seconds: phase.s, say: start, prompts, figure: figure(part, game, 'timer-img', phase) });
   });
   return segments;
 }
@@ -241,10 +240,9 @@ export function openTaskCard(stat, game, start = null) {
     card.dataset.view = view;
     if (view === 'steps') {
       const part = task.parts[shown];
-      const open = openParts(task, game);
       const timer = () => openTimer({
-        title: taskTitle({ parts: open }), segments: timerSegments({ ...task, parts: open }, game),
-        rhythm: open.length === 1 ? open[0].row.atemtakt : null, onFinish: finish,
+        title: part.row.name, segments: timerSegments(stat, part, game),
+        rhythm: part.row.atemtakt, onFinish: () => (several ? finishPart(part) : finish()),
       });
       fill(body);
       fill(actions,
@@ -252,7 +250,7 @@ export function openTaskCard(stat, game, start = null) {
           ? h('button', { class: 'btn text tc-too-much', type: 'button', onclick: () => { game.undoPart(stat, part.row.id); showPart(shown); show('steps'); } },
             icon(UI_ICONS.undo), 'Rückgängig')
           : (canBeTooMuch(task) ? tooMuch() : null),
-        open.length > 0 ? h('button', { class: 'btn ghost', type: 'button', onclick: timer }, icon(UI_ICONS.timer), 'Mit Timer') : null,
+        isDone(part) ? null : h('button', { class: 'btn ghost', type: 'button', onclick: timer }, icon(UI_ICONS.timer), 'Mit Timer'),
         isDone(part)
           ? h('span', { class: 'pill tc-part-done' }, icon(UI_ICONS.check), `${part.row.kurz} erledigt`)
           : h('button', { class: 'btn primary', type: 'button', onclick: () => (several ? finishPart(part) : finish()) },

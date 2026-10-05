@@ -28,7 +28,7 @@ const CHAPTERS = [
     title: 'Das Tageswerk',
     text: [
       'Jeden Tag gibt die App vier Aufgaben vor, eine für jeden Wert. Auswählen musst du nichts. Ein neuer Tag beginnt um 3 Uhr.',
-      'Tippe auf eine Aufgabe: Sie dreht sich um wie eine Karte. Dort stehen die Übungen mit ihren Schritten und ein Timer, der durch alles führt und ansagt, was kommt.',
+      'Tippe auf eine Aufgabe: Sie dreht sich um wie eine Karte. Dort stehen die Übungen mit ihren Schritten und ein Timer, der durch jede Übung führt und ansagt, was kommt. Die nächste beginnt erst, wenn du sie antippst.',
     ],
   },
   {

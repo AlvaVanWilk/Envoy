@@ -9,7 +9,7 @@
 // Same events + same catalog = same result on every device.
 
 import {
-  STAT_IDS, MALUS_AVERAGE_WINDOW, INTENSITY_UP_AFTER, INTENSITY_DOWN_AFTER,
+  STAT_IDS, MALUS_AVERAGE_WINDOW, INTENSITY_UP_AFTER, INTENSITY_DOWN_AFTER, CHILD_UP_AFTER,
   INTENSITY_DOWN_AFTER_MISSED_DAYS, TOO_MUCH,
 } from './config.js';
 import { addXp, removeXp, malusFactor, average } from './formulas.js';
@@ -17,7 +17,7 @@ import { dayRange, addDays, dayStartMs } from './days.js';
 import { compareEvents } from './events.js';
 import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance, startOfDay } from './world/worldstate.js';
 import { checkAchievements, bonusOf, withBonus } from './achievements.js';
-import { taskFor, taskOfDone, resultOf, ageOn } from './tasks.js';
+import { taskFor, taskOfDone, resultOf, ageOn, isChild } from './tasks.js';
 
 export { unmetRequirements } from './world/items.js';
 
@@ -41,8 +41,9 @@ function initialIntensity(catalog) {
 }
 
 // Up after two good runs in a row, down after two too hard ones in a row;
-// a run that is neither breaks the row.
-function applyResult(entry, result, maxLevel) {
+// a run that is neither breaks the row. A child is not asked: each run counts
+// as good, up after CHILD_UP_AFTER of them.
+function applyResult(entry, result, maxLevel, upAfter = INTENSITY_UP_AFTER) {
   const next = { ...entry, fresh: false };
   if (result === 'hard') {
     next.good = 0;
@@ -55,7 +56,7 @@ function applyResult(entry, result, maxLevel) {
   } else if (result === 'good') {
     next.hard = 0;
     next.good += 1;
-    if (next.good >= INTENSITY_UP_AFTER) {
+    if (next.good >= upAfter) {
       next.level = Math.min(maxLevel, next.level + 1);
       next.good = 0;
       next.fresh = next.level !== entry.level;
@@ -134,13 +135,18 @@ export function replay(events, catalog, today, now = Date.now()) {
         }
         if (e.stat === 'ausdauer') totals.treppe_min += (taskOfDone(e, catalog)?.seconds || 0) / 60;
         // every exercise of the task: its answer counts for its stage
-        // („zu viel“ for all of them), nothing in Krankheitsmodus
+        // („zu viel“ for all of them), nothing in Krankheitsmodus; a child's
+        // run counts as good without a question
+        const child = isChild(ageOn(world.envoy, day));
         for (const id of Array.isArray(e.teile) ? e.teile : []) {
           const row = catalog.exerciseById.get(id);
           if (!row || !intensity[row.uebung]) continue;
           const entry = { ...intensity[row.uebung], fresh: false };
-          const result = e.sick ? null : resultOf(e.zuviel ? TOO_MUCH : e.antworten?.[id]);
-          intensity[row.uebung] = result ? applyResult(entry, result, stagesOf.get(row.uebung)) : entry;
+          let result = e.sick ? null : resultOf(e.zuviel ? TOO_MUCH : e.antworten?.[id]);
+          if (!result && child && !e.sick) result = 'good';
+          intensity[row.uebung] = result
+            ? applyResult(entry, result, stagesOf.get(row.uebung), child ? CHILD_UP_AFTER : INTENSITY_UP_AFTER)
+            : entry;
         }
         if (e.stat === 'gelassenheit') restFromTask(world, e.t, ctx);
       }

@@ -39,6 +39,10 @@ export const XP_MAX = 28;
 // after the exercise (see ANSWERS).
 export const INTENSITY_UP_AFTER = 2;
 export const INTENSITY_DOWN_AFTER = 2;
+// Children (up to this age) are not asked after an exercise: every run
+// counts, and after this many runs at a stage the next one comes.
+export const CHILD_UNTIL = 12;
+export const CHILD_UP_AFTER = 3;
 // After every 7 missed days in a row each exercise of the area goes down one stage.
 export const INTENSITY_DOWN_AFTER_MISSED_DAYS = 7;
 
@@ -148,7 +152,6 @@ export const TOO_MUCH = 'zuviel';
 // The guided timer: time to get ready before the first exercise, and to
 // change to the next one (seconds), per area.
 export const TIMER_PREP = { kraft: 10, ausdauer: 5, beweglichkeit: 10, gelassenheit: 0 };
-export const TIMER_SWITCH = 10;
 
 export const DATA_FILES = {
   exercises: 'data/uebungen.json',

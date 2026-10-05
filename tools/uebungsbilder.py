@@ -404,8 +404,9 @@ def spatial(view, parts, head, crown, face):
 
 # Der Seitstütz, seen from the front and a little from above: lying on the
 # side, the head to the left, propped up on the forearm, the elbow under the
-# shoulder. The hips lift until the body is one line from the head to the
-# knees (stages 1 and 2) or to the feet (stage 3), and come down again.
+# shoulder. The body is one line from the head to the knees (stages 1 and 2)
+# or to the feet (stage 3) and holds it, only breathing; it does not go up
+# and down (the exercise is a hold).
 PLANK = Camera(yaw=0, pitch=16, origin=(0, FLOOR))
 PLANK_ELBOW = (96, 4)          # x, height above the floor
 PLANK_REST = 6                 # height of a knee, a foot or the hip lying on the floor
@@ -433,7 +434,7 @@ def side_plank(stage):
             low = tilt
         else:
             high = tilt
-    lift = hold((0.1, high), (0.3, 0.0), (0.72, 0.0), (0.9, high))
+    lift = hold((0.0, 0.0), (0.5, min(2.5, high)), (1.0, 0.0))   # a calm breath, the hips stay up
 
     def upper_points(tilt):
         shoulder, hip = bottom_line(tilt)

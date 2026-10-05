@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T22:45:56Z",
+ "generated": "2026-10-05T07:58:29Z",
  "source": "uebungen.xlsx",
  "exercises": [
   {
@@ -29,8 +29,8 @@
     "Langsam und ruhig weiteratmen. Nur so viele, wie gehen, ohne dass sich der Rücken löst. Pausen sind in Ordnung."
    ],
    "wofuer": "Für die tiefe Bauchmuskulatur: Der Rumpf bleibt ruhig, während sich die Beine bewegen.",
-   "frage": "Blieb der untere Rücken die ganze Minute am Boden?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -63,8 +63,8 @@
     "Langsam und nur so weit, wie der Rücken am Boden bleibt. Pausen sind in Ordnung."
    ],
    "wofuer": "Für die tiefe Bauchmuskulatur: Der Rumpf bleibt ruhig, während sich die Beine bewegen.",
-   "frage": "Blieb der untere Rücken die ganze Minute am Boden?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -97,8 +97,8 @@
     "Langsam und nur so weit, wie der Rücken am Boden bleibt. Pausen sind in Ordnung."
    ],
    "wofuer": "Für die tiefe Bauchmuskulatur: Der Rumpf bleibt ruhig, während sich Arme und Beine bewegen.",
-   "frage": "Blieb der untere Rücken die ganze Minute am Boden?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -131,8 +131,8 @@
     "Der Rücken bleibt flach wie ein Tisch. Pausen sind in Ordnung."
    ],
    "wofuer": "Für den Rücken: ruhig bleiben, während sich Arme und Beine bewegen.",
-   "frage": "Blieb der Rücken die ganze Minute ruhig und flach?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -165,8 +165,8 @@
     "Zurück, dann die andere Seite. Pausen sind in Ordnung."
    ],
    "wofuer": "Für den Rücken: ruhig bleiben, während sich Arme und Beine bewegen.",
-   "frage": "Blieb der Rücken die ganze Minute ruhig und flach?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -203,8 +203,8 @@
     "Nach der halben Zeit die Seite wechseln."
    ],
    "wofuer": "Für den Rücken: ruhig bleiben, während sich Arme und Beine bewegen.",
-   "frage": "Blieb der Rücken die ganze Zeit ruhig, ohne zu kippen?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -241,8 +241,8 @@
     "Halten und ruhig atmen. Sinkt das Becken, kurz ablegen und wieder heben."
    ],
    "wofuer": "Für die seitlichen Bauchmuskeln.",
-   "frage": "Blieb das Becken auf beiden Seiten bis zum Ende oben?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -279,8 +279,8 @@
     "Sinkt das Becken, kurz ablegen und wieder heben."
    ],
    "wofuer": "Für die seitlichen Bauchmuskeln.",
-   "frage": "Blieb das Becken auf beiden Seiten bis zum Ende oben?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -317,8 +317,8 @@
     "Sinkt das Becken, kurz ablegen und wieder heben."
    ],
    "wofuer": "Für die seitlichen Bauchmuskeln.",
-   "frage": "Blieb das Becken auf beiden Seiten bis zum Ende oben?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -737,8 +737,8 @@
     "Gemütlich, ein Bär hat keine Eile. Pausen sind in Ordnung."
    ],
    "wofuer": "Für Arme, Schultern und Bauch.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -770,8 +770,8 @@
     "Der Kopf schaut zum Boden. Pausen sind in Ordnung."
    ],
    "wofuer": "Für Arme, Schultern und Bauch.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [
     {
      "at": 20,
@@ -812,8 +812,8 @@
     "Der Rücken bleibt flach wie ein Tisch. Pausen sind in Ordnung."
    ],
    "wofuer": "Für Arme, Schultern und Bauch.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -863,8 +863,8 @@
     "Halten und ruhig weiteratmen. In den Pausen ablegen."
    ],
    "wofuer": "Für den Bauch und den ganzen Rumpf.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -914,8 +914,8 @@
     "Halten und ruhig weiteratmen. In den Pausen ablegen."
    ],
    "wofuer": "Für den Bauch und den ganzen Rumpf.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -965,8 +965,8 @@
     "Die Hüfte bleibt ruhig. In den Pausen ablegen."
    ],
    "wofuer": "Für den Bauch und den ganzen Rumpf.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -998,8 +998,8 @@
     "Dann die andere Seite. Die Nase schaut zum Boden."
    ],
    "wofuer": "Für den Rücken.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -1031,8 +1031,8 @@
     "Ablegen, ausruhen, wieder abheben. Die Nase schaut zum Boden."
    ],
    "wofuer": "Für den Rücken.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -1064,8 +1064,8 @@
     "Zwischendurch ablegen ist in Ordnung."
    ],
    "wofuer": "Für den Rücken.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -1097,8 +1097,8 @@
     "Dazwischen ausruhen ist in Ordnung."
    ],
    "wofuer": "Für die Beine.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -1130,8 +1130,8 @@
     "Umdrehen und zurückspringen. Dazwischen ausruhen ist in Ordnung."
    ],
    "wofuer": "Für die Beine.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
@@ -1163,8 +1163,8 @@
     "Weich in der Hocke landen. Dazwischen ausruhen ist in Ordnung."
    ],
    "wofuer": "Für die Beine.",
-   "frage": "War das leicht?",
-   "antwort": "ja-nein",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},

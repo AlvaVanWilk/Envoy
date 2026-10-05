@@ -246,7 +246,7 @@ test('children and young people have exercises of their own; without an age thos
   assert.deepEqual(keys('gelassenheit', 15), ['innehalten']);
 });
 
-test('the task of today follows the age of the Envoy; its stages count as for everyone', () => {
+test('the task of today follows the age of the Envoy; a child is not asked, every run counts', () => {
   const day = START;
   const born = Number(day.slice(0, 4)) - 6;
   const envoy = { id: 'e0', type: 'envoy', d: day, t: dayStartMs(day) + 1000, name: 'Ida', figur: 'erste', haut: 'hell', haar: 'blond', geburtsjahr: born };
@@ -254,12 +254,20 @@ test('the task of today follows the age of the Envoy; its stages count as for ev
   assert.equal(s.age, 6);
   assert.deepEqual(s.log.at(-1).tasks.kraft.teile, ['baerengang-1', 'flieger-1', 'froschsprung-1']);
   assert.deepEqual(taskFor('gelassenheit', s.intensityAtDayStart, false, real, s.age).parts.map((p) => p.row.id), ['teddy-1']);
-  // two easy runs: the Bärengang goes up a stage the day after
+  assert.deepEqual(questionsOf(taskFor('kraft', s.intensityAtDayStart, false, real, s.age)), []);
+  // three runs without questions: every exercise goes up a stage the day after
   const run = (d, n) => ({ id: `k${n}`, type: 'done', d, t: dayStartMs(d) + 7200000, stat: 'kraft', xp: 14,
-    teile: ['baerengang-1', 'flieger-1', 'froschsprung-1'], antworten: { 'baerengang-1': 'ja' } });
+    teile: ['baerengang-1', 'flieger-1', 'froschsprung-1'] });
   s = replay([envoy, run(day, 1), run(addDays(day, 1), 2)], real, addDays(day, 2));
   assert.deepEqual(taskFor('kraft', s.intensityAtDayStart, false, real, s.age).parts.map((p) => p.row.id),
-    ['baerengang-2', 'flieger-1', 'froschsprung-1']);
+    ['baerengang-1', 'flieger-1', 'froschsprung-1']);
+  s = replay([envoy, run(day, 1), run(addDays(day, 1), 2), run(addDays(day, 2), 3)], real, addDays(day, 3));
+  assert.deepEqual(taskFor('kraft', s.intensityAtDayStart, false, real, s.age).parts.map((p) => p.row.id),
+    ['baerengang-2', 'flieger-2', 'froschsprung-2']);
+  // a teenager is asked, as adults are
+  const teen = { ...envoy, id: 'e1', geburtsjahr: Number(day.slice(0, 4)) - 13 };
+  s = replay([teen], real, day);
+  assert.ok(questionsOf(taskFor('kraft', s.intensityAtDayStart, false, real, s.age)).length > 0);
 });
 
 test('the Hampel-Runden: each move with its own moving figure', () => {
