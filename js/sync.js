@@ -65,7 +65,7 @@ export const sync = {
       const known = store.loadArena();
       const body = await post({
         action: 'sync', user: profile.user, token: profile.token, since: this.settings.since, events: sending,
-        abbild: abbildOf(game.state), arenaId: known.id, arenaSince: known.since,
+        abbild: game.state ? abbildOf(game.state) : null, arenaId: known.id, arenaSince: known.since,
       });
       game.receive(body.events || []);
       if (body.arena) arena.record(body.arena.id, body.arena.fights);

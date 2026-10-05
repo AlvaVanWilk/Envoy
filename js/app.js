@@ -118,8 +118,9 @@ function renderCreation() {
   document.body.classList.remove('has-topbar');
   replaceChildren(navRoot);
   replaceChildren(topRoot);
-  // a new Envoy does not need the news of this version
-  creating = renderCreate(game, { onDone: () => { creating = null; markNewsSeen(); location.hash = '#envoy'; render(); } });
+  // whoever creates an Envoy is new here and does not need the news of this version
+  markNewsSeen();
+  creating = renderCreate(game, { onDone: () => { creating = null; location.hash = '#envoy'; render(); } });
   replaceChildren(viewRoot, creating);
   document.title = APP_NAME;
   lastView = null;
