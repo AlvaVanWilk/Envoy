@@ -568,9 +568,9 @@ maximieren sein“). Deshalb braucht das Aufwerten mehr Energie am Stück (30, 7
 statt 22, 45, 85, 130), ein Plan für Deko braucht anderthalbmal so viele Chancen (9, 18, 36
 statt 6, 12, 24), und die beiden Pläne beim Händler kosten dreimal so viel (Teppich 120,
 Pilzholztisch 180). Eine Rechnung, die ein eifriges Spielen Tag für Tag nachstellt (alle
-vier Aufgaben, ein- bis dreimal am Tag gespielt), kommt mit den neuen Regeln an keinem
-Tag früher auf eine Lagerstufe als mit den alten, meist am selben Tag, manchmal ein, zwei
-Tage später.
+vier Aufgaben, ein- bis dreimal am Tag gespielt, ganz aufs Lager hin), kommt mit den neuen
+Regeln meist am selben Tag auf eine Lagerstufe wie mit den alten (18 von 28 Fällen), in
+einigen zwei bis fünf Tage später, in wenigen einen Tag früher.
 
 **Begegnungen:** Jeden Tag erscheinen an wilden Orten Geister (je Ort 55 % Chance,
 mindestens eine an einem von Anfang an offenen Ort). Welcher Geist kommt, richtet sich
@@ -691,8 +691,8 @@ Aufwerten ist kein Muss. Es kostet immer etwa eine volle Ladung der Lager der St
 und die **Energie wird am Stück** gebraucht: Die Leiste muss lang genug sein, und die
 wächst nur mit der echten Ausdauer-Aufgabe (der Schlafplatz hilft, weil er morgens über
 das Ende der Leiste füllt, und das Tageswerk). Wer jeden Tag alle vier Aufgaben macht und
-ganz aufs Lager hin spielt, kommt frühestens etwa an Tag 4, 8, 14 bis 18 und 25 bis 30 auf
-die Stufen 2 bis 5, je nachdem, wie oft am Tag er spielt; wer Tage auslässt, später. Mehr
+ganz aufs Lager hin spielt, kommt frühestens etwa an Tag 4, 8, 18 und 26 bis 32 auf die
+Stufen 2 bis 5, je nachdem, wie oft am Tag er spielt; wer Tage auslässt, später. Mehr
 Training verlangt das nicht, nur Regelmäßigkeit. (Bis 5.11 kostete das Aufwerten 22, 45, 85
 und 130 Energie; seit 5.12 gibt es mehr Energie am Tag, der Ausbau soll aber nicht schneller
 gehen, siehe Tempo der Wirtschaft.) Einrichtungen und Deko bleiben beim
