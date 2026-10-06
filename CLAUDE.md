@@ -134,8 +134,12 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Aufgabe in den letzten 28 Tagen, jede Aufgabe zählt gleich, egal welche Stufe; Werte und
   Kleidung zählen dort nicht; dazu die Haltung; acht Runden, danach nach Punkten, gleich
   fleißige etwa zur Hälfte unentschieden;
-  Ruhm als eigene Währung nur der Arena, geht nie verloren (Farben für färbbare Kleidung,
-  Titel); keine echten Übungsdaten sichtbar
+  Ruhm als eigene Währung nur der Arena, geht nie verloren (Kleidung mit Boni, jeden Tag drei
+  Stücke, mindestens selten, und Farben für färbbare Kleidung; Titel kommen mit den Rängen aus
+  allem verdienten Ruhm, nicht zum Kaufen, so gewünscht); keine echten Übungsdaten sichtbar
+- Aushang am Lager (so gewünscht, nicht endlos, `js/world/jobs.js`): jeden Tag drei Aufträge,
+  ohne Energie, nur Zeit (der Envoy geht an einen Ort, als Aktion seiner Expedition); der Lohn
+  steht darauf (Bannsplitter, oft ein bestimmtes Kleidungsstück mit Güte), kein Material
 - Die Tiefen (so gewünscht, `js/world/depths.js`): unter dem Trümmerfeld, ab dem Lagerfeuer,
   drei Tiefen mit je zehn Ebenen, auf jeder ein Wächter (ein Geist der Welt, so stark wie die
   Ebene); hinabsteigen kostet keine Energie, danach ruht der Envoy (60 Minuten, je Level

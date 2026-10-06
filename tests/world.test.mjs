@@ -516,3 +516,37 @@ test('die Tiefen: one Ebene after another, a rest after each descent, nothing lo
   const dressed = prospect({ ...c, stats: statsAt(5), fx: { ...c.fx, schaden: 3, treffer: 12, ausweichen: 8 } }, strong);
   assert.ok(dressed > plain + 0.15, `${plain} → ${dressed}`);
 });
+
+test('der Aushang: a few Aufträge a day, each once, without Energie, the reward from the note', async () => {
+  const { jobsFor, jobOutcome, jobState } = await import('../js/world/jobs.js');
+  const fire = ev('expedition', { q: 'q-lagerfeuer', place: 'truemmerfeld', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'bauen', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: ['lagerfeuer'], rest: false } } }, 0);
+  const s0 = replay([fire], catalog, DAY, T0 + 0.1 * H);
+  const c = ctxOf(s0);
+  const jobs = jobsFor(DAY, c);
+  assert.equal(jobs.length, 3);
+  assert.deepEqual(jobsFor(DAY, c), jobs);                     // the same all day
+  for (const j of jobs) {
+    assert.ok(j.minutes >= 4 && j.splitter > 0 && catalog.placeById.get(j.place));
+    if (j.thing) assert.ok(catalog.itemById.get(j.thing.id));
+  }
+  const job = jobs[0];
+  const take = (hoursAfter, fields = {}) => Object.assign(ev('expedition', { q: job.id, place: job.place, title: job.name, regel: 2, least: 0 }, hoursAfter), { outcome: jobOutcome(job) }, fields);
+  const first = take(0.1);
+  const busy = replay([fire, first], catalog, DAY, T0 + 0.11 * H);
+  assert.ok(Math.abs(busy.world.stamina.value - s0.world.stamina.value) < 0.1);   // no Energie
+  assert.equal(jobState(job, busy.world), 'running');
+  const after = replay([fire, first], catalog, DAY, T0 + 2 * H);
+  assert.equal(after.world.expedition, null);
+  assert.equal(after.world.purse.splitter, job.splitter);
+  assert.equal(jobState(job, after.world), 'done');
+  if (job.thing) assert.ok(Object.values(after.world.items).some((e) => e.id === job.thing.id));
+  // the same Auftrag again, or one of another day, does not count
+  const again = take(2.1);
+  assert.equal(replay([fire, first, again], catalog, DAY, T0 + 4 * H).world.purse.splitter, job.splitter);
+  const old = take(2.2, { d: '2026-05-02' });
+  assert.equal(replay([fire, first, old], catalog, '2026-05-02', T0 + 30 * H).world.purse.splitter, job.splitter);
+  // not before the Lagerfeuer
+  assert.equal(replay([take(0)], catalog, DAY, T0 + 2 * H).world.purse.splitter, 0);
+});

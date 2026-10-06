@@ -3,10 +3,10 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, SLOT_ICONS, PLACE_ICONS, ENERGY_ICON } from './icons.js';
+import { NAV_ICONS, SLOT_ICONS, PLACE_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.14';
+export const NEWS_ID = '5.15';
 
 const GREETING = 'Liebe Envoys!';
 const INTRO = 'Euer Envoy hat jetzt viel mehr zu tun, und seine Kleidung zählt.';
@@ -14,14 +14,14 @@ const INTRO = 'Euer Envoy hat jetzt viel mehr zu tun, und seine Kleidung zählt.
 const NEWS = [
   { icon: PLACE_ICONS.hoehle, title: 'Die Tiefen',
     text: 'Unter dem Trümmerfeld wartet auf jeder Ebene ein Wächter. Hinabsteigen kostet keine Energie. Wie weit euer Envoy kommt, entscheiden seine Werte und seine Kleidung.' },
+  { icon: PLACE_ICONS.ort, title: 'Der Aushang am Lager',
+    text: 'Jeden Tag hängen dort drei Aufträge, der Lohn steht gleich darauf. Sie kosten keine Energie, nur ein wenig Zeit.' },
   { icon: SLOT_ICONS.torso, title: 'Kleidung mit Boni',
     text: 'Gefundene Kleidung kann gut, selten oder prächtig sein. Dann bringt sie Boni mit: mehr Schaden, bessere Treffer, schnellere Energie, mehr Glück.' },
   { icon: NAV_ICONS.haendler, title: 'Der Händler wartet gleich am Anfang',
-    text: 'Er steckt in der Nebelfurt fest. Helft ihm heraus, dann ist er für euch da.' },
-  { icon: ENERGY_ICON, title: 'Tränke für Energie',
-    text: 'Pilztee und Quellsud füllen eure Energie auf. Der Händler hat jeden Tag zwei von jeder Sorte.' },
-  { icon: NAV_ICONS.arena, title: 'Die Arena kostet keine Energie mehr',
-    text: 'Fordert heraus, wen die Rangliste erlaubt. Eure Energie bleibt ganz für die Zwischenwelt.' },
+    text: 'Er steckt in der Nebelfurt fest. Helft ihm heraus, dann verkauft er euch jeden Tag auch Pilztee und Quellsud für Energie.' },
+  { icon: NAV_ICONS.arena, title: 'Neues in der Arena',
+    text: 'Herausfordern kostet keine Energie mehr. Für Ruhm gibt es jetzt Kleidung mit Boni, und Titel kommen mit euren Rängen.' },
 ];
 
 export function openNews(onDone) {

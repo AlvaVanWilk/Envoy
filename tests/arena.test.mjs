@@ -7,8 +7,8 @@ import { readFileSync } from 'node:fs';
 import { replay } from '../js/replay.js';
 import { mergeEvents } from '../js/events.js';
 import { buildCatalog } from '../js/catalog.js';
-import { abbildOf, fightEventId } from '../js/world/arena.js';
-import { ARENA_ENERGY, DYE_PRICE, TITLES } from '../js/config.js';
+import { abbildOf, fightEventId, rankOf, arenaOffersFor } from '../js/world/arena.js';
+import { ARENA_ENERGY, DYE_PRICE, TITLES, RANKS } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -44,22 +44,45 @@ test('arena: fights bring Ruhm; a challenge costs Energie, being challenged does
   assert.equal(twice.world.arena.ruhm, 3);
 });
 
-test('arena: Haltung and Titel of the Abbild; a Titel is bought with Ruhm first', () => {
-  const title = TITLES[0];
-  const events = [...start(), fight(1, 'verteidigt', 'sieg', title.price, 1), ev('abbild', { haltung: 'angriff', titel: title.id }, 2)];
+test('arena: Haltung and Titel of the Abbild; a Titel comes with its Rang, one bought before stays', () => {
+  const title = TITLES.find((t) => t.rang === 1);
+  const events = [...start(), fight(1, 'verteidigt', 'sieg', RANKS[1].at - 1, 1), ev('abbild', { haltung: 'angriff', titel: title.id }, 2)];
   let s = replay(events, catalog, DAY, T0 + 3 * 60000);
   assert.equal(s.world.arena.haltung, 'angriff');
-  assert.equal(s.world.arena.titel, '');            // not bought yet
-  events.push(ev('ruhmkauf', { ware: 'titel', titel: title.id, preis: title.price }, 3), ev('abbild', { titel: title.id }, 4));
+  assert.equal(s.world.arena.titel, '');            // the Rang is not reached yet
+  assert.equal(rankOf(s.world.arena.earned).index, 0);
+  events.push(fight(2, 'verteidigt', 'sieg', 1, 3), ev('abbild', { titel: title.id }, 4));
   s = replay(events, catalog, DAY, T0 + 5 * 60000);
+  assert.equal(rankOf(s.world.arena.earned).index, 1);
   assert.equal(s.world.arena.titel, title.id);
-  assert.equal(s.world.arena.ruhm, 0);
-  // without enough Ruhm nothing is bought
-  events.push(ev('ruhmkauf', { ware: 'titel', titel: TITLES[1].id, preis: TITLES[1].price }, 5));
-  s = replay(events, catalog, DAY, T0 + 6 * 60000);
-  assert.equal(s.world.arena.titles[TITLES[1].id], undefined);
   assert.equal(abbildOf(s).titel, title.id);
   assert.equal(abbildOf(s).haltung, 'angriff');
+  // a Titel of a higher Rang is not the Abbild's yet, unless it was bought before 5.15
+  const high = TITLES.find((t) => t.rang === 5);
+  events.push(ev('abbild', { titel: high.id }, 5));
+  assert.equal(replay(events, catalog, DAY, T0 + 6 * 60000).world.arena.titel, title.id);
+  events.push(ev('ruhmkauf', { ware: 'titel', titel: high.id, preis: 10 }, 6), ev('abbild', { titel: high.id }, 7));
+  s = replay(events, catalog, DAY, T0 + 8 * 60000);
+  assert.equal(s.world.arena.titel, high.id);
+  // spending Ruhm never lowers the Rang
+  assert.equal(s.world.arena.ruhm, RANKS[1].at - 10);
+  assert.equal(rankOf(s.world.arena.earned).index, 1);
+});
+
+test('arena: Ruhm buys clothing with bonuses, each offer once', () => {
+  const s0 = replay(start(), catalog, DAY, T0 + 60000);
+  const ctx = { catalog, world: s0.world, stats: s0.stats, statsAtDayStart: s0.statsAtDayStart };
+  const offers = arenaOffersFor(DAY, ctx);
+  assert.equal(offers.length, 3);
+  for (const o of offers) assert.ok(['selten', 'praechtig'].includes(o.guete) && o.price > 0);
+  const o = offers[0];
+  const buy = (minutes) => ev('ruhmkauf', { ware: 'kleidung', offer: o.offer, thing: o.id, preis: o.price, guete: o.guete, bonus: o.bonus, ...(o.farbe ? { farbe: o.farbe } : {}) }, minutes);
+  const events = [...start(), fight(1, 'verteidigt', 'sieg', o.price + 1, 1), buy(2), buy(3)];
+  const s = replay(events, catalog, DAY, T0 + 4 * 60000);
+  const pieces = Object.values(s.world.items).filter((e) => e.id === o.id && e.guete);
+  assert.equal(pieces.length, 1);
+  assert.deepEqual(pieces[0].bonus, o.bonus);
+  assert.equal(s.world.arena.ruhm, 1);
 });
 
 test('arena: a piece that can be dyed takes another colour for Ruhm, and the Abbild wears it so', () => {

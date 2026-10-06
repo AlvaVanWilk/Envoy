@@ -10,11 +10,11 @@ import { openSheet, closeSheet, toast } from './sheet.js';
 import { paperdoll } from './paperdoll.js';
 import { arena, arenaErrorText } from '../arena.js';
 import { store } from '../store.js';
-import { titleById } from '../world/arena.js';
-import { ARENA_REACH } from '../config.js';
+import { titleOwned, rankOf } from '../world/arena.js';
+import { ARENA_REACH, TITLES } from '../config.js';
 import { abbildPortrait, titleText, nameLine, ruhmAmount, haltungPicker } from './arenaparts.js';
 import { challengePart } from './arenafight.js';
-import { shopPanel } from './arenashop.js';
+import { shopPanel, ranksPanel } from './arenashop.js';
 
 const REFRESH_MS = 60 * 1000;
 let loadedAt = 0;
@@ -48,6 +48,7 @@ export function renderArena(game) {
       ownPanel(game, arena.hall),
       listPanel(game, arena.hall),
       shopPanel(game),
+      ranksPanel(game),
       fightsPanel(game)));
   setTimeout(() => markFightsSeen(game), 4000);
   return view;
@@ -74,6 +75,7 @@ function ownPanel(game, hall) {
       h('div', { class: 'arena-own-info' },
         nameLine(world.envoy.name, world.arena.titel),
         h('p', { class: `arena-place ${standing ? 'is-standing' : ''}` }, place),
+        h('p', { class: 'arena-rank' }, `Rang: ${rankOf(world.arena.earned).rank.name}`),
         haltungPicker(world.arena.haltung, (id) => game.setAbbild({ haltung: id }), 'Haltung deines Abbilds'),
         titlePicker(game),
         hall ? joinButton(standing) : null)));
@@ -81,7 +83,7 @@ function ownPanel(game, hall) {
 
 function titlePicker(game) {
   const own = game.state.world.arena;
-  const owned = Object.keys(own.titles).filter((id) => titleById(id));
+  const owned = TITLES.filter((t) => titleOwned(own, t.id)).map((t) => t.id);
   if (owned.length === 0) return null;
   return h('div', { class: 'arena-titles' },
     h('p', { class: 'arena-label' }, 'Titel'),

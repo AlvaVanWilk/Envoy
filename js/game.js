@@ -14,10 +14,11 @@ import { addition, progressAt } from './world/expedition.js';
 import { runQuest, siteStamina, gatherEstimate } from './world/run.js';
 import { projectedWorld } from './world/worldstate.js';
 import { DYE_PRICE, RULES, RULES_NOW } from './config.js';
-import { titleById } from './world/arena.js';
+import { arenaOffersFor } from './world/arena.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
 import { nextFloor, blockedAt, descend } from './world/depths.js';
+import { jobsFor, jobState, jobOutcome, jobsOpen } from './world/jobs.js';
 import { bonusOf, withBonus, runningBonuses } from './achievements.js';
 
 const REPORT_HOURS = 48;
@@ -346,6 +347,26 @@ export const game = {
     if (this.state.world.equipped[slot]) this.add([this.event('unequip', { slot })]);
   },
 
+  // --- der Aushang (see world/jobs.js) ----------------------------------------
+
+  // The Aufträge of today, each with its state.
+  jobs() {
+    const c = this.ctx();
+    if (!jobsOpen(c.world)) return [];
+    return jobsFor(c.day, c).map((job) => ({ ...job, state: jobState(job, c.world) }));
+  },
+
+  // The Envoy takes on an Auftrag: it joins his row like a quest, without Energie.
+  takeJob(jobId) {
+    this.refresh();
+    const job = this.jobs().find((j) => j.id === jobId && j.state === 'open');
+    if (!job) return null;
+    const event = this.event('expedition', { q: job.id, place: job.place, title: job.name, regel: RULES, least: 0 });
+    event.outcome = jobOutcome(job);
+    this.add([event]);
+    return event;
+  },
+
   // --- die Tiefen (see world/depths.js) ---------------------------------------
 
   // Why the Envoy cannot go down now, or null.
@@ -376,11 +397,16 @@ export const game = {
     if (Object.keys(fields).length > 0) this.add([this.event('abbild', fields)]);
   },
 
-  buyTitle(id) {
-    const title = titleById(id);
-    const own = this.state.world.arena;
-    if (!title || own.titles[id] || own.ruhm < title.price) return;
-    this.add([this.event('ruhmkauf', { ware: 'titel', titel: id, preis: title.price })]);
+  // The pieces of clothing Ruhm buys today, without those already bought.
+  arenaOffers() {
+    return arenaOffersFor(this.state.today, this.ctx()).filter((o) => !this.state.world.bought[o.offer]);
+  },
+
+  buyArena(offer) {
+    if (this.state.world.arena.ruhm < offer.price || this.state.world.bought[offer.offer]) return;
+    const farbe = offer.farbe ? { farbe: offer.farbe } : {};
+    const extra = offer.guete ? { guete: offer.guete, bonus: offer.bonus } : {};
+    this.add([this.event('ruhmkauf', { ware: 'kleidung', offer: offer.offer, thing: offer.id, preis: offer.price, ...farbe, ...extra })]);
   },
 
   // A piece of clothing in another colour ('' = its own colour again).

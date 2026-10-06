@@ -22,7 +22,7 @@
 //   arena       { ruhm, haltung, titel, titles, fights }: the own Abbild in the arena; see arena.js
 //   tiefen      { cleared, rest, descents, last }: how far down the Envoy got; see depths.js
 //   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
-//   encountersDone { encounterId: true }
+//   encountersDone { encounterId: true }, also the Aufträge of the Aushang done (aus:…, see jobs.js)
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
 //   bought      { offerId: true }
 //   seen        { report id: true }: reports shown on some device (event `gesehen`)
@@ -42,6 +42,7 @@ import { emptyPlans } from './plans.js';
 import { emptyClothes, countClothes, fits, figureOf } from './clothes.js';
 import { emptyArena, applyArenaEvent } from './arena.js';
 import { emptyDepths, nextFloor, blockedAt, restMinutes } from './depths.js';
+import { isJob, jobAllowed, jobsOpen } from './jobs.js';
 import { lootThing } from './run.js';
 import { cleanBonuses } from './bonuses.js';
 import { seededRandom } from './rng.js';
@@ -173,7 +174,7 @@ function bringHome(world, ctx, action, leftBehind, t) {
   if (r.rest) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
   recordMonsters(world, outcome.fights, action.day);
 
-  if (action.q.startsWith('enc:')) {
+  if (action.q.startsWith('enc:') || isJob(action.q)) {
     world.encountersDone[action.q] = true;
   } else {
     const record = world.quests[action.q] || { done: 0, runs: 0, last: null };
@@ -335,6 +336,8 @@ function addAction(world, e, ctx) {
   if (Array.isArray(e.stops) || e.out !== undefined) { oldExpedition(world, e, ctx); return; }
   const place = ctx.catalog.placeById.get(e.place);
   if (!place || typeof e.q !== 'string' || !e.outcome?.reward) return;
+  // an Auftrag of the Aushang: once, only those of its day, no Energie
+  if (isJob(e.q) && (!jobsOpen(world) || !jobAllowed(e, world) || Number(e.outcome.stamina) > 0)) return;
   const regel = RULE_SETS[e.regel] ? e.regel : 1;
   const action = {
     id: e.id, q: e.q, place: e.place, title: e.title, day: e.d, regel,
@@ -487,7 +490,9 @@ function testHelp(world, e, ctx) {
     if (amount > 0) world.purse[key] += Math.min(amount, roomFor(world, ctx.catalog, key));
   }
   world.purse.splitter += Math.max(0, Math.floor(Number(e.splitter) || 0));
-  world.arena.ruhm += Math.max(0, Math.floor(Number(e.ruhm) || 0));
+  const ruhm = Math.max(0, Math.floor(Number(e.ruhm) || 0));
+  world.arena.ruhm += ruhm;
+  world.arena.earned += ruhm;
   if (e.fertig && world.expedition) {
     world.expedition.rushed = e.t;
     advance(world, e.t, ctx);

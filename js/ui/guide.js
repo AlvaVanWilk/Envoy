@@ -8,6 +8,7 @@ import { store } from '../store.js';
 import { talentsOpen } from './talents.js';
 import { BACKPACK_SIZE } from '../config.js';
 import { depthsOpen } from '../world/depths.js';
+import { jobsOpen } from '../world/jobs.js';
 
 // The kind of a quest the Envoy has done; gathering and building at the camp are not in the table.
 const kindOf = (game, id) => (id.startsWith('gather:') ? 'sammeln' : id.startsWith('bau:') ? 'bauen' : game.catalog.questById.get(id)?.kind);
@@ -180,6 +181,15 @@ const CHAPTERS = [
     text: [
       'Mit jeder Lagerstufe lassen sich die Einrichtungen weiter ausbauen. Dazu gibt es Deko: Sie gibt mehr Hygge als die meisten Einrichtungen und bleibt beim Aufwerten stehen.',
       'Gebaut wird sie nach einem Plan. Einen je Stufe gibt es gleich, die anderen muss der Envoy finden: an bestimmten Orten, bei Geistern oder beim Händler. Manche sind selten.',
+    ],
+  },
+  {
+    id: 'aushang',
+    title: 'Der Aushang',
+    when: (game) => jobsOpen(game.state.world),
+    text: [
+      'Am Lager hängen jeden Tag drei Aufträge. Auf jedem steht, wohin er führt und was er bringt.',
+      'Ein Auftrag kostet keine Energie, nur Zeit. Ist der Envoy schon unterwegs, hängt er ihn an. Am nächsten Tag hängen neue aus.',
     ],
   },
   {

@@ -25,6 +25,7 @@ import { openFacilities, canBuildSomething } from './facilities.js';
 import { openUpgrade } from './upgrade.js';
 import { openPicture } from './sheet.js';
 import { unseenDropCount } from './character.js';
+import { jobBoard } from './jobboard.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
 import { campStatus, facilityLevel, nextUpgrade, dekoBuilt, FACILITY_IDS } from '../world/camp.js';
@@ -283,6 +284,7 @@ export function renderCamp(game) {
         expeditionPanel(game),
         suppliesPanel(game)),
       h('div', { class: 'camp-col' },
+        jobBoard(game),
         sightingsPanel(game),
         noticesPanel(game))));
 }

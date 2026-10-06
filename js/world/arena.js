@@ -3,22 +3,61 @@
 //   kampf     a fight of the own Abbild: Ruhm, and for a challenge the Energie
 //             it cost (nothing since version 5.13; the event says how much)
 //   abbild    Haltung and Titel of the own Abbild (the latest counts)
-//   ruhmkauf  something bought with Ruhm: a colour for a piece of clothing, or a Titel
+//   ruhmkauf  something bought with Ruhm: a colour for a piece of clothing, a
+//             piece of clothing with bonuses (since 5.15), or a Titel (before 5.15)
 // Ruhm is the currency of the arena only. It never makes the Envoy stronger.
+// All the Ruhm ever earned gives the Rang (RANKS), and each Rang its Titel;
+// spending Ruhm never lowers the Rang.
 //
-// world.arena = { ruhm, haltung, titel, titles, fights }
+// world.arena = { ruhm, earned, haltung, titel, titles, fights }
 //   ruhm     what is left to spend
-//   titles   { id: true } the Titel bought
+//   earned   all the Ruhm ever earned
+//   titles   { id: true } the Titel bought before 5.15 (they stay)
 //   fights   the latest fights, newest last: { id, t, rolle, gegner, ergebnis, ruhm, platz }
 
-import { ARENA_ENERGY_BEFORE, HALTUNGEN, TITLES, DYES } from '../config.js';
+import { ARENA_ENERGY_BEFORE, HALTUNGEN, TITLES, DYES, RANKS, ARENA_OFFERS, ARENA_PRICES } from '../config.js';
+import { stow } from './inventory.js';
+import { cleanBonuses, rollBonuses } from './bonuses.js';
+import { seededRandom, shuffle } from './rng.js';
+import { heroPower } from './hero.js';
+import { itemLevel } from './items.js';
+import { obtainable, figureOf, rollDye } from './clothes.js';
 
 const KEEP_FIGHTS = 40;
 const RESULTS = ['sieg', 'remis', 'niederlage'];
 
-export const emptyArena = () => ({ ruhm: 0, haltung: 'abwehr', titel: '', titles: {}, fights: [] });
+export const emptyArena = () => ({ ruhm: 0, earned: 0, haltung: 'abwehr', titel: '', titles: {}, fights: [] });
 
 export const titleById = (id) => TITLES.find((t) => t.id === id) || null;
+
+// The Rang for all the Ruhm ever earned: its number (0 = the first) and the next one.
+export function rankOf(earned) {
+  const index = RANKS.reduce((found, r, i) => (earned >= r.at ? i : found), 0);
+  return { index, rank: RANKS[index], next: RANKS[index + 1] || null };
+}
+
+// A Titel is the Abbild's once its Rang is reached (or if it was bought before 5.15).
+export const titleOwned = (arena, id) => {
+  const title = titleById(id);
+  return Boolean(title) && (Boolean(arena.titles[id]) || rankOf(arena.earned).index >= title.rang);
+};
+
+const BAND = 3;
+
+// What Ruhm buys today besides colours: a few pieces of clothing around the
+// Envoy's strength, each at least selten, its price by its Güte.
+export function arenaOffersFor(day, ctx) {
+  const rng = seededRandom(`${day}:arena`);
+  const power = heroPower(ctx.statsAtDayStart);
+  const figure = figureOf(ctx.world);
+  const items = ctx.catalog.equipment.filter((i) => (i.herkunft.includes('beute') || i.herkunft.includes('haendler'))
+    && obtainable(i, figure) && Math.abs(itemLevel(i) - power) <= BAND);
+  return shuffle(rng, items).slice(0, ARENA_OFFERS).map((item, n) => {
+    const farbe = rollDye(item, seededRandom(`${day}:arena:farbe:${n}`));
+    const extra = rollBonuses('arena', power, seededRandom(`${day}:arena:guete:${n}`));
+    return { offer: `${day}:arena:${n}`, id: item.id, price: ARENA_PRICES[extra.guete] || ARENA_PRICES.selten, ...(farbe ? { farbe } : {}), ...extra };
+  });
+}
 
 // The id of the event for a fight: the same on every device, so a fight is
 // written only once (arena = the id of the list on the server, s = its number).
@@ -30,6 +69,7 @@ function fought(world, e) {
   if (!RESULTS.includes(e.ergebnis)) return;
   const ruhm = whole(e.ruhm);
   world.arena.ruhm += ruhm;
+  world.arena.earned += ruhm;
   if (e.rolle === 'fordert') {
     const cost = e.energie === undefined ? ARENA_ENERGY_BEFORE : whole(e.energie);
     world.stamina.value = Math.max(0, world.stamina.value - cost);
@@ -46,7 +86,13 @@ function fought(world, e) {
 function bought(world, e, catalog) {
   const price = whole(e.preis);
   if (price > world.arena.ruhm) return;
-  if (e.ware === 'titel') {
+  if (e.ware === 'kleidung') {
+    // a piece of clothing with bonuses, each offer once
+    if (world.bought[e.offer] || !catalog.itemById.get(e.thing) || typeof e.offer !== 'string') return;
+    world.bought[e.offer] = true;
+    const farbe = typeof e.farbe === 'string' && e.farbe ? { farbe: e.farbe } : {};
+    stow(world, catalog, { inst: e.id, kind: 'item', id: e.thing, got: e.t, ...farbe, ...cleanBonuses(e) });
+  } else if (e.ware === 'titel') {
     if (!titleById(e.titel) || world.arena.titles[e.titel]) return;
     world.arena.titles[e.titel] = true;
   } else if (e.ware === 'farbe') {
@@ -64,7 +110,7 @@ export function applyArenaEvent(world, e, ctx) {
   else if (e.type === 'ruhmkauf') bought(world, e, ctx.catalog);
   else if (e.type === 'abbild') {
     if (HALTUNGEN.some((h) => h.id === e.haltung)) world.arena.haltung = e.haltung;
-    if (e.titel === '' || world.arena.titles[e.titel]) world.arena.titel = e.titel;
+    if (e.titel === '' || titleOwned(world.arena, e.titel)) world.arena.titel = e.titel;
   }
 }
 

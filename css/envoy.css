@@ -2750,3 +2750,56 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
   .view.world .view-head { flex-wrap: wrap; }
   .view.world .head-actions { width: 100%; justify-content: flex-end; }
 }
+
+/* --- Der Aushang (ui/jobboard.js) --- */
+.job-count { order: 2; font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--copper-bright); }
+.job-notes { display: grid; gap: 10px; }
+.job-note {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "name reward" "where reward";
+  align-items: center;
+  gap: 2px 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(214, 222, 214, 0.14);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(227, 215, 194, 0.07), rgba(227, 215, 194, 0.03));
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.job-note:hover { border-color: var(--line-strong); }
+.job-name { grid-area: name; font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--ivory-bright); }
+.job-where { grid-area: where; font-size: 13px; color: var(--muted); }
+.job-reward { grid-area: reward; display: flex; align-items: center; gap: 8px; }
+.job-reward .res-name { display: none; }
+.job-thing { width: 44px; height: 44px; }
+.job-thing .item-icon { width: 40px; height: 40px; }
+.job-state { position: absolute; right: 10px; top: -9px; padding: 1px 8px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line-strong); font-size: 11px; color: var(--text-2); }
+.job-note.is-running { border-color: rgba(126, 163, 164, 0.5); }
+.job-note.is-done { cursor: default; opacity: 0.55; }
+.job-note.is-done .job-name { text-decoration: line-through; text-decoration-color: rgba(244, 236, 222, 0.4); }
+.job-text { margin: 0 0 12px; color: var(--text-2); }
+.job-pay-label { margin: 16px 0 8px; }
+.job-pay { display: grid; gap: 10px; }
+.job-pay-thing { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; }
+
+/* --- Arena: clothing for Ruhm, Ränge and Titel (ui/arenashop.js) --- */
+.arena-rank { margin: 0; font-size: 13px; color: var(--warn); }
+.arena-offers { margin-bottom: 14px; }
+.arena-offer { width: 100%; border: 0; border-bottom: 1px solid var(--line); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.arena-offer .item-row-main { min-width: 0; }
+.arena-dye-entry { margin-top: 4px; }
+.arena-rank-next { margin: -2px 0 10px; font-size: 13px; }
+.rank-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.rank { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; opacity: 0.6; }
+.rank.is-reached { opacity: 1; }
+.rank.is-now { border-color: rgba(234, 183, 92, 0.55); box-shadow: 0 0 12px -4px rgba(234, 183, 92, 0.5); }
+.rank-name { font-family: var(--font-display); font-weight: 700; color: var(--ivory-bright); }
+.rank-at { font-size: 12px; color: var(--muted); align-self: center; }
+.rank-titles { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+.rank-titles:empty { display: none; }
+.rank-title { padding: 3px 9px; border: 1px solid var(--line); border-radius: 4px; background: none; color: var(--muted); font: inherit; font-size: 13px; font-style: italic; cursor: pointer; }
+.rank-title.is-owned { color: var(--ivory); border-color: var(--line-strong); }
+.rank-title.is-worn { color: var(--warn); border-color: rgba(234, 183, 92, 0.6); }

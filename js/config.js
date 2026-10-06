@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.14.0';
+export const APP_VERSION = '5.15.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -280,6 +280,8 @@ export const QUALITY_CHANCES = {
   haendler: [25, 45, 24, 6],
   tiefe: [0, 55, 33, 12],          // a Wächter of the Tiefen: never a plain piece
   tiefenwaechter: [0, 0, 70, 30],  // the last Wächter of a Tiefe: at least selten
+  aushang: [20, 45, 27, 8],        // the reward of an Auftrag
+  arena: [0, 0, 65, 35],           // for Ruhm: at least selten
 };
 export const BONUSES = [
   { id: 'schaden', base: 1, perLevel: 0.2 },      // more damage with each hit
@@ -329,6 +331,31 @@ export const DEPTH_RETREAT_SHARE = 0.25;
 export const DEPTH_ITEM_CHANCE = 40;            // percent, more with luck
 export const DEPTH_SURE_ITEM = 5;               // on this Ebene a piece of clothing is sure
 
+// Der Aushang am Lager (see world/jobs.js): open with the Lagerfeuer, every
+// day JOBS_PER_DAY Aufträge, each once. An Auftrag costs no Energie, only
+// time: the Envoy goes to a place and is busy there for some minutes. Its
+// reward stands on the note: Bannsplitter (JOB_SPLITTER: base + per minute,
+// a little more with strength) and often (JOB_THING_CHANCE) a piece of
+// clothing, in its colour and with its Güte.
+export const JOBS_FROM_STAGE = 1;
+export const JOBS_PER_DAY = 3;
+export const JOB_SPLITTER = { base: 6, perMinute: 2, perLevel: 0.08 };
+export const JOB_THING_CHANCE = 0.6;
+export const JOBS = [
+  { id: 'brief', name: 'Ein Brief ohne Absender', minutes: [4, 7], text: 'Am Lager liegt ein Brief. Er soll an den Ort, der darauf steht.' },
+  { id: 'laterne', name: 'Die verlorene Laterne', minutes: [5, 9], text: 'Jemand hat unterwegs seine Laterne verloren. Sie liegt irgendwo dort.' },
+  { id: 'wurzeln', name: 'Ein Korb Wurzeln', minutes: [6, 10], text: 'Für eine Suppe am Lagerfeuer fehlen noch Wurzeln. Dort wachsen gute.' },
+  { id: 'nachsehen', name: 'Nach dem Rechten sehen', minutes: [4, 8], text: 'Dort soll es in letzter Zeit unruhig gewesen sein. Einmal nachsehen genügt.' },
+  { id: 'federn', name: 'Ein Bündel Federn', minutes: [5, 9], text: 'Eine Sammlerin wünscht sich weiche Federn. Dort liegen manchmal welche.' },
+  { id: 'wache', name: 'Stille Wache', minutes: [8, 14], text: 'Jemand bittet, eine Weile dort zu sitzen und auf das Licht zu achten.' },
+  { id: 'wegweiser', name: 'Der umgefallene Wegweiser', minutes: [6, 11], text: 'Ein alter Wegweiser ist umgefallen. Er soll wieder stehen.' },
+  { id: 'tee', name: 'Tee für eine Reisende', minutes: [4, 7], text: 'Eine Reisende hat ihren Tee am Lager vergessen. Sie wartet dort.' },
+  { id: 'melodie', name: 'Eine verlorene Melodie', minutes: [7, 12], text: 'Ein Echo hat eine Melodie mitgenommen. Wer genau hinhört, findet sie dort.' },
+  { id: 'steinturm', name: 'Ein Zeichen am Weg', minutes: [8, 13], text: 'Dort soll ein kleiner Steinturm stehen, damit andere den Weg finden.' },
+  { id: 'schal', name: 'Ein Schal im Gestrüpp', minutes: [4, 8], text: 'Dort hängt ein Schal im Gestrüpp. Seine Besitzerin vermisst ihn.' },
+  { id: 'samen', name: 'Ein Säckchen Samen', minutes: [6, 10], text: 'Ein Säckchen Samen soll dort in die Erde, an einen hellen Platz.' },
+];
+
 // The arena (see arena.php and world/arena.js): open from this Lagerstufe on,
 // and only with an account, since the Abbilder of the others lie on the server.
 export const ARENA_FROM_STAGE = 1;
@@ -341,20 +368,34 @@ export const HALTUNGEN = [
   { id: 'abwehr', name: 'Abwehr', edge: 'fängt Angriff ab' },
   { id: 'ruhe', name: 'Ruhe', edge: 'löst Abwehr auf' },
 ];
-// For Ruhm: a piece of clothing in another colour, and Titel for the Abbild
-// (shown after its name, the same for every figure).
+// For Ruhm: a piece of clothing in another colour, and every day a few
+// pieces of clothing with bonuses (ARENA_OFFERS, at least selten, price by
+// Güte). Titel for the Abbild (shown after its name, the same for every
+// figure) are not bought (since 5.15): they come with the Ränge, which
+// follow all the Ruhm ever earned (spending it does not lower the Rang).
+// A Titel bought before stays.
 export const DYE_PRICE = 8;
+export const ARENA_OFFERS = 3;
+export const ARENA_PRICES = { selten: 20, praechtig: 35 };
+export const RANKS = [
+  { at: 0, name: 'Neu in der Halle' },
+  { at: 15, name: 'Bekannt in der Halle' },
+  { at: 40, name: 'Geachtet' },
+  { at: 80, name: 'Gefeiert' },
+  { at: 150, name: 'Unvergessen' },
+  { at: 250, name: 'Legende der Halle' },
+];
 export const TITLES = [
-  { id: 'leiser-schritt', name: 'mit leisem Schritt', price: 10 },
-  { id: 'ruhige-hand', name: 'mit ruhiger Hand', price: 10 },
-  { id: 'morgenstunde', name: 'aus der Morgenstunde', price: 15 },
-  { id: 'truemmerfeld', name: 'vom Trümmerfeld', price: 15 },
-  { id: 'pilzhain', name: 'aus dem Pilzhain', price: 15 },
-  { id: 'langer-atem', name: 'mit langem Atem', price: 20 },
-  { id: 'offenes-herz', name: 'mit offenem Herzen', price: 20 },
-  { id: 'stille', name: 'aus der Stille', price: 25 },
-  { id: 'sturm', name: 'aus dem Sturm', price: 25 },
-  { id: 'tausend-schritte', name: 'der tausend Schritte', price: 30 },
+  { id: 'leiser-schritt', name: 'mit leisem Schritt', rang: 1 },
+  { id: 'ruhige-hand', name: 'mit ruhiger Hand', rang: 1 },
+  { id: 'morgenstunde', name: 'aus der Morgenstunde', rang: 2 },
+  { id: 'truemmerfeld', name: 'vom Trümmerfeld', rang: 2 },
+  { id: 'pilzhain', name: 'aus dem Pilzhain', rang: 2 },
+  { id: 'langer-atem', name: 'mit langem Atem', rang: 3 },
+  { id: 'offenes-herz', name: 'mit offenem Herzen', rang: 3 },
+  { id: 'stille', name: 'aus der Stille', rang: 4 },
+  { id: 'sturm', name: 'aus dem Sturm', rang: 4 },
+  { id: 'tausend-schritte', name: 'der tausend Schritte', rang: 5 },
 ];
 
 // Where the camp lies, for the time of day in its picture (middle of Germany).

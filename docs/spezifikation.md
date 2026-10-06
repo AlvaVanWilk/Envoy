@@ -956,12 +956,44 @@ verbeugen sich beide.
 **Ruhm** ist die Währung der Arena und nur dort: herausfordern bringt 3 für einen Sieg,
 2 für unentschieden, 1 fürs Antreten; das herausgeforderte Abbild bekommt 2, wenn es hält,
 sonst 1. Ruhm geht nie verloren, macht den Envoy nie stärker und ist kein Heldenlevel. Für
-Ruhm gibt es: ein färbbares Kleidungsstück in einer der zwölf Farben oder wieder wie
-gezeichnet (8 Ruhm) und Titel für das Abbild („mit leisem Schritt“, 10 bis 30 Ruhm). Jeder
+Ruhm gibt es (seit 5.15, so gewünscht: Kleidung mit Boni statt gekaufter Titel):
+
+- **Ausrüstung der Halle**: jeden Tag drei Kleidungsstücke um die Stärke des Envoy, jedes
+  mindestens selten (65 % selten, 35 % prächtig), selten 20 Ruhm, prächtig 35 (`ARENA_OFFERS`,
+  `ARENA_PRICES`). Jedes Angebot einmal.
+- ein färbbares Kleidungsstück in einer der zwölf Farben oder wieder wie gezeichnet (8 Ruhm).
+
+**Ränge und Titel**: Titel werden nicht mehr gekauft. Aller jemals verdiente Ruhm (`earned`,
+Ausgeben senkt ihn nie) ergibt den Rang: Neu in der Halle (0), Bekannt in der Halle (15),
+Geachtet (40), Gefeiert (80), Unvergessen (150), Legende der Halle (250). Jeder Rang ab dem
+zweiten bringt Titel für das Abbild („mit leisem Schritt“ …, `TITLES` mit `rang`). Ein vor 5.15
+gekaufter Titel bleibt. Die Halle zeigt den Rang beim eigenen Abbild und eine Tafel aller
+Ränge mit ihren Titeln.
+
+Jeder
 Kampf steht als Ereignis `kampf` in der Liste des eigenen Kontos (die Id kommt vom Server,
-so schreibt jedes Gerät denselben), Haltung und Titel als `abbild`, Käufe als `ruhmkauf`.
+so schreibt jedes Gerät denselben), Haltung und Titel als `abbild`, Käufe als `ruhmkauf`
+(`ware`: `farbe`, `kleidung`, früher `titel`).
 Kämpfe, die das eigene Abbild erlebt hat, kommen mit dem nächsten Abgleich und stehen in der
 Halle als neu.
+
+## Der Aushang
+
+Seit 5.15 (so gewünscht: ein Aushang, aber nicht endlos). Am Lager, ab dem Lagerfeuer, hängen
+jeden Tag **drei Aufträge** (`js/world/jobs.js`, `js/ui/jobboard.js`, `JOBS` in `js/config.js`),
+für alle gleich ausgewählt, den ganzen Tag dieselben (mit den Werten vom Tagesbeginn).
+
+- Jeder Auftrag führt an einen offenen Ort und dauert dort einige Minuten (je Auftrag 4 bis
+  14). Er **kostet keine Energie, nur Zeit**: Der Envoy geht hin, ist eine Weile beschäftigt
+  und kommt zurück, als eine Aktion seiner Expedition. Ist er schon unterwegs, wird der
+  Auftrag angehängt.
+- **Der Lohn steht auf dem Zettel**: Bannsplitter (6 + 2 je Minute, je Level Stärke 8 % mehr)
+  und mit 60 % ein bestimmtes Kleidungsstück, in seiner Farbe und mit seiner Güte (20/45/27/8 %),
+  passend zur Figur und Stärke. Kein Material und keine Pläne, damit der Lagerausbau nicht
+  schneller geht.
+- Jeder Auftrag einmal; erledigte bleiben durchgestrichen hängen. Am nächsten Tag hängen neue.
+- Ereignis: `expedition` mit `q` = `aus:<Tag>:<Nummer>`, ohne Energie. Es zählt nur am eigenen
+  Tag und nur einmal.
 
 ## Die Tiefen
 
@@ -1410,6 +1442,8 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
 | Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy |
 | Tränke | Pilztee (+10) und Quellsud (+25) beim Händler, je zwei am Tag, nie über die Leiste |
+| Aushang | drei Aufträge am Tag am Lager, ohne Energie, nur Zeit; der Lohn (Bannsplitter, oft Kleidung mit Güte) steht darauf; jeder einmal |
+| Ruhm | kauft Kleidung mit Boni (mindestens selten) und Farben; Titel kommen mit den Rängen aus allem verdienten Ruhm |
 | Die Tiefen | drei Tiefen mit je zehn Wächtern, ohne Energie, danach Rast (60 Minuten, mit Gelassenheit kürzer); Werte und Kleidung entscheiden, wie weit der Envoy kommt; zu stark heißt zurückziehen, nie scheitern |
 | Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden, ohne Energie (seit 5.13); Stärke = Tage mit erledigter Aufgabe in den letzten 28 Tagen je Bereich (Fleiß, nicht Begabung); Ruhm als eigene Währung (Farben, Titel) |
 | Berichte | jeder nur einmal, auch über Geräte hinweg |

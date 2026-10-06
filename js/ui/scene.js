@@ -125,7 +125,9 @@ export function storyOf(exp, game) {
     } else {
       const finds = findsOf(o, catalog, game);
       if (o.kind === 'bauen') events.push({ t: x.done, key: `f${i}`, text: `Fertig: ${a.title}`, pop: 'Fertig' });
-      if (finds.length > 0) events.push({ t: x.done, key: `f${i}+`, text: `Gefunden: ${finds.map((f) => f.text.replace(/^\+/, '')).join(', ')}`, pop: finds.map((f) => f.text).join(' · ') });
+      if (o.kind === 'auftrag') events.push({ t: x.done, key: `f${i}`, text: `Erledigt: ${a.title}`, pop: 'Erledigt' });
+      const found = o.kind === 'auftrag' ? 'Lohn' : 'Gefunden';
+      if (finds.length > 0) events.push({ t: x.done, key: `f${i}+`, text: `${found}: ${finds.map((f) => f.text.replace(/^\+/, '')).join(', ')}`, pop: finds.map((f) => f.text).join(' · ') });
     }
     const next = times.actions[i + 1];
     if (a.home > 0 && (!next || next.begin > x.done)) events.push({ t: x.done, key: `home${i}`, text: 'Auf dem Rückweg' });
@@ -282,11 +284,18 @@ function updateGather(el, a, x, t) {
   el.dataset.n = String(sum);
 }
 
+// What the Envoy does at a place, in a few words.
+function workText(a, place) {
+  if (a.outcome?.kind === 'bauen') return `Baut: ${a.title}`;
+  if (a.outcome?.kind === 'auftrag') return `Auftrag: ${a.title}`;
+  return `Erkundet: ${place?.name || a.title}`;
+}
+
 function workScene(a, place) {
   const building = a.outcome?.kind === 'bauen';
   return h('div', { class: 'scene scene-work' },
     h('span', { class: 'work-pic' }, icon(building ? FACILITY_ICONS.aufwerten : UI_ICONS.search)),
-    h('p', { class: 'scene-text' }, building ? `Baut: ${a.title}` : `Erkundet: ${place?.name || a.title}`),
+    h('p', { class: 'scene-text' }, workText(a, place)),
     h('span', { class: 'work-bar' }, h('span', { class: 'work-fill' })));
 }
 
@@ -324,7 +333,7 @@ export function nowDoing(exp, game, t) {
     const sum = gatheredAt(a, story.times.actions[now.p.i], t);
     return { kind: 'gather', title: `Sammelt ${MATERIALS[g.material]}`, count: `${sum} / ${g.wanted}`, material: g.material };
   }
-  return { kind: 'work', title: a.outcome?.kind === 'bauen' ? `Baut: ${a.title}` : `Erkundet: ${place?.name || a.title}` };
+  return { kind: 'work', title: workText(a, place) };
 }
 
 // Draws or moves on the scene in `box` for time t.
