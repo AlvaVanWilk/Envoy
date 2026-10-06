@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.13.0';
+export const APP_VERSION = '5.14.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -278,6 +278,8 @@ export const QUALITY_CHANCES = {
   fund: [55, 30, 12, 3],
   beute: [35, 40, 19, 6],
   haendler: [25, 45, 24, 6],
+  tiefe: [0, 55, 33, 12],          // a Wächter of the Tiefen: never a plain piece
+  tiefenwaechter: [0, 0, 70, 30],  // the last Wächter of a Tiefe: at least selten
 };
 export const BONUSES = [
   { id: 'schaden', base: 1, perLevel: 0.2 },      // more damage with each hit
@@ -287,6 +289,45 @@ export const BONUSES = [
   { id: 'erholung', base: 8, perLevel: 1.2 },     // percent faster refilling of Energie
   { id: 'glueck', base: 5, perLevel: 1 },         // percent more Bannsplitter and finds
 ];
+
+// Die Tiefen (see world/depths.js): beneath the Trümmerfeld, open with the
+// Lagerfeuer. Three of them, one after the other, ten Ebenen each. On every
+// Ebene waits a Wächter, one of the spirits of the world, as strong as the
+// Stufe of its Ebene: `from` on the first, `step` more on each one after,
+// and the last one DEPTH_LAST_EXTRA more. Its values follow from the Stufe
+// (DEPTH_GUARDIAN: base + per Stufe). A descent costs no Energie; afterwards
+// the Envoy rests. A Wächter too strong: the Envoy withdraws, with a little
+// (DEPTH_RETREAT_SHARE), and tries again after the rest. An Ebene overcome
+// brings Bannsplitter (splitter: base + per Ebene; the last one `boss`) and
+// maybe a piece of clothing (DEPTH_ITEM_CHANCE, sure on DEPTH_SURE_ITEM and the last).
+export const DEPTHS_FROM_STAGE = 1;
+export const DEPTHS = [
+  {
+    id: 'brunnen', name: 'Der alte Brunnen', from: 1, step: 0.5, splitter: [10, 3], boss: 80,
+    text: 'Unter dem Trümmerfeld führt ein alter Brunnen hinab. Auf jeder Ebene wartet ein Wächter.',
+    waechter: ['zauderling', 'nebelwicht', 'gruebelkraehe', 'zauderling', 'hastwind', 'nebelwicht', 'dornenfluesterer', 'gruebelkraehe', 'hastwind', 'schwerer-schatten'],
+  },
+  {
+    id: 'wurzelhallen', name: 'Die Wurzelhallen', from: 6, step: 0.55, splitter: [25, 4], boss: 160,
+    opens: 'Öffnet sich, wenn der alte Brunnen bezwungen ist.',
+    text: 'Tiefer unten tragen Wurzeln die Decke, dick wie Säulen. Es riecht nach Erde und nach etwas Altem.',
+    waechter: ['dornenfluesterer', 'hastwind', 'echo', 'schwerer-schatten', 'dornenfluesterer', 'glutfresser', 'echo', 'schwerer-schatten', 'glutfresser', 'nachtmahr'],
+  },
+  {
+    id: 'aschengewoelbe', name: 'Das Aschengewölbe', from: 11.5, step: 0.55, splitter: [45, 6], boss: 300,
+    opens: 'Öffnet sich, wenn die Wurzelhallen bezwungen sind.',
+    text: 'Ganz unten ist es warm. Die Asche hier ist älter als die Trümmer oben.',
+    waechter: ['glutfresser', 'echo', 'nachtmahr', 'schwerer-schatten', 'glutfresser', 'nachtmahr', 'echo', 'glutfresser', 'nachtmahr', 'aschenkoenigin'],
+  },
+];
+export const DEPTH_LAST_EXTRA = 1;
+export const DEPTH_GUARDIAN = { leben: [6, 4.6], kraft: [0.5, 0.75], gewandtheit: [0, 0.8] };
+export const DEPTH_REST_MINUTES = 60;           // after every descent
+export const DEPTH_REST_PER_GELASSENHEIT = 1;   // a minute less for each level of Gelassenheit above 1
+export const DEPTH_REST_LEAST = 30;
+export const DEPTH_RETREAT_SHARE = 0.25;
+export const DEPTH_ITEM_CHANCE = 40;            // percent, more with luck
+export const DEPTH_SURE_ITEM = 5;               // on this Ebene a piece of clothing is sure
 
 // The arena (see arena.php and world/arena.js): open from this Lagerstufe on,
 // and only with an account, since the Abbilder of the others lie on the server.

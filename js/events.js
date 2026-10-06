@@ -107,7 +107,7 @@ export const KNOWN_TYPES = new Set([
   'plan', 'done', 'teil', 'undo', 'mode',
   'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
   'envoy', 'travel', 'quest', 'test',
-  'kampf', 'abbild', 'ruhmkauf', 'gesehen',
+  'kampf', 'abbild', 'ruhmkauf', 'gesehen', 'tiefe',
 ]);
 
 // Minimal shape check for events coming from outside (sync, backup file).

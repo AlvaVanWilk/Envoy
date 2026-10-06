@@ -42,7 +42,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
-  Pilzholz, Bannsplitter und Ruhm dazu, Plan finden, Kleidung finden, Expedition beenden, den Hinweis
+  Pilzholz, Bannsplitter und Ruhm dazu, Plan finden, Kleidung finden, Expedition beenden, Rast in
+  den Tiefen beenden, den Hinweis
   nach einem Tag ohne Tageswerk zeigen, die Kleiderkammer in Safari
   öffnen oder ihren Link kopieren,
   `js/ui/testtools.js`);
@@ -135,6 +136,12 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   fleißige etwa zur Hälfte unentschieden;
   Ruhm als eigene Währung nur der Arena, geht nie verloren (Farben für färbbare Kleidung,
   Titel); keine echten Übungsdaten sichtbar
+- Die Tiefen (so gewünscht, `js/world/depths.js`): unter dem Trümmerfeld, ab dem Lagerfeuer,
+  drei Tiefen mit je zehn Ebenen, auf jeder ein Wächter (ein Geist der Welt, so stark wie die
+  Ebene); hinabsteigen kostet keine Energie, danach ruht der Envoy (60 Minuten, je Level
+  Gelassenheit eine weniger, mindestens 30); Werte und Kleidungsboni entscheiden; ist der
+  Wächter zu stark, zieht er sich mit etwas Bannsplittern zurück; je Ebene einmal Bannsplitter,
+  oft Kleidung mit Güte (Ebene 5 und 10 sicher)
 - Neuigkeiten beim ersten Start einer neuen Fassung (`js/ui/news.js`, im Ton der Nutzerin:
   „Liebe Envoys!“, große Überschriften, ein, zwei Sätze); ein Envoy ohne Alter wird danach
   gefragt, das Fenster lässt sich nicht wegklicken

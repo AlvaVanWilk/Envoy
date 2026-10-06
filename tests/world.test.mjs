@@ -461,3 +461,58 @@ test('pieces found, dropped or offered get a Güte and bonuses; worn, the bonuse
   assert.equal(fx.erholung, 9);
   assert.equal(fx.schaden, 2);
 });
+
+test('die Tiefen: one Ebene after another, a rest after each descent, nothing lost when the Wächter is too strong', async () => {
+  const { nextFloor, descend, guardian, prospect, blockedAt, restMinutes } = await import('../js/world/depths.js');
+  const fire = ev('expedition', { q: 'q-lagerfeuer', place: 'truemmerfeld', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'bauen', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: ['lagerfeuer'], rest: false } } }, 0);
+  // closed before the Lagerfeuer
+  assert.equal(blockedAt(replay([], catalog, DAY, T0).world, T0), 'closed');
+  const before = replay([fire], catalog, DAY, T0 + 0.1 * H);
+  assert.equal(blockedAt(before.world, T0 + 0.1 * H), null);
+  const floor = nextFloor(before.world);
+  assert.deepEqual([floor.depth.id, floor.ebene], ['brunnen', 1]);
+  // the first Wächter is weak, the last of the first Tiefe much stronger
+  const first = guardian(floor, catalog);
+  const last = guardian({ depth: floor.depth, ebene: 10 }, catalog);
+  assert.ok(last.leben > first.leben * 2 && last.kraft > first.kraft);
+  assert.ok(prospect(ctxOf(before), floor) > 0.8);
+  assert.ok(prospect(ctxOf(before), { depth: floor.depth, ebene: 10 }) < 0.05);
+
+  // a descent won: Bannsplitter, the Ebene overcome, then a rest
+  const won = ev('tiefe', { tiefe: 'brunnen', ebene: 1 }, 0.1);
+  won.outcome = { tiefe: 'brunnen', ebene: 1, monster: 'zauderling', result: 'won', rounds: [], heroMax: 11, monsterMax: 11,
+    reward: { splitter: 13, things: [] } };
+  const s1 = replay([fire, won], catalog, DAY, T0 + 0.2 * H);
+  assert.equal(s1.world.tiefen.cleared.brunnen, 1);
+  assert.equal(s1.world.purse.splitter, 13);
+  assert.equal(s1.world.tiefen.rest, won.t + restMinutes(s1.stats) * 60000);
+  assert.equal(blockedAt(s1.world, T0 + 0.2 * H), 'rest');
+  // during the rest, or for the wrong Ebene, a descent does not count
+  const early = ev('tiefe', { tiefe: 'brunnen', ebene: 2 }, 0.3);
+  early.outcome = { ...won.outcome, ebene: 2, reward: { splitter: 16, things: [] } };
+  assert.equal(replay([fire, won, early], catalog, DAY, T0 + 0.4 * H).world.tiefen.cleared.brunnen, 1);
+  const wrong = ev('tiefe', { tiefe: 'brunnen', ebene: 3 }, 1.2);
+  wrong.outcome = { ...won.outcome, ebene: 3 };
+  assert.equal(replay([fire, won, wrong], catalog, DAY, T0 + 1.3 * H).world.tiefen.cleared.brunnen, 1);
+  // too strong: the Envoy withdraws with a little, the Ebene stays
+  const lost = ev('tiefe', { tiefe: 'brunnen', ebene: 2 }, 1.2);
+  lost.outcome = { ...won.outcome, ebene: 2, result: 'lost', reward: { splitter: 4, things: [] } };
+  const s2 = replay([fire, won, lost], catalog, DAY, T0 + 1.3 * H);
+  assert.equal(s2.world.tiefen.cleared.brunnen, 1);
+  assert.equal(s2.world.purse.splitter, 17);
+  assert.equal(nextFloor(s2.world).ebene, 2);
+
+  // rolled for real: a sure piece of clothing on Ebene 5 comes with a Güte, at least gut
+  const c = ctxOf(before);
+  const five = descend({ ...c, stats: statsAt(8) }, { depth: floor.depth, ebene: 5 }, 'tiefe-test');
+  assert.equal(five.result === 'lost', false);
+  assert.equal(five.reward.things.length, 1);
+  assert.ok(['gut', 'selten', 'praechtig'].includes(five.reward.things[0].guete));
+  // equipment matters: the same Envoy with bonuses fares better against a strong Wächter
+  const strong = { depth: floor.depth, ebene: 10 };
+  const plain = prospect({ ...c, stats: statsAt(5) }, strong);
+  const dressed = prospect({ ...c, stats: statsAt(5), fx: { ...c.fx, schaden: 3, treffer: 12, ausweichen: 8 } }, strong);
+  assert.ok(dressed > plain + 0.15, `${plain} → ${dressed}`);
+});

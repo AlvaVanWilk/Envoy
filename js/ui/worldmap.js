@@ -17,6 +17,7 @@ import { viewHead, sectionTitle, supplies, staminaBar, materialLimits, resourceI
 import { journeyPanel, heroClass } from './journey.js';
 import { questListPanel } from './questlist.js';
 import { newFights } from './arena.js';
+import { depthsLink } from './depths.js';
 import { arena } from '../arena.js';
 import { openQuest } from './questsheet.js';
 import { questsAt, questState, placeUnlocked, describeCondition } from '../world/quests.js';
@@ -156,7 +157,7 @@ export function renderMap(game) {
   });
 
   return h('section', { class: 'view world' },
-    viewHead('Abenteuer', 'Die Zwischenwelt', arenaLink(game)),
+    viewHead('Abenteuer', 'Die Zwischenwelt', depthsLink(game), arenaLink(game)),
     h('div', { class: 'world-grid' },
       h('div', { class: 'world-supplies panel' },
         sectionTitle('Vorrat'),

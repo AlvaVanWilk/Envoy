@@ -20,6 +20,7 @@
 //   clothes     { since, found }: Energie of work since the last piece of clothing found on
 //               the way, and how many were found; see clothes.js
 //   arena       { ruhm, haltung, titel, titles, fights }: the own Abbild in the arena; see arena.js
+//   tiefen      { cleared, rest, descents, last }: how far down the Envoy got; see depths.js
 //   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
 //   encountersDone { encounterId: true }
 //   bestiary    { monsterId: { seen, won, calmed, driven, first } }
@@ -40,6 +41,7 @@ import { emptyCamp, FACILITY_IDS } from './camp.js';
 import { emptyPlans } from './plans.js';
 import { emptyClothes, countClothes, fits, figureOf } from './clothes.js';
 import { emptyArena, applyArenaEvent } from './arena.js';
+import { emptyDepths, nextFloor, blockedAt, restMinutes } from './depths.js';
 import { lootThing } from './run.js';
 import { cleanBonuses } from './bonuses.js';
 import { seededRandom } from './rng.js';
@@ -71,6 +73,7 @@ export function initialWorld(catalog, startTime, stats) {
     plans: emptyPlans(),
     clothes: emptyClothes(),
     arena: emptyArena(),
+    tiefen: emptyDepths(),
     quests: {},
     encountersDone: {},
     bestiary: {},
@@ -354,6 +357,23 @@ function removeAction(world, e, ctx) {
   if (last && last.id === e.ref && last.stage === 0) dropAction(world, exp, exp.actions.length - 1, e.t, ctx, null);
 }
 
+// A descent into the Tiefen (see depths.js): only to the next Ebene, at the
+// camp, after the rest. What it brought counts; then the Envoy rests.
+function descendInto(world, e, ctx) {
+  const o = e.outcome;
+  const floor = nextFloor(world);
+  if (!o?.reward || blockedAt(world, e.t) || floor.depth.id !== e.tiefe || floor.ebene !== e.ebene) return;
+  if (o.result === 'won' || o.result === 'calmed') world.tiefen.cleared[e.tiefe] = e.ebene;
+  world.purse.splitter += Math.max(0, Math.floor(Number(o.reward.splitter) || 0));
+  (o.reward.things || []).forEach((thing, n) => {
+    if (thing?.kind !== 'item' || !ctx.catalog.itemById.has(thing.id)) return;
+    stow(world, ctx.catalog, { inst: `${e.id}:${n}`, kind: 'item', id: thing.id, got: e.t, ...kept(thing) });
+  });
+  world.tiefen.rest = e.t + restMinutes(ctx.stats) * 60000;
+  world.tiefen.descents += 1;
+  world.tiefen.last = { id: e.id, tiefe: e.tiefe, ebene: e.ebene, result: o.result, t: e.t };
+}
+
 function equip(world, e, ctx) {
   const slot = slotKey(e.slot);
   let entry = world.items[e.inst];
@@ -412,6 +432,9 @@ export function applyWorldEvent(world, e, ctx) {
     case 'equip':
       equip(world, e, ctx);
       break;
+    case 'tiefe':
+      descendInto(world, e, ctx);
+      break;
     case 'unequip': {
       const slot = slotKey(e.slot);
       const worn = world.items[world.equipped[slot]];
@@ -444,8 +467,10 @@ export function applyWorldEvent(world, e, ctx) {
 // Help while trying things out, only offered in the test copy (see ui/testtools.js):
 // the bar full again (or more Energie, beyond the end of the bar), material
 // added (as much as fits, like after a trip), Bannsplitter and Ruhm added, the next
-// plan not found yet, or the running expedition over at once, every action done.
+// plan not found yet, the rest after a descent into the Tiefen over, or the
+// running expedition over at once, every action done.
 function testHelp(world, e, ctx) {
+  if (e.rast) world.tiefen.rest = Math.min(world.tiefen.rest, e.t);
   if (e.energie) world.stamina.value = Math.max(world.stamina.value, maxStamina(ctx.stats));
   world.stamina.value += Math.max(0, Math.floor(Number(e.mehrEnergie) || 0));
   if (e.plan) {

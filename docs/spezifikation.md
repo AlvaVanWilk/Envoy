@@ -963,6 +963,45 @@ so schreibt jedes Gerät denselben), Haltung und Titel als `abbild`, Käufe als 
 Kämpfe, die das eigene Abbild erlebt hat, kommen mit dem nächsten Abgleich und stehen in der
 Halle als neu.
 
+## Die Tiefen
+
+Seit 5.14 (so gewünscht: etwas, das immer zu tun ist und bei dem Werte **und** Ausrüstung
+zählen). Unter dem Trümmerfeld führt ein Schacht hinab, offen ab dem Lagerfeuer, erreichbar
+über „Die Tiefen“ oben auf der Abenteuer-Seite (`js/world/depths.js`, `js/ui/depths.js`,
+Zahlen in `DEPTHS` in `js/config.js`).
+
+- **Drei Tiefen** nacheinander, je zehn Ebenen: Der alte Brunnen, Die Wurzelhallen, Das
+  Aschengewölbe. Eine Tiefe öffnet sich, wenn die darüber bezwungen ist. Weiter unten noch
+  nichts („Tiefer geht es noch nicht.“), damit Luft nach oben bleibt.
+- **Auf jeder Ebene ein Wächter**: einer der Geister der Welt (mit seinem Bild), so stark
+  wie die Stufe der Ebene. Stufe = Anfang + Schritt × (Ebene − 1), der letzte Wächter einer
+  Tiefe eine Stufe mehr (Brunnen 1 bis 6,5, Wurzelhallen 6 bis 12, Aschengewölbe 11,5 bis
+  17,5). Leben 6 + 4,6 × Stufe, Kraft 0,5 + 0,75 × Stufe, Gewandtheit 0,8 × Stufe.
+- **Der Kampf** wie unterwegs (`combat.js`, höchstens zwölf Runden), mit den Werten des
+  Envoy und den Boni seiner Kleidung. Gerechnet: Gegen einen Wächter seiner eigenen Stufe
+  gewinnt ein Envoy ohne Boni etwa jeden dritten Kampf, mit üblicher Kleidung (fünf Teile,
+  Güte wie bei Geistern) drei von vier oder mehr; Kleidung ist so etwa eine Stufe wert.
+- **Hinabsteigen kostet keine Energie.** Danach ruht der Envoy 60 Minuten, je Level
+  Gelassenheit über 1 eine Minute weniger, mindestens 30 (Gelassenheit verkürzt Ruhezeiten).
+  Unterwegs auf einer Expedition geht es nicht.
+- **Nichts scheitert**: Ist der Wächter zu stark, zieht sich der Envoy zurück, bringt ein
+  Viertel der Bannsplitter der Ebene mit und versucht es nach der Rast noch einmal.
+- **Belohnung**, je Ebene einmal: Bannsplitter (Brunnen 10 + 3 je Ebene, Wurzelhallen
+  25 + 4, Aschengewölbe 45 + 6; der letzte Wächter 80, 160, 300; mit Glück mehr) und mit
+  40 % ein Kleidungsstück (mit Glück öfter), auf Ebene 5 und 10 sicher. Es passt zur Stärke
+  und Figur des Envoy und hat immer eine Güte: mindestens gut (55/33/12 %), beim letzten
+  Wächter mindestens selten (70/30 %).
+- **Die Seite** zeigt den nächsten Wächter mit Bild und Stufe, in Worten, wie der Envoy
+  gegen ihn stünde (aus 120 gedachten Kämpfen, immer mit denselben Würfeln, so ändern nur
+  Werte und Kleidung die Aussicht), die Werte beider im Kampf und, was davon die Kleidung
+  dazugibt (in Orange), was die Ebene bringt, und den Knopf „Hinabsteigen“ oder bis wann der
+  Envoy ruht. Der Kampf läuft Runde für Runde in einem Fenster, danach der Fund. Darunter alle
+  Tiefen mit ihren Ebenen. Der Knopf auf der Abenteuer-Seite leuchtet, solange der Envoy
+  hinabsteigen könnte.
+- Ereignis `tiefe` (`tiefe`, `ebene`, `outcome` mit dem Kampf und der Belohnung, beim
+  Hinabsteigen gewürfelt). Es zählt nur für die nächste Ebene, nach der Rast und nicht
+  unterwegs; sonst bleibt es ohne Wirkung. Im Testordner beendet ein Test-Knopf die Rast.
+
 ## Neuigkeiten beim Start
 
 Beim ersten Start einer neuen Fassung erscheint einmal über allem, was neu ist: oben
@@ -1371,6 +1410,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
 | Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy |
 | Tränke | Pilztee (+10) und Quellsud (+25) beim Händler, je zwei am Tag, nie über die Leiste |
+| Die Tiefen | drei Tiefen mit je zehn Wächtern, ohne Energie, danach Rast (60 Minuten, mit Gelassenheit kürzer); Werte und Kleidung entscheiden, wie weit der Envoy kommt; zu stark heißt zurückziehen, nie scheitern |
 | Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden, ohne Energie (seit 5.13); Stärke = Tage mit erledigter Aufgabe in den letzten 28 Tagen je Bereich (Fleiß, nicht Begabung); Ruhm als eigene Währung (Farben, Titel) |
 | Berichte | jeder nur einmal, auch über Geräte hinweg |
 | Lange Pause | nach je 7 Fehltagen jede Übung des Bereichs eine Stufe runter |

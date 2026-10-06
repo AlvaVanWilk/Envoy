@@ -3,7 +3,8 @@
 // of it. Its buttons fill the Energie or add more beyond the end of the bar
 // (for raising the camp), add Stein, Pilzholz, Bannsplitter and Ruhm (for the
 // arena), find the next
-// plan for Deko or a piece of clothing (in a colour of its own), bring the Envoy back from an expedition at once, and
+// plan for Deko or a piece of clothing (in a colour of its own), bring the Envoy back from an expedition at once,
+// end his rest after a descent into the Tiefen, and
 // show the note after a day without the Tageswerk (as if Kraft and
 // Gelassenheit had been left yesterday), so everything can be tried without waiting. The last ones open the Kleiderkammer
 // (the user's page on claude.ai for the drawings of the clothes, see
@@ -81,6 +82,7 @@ function actions(game) {
     button('Plan finden', () => findPlan(game), game.state.world.camp.stage < 2),
     button('Kleidung finden', () => findClothes(game)),
     button('Expedition beenden', run({ fertig: true }, 'Der Envoy ist zurück'), !game.state.world.expedition),
+    button('Rast in den Tiefen beenden', run({ rast: true }, 'Der Envoy ist ausgeruht'), game.state.world.tiefen.rest <= Date.now()),
     button('Hinweis: Tageswerk liegen geblieben', () => openDayNote(['kraft', 'gelassenheit'], true, () => {})),
     ...wardrobeLinks(),
   ];

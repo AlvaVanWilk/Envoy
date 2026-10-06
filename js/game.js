@@ -17,6 +17,7 @@ import { DYE_PRICE, RULES, RULES_NOW } from './config.js';
 import { titleById } from './world/arena.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
+import { nextFloor, blockedAt, descend } from './world/depths.js';
 import { bonusOf, withBonus, runningBonuses } from './achievements.js';
 
 const REPORT_HOURS = 48;
@@ -343,6 +344,25 @@ export const game = {
 
   unequip(slot) {
     if (this.state.world.equipped[slot]) this.add([this.event('unequip', { slot })]);
+  },
+
+  // --- die Tiefen (see world/depths.js) ---------------------------------------
+
+  // Why the Envoy cannot go down now, or null.
+  depthBlock() {
+    return blockedAt(this.state.world, Date.now());
+  },
+
+  // Down to the next Ebene: the fight is rolled now and stored in the event.
+  descend() {
+    this.refresh();
+    if (this.depthBlock()) return null;
+    const c = this.ctx();
+    const floor = nextFloor(c.world);
+    const event = this.event('tiefe', { tiefe: floor.depth.id, ebene: floor.ebene });
+    event.outcome = descend(c, floor, event.id);
+    this.add([event]);
+    return event.outcome;
   },
 
   // --- the arena: the own Abbild and what Ruhm buys (the fights come from the server, see arena.js) ---

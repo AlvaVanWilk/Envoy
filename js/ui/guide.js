@@ -7,6 +7,7 @@ import { h } from './dom.js';
 import { store } from '../store.js';
 import { talentsOpen } from './talents.js';
 import { BACKPACK_SIZE } from '../config.js';
+import { depthsOpen } from '../world/depths.js';
 
 // The kind of a quest the Envoy has done; gathering and building at the camp are not in the table.
 const kindOf = (game, id) => (id.startsWith('gather:') ? 'sammeln' : id.startsWith('bau:') ? 'bauen' : game.catalog.questById.get(id)?.kind);
@@ -179,6 +180,16 @@ const CHAPTERS = [
     text: [
       'Mit jeder Lagerstufe lassen sich die Einrichtungen weiter ausbauen. Dazu gibt es Deko: Sie gibt mehr Hygge als die meisten Einrichtungen und bleibt beim Aufwerten stehen.',
       'Gebaut wird sie nach einem Plan. Einen je Stufe gibt es gleich, die anderen muss der Envoy finden: an bestimmten Orten, bei Geistern oder beim Händler. Manche sind selten.',
+    ],
+  },
+  {
+    id: 'tiefen',
+    title: 'Die Tiefen',
+    when: (game) => depthsOpen(game.state.world),
+    text: [
+      'Unter dem Trümmerfeld führt ein alter Brunnen hinab. Auf jeder Ebene wartet ein Wächter. Der Weg hinein liegt oben auf der Abenteuer-Seite.',
+      'Hinabsteigen kostet keine Energie. Danach ruht der Envoy eine Stunde, mit mehr Gelassenheit etwas kürzer.',
+      'Wie weit er kommt, hängt an seinen Werten und an seiner Kleidung. Ist ein Wächter noch zu stark, zieht er sich zurück und versucht es nach der Rast noch einmal.',
     ],
   },
   {

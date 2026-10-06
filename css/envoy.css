@@ -2679,3 +2679,74 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 @media (prefers-reduced-motion: reduce) {
   .gate-layer, .gate-card { transition: none; }
 }
+
+/* --- Die Tiefen (ui/depths.js) --- */
+.depths-link, .arena-link { min-height: 40px; padding: 0 14px; }
+.depths-link .icon { color: var(--teal); }
+.depths-link.news { box-shadow: 0 0 0 2px rgba(126, 163, 164, 0.6), 0 0 14px rgba(126, 163, 164, 0.4); }
+.depths-grid { display: grid; gap: 14px; align-items: start; }
+.depth-count { order: 2; font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--copper-bright); }
+.depth-text { margin: -2px 0 12px; font-size: 14px; }
+.shaft { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin: 0 0 16px; padding: 0; list-style: none; }
+.shaft-step { aspect-ratio: 1; max-width: 26px; justify-self: center; width: 100%; border-radius: 50%; background: #0d1416; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(244, 236, 222, 0.08); }
+.shaft-step.is-last { border-radius: 4px; }
+.shaft-step.is-done { background: radial-gradient(circle at 45% 38%, var(--copper-bright), var(--copper-dark)); box-shadow: 0 0 0 1px #04070a, 0 0 8px rgba(232, 121, 31, 0.35); }
+.shaft-step.is-next { box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7), 0 0 0 2px var(--teal); }
+.guardian { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center; }
+.guardian-pic { display: block; width: 96px; height: 96px; overflow: hidden; border-radius: 50%; background: radial-gradient(circle at 45% 35%, #2e4a50, #15252a 72%); box-shadow: 0 0 0 1.5px #04070a, 0 4px 14px rgba(0, 0, 0, 0.6); }
+.guardian-pic.is-last { box-shadow: 0 0 0 2px var(--warn), 0 0 18px rgba(234, 183, 92, 0.35); }
+.guardian-pic img { width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.3); }
+.guardian-info { display: grid; gap: 4px; min-width: 0; }
+.guardian-info .eyebrow { margin: 0; }
+.guardian-name { margin: 0; font-family: var(--font-display); font-size: 22px; color: var(--ivory-bright); }
+.guardian-text { margin: 0; font-size: 14px; color: var(--text-2); }
+.prospect { display: grid; gap: 6px; margin: 16px 0 10px; }
+.prospect-text { margin: 0; font-weight: 600; color: var(--ivory-bright); }
+.prospect-bar { display: block; height: 8px; overflow: hidden; border-radius: 4px; background: #0d1416; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7); }
+.prospect-fill { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--teal-deep), var(--teal)); }
+.depth-reward { margin: 0 0 14px; font-size: 14px; }
+.depth-go { display: grid; gap: 6px; justify-items: start; }
+.depth-go p { margin: 0; font-size: 13px; }
+.depth-why { margin: 0; color: var(--text-2); }
+.depth-why strong { color: var(--ivory-bright); }
+.rest-left { font-variant-numeric: tabular-nums; }
+.fight-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.fight-table th, .fight-table td { padding: 8px 0; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+.fight-table th[scope="row"], .fight-table thead th:first-child { text-align: left; font-weight: 400; color: var(--muted); }
+.fight-table thead th { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--ivory); }
+.fight-table tr:last-child th, .fight-table tr:last-child td { border-bottom: 0; }
+.gear-part { margin-left: 6px; font-size: 12px; font-weight: 700; color: var(--copper-bright); }
+.gear-note { margin: 10px 0 0; font-size: 13px; }
+.gear-note .gear-part { margin-left: 0; }
+.depth-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.depth-item { display: grid; gap: 6px; }
+.depth-item .shaft { margin: 0; max-width: 380px; }
+.depth-item .shaft-step { max-width: 16px; }
+.depth-name { font-family: var(--font-display); font-weight: 700; color: var(--ivory); }
+.depth-item.is-locked .depth-name { color: var(--muted); }
+.depth-item > .muted { font-size: 13px; }
+.depth-play { display: grid; gap: 12px; justify-items: center; }
+.depth-play .scene { width: 100%; }
+.depth-end { display: grid; gap: 8px; justify-items: center; text-align: center; }
+.depth-end p { margin: 0; }
+.depth-gain .res { font-size: 20px; }
+.depth-finds { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.depth-find { display: grid; grid-template-columns: 64px 1fr; gap: 12px; align-items: center; text-align: left; }
+@media (min-width: 760px) {
+  .depths-grid { grid-template-columns: 1.3fr 1fr; }
+  .depth-overview { grid-column: 1 / -1; }
+}
+@media (min-width: 1100px) {
+  .depths-grid { grid-template-columns: 1.3fr 1fr 1fr; }
+  .depth-overview { grid-column: auto; }
+}
+@media (max-width: 480px) {
+  .depths-link, .arena-link { min-height: 36px; padding: 0 10px; font-size: 12px; }
+  .guardian { grid-template-columns: 76px 1fr; }
+  .guardian-pic { width: 76px; height: 76px; }
+}
+/* On a phone the ways to the Tiefen and the arena go below the heading. */
+@media (max-width: 560px) {
+  .view.world .view-head { flex-wrap: wrap; }
+  .view.world .head-actions { width: 100%; justify-content: flex-end; }
+}

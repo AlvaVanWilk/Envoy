@@ -3,15 +3,17 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, SLOT_ICONS, ENERGY_ICON } from './icons.js';
+import { NAV_ICONS, SLOT_ICONS, PLACE_ICONS, ENERGY_ICON } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.13';
+export const NEWS_ID = '5.14';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Euer Envoy hat jetzt mehr zu tun, und seine Kleidung zählt.';
+const INTRO = 'Euer Envoy hat jetzt viel mehr zu tun, und seine Kleidung zählt.';
 
 const NEWS = [
+  { icon: PLACE_ICONS.hoehle, title: 'Die Tiefen',
+    text: 'Unter dem Trümmerfeld wartet auf jeder Ebene ein Wächter. Hinabsteigen kostet keine Energie. Wie weit euer Envoy kommt, entscheiden seine Werte und seine Kleidung.' },
   { icon: SLOT_ICONS.torso, title: 'Kleidung mit Boni',
     text: 'Gefundene Kleidung kann gut, selten oder prächtig sein. Dann bringt sie Boni mit: mehr Schaden, bessere Treffer, schnellere Energie, mehr Glück.' },
   { icon: NAV_ICONS.haendler, title: 'Der Händler wartet gleich am Anfang',

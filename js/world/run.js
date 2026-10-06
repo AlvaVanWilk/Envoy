@@ -60,8 +60,9 @@ function scaled(rng, amount, factor) {
 // from spirits (origin `beute`) or found on the way (`fund`), maybe in a
 // colour of its own.
 // Found on the way, it is mostly one that can be put on right away
-// (WEARABLE_SHARE), the very first always.
-export function lootThing(ctx, rng, origin, dyeRng) {
+// (WEARABLE_SHARE), the very first always. quality: whose chances for the
+// Güte count (see QUALITY_CHANCES), if not those of the origin.
+export function lootThing(ctx, rng, origin, dyeRng, quality = origin) {
   const power = heroPower(ctx.stats);
   const figure = figureOf(ctx.world);
   const items = ctx.catalog.equipment.filter((i) => i.herkunft.includes(origin)
@@ -73,7 +74,7 @@ export function lootThing(ctx, rng, origin, dyeRng) {
   const item = pick(rng, wearableFirst ? now : items);
   const farbe = rollDye(item, dyeRng);
   // its Güte and bonuses, with the dice of the colour (see bonuses.js)
-  const extra = dyeRng ? rollBonuses(origin, power, dyeRng) : {};
+  const extra = dyeRng ? rollBonuses(quality, power, dyeRng) : {};
   return { kind: 'item', id: item.id, ...(farbe ? { farbe } : {}), ...extra };
 }
 
