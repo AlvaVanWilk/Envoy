@@ -31,7 +31,7 @@
 //   dropped     equipment taken off because a stat fell below its requirement
 // }
 
-import { NAME_MAX, OLD_SLOT_NAMES, RULE_SETS, rulesOf } from '../config.js';
+import { NAME_MAX, OLD_SLOT_NAMES, RULE_SETS, rulesOf, potionById } from '../config.js';
 import { effects, maxStamina, staminaAt, sleepBonus } from './hero.js';
 import {
   stow, removeEntry, hasSpace, atCamp, reachable, roomFor, overloaded, entriesIn, LIMITED_MATERIALS,
@@ -41,6 +41,7 @@ import { emptyPlans } from './plans.js';
 import { emptyClothes, countClothes, fits, figureOf } from './clothes.js';
 import { emptyArena, applyArenaEvent } from './arena.js';
 import { lootThing } from './run.js';
+import { cleanBonuses } from './bonuses.js';
 import { seededRandom } from './rng.js';
 import { unmetRequirements } from './items.js';
 import { camp } from './map.js';
@@ -54,6 +55,8 @@ const slotKey = (slot) => OLD_SLOT_NAMES[slot] || slot;
 const KEEP_REPORTS = 30;
 // The colour of a thing, if it has one (see clothes.js).
 const dyed = (farbe) => (typeof farbe === 'string' && farbe ? { farbe } : {});
+// Its colour, and its Güte and bonuses, if it has them (see bonuses.js).
+const kept = (thing) => ({ ...dyed(thing.farbe), ...cleanBonuses(thing) });
 
 export function initialWorld(catalog, startTime, stats) {
   const world = {
@@ -159,7 +162,7 @@ function bringHome(world, ctx, action, leftBehind, t) {
     if (taken < amount) leftBehind[name] = (leftBehind[name] || 0) + amount - taken;
   }
   r.things.forEach((thing, n) => {
-    stow(world, ctx.catalog, { inst: `${action.id}:${n}`, kind: thing.kind, id: thing.id, got: t, ...dyed(thing.farbe) });
+    stow(world, ctx.catalog, { inst: `${action.id}:${n}`, kind: thing.kind, id: thing.id, got: t, ...kept(thing) });
   });
   for (const feature of r.unlocks) unlock(world, feature, action.day);
   for (const id of r.plans || []) if (!world.plans.found[id]) world.plans.found[id] = action.day;
@@ -383,9 +386,11 @@ export function applyWorldEvent(world, e, ctx) {
       if (!world.bought[e.offer] && world.purse.splitter >= e.price) {
         world.purse.splitter -= e.price;
         world.bought[e.offer] = true;
-        // a plan for Deko is knowledge, not a thing for the backpack
+        // a plan for Deko is knowledge, not a thing for the backpack; a potion
+        // is drunk at once
         if (e.kind === 'plan') world.plans.found[e.thing] = world.plans.found[e.thing] || e.d;
-        else stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t, ...dyed(e.farbe) });
+        else if (e.kind === 'trank') giveBack(world, potionById(e.thing)?.energie || 0, ctx);
+        else stow(world, ctx.catalog, { inst: e.id, kind: e.kind, id: e.thing, got: e.t, ...kept(e) });
       }
       break;
     case 'sell':
@@ -450,7 +455,7 @@ function testHelp(world, e, ctx) {
   if (e.kleidung) {
     // a piece of clothing as if found on the way: fits the Envoy, in a colour of its own
     const thing = lootThing({ ...ctx, world }, seededRandom(`${e.id}:kleidung`), 'fund', seededRandom(`${e.id}:farbe`));
-    if (thing) stow(world, ctx.catalog, { inst: e.id, kind: 'item', id: thing.id, got: e.t, ...dyed(thing.farbe) });
+    if (thing) stow(world, ctx.catalog, { inst: e.id, kind: 'item', id: thing.id, got: e.t, ...kept(thing) });
   }
   for (const key of LIMITED_MATERIALS) {
     const amount = Math.max(0, Math.floor(Number(e[key]) || 0));

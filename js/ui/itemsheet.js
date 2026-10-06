@@ -6,7 +6,8 @@ import { UI_ICONS } from './icons.js';
 import { SLOTS } from '../config.js';
 import { openSheet, closeSheet } from './sheet.js';
 import { statEmblem, statInfo } from './stats.js';
-import { itemIcon, effectList, reqChips } from './parts.js';
+import { itemIcon, effectList, reqChips, effectsOf, qualityClass } from './parts.js';
+import { qualityById } from '../world/bonuses.js';
 import { unmetRequirements, lookup } from '../world/items.js';
 import { fits, figureOf, dyeById } from '../world/clothes.js';
 import { hasSpace, reachable, capacity } from '../world/inventory.js';
@@ -16,10 +17,12 @@ export const WHERE = { rucksack: 'Rucksack', schrank: 'Aufbewahrung', body: 'Get
 // Shown for things in the storage while the Envoy is away.
 export const AWAY_NOTE = 'Der Envoy ist unterwegs. Er erinnert sich nur, was dort liegt; erreichbar wird es im Lager.';
 
-// Slot, stufe and, for a piece with a colour of its own, the colour.
+// Slot, stufe, the Güte of a piece with bonuses and, for a piece with a
+// colour of its own, the colour.
 export function thingSubtitle(entry, thing) {
   const dye = dyeById(entry?.farbe);
-  return `${slotName(thing.slot)} · Stufe ${thing.stufe}${dye ? ` · ${dye.name}` : ''}`;
+  const quality = qualityById(entry?.guete);
+  return `${slotName(thing.slot)} · Stufe ${thing.stufe}${quality && quality.bonuses > 0 ? ` · ${quality.name}` : ''}${dye ? ` · ${dye.name}` : ''}`;
 }
 
 // Shown for a piece whose drawing is made for the other figure.
@@ -86,11 +89,11 @@ export function openEntry(inst, game) {
     eyebrow: `${thingSubtitle(entry, thing)} · ${WHERE[entry.where]}`,
     className: 'item-sheet',
     content: [
-      h('div', { class: 'item-hero' }, itemIcon(thing, game, 'item-hero-icon', entry.farbe)),
+      h('div', { class: `item-hero${qualityClass(entry)}` }, itemIcon(thing, game, 'item-hero-icon', entry.farbe)),
       entry.kind === 'item' ? requirementList(thing, stats) : null,
       entry.kind === 'item' && !fits(thing, figureOf(world)) ? h('p', { class: 'muted' }, OTHER_FIGURE) : null,
       thing.faehigkeit || thing.text ? h('p', { class: 'item-ability' }, thing.faehigkeit || thing.text) : null,
-      effectList(thing.effekt),
+      effectList(effectsOf(thing, entry)),
       reachable(world, entry) ? null : h('p', { class: 'muted away-note' }, AWAY_NOTE),
       actions.length > 0 ? h('div', { class: 'sheet-actions' }, actions) : null,
     ],
@@ -115,14 +118,13 @@ export function openSlot(slotId, game) {
     else if (other) action = h('span', { class: 'locked-label' }, 'Passt nicht');
     else if (unmet.length === 0) action = h('button', { class: 'btn primary small', onclick: () => { game.equip(slotId, entry.inst); closeSheet(); } }, 'Anlegen');
     else action = h('span', { class: 'locked-label' }, icon(UI_ICONS.lock), 'Gesperrt');
-    const dye = dyeById(entry.farbe);
     return h('div', { class: `item-row ${(unmet.length || other) && !worn ? 'locked' : ''} ${reachable(world, entry) ? '' : 'away'}` },
-      h('span', { class: 'item-frame' }, itemIcon(item, game, 'item-icon', entry.farbe)),
+      h('span', { class: `item-frame${qualityClass(entry)}` }, itemIcon(item, game, 'item-icon', entry.farbe)),
       h('span', { class: 'item-row-main' },
         h('span', { class: 'item-name' }, item.name),
-        h('span', { class: 'item-sub' }, `Stufe ${item.stufe}${dye ? ` · ${dye.name}` : ''} · ${WHERE[entry.where]}`),
+        h('span', { class: 'item-sub' }, `${thingSubtitle(entry, item)} · ${WHERE[entry.where]}`),
         reqChips(item, stats),
-        effectList(item.effekt)),
+        effectList(effectsOf(item, entry))),
       action);
   });
 

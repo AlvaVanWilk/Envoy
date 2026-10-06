@@ -306,7 +306,8 @@ export const game = {
   buy(offer) {
     if (!this.unlocked('haendler') || this.state.world.purse.splitter < offer.price) return;
     const farbe = offer.farbe ? { farbe: offer.farbe } : {};
-    this.add([this.event('buy', { offer: offer.offer, kind: offer.kind, thing: offer.id, price: offer.price, ...farbe })]);
+    const extra = offer.guete ? { guete: offer.guete, bonus: offer.bonus } : {};
+    this.add([this.event('buy', { offer: offer.offer, kind: offer.kind, thing: offer.id, price: offer.price, ...farbe, ...extra })]);
   },
 
   sell(inst) {

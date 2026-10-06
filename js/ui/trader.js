@@ -1,14 +1,15 @@
 // The trader: a different selection every day, around the hero's strength,
-// and on some days a plan for Deko. Buys everything back for a third of its price.
+// on some days a plan for Deko, and every day a few potions for Energie.
+// Buys everything back for a third of its price.
 
-import { h } from './dom.js';
-import { NAV_ICONS } from './icons.js';
-import { viewHead, sectionTitle, supplies, price, resource, itemIcon, dekoIcon, reqChips, effectList, lockedView, unlockHint } from './parts.js';
+import { h, icon } from './dom.js';
+import { NAV_ICONS, ENERGY_ICON } from './icons.js';
+import { viewHead, sectionTitle, supplies, price, resource, itemIcon, dekoIcon, reqChips, effectList, effectsOf, qualityClass, lockedView, unlockHint } from './parts.js';
 import { openSheet, closeSheet, toast } from './sheet.js';
 import { thingSubtitle } from './itemsheet.js';
 import { sellPrice, lookup } from '../world/items.js';
 import { reachable } from '../world/inventory.js';
-import { CURRENCY } from '../config.js';
+import { CURRENCY, POTIONS, potionById } from '../config.js';
 
 export function renderTrader(game) {
   const { world, stats } = game.state;
@@ -27,22 +28,22 @@ export function renderTrader(game) {
         sectionTitle('Heute im Angebot'),
         offers.length === 0
           ? h('p', { class: 'empty-state' }, 'Alles verkauft. Morgen gibt es Neues.')
-          : h('div', { class: 'offer-grid' }, offers.map((offer) => {
+          : h('div', { class: 'offer-grid' }, [...potionOffers(offers, game), ...offers.filter((o) => o.kind !== 'trank').map((offer) => {
             if (offer.kind === 'plan') return planOffer(offer, game);
             const thing = game.catalog.itemById.get(offer.id);
             return h('button', { class: 'offer', onclick: () => openOffer(offer, thing, game) },
-              h('span', { class: 'item-frame' }, itemIcon(thing, game, 'item-icon', offer.farbe)),
+              h('span', { class: `item-frame${qualityClass(offer)}` }, itemIcon(thing, game, 'item-icon', offer.farbe)),
               h('span', { class: 'item-name' }, thing.name),
               h('span', { class: 'item-sub' }, thingSubtitle(offer, thing)),
               offer.kind === 'item' ? reqChips(thing, stats) : null,
               price(offer.price, world.purse.splitter));
-          }))),
+          })])),
       h('section', { class: 'panel trader-sell' },
         sectionTitle('Verkaufen'),
         owned.length === 0
           ? h('p', { class: 'muted' }, 'Nichts im Rucksack oder Lager.')
           : h('div', { class: 'item-list' }, owned.map(({ entry, thing }) => h('div', { class: 'item-row' },
-            h('span', { class: 'item-frame' }, itemIcon(thing, game, 'item-icon', entry.farbe)),
+            h('span', { class: `item-frame${qualityClass(entry)}` }, itemIcon(thing, game, 'item-icon', entry.farbe)),
             h('span', { class: 'item-row-main' }, h('span', { class: 'item-name' }, thing.name), h('span', { class: 'item-sub' }, thingSubtitle(entry, thing))),
             h('button', { class: 'btn ghost small', onclick: () => confirmSell(entry, thing, game) }, resource('splitter', sellPrice(entry, game.catalog)))))))));
 }
@@ -55,14 +56,57 @@ function openOffer(offer, thing, game) {
     eyebrow: thingSubtitle(offer, thing),
     className: 'item-sheet',
     content: [
-      h('div', { class: 'item-hero' }, itemIcon(thing, game, 'item-hero-icon', offer.farbe)),
+      h('div', { class: `item-hero${qualityClass(offer)}` }, itemIcon(thing, game, 'item-hero-icon', offer.farbe)),
       offer.kind === 'item' ? reqChips(thing, stats) : null,
       thing.faehigkeit || thing.text ? h('p', { class: 'item-ability' }, thing.faehigkeit || thing.text) : null,
-      effectList(thing.effekt),
+      effectList(effectsOf(thing, offer)),
       h('div', { class: 'sheet-actions' },
         price(offer.price, world.purse.splitter),
         h('button', { class: 'btn primary', disabled: !affordable, onclick: () => { game.buy(offer); closeSheet(); } },
           affordable ? 'Kaufen' : `Nicht genug ${CURRENCY}`)),
+    ],
+  });
+}
+
+// The potions: one tile for each, with how many are left today.
+function potionOffers(offers, game) {
+  return POTIONS.map((p) => offers.filter((o) => o.kind === 'trank' && o.id === p.id)).filter((left) => left.length > 0)
+    .map((left) => {
+      const potion = potionById(left[0].id);
+      return h('button', { class: 'offer offer-potion', onclick: () => openPotion(left[0], potion, game) },
+        h('span', { class: 'item-frame potion-frame' }, icon(ENERGY_ICON, 'item-icon item-glyph')),
+        h('span', { class: 'item-name' }, potion.name),
+        h('span', { class: 'item-sub' }, `+${potion.energie} Energie · noch ${left.length} heute`),
+        price(left[0].price, game.state.world.purse.splitter));
+    });
+}
+
+// A potion is drunk at once; it fills the bar, never beyond its end.
+function openPotion(offer, potion, game) {
+  const { world } = game.state;
+  const st = game.stamina();
+  const room = Math.max(0, Math.floor(st.max - st.value));
+  const gain = Math.min(potion.energie, room);
+  const affordable = world.purse.splitter >= offer.price;
+  let label = 'Kaufen und trinken';
+  if (!affordable) label = `Nicht genug ${CURRENCY}`;
+  else if (gain <= 0) label = 'Die Energie ist voll';
+  openSheet({
+    title: potion.name,
+    eyebrow: `Trank · +${potion.energie} Energie`,
+    className: 'item-sheet',
+    content: [
+      h('div', { class: 'item-hero potion-hero' }, icon(ENERGY_ICON, 'item-hero-icon item-glyph')),
+      h('p', { class: 'item-ability' }, potion.text),
+      h('p', { class: 'muted' }, gain < potion.energie && gain > 0
+        ? `Füllt die Energie um ${gain} auf, bis ans Ende der Leiste.`
+        : 'Füllt die Energie auf, höchstens bis ans Ende der Leiste.'),
+      h('div', { class: 'sheet-actions' },
+        price(offer.price, world.purse.splitter),
+        h('button', {
+          class: 'btn primary', disabled: !affordable || gain <= 0,
+          onclick: () => { game.buy(offer); closeSheet(); toast(`${potion.name}: +${gain} Energie`); },
+        }, label)),
     ],
   });
 }

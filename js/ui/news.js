@@ -3,27 +3,23 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, RESOURCE_ICONS, UI_ICONS, ENERGY_ICON, STAT_ICONS } from './icons.js';
+import { NAV_ICONS, SLOT_ICONS, ENERGY_ICON } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.12';
+export const NEWS_ID = '5.13';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'In der Zwischenwelt geht jetzt vieles schneller. Euer Envoy schafft an einem Tag viel mehr als bisher.';
+const INTRO = 'Euer Envoy hat jetzt mehr zu tun, und seine Kleidung zählt.';
 
 const NEWS = [
-  { icon: UI_ICONS.timer, title: 'Zehn Sekunden statt einer Minute',
-    text: 'Jede Energie dauert jetzt nur noch zehn Sekunden. Kleine Aufgaben sind im Nu erledigt, lange Expeditionen in ein paar Minuten.' },
-  { icon: NAV_ICONS.abenteuer, title: 'Wege kosten keine Energie mehr',
-    text: 'Die ganze Energie geht in das, was euer Envoy unterwegs tut. Weit entfernte Orte brauchen nur etwas länger.' },
-  { icon: ENERGY_ICON, title: 'Das Tageswerk gibt doppelt so viel',
-    text: 'Jede erledigte Aufgabe füllt ein Viertel eurer Energie auf, auch über die Leiste hinaus. Alle vier zusammen sind eine ganze Leiste.' },
-  { icon: RESOURCE_ICONS.splitter, title: 'Mehr Bannsplitter!',
-    text: 'Wiederholbare Quests bringen jetzt viel mehr Bannsplitter, und viele lassen sich jeden Tag machen.' },
-  { icon: STAT_ICONS.gelassenheit, title: 'Ein Hinweis, bevor etwas verloren geht',
-    text: 'Ist das Tageswerk gestern liegen geblieben, sagt euch Envoy am nächsten Tag Bescheid. Ein Tag Pause kostet nichts, erst der zweite.' },
-  { icon: NAV_ICONS.lager, title: 'Das Lager bleibt ein großes Vorhaben',
-    text: 'Damit es nicht zu schnell fertig ist, braucht das Aufwerten mehr Energie am Stück. Pläne für Deko sind etwas seltener, beim Händler kosten sie mehr.' },
+  { icon: SLOT_ICONS.torso, title: 'Kleidung mit Boni',
+    text: 'Gefundene Kleidung kann gut, selten oder prächtig sein. Dann bringt sie Boni mit: mehr Schaden, bessere Treffer, schnellere Energie, mehr Glück.' },
+  { icon: NAV_ICONS.haendler, title: 'Der Händler wartet gleich am Anfang',
+    text: 'Er steckt in der Nebelfurt fest. Helft ihm heraus, dann ist er für euch da.' },
+  { icon: ENERGY_ICON, title: 'Tränke für Energie',
+    text: 'Pilztee und Quellsud füllen eure Energie auf. Der Händler hat jeden Tag zwei von jeder Sorte.' },
+  { icon: NAV_ICONS.arena, title: 'Die Arena kostet keine Energie mehr',
+    text: 'Fordert heraus, wen die Rangliste erlaubt. Eure Energie bleibt ganz für die Zwischenwelt.' },
 ];
 
 export function openNews(onDone) {

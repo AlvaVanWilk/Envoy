@@ -1,6 +1,7 @@
 // Level and price of equipment.
 
-import { SELL_SHARE } from '../config.js';
+import { SELL_SHARE, BONUS_PRICE } from '../config.js';
+import { bonusCount } from './bonuses.js';
 import { fits, figureOf } from './clothes.js';
 
 // How demanding an item is: its highest requirement (0 = none).
@@ -15,9 +16,10 @@ export function itemPrice(item) {
 }
 
 // What an owned item is worth to the trader.
+// A piece with bonuses is worth more (see bonuses.js).
 export function sellPrice(entry, catalog) {
   const thing = catalog.itemById.get(entry.id);
-  return thing ? Math.max(1, Math.floor(itemPrice(thing) * SELL_SHARE)) : 0;
+  return thing ? Math.max(1, Math.floor(itemPrice(thing) * (1 + BONUS_PRICE * bonusCount(entry)) * SELL_SHARE)) : 0;
 }
 
 export function lookup(entry, catalog) {

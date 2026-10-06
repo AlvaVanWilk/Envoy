@@ -283,7 +283,8 @@ test('encounters: same list all day, fitting the hero', () => {
 test('trader offers lie around the hero\'s strength; buying needs enough Bannsplitter', () => {
   const s = replay([], catalog, DAY, T0);
   const offers = offersFor(DAY, ctxOf(s));
-  assert.equal(offers.length, 5);
+  assert.equal(offers.filter((x) => x.kind === 'item').length, 5);
+  assert.equal(offers.filter((x) => x.kind === 'trank').length, 4);   // two of each potion
   for (const o of offers.filter((x) => x.kind === 'item')) assert.ok(itemLevel(catalog.itemById.get(o.id)) <= 4, o.id);
 
   const buy = ev('buy', { offer: `${DAY}:0`, kind: 'item', thing: 'kopf_kapuze_2', price: 50 }, 3);
@@ -419,4 +420,44 @@ test('the second figure wears its own layers and shows its own icons', () => {
   for (const item of catalog.equipment) {
     if (item.figuren?.zweite) assert.ok(item.icons?.zweite, `${item.id}: Icon der zweiten Figur fehlt`);
   }
+});
+
+test('a potion from the trader fills the Energie, never beyond the end of the bar', () => {
+  const gift = ev('expedition', { q: 'q-pilzholz', place: 'pilzhain', title: 'x', out: 0, act: 1, back: 0, cost: 8,
+    outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { splitter: 60, pilzholz: 0, stein: 0, things: [], unlocks: ['haendler'], rest: false } } }, 0);
+  const tea = ev('buy', { offer: `${DAY}:trank:pilztee:0`, kind: 'trank', thing: 'pilztee', price: 12 }, 0.05);
+  const s = replay([gift, tea], catalog, DAY, T0 + 0.06 * H);
+  assert.equal(s.world.purse.splitter, 48);
+  assert.ok(Math.abs(s.world.stamina.value - 10) < 0.05, `${s.world.stamina.value}`);   // 2 + 10, but only up to 10
+  const again = ev('buy', { offer: `${DAY}:trank:pilztee:0`, kind: 'trank', thing: 'pilztee', price: 12 }, 0.07);
+  assert.equal(replay([gift, tea, again], catalog, DAY, T0 + 0.08 * H).world.purse.splitter, 48);   // the same one only once
+});
+
+test('pieces found, dropped or offered get a Güte and bonuses; worn, the bonuses count', async () => {
+  const { rollBonuses, cleanBonuses } = await import('../js/world/bonuses.js');
+  const { seededRandom } = await import('../js/world/rng.js');
+  const counts = {};
+  for (let i = 0; i < 2000; i += 1) {
+    const r = rollBonuses('fund', 5, seededRandom(`b${i}`));
+    counts[r.guete || 'schlicht'] = (counts[r.guete || 'schlicht'] || 0) + 1;
+    if (r.guete) {
+      assert.equal(Object.keys(r.bonus).length, { gut: 1, selten: 2, praechtig: 3 }[r.guete]);
+      for (const key of Object.keys(r.bonus)) assert.ok(!['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit'].includes(key));
+    }
+  }
+  assert.ok(counts.schlicht > counts.gut && counts.gut > counts.selten && counts.selten > counts.praechtig, JSON.stringify(counts));
+  assert.deepEqual(cleanBonuses({ guete: 'gut', bonus: { kraft: 5 } }), {});
+  // a bought piece with a bonus, worn: its bonus counts in the effects
+  const gift = ev('expedition', { q: 'q-pilzholz', place: 'pilzhain', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { splitter: 200, pilzholz: 0, stein: 0, things: [], unlocks: ['haendler'], rest: false } } }, 0);
+  const item = catalog.equipment.find((i) => i.herkunft.includes('fund') && i.slot === 'torso' && i.passt?.includes('erste') && !Object.keys(i.req || {}).length);
+  const buy = ev('buy', { offer: `${DAY}:9`, kind: 'item', thing: item.id, price: 20, guete: 'selten', bonus: { erholung: 9, schaden: 2 } }, 0.05);
+  const wear = ev('equip', { slot: 'torso', inst: buy.id }, 0.06);
+  const s = replay([gift, buy, wear], catalog, DAY, T0 + 0.07 * H);
+  assert.deepEqual([s.world.items[buy.id].guete, s.world.items[buy.id].bonus], ['selten', { erholung: 9, schaden: 2 }]);
+  const fx = effects(s.world, catalog);
+  assert.equal(fx.erholung, 9);
+  assert.equal(fx.schaden, 2);
 });

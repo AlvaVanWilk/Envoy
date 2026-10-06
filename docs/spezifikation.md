@@ -258,7 +258,9 @@ Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 
 ## Ausrüstung
 
-**Ausrüstung erhöht nie Stats.** Sie stellt Voraussetzungen und gibt Fähigkeiten:
+**Ausrüstung erhöht nie Stats** (Kraft, Ausdauer, Beweglichkeit, Gelassenheit). Sie stellt
+Voraussetzungen und hilft in der Welt, mit Fähigkeiten und Boni. Sie soll wichtig sein, kein
+optisches Extra (so gewünscht, 5.13):
 
 | Effekt | Wirkung |
 | --- | --- |
@@ -269,6 +271,31 @@ Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 | reise | kürzere Wege (mindestens 1); bis 5.11 auch weniger Energie je Weg |
 | erholung | Energie füllt sich schneller |
 | glueck | mehr Bannsplitter und öfter ein Fundstück |
+
+### Güte und Boni (seit 5.13)
+
+Jedes Stück Kleidung, das unterwegs gefunden wird, ein Geist fallen lässt oder der Händler
+anbietet, bekommt eine **Güte**: schlicht (keine Boni), gut (1), selten (2), prächtig (3).
+Wie wahrscheinlich welche Güte ist, hängt an der Herkunft (`QUALITY_CHANCES` in
+`js/config.js`): unterwegs 55/30/12/3 %, bei Geistern 35/40/19/6 %, beim Händler 25/45/24/6 %.
+Die Boni werden aus den Effekten oben gezogen, jeder höchstens einmal je Stück (`BONUSES`):
+
+| Bonus | bei Stärke 1 | je Level mehr |
+| --- | --- | --- |
+| schaden | 1 | 0,2 |
+| treffer | 3 % | 0,6 |
+| ausweichen | 3 % | 0,5 |
+| beruhigen | 4 % | 0,8 |
+| erholung | 8 % | 1,2 |
+| glueck | 5 % | 1 |
+
+Stärke = Durchschnitt der vier Level, wenn das Stück auftaucht; die Größe schwankt um ±20 %,
+mindestens 1. Güte und Boni gehören dem Stück (`guete`, `bonus` am Ding, im Ereignis
+gespeichert, `js/world/bonuses.js`) und zählen, solange es getragen wird, zusammen mit den
+festen Effekten des Teils. Der Rahmen zeigt die Güte in Farbe (gut grün, selten blau,
+prächtig gold), der Name steht klein beim Teil („Torso · Stufe 1 · Selten“). Jeder Bonus
+macht das Stück beim Händler 40 % teurer, beim Verkauf ebenso mehr wert (`BONUS_PRICE`).
+Ältere Stücke ohne Güte bleiben schlicht.
 
 **Sechs Slots:** Kopf, Torso, Handwickel, Accessoire, Beinkleidung, Schuhe. Kein
 Waffen-Slot, kein Gürtel, keine Schulterstücke. Die **Handwickel** sind das Gegenstück
@@ -283,7 +310,7 @@ und warum.
 
 ### Kleidung: viele Fundstücke in eigenen Farben
 
-Die meiste Kleidung bringt keine Fähigkeit, sondern Vielfalt: Die Teile der Kleiderkammer
+Die meiste Kleidung bringt keine feste Fähigkeit, sondern Vielfalt und gewürfelte Boni (siehe Güte und Boni): Die Teile der Kleiderkammer
 (bisher 55, Oberteile, Hosen, Sandalen, Armwickel) werden **unterwegs gefunden** (Herkunft
 `fund`), auch bei Geistern und beim Händler. Feste Questbelohnungen, die für alle gleich
 sind, bleiben wenige (Handwickel, Bastsandalen, Griffhandschuhe …).
@@ -636,13 +663,20 @@ ist weniger Beute.
 
 ### Händler
 
-Wird durch die Quest „Der Händler im Nebel“ freigeschaltet (den Händler retten).
+Wird durch die Quest „Der Händler im Nebel“ freigeschaltet (den Händler retten). Seit 5.13
+hat sie keine Voraussetzung mehr und ist am ersten Tag zu schaffen (6 Energie, der
+Nebelwächter auf Stufe 2).
 Bietet jeden Tag 5 Dinge an, an manchen Tagen dazu einen Plan für Deko (siehe Das Lager). Die
 Ausrüstung ist zufällig, aber immer im Bereich der Stärke des Helden (Voraussetzung
 höchstens 3 Level darunter oder darüber) und passend zur Figur; färbbare Kleidung hat eine
-eigene Farbe, die beim Kauf bleibt. Preis in Bannsplittern = 12 + 4 × n + n² + 8 × Stufe
+eigene Farbe, die beim Kauf bleibt, dazu eine Güte mit Boni (siehe Ausrüstung). Preis in Bannsplittern = 12 + 4 × n + n² + 8 × Stufe
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
 alles für ein Drittel des Preises zurück.
+
+**Tränke** (seit 5.13, `POTIONS`): jeden Tag zwei **Pilztee** (+10 Energie, 12 Bannsplitter)
+und zwei **Quellsud** (+25 Energie, 28 Bannsplitter). Ein Trank wird beim Kauf getrunken und
+füllt die Energie auf, nie über das Ende der Leiste hinaus (so bleibt das Tempo des
+Lagerausbaus, der Energie am Stück braucht). Gekauft als Ereignis `buy` mit `kind: 'trank'`.
 
 ### Rucksack, Vorrat und Aufbewahrung
 
@@ -871,7 +905,7 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 | Bastsandalen (die ersten Schuhe) | Quest „Bast aus dem Pilzhain“, ohne Voraussetzung |
 | Lagerstufe 1, die vier Einrichtungen | Quest „Ein Lagerfeuer errichten“ (die erste Quest) |
 | Lagerstufen 2 bis 5, höhere Stufen der Einrichtungen, Deko | Hygge (siehe Das Lager) |
-| Händler | Quest „Der Händler im Nebel“ |
+| Händler | Quest „Der Händler im Nebel“, ohne Voraussetzung (seit 5.13) |
 | Aschenhang, Turm der Stufen, lange Straße | Quest „Die Brücke über die Schlucht“ |
 | Weißes Tal | Quest „Die lange Straße“ (30 km reale Strecke) |
 | Talentbaum | alle vier Stats auf 10 (Inhalt Phase 2) |
@@ -897,7 +931,8 @@ spielen in der Arena keine Rolle.
 
 - Wer ein Abbild aufstellt, beginnt am Ende. Herausfordern lassen sich die Abbilder bis drei
   Plätze über oder unter dem eigenen, jedes einmal am Tag. Eine Herausforderung kostet
-  5 Energie; unterwegs geht es nicht.
+  keine Energie (seit 5.13, so gewünscht; vorher 5, ältere Kämpfe ohne Feld `energie`
+  behalten das); unterwegs geht es nicht.
 - Wer gegen jemanden weiter oben gewinnt, nimmt dessen Platz; die dazwischen rücken einen
   nach unten. Unentschieden oder unterlegen ändert nichts an der Liste.
 - Wessen App 14 Tage nicht offen war, dessen Abbild ruht: Es verlässt die Liste und beginnt
@@ -1334,7 +1369,9 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Zeit und Wege | eine Energie dauert zehn Sekunden (bis 5.11 eine Minute); Wege kosten keine Energie, nur Zeit; ältere Ereignisse behalten die alten Regeln (`regel`, `RULE_SETS`) |
 | Ausbau des Lagers | nicht schneller als vor 5.12: Aufwerten 30, 70, 115, 165 Energie am Stück, Pläne 9, 18, 36 Chancen, Händler-Pläne 120 und 180 Bannsplitter |
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
-| Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden; Stärke = Tage mit erledigter Aufgabe in den letzten 28 Tagen je Bereich (Fleiß, nicht Begabung); Ruhm als eigene Währung (Farben, Titel) |
+| Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy |
+| Tränke | Pilztee (+10) und Quellsud (+25) beim Händler, je zwei am Tag, nie über die Leiste |
+| Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden, ohne Energie (seit 5.13); Stärke = Tage mit erledigter Aufgabe in den letzten 28 Tagen je Bereich (Fleiß, nicht Begabung); Ruhm als eigene Währung (Farben, Titel) |
 | Berichte | jeder nur einmal, auch über Geräte hinweg |
 | Lange Pause | nach je 7 Fehltagen jede Übung des Bereichs eine Stufe runter |
 | Krankheitsmodus | Stufe 1, Übungen ohne Stufen halbe Zeit, 14 XP, zählt nicht für die Stufen, kein Malus-Erlass |

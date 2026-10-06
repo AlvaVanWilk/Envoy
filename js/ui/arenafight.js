@@ -1,14 +1,12 @@
-// Challenging another Abbild: the Haltung is chosen, the Energie spent, the
-// server decides the fight (see arena.php), and here it plays round by
-// round. At the end both bow; a defeat costs nothing but the Energie.
+// Challenging another Abbild: the Haltung is chosen, the server decides the
+// fight (see arena.php), and here it plays round by round. At the end both
+// bow; a defeat costs nothing. A challenge costs no Energie.
 
-import { h, icon, replaceChildren } from './dom.js';
-import { ENERGY_ICON } from './icons.js';
+import { h, replaceChildren } from './dom.js';
 import { toast } from './sheet.js';
 import { fighterCard, pop, shake } from './scene.js';
 import { arena, arenaErrorText } from '../arena.js';
 import { sync } from '../sync.js';
-import { ARENA_ENERGY } from '../config.js';
 import { abbildPortrait, haltungPicker, titleText, ruhmAmount } from './arenaparts.js';
 
 const ROUND_MS = 1300;
@@ -20,7 +18,6 @@ const resultText = (fight) => (fight.entscheid === 'punkte' && fight.ergebnis !=
 // Why the Envoy cannot go now, or null.
 function blocked(game) {
   if (game.state.world.expedition) return 'Der Envoy ist unterwegs.';
-  if (Math.floor(game.stamina().value) < ARENA_ENERGY) return 'Nicht genug Energie.';
   return null;
 }
 
@@ -32,7 +29,6 @@ export function challengePart(x, game, panel) {
     const why = blocked(game);
     replaceChildren(part,
       haltungPicker(haltung, (id) => { haltung = id; draw(); }, 'Deine Haltung'),
-      h('p', { class: 'arena-cost' }, icon(ENERGY_ICON, 'icon energy-icon'), `${ARENA_ENERGY} Energie`),
       why ? h('p', { class: 'arena-why' }, why) : null,
       h('button', { class: 'btn primary', disabled: Boolean(why), onclick: (e) => go(e.currentTarget) }, 'Herausfordern'));
   };

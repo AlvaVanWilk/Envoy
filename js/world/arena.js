@@ -1,6 +1,7 @@
 // The arena in the own list of events. The fights are decided by the server
 // (arena.php); here only what follows from them for this Envoy:
 //   kampf     a fight of the own Abbild: Ruhm, and for a challenge the Energie
+//             it cost (nothing since version 5.13; the event says how much)
 //   abbild    Haltung and Titel of the own Abbild (the latest counts)
 //   ruhmkauf  something bought with Ruhm: a colour for a piece of clothing, or a Titel
 // Ruhm is the currency of the arena only. It never makes the Envoy stronger.
@@ -10,7 +11,7 @@
 //   titles   { id: true } the Titel bought
 //   fights   the latest fights, newest last: { id, t, rolle, gegner, ergebnis, ruhm, platz }
 
-import { ARENA_ENERGY, HALTUNGEN, TITLES, DYES } from '../config.js';
+import { ARENA_ENERGY_BEFORE, HALTUNGEN, TITLES, DYES } from '../config.js';
 
 const KEEP_FIGHTS = 40;
 const RESULTS = ['sieg', 'remis', 'niederlage'];
@@ -29,7 +30,10 @@ function fought(world, e) {
   if (!RESULTS.includes(e.ergebnis)) return;
   const ruhm = whole(e.ruhm);
   world.arena.ruhm += ruhm;
-  if (e.rolle === 'fordert') world.stamina.value = Math.max(0, world.stamina.value - (Number(e.energie) || ARENA_ENERGY));
+  if (e.rolle === 'fordert') {
+    const cost = e.energie === undefined ? ARENA_ENERGY_BEFORE : whole(e.energie);
+    world.stamina.value = Math.max(0, world.stamina.value - cost);
+  }
   const gegner = e.gegner && typeof e.gegner === 'object' ? e.gegner : {};
   world.arena.fights.push({
     id: e.id, t: e.t, rolle: e.rolle === 'fordert' ? 'fordert' : 'verteidigt',

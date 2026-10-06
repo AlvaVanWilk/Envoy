@@ -108,7 +108,7 @@ export const arena = {
       fresh.push({
         id, t: f.t, d: dayKey(new Date(f.t)), dev: game.deviceId, type: 'kampf',
         kampf: f.s, rolle: f.rolle, gegner: f.gegner, ergebnis: f.ergebnis, ruhm: f.ruhm, platz: f.platz,
-        ...(f.rolle === 'fordert' ? { energie: ARENA_ENERGY } : {}),
+        ...(f.rolle === 'fordert' ? { energie: ARENA_ENERGY } : {}),   // what it cost (nothing now)
         ...(f.runden ? { haltung: f.haltung, gegnerHaltung: f.gegnerHaltung, entscheid: f.entscheid, leben: f.leben, runden: f.runden } : {}),
       });
     }

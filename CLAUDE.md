@@ -110,20 +110,25 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   zwischen den Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung, 2 Energie, am ersten Tag
   zu schaffen), die Bastsandalen die Quest „Bast aus dem Pilzhain“ (ohne Voraussetzung,
   2 Energie und je 1 Energie Weg)
-- Kleidung als Fundstücke: die Teile der Kleiderkammer (Herkunft `fund`, ohne Fähigkeit)
+- Kleidung als Fundstücke: die Teile der Kleiderkammer (Herkunft `fund`, ohne feste Fähigkeit)
   unterwegs bei jeder Quest außer Bauen (3 % je Energie, der erste nach 5 Energie sicher und
   sofort tragbar, sonst spätestens nach 66), bei Geistern und beim Händler; jedes Stück in einer
   eigenen Farbe (12 oder wie gezeichnet, Spalte `faerbbar`, `DYES` in `js/config.js`, umgefärbt
   in `js/ui/look.js`, Haut bleibt); nur, was der Figur passt (Spalte `figur`: Frau, Mann, beide);
-  feste Questbelohnungen bleiben wenige
+  feste Questbelohnungen bleiben wenige; jedes gefundene, erbeutete oder angebotene Stück hat
+  eine Güte (schlicht, gut, selten, prächtig) mit 0 bis 3 gewürfelten Boni (Schaden, Treffer,
+  Ausweichen, Beruhigen, Erholung der Energie, Glück; größer bei stärkerem Envoy,
+  `js/world/bonuses.js`), so gewünscht: Ausrüstung hebt nie einen Stat, soll aber wichtig sein
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
-  (gesammeltes ist sofort dort, ohne Erklärung); Händler, Kompendium der getroffenen Geister
+  (gesammeltes ist sofort dort, ohne Erklärung); Händler (Quest ohne Voraussetzung, am ersten
+  Tag zu schaffen; dazu jeden Tag je zwei Tränke für Energie, Pilztee +10 und Quellsud +25,
+  nie über die Leiste), Kompendium der getroffenen Geister
 - Erfolge: bisher einer („Angekommen“, +10 % auf Tageswerk und Sammeln, nur die ersten
   15 Minuten nach dem Start)
 - Arena (so gewünscht): Ruhmeshalle mit laufender Rangliste der Abbilder aller Konten auf dem
   Server (Forderungsrangliste: bis drei Plätze über oder unter dem eigenen, jedes einmal am
-  Tag; Sieg gegen weiter oben nimmt den Platz), Kämpfe entscheidet der Server (`arena.php`)
+  Tag, ohne Energie; Sieg gegen weiter oben nimmt den Platz), Kämpfe entscheidet der Server (`arena.php`)
   aus dem Fleiß, nicht der Begabung (so gewünscht): Stärke je Bereich = Tage mit erledigter
   Aufgabe in den letzten 28 Tagen, jede Aufgabe zählt gleich, egal welche Stufe; Werte und
   Kleidung zählen dort nicht; dazu die Haltung; acht Runden, danach nach Punkten, gleich

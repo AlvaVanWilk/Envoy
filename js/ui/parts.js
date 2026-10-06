@@ -155,9 +155,20 @@ const EFFECT_TEXT = {
   ausweichen: (v) => `Ausweichen +${v} %`,
   beruhigen: (v) => `Beruhigen +${v} %`,
   reise: (v) => `Reise ${v}`,
-  erholung: (v) => `Erholung +${v} %`,
+  erholung: (v) => `Energie +${v} % schneller`,
   glueck: (v) => `Glück +${v} %`,
 };
+
+// The abilities of a piece: those of the table, and its own bonuses (see
+// world/bonuses.js; entry: the owned piece or the offer).
+export function effectsOf(thing, entry) {
+  const total = { ...(thing?.effekt || {}) };
+  for (const [key, value] of Object.entries(entry?.bonus || {})) total[key] = (total[key] || 0) + value;
+  return total;
+}
+
+// The class of a frame for the Güte of a piece: its colour.
+export const qualityClass = (entry) => (entry?.guete ? ` q-${entry.guete}` : '');
 
 export function effectText(key, value) {
   return EFFECT_TEXT[key] ? EFFECT_TEXT[key](value) : `${key} ${value}`;

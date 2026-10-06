@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-06T01:16:47Z",
+ "generated": "2026-10-06T22:45:42Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -345,10 +345,10 @@
   {
    "id": "nebelwaechter",
    "name": "Nebelwächter",
-   "stufe": 4,
-   "leben": 24,
-   "kraft": 3,
-   "gewandtheit": 3,
+   "stufe": 2,
+   "leben": 12,
+   "kraft": 1,
+   "gewandtheit": 1,
    "calmable": false,
    "loot": {
     "splitter": [
@@ -990,18 +990,7 @@
    "monsters": [
     "nebelwaechter"
    ],
-   "conditions": [
-    {
-     "type": "stat",
-     "stat": "kraft",
-     "min": 3
-    },
-    {
-     "type": "stat",
-     "stat": "ausdauer",
-     "min": 3
-    }
-   ],
+   "conditions": [],
    "speedStats": [],
    "yieldStats": [],
    "consumes": {},

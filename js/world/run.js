@@ -24,6 +24,7 @@ import { itemLevel, unmetRequirements } from './items.js';
 import { roomFor } from './inventory.js';
 import { rollPlans } from './plans.js';
 import { obtainable, figureOf, rollDye, rollClothes } from './clothes.js';
+import { rollBonuses } from './bonuses.js';
 
 const LOOT_BAND = 3;
 const WEARABLE_SHARE = 0.75;
@@ -71,7 +72,9 @@ export function lootThing(ctx, rng, origin, dyeRng) {
   const wearableFirst = origin === 'fund' && now.length > 0 && (first || rng() < WEARABLE_SHARE);
   const item = pick(rng, wearableFirst ? now : items);
   const farbe = rollDye(item, dyeRng);
-  return farbe ? { kind: 'item', id: item.id, farbe } : { kind: 'item', id: item.id };
+  // its Güte and bonuses, with the dice of the colour (see bonuses.js)
+  const extra = dyeRng ? rollBonuses(origin, power, dyeRng) : {};
+  return { kind: 'item', id: item.id, ...(farbe ? { farbe } : {}), ...extra };
 }
 
 function monsterLoot(monster, result, ctx, rng, into, dyeRng) {

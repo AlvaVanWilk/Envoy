@@ -123,7 +123,8 @@ const CHAPTERS = [
     id: 'ausruestung',
     title: 'Ausrüstung',
     text: [
-      'Ausrüstung macht den Envoy nie stärker. Sie gibt Fähigkeiten, etwa mehr Schaden oder kürzere Wege. Dafür verlangt sie Mindestwerte.',
+      'Ausrüstung hebt nie einen Wert. Sie hilft in der Welt: mehr Schaden, bessere Treffer, schnellere Energie, mehr Glück. Dafür verlangt sie Mindestwerte.',
+      'Gefundene Kleidung hat eine Güte: schlicht, gut, selten oder prächtig. Je feiner, desto mehr Boni; je stärker der Envoy, desto größer sind sie.',
       'Sinkt ein Wert unter die Voraussetzung, legt der Envoy das Teil ab. Es liegt dann wieder im Rucksack.',
     ],
   },
@@ -186,6 +187,7 @@ const CHAPTERS = [
     when: (game) => game.unlocked('haendler'),
     text: [
       'Der Händler bietet jeden Tag andere Ausrüstung an, passend zur Stärke des Envoy. Er zahlt in Bannsplittern und kauft auch, was der Envoy nicht mehr braucht.',
+      'Dazu hat er jeden Tag zwei Pilztee und zwei Quellsud. Ein Trank füllt die Energie auf, höchstens bis ans Ende der Leiste.',
     ],
   },
   {

@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.12.2';
+export const APP_VERSION = '5.13.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -262,10 +262,37 @@ export const DYES = [
   { id: 'schiefer', name: 'Schiefer', rgb: [78, 84, 92] },
 ];
 
+// Ausrüstung mit Boni (see world/bonuses.js): a piece found, dropped by a
+// spirit or offered by the trader gets a Güte, which says how many bonuses it
+// has. QUALITY_CHANCES: the shares of the four for each origin. A bonus never
+// raises a stat; it helps in the world (see hero.js: fighter, staminaPerHour,
+// and the luck in run.js). Its size: base at strength 1, + perLevel for each
+// level of strength (average of the stats) when the piece turns up.
+export const QUALITIES = [
+  { id: 'schlicht', name: 'Schlicht', bonuses: 0 },
+  { id: 'gut', name: 'Gut', bonuses: 1 },
+  { id: 'selten', name: 'Selten', bonuses: 2 },
+  { id: 'praechtig', name: 'Prächtig', bonuses: 3 },
+];
+export const QUALITY_CHANCES = {
+  fund: [55, 30, 12, 3],
+  beute: [35, 40, 19, 6],
+  haendler: [25, 45, 24, 6],
+};
+export const BONUSES = [
+  { id: 'schaden', base: 1, perLevel: 0.2 },      // more damage with each hit
+  { id: 'treffer', base: 3, perLevel: 0.6 },      // percent points to hit
+  { id: 'ausweichen', base: 3, perLevel: 0.5 },   // percent points to dodge
+  { id: 'beruhigen', base: 4, perLevel: 0.8 },    // percent points to calm a spirit
+  { id: 'erholung', base: 8, perLevel: 1.2 },     // percent faster refilling of Energie
+  { id: 'glueck', base: 5, perLevel: 1 },         // percent more Bannsplitter and finds
+];
+
 // The arena (see arena.php and world/arena.js): open from this Lagerstufe on,
 // and only with an account, since the Abbilder of the others lie on the server.
 export const ARENA_FROM_STAGE = 1;
-export const ARENA_ENERGY = 5;         // a challenge costs this much Energie
+export const ARENA_ENERGY = 0;         // a challenge costs no Energie (since 5.13)
+export const ARENA_ENERGY_BEFORE = 5;  // what a challenge cost before, for fights written without the field
 export const ARENA_REACH = 3;          // places above or below that may be challenged (as on the server)
 // The Haltung of an Abbild; each one has the edge over another.
 export const HALTUNGEN = [
@@ -295,6 +322,16 @@ export const CAMP_LONGITUDE = 10;
 export const ENCOUNTER_CHANCE = 0.55;                  // per wild place and day
 export const ENCOUNTER_COST = 3;                        // stamina on site
 export const TRADER_OFFERS = 5;
+export const BONUS_PRICE = 0.4;                         // each bonus of a piece: 40 % more at the trader, and when sold
+// Tränke beim Händler (since 5.13): drunk at once when bought, each fills the
+// bar by so much Energie, never beyond its end (so the camp grows no faster).
+// Every day he has each of them in stock this many times.
+export const POTIONS = [
+  { id: 'pilztee', name: 'Pilztee', energie: 10, preis: 12, text: 'Bitter und warm. Danach geht es wieder.' },
+  { id: 'quellsud', name: 'Quellsud', energie: 25, preis: 28, text: 'Aus dem Wasser der stillen Quelle, mit einem Hauch Nebelkraut.' },
+];
+export const POTIONS_PER_DAY = 2;
+export const potionById = (id) => POTIONS.find((p) => p.id === id) || null;
 
 // Plans for Deko (see world/plans.js). A chance to find one: every 10
 // Energie of work at the place where it lies, every spirit the Envoy meets,

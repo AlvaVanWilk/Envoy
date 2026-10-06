@@ -9,7 +9,7 @@ import { statRow, statInfo } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { store } from '../store.js';
 import { addDays, formatDayShort } from '../days.js';
-import { viewHead, sectionTitle, itemIcon, staminaBar, effectText } from './parts.js';
+import { viewHead, sectionTitle, itemIcon, staminaBar, effectText, qualityClass } from './parts.js';
 import { openSlot, slotName } from './itemsheet.js';
 import { packBox } from './pack.js';
 
@@ -45,7 +45,7 @@ function slotTile(slotId, game) {
     'aria-label': item ? `${slotName(slotId)}: ${item.name}` : `${slotName(slotId)}: leer`,
     onclick: () => openSlot(slotId, game),
   },
-  h('span', { class: 'slot-frame' }, item ? itemIcon(item, game, 'item-icon', entry.farbe) : icon(SLOT_ICONS[slotId], 'slot-glyph')),
+  h('span', { class: `slot-frame${qualityClass(entry)}` }, item ? itemIcon(item, game, 'item-icon', entry.farbe) : icon(SLOT_ICONS[slotId], 'slot-glyph')),
   h('span', { class: 'slot-label' }, SLOTS.find((x) => x.id === slotId).short));
 }
 

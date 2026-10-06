@@ -15,13 +15,17 @@ function addEffects(total, effects) {
   return total;
 }
 
-// All abilities from worn items.
+// All abilities from worn items: those of the piece (the table) and the
+// bonuses of this one piece (its Güte, see bonuses.js).
 export function effects(world, catalog) {
   const total = { ...EMPTY };
   for (const inst of Object.values(world.equipped)) {
     const entry = world.items[inst];
     const item = entry && catalog.itemById.get(entry.id);
-    if (item) addEffects(total, item.effekt);
+    if (item) {
+      addEffects(total, item.effekt);
+      addEffects(total, entry.bonus);
+    }
   }
   return total;
 }
