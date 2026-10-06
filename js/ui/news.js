@@ -3,7 +3,7 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, RESOURCE_ICONS, UI_ICONS, ENERGY_ICON } from './icons.js';
+import { NAV_ICONS, RESOURCE_ICONS, UI_ICONS, ENERGY_ICON, STAT_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
 export const NEWS_ID = '5.12';
@@ -20,6 +20,8 @@ const NEWS = [
     text: 'Jede erledigte Aufgabe füllt ein Viertel eurer Energie auf, auch über die Leiste hinaus. Alle vier zusammen sind eine ganze Leiste.' },
   { icon: RESOURCE_ICONS.splitter, title: 'Mehr Bannsplitter!',
     text: 'Wiederholbare Quests bringen jetzt viel mehr Bannsplitter, und viele lassen sich jeden Tag machen.' },
+  { icon: STAT_ICONS.gelassenheit, title: 'Ein Hinweis, bevor etwas verloren geht',
+    text: 'Ist das Tageswerk gestern liegen geblieben, sagt euch Envoy am nächsten Tag Bescheid. Ein Tag Pause kostet nichts, erst der zweite.' },
   { icon: NAV_ICONS.lager, title: 'Das Lager bleibt ein großes Vorhaben',
     text: 'Damit es nicht zu schnell fertig ist, braucht das Aufwerten mehr Energie am Stück. Pläne für Deko sind etwas seltener, beim Händler kosten sie mehr.' },
 ];

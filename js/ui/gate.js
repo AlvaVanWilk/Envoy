@@ -2,11 +2,13 @@
 // the news of a new version (see news.js), then, for an Envoy from before the
 // age was asked, the age. That one cannot be put aside: the Tageswerk follows
 // it (children have their own exercises, see tasks.js), and once it is given
-// the open tasks of today are made anew.
+// the open tasks of today are made anew. Last, once a day, the note after a
+// day without the Tageswerk (see daynote.js).
 
 import { h } from './dom.js';
 import { birthYearFor, ageOf } from './create.js';
 import { NEWS_ID, openNews } from './news.js';
+import { dayNoteDue, markDayNoteSeen, openDayNoteFor } from './daynote.js';
 import { store } from '../store.js';
 
 let open = false;
@@ -31,12 +33,19 @@ export function showGates(game) {
     openNews(() => {
       markNewsSeen();
       open = false;
-      if (needsAge(game)) showGates(game);
+      if (needsAge(game) || dayNoteDue(game)) showGates(game);
       else game.refresh();   // what waited for it (a tour) comes now
     });
   } else if (needsAge(game)) {
     open = true;
     openAgeGate(game, () => { open = false; });
+  } else if (dayNoteDue(game)) {
+    open = true;
+    markDayNoteSeen(game);
+    openDayNoteFor(game, () => {
+      open = false;
+      game.refresh();
+    });
   }
 }
 

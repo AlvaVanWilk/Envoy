@@ -3,8 +3,9 @@
 // of it. Its buttons fill the Energie or add more beyond the end of the bar
 // (for raising the camp), add Stein, Pilzholz, Bannsplitter and Ruhm (for the
 // arena), find the next
-// plan for Deko or a piece of clothing (in a colour of its own), and bring the Envoy back from an expedition at once, so
-// everything can be tried without waiting. The last ones open the Kleiderkammer
+// plan for Deko or a piece of clothing (in a colour of its own), bring the Envoy back from an expedition at once, and
+// show the note after a day without the Tageswerk (as if Kraft and
+// Gelassenheit had been left yesterday), so everything can be tried without waiting. The last ones open the Kleiderkammer
 // (the user's page on claude.ai for the drawings of the clothes, see
 // CLAUDE.md) or copy its address. On iPhone and iPad a link to claude.ai opens
 // the Claude app; the address with x-safari-https opens it in Safari instead
@@ -18,6 +19,7 @@ import { MATERIALS, CURRENCY } from '../config.js';
 import { IS_TEST } from '../stage.js';
 import { toast } from './sheet.js';
 import { thingName } from '../world/clothes.js';
+import { openDayNote } from './daynote.js';
 
 const MATERIAL_AMOUNT = 25;
 const SPLITTER_AMOUNT = 50;
@@ -79,6 +81,7 @@ function actions(game) {
     button('Plan finden', () => findPlan(game), game.state.world.camp.stage < 2),
     button('Kleidung finden', () => findClothes(game)),
     button('Expedition beenden', run({ fertig: true }, 'Der Envoy ist zurück'), !game.state.world.expedition),
+    button('Hinweis: Tageswerk liegen geblieben', () => openDayNote(['kraft', 'gelassenheit'], true, () => {})),
     ...wardrobeLinks(),
   ];
 }

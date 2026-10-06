@@ -164,3 +164,37 @@ test('the time-limited bonus is asked for by time', () => {
   assert.equal(bonusOf({}, 'tageswerk', 0), 0);
 });
 
+
+test('at stake: after a day without a task, leaving it today as well would cost something', () => {
+  const events = [];
+  for (let i = 0; i < 7; i += 1) events.push(done(addDays(START, i), 'kraft', 20));
+  // yesterday (START+6) Kraft was done: today's day would be the first missed one, it costs nothing
+  assert.deepEqual(replay(events, catalog, addDays(START, 7)).atStake, {});
+  // yesterday (START+7) Kraft was left: today it would cost 5 XP (a quarter of 20)
+  const s = replay(events, catalog, addDays(START, 8));
+  assert.deepEqual(Object.keys(s.atStake), ['kraft']);
+  assert.ok(Math.abs(s.atStake.kraft - 5 / 73.5) < 0.01, `${s.atStake.kraft}`);
+  // done today: nothing at stake any more
+  assert.deepEqual(replay([...events, done(addDays(START, 8), 'kraft', 20)], catalog, addDays(START, 8)).atStake, {});
+  // the other stats were never done: nothing to lose
+  assert.equal(s.atStake.ausdauer, undefined);
+});
+
+test('at stake: nothing at the floor', () => {
+  const events = [done(START, 'kraft', 802)]; // straight to level 10
+  const low = replay(events, catalog, addDays(START, 400));
+  assert.equal(low.stats.kraft.level, 6);
+  assert.deepEqual(low.atStake, {});
+});
+
+test('the note after a day without the Tageswerk names the stats at stake', async () => {
+  const { dayNoteText } = await import('../js/ui/daynote.js');
+  const one = dayNoteText(['kraft'], true);
+  assert.equal(one.title, 'Gestern blieb die Aufgabe für Kraft liegen');
+  assert.match(one.text, /^Ein Tag Pause kostet nichts\. Bleibt sie heute auch liegen, verliert dein Envoy ab morgen etwas von dem, was er sich bei Kraft erarbeitet hat\.$/);
+  const two = dayNoteText(['kraft', 'ausdauer', 'gelassenheit'], false);
+  assert.equal(two.title, 'Gestern blieben die Aufgaben für Kraft, Ausdauer und Gelassenheit liegen');
+  assert.ok(!two.text.includes('Pause'));
+  assert.equal(dayNoteText(['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit'], true).title, 'Gestern blieb das Tageswerk liegen');
+  for (const x of [one, two]) assert.ok(!`${x.title}${x.text}`.includes('!'));
+});

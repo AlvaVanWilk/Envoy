@@ -221,6 +221,19 @@ erreicht hat, fällt nie unter 18. **Untergrenze:** Level 1, 0 XP.
 
 Die Anzeige nennt ausgelassene Tage „Pause“, mit dem Abzug (z. B. „−5 Kraft“).
 
+**Hinweis am Tag danach** (so gewünscht, `js/ui/daynote.js`). Ist eine Aufgabe gestern
+liegen geblieben und würde es den Wert etwas kosten, wenn sie auch heute liegen bleibt
+(also nicht am ersten Tag in Folge, nicht am Bodensatz, nicht ohne bisherigen Gewinn;
+`atStake` aus `js/replay.js`), erscheint beim ersten Öffnen des Tages einmal ein Fenster,
+nach den Neuigkeiten und dem Alter: die Zeichen der betroffenen Werte, „Gestern blieb die
+Aufgabe für Kraft liegen“ (mehrere: „Gestern blieben die Aufgaben für Kraft und
+Gelassenheit liegen“, alle vier: „Gestern blieb das Tageswerk liegen“), darunter „Ein Tag
+Pause kostet nichts. Bleibt sie heute auch liegen, verliert dein Envoy ab morgen etwas von
+dem, was er sich bei Kraft erarbeitet hat.“ Den ersten Satz nur, wenn gestern der erste
+Tag ohne die Aufgabe war. Knöpfe „Später“ und „Zum Tageswerk“; Esc oder ein Tipp daneben
+schließt es. Einmal am Tag je Gerät (`dayNote` in den Einstellungen des Geräts). Ruhig und
+sachlich, ohne Ausrufezeichen und ohne Zahl: Es soll warnen, nicht drängen (Punkt 2).
+
 ### Tagesgrenze
 
 Ein Tag beginnt um 3:00 Uhr Ortszeit. Ein Tag gilt als abgeschlossen, sobald der
@@ -1284,8 +1297,10 @@ auf den IONOS-Webspace, in zwei Ordner:
   das Schild „Test“ ein Menü über der Seite: „Energie auffüllen“, „+50 Energie“ (über die
   Leiste hinaus, damit sich das Aufwerten ohne hohe Ausdauer ausprobieren lässt), „+25
   Stein“, „+25 Pilzholz“, „+50 Bannsplitter“, „Plan finden“ (der nächste noch nicht
-  gefundene der erreichten Lagerstufen) und „Expedition beenden“ (Ereignis `test`;
-  Material nur so viel, wie passt), damit sich alles ohne Warten ausprobieren lässt, dazu
+  gefundene der erreichten Lagerstufen), „Expedition beenden“ (Ereignis `test`;
+  Material nur so viel, wie passt) und „Hinweis: Tageswerk liegen geblieben“ (zeigt den
+  Hinweis am Tag danach, als wären Kraft und Gelassenheit gestern liegen geblieben),
+  damit sich alles ohne Warten ausprobieren lässt, dazu
   „Kleiderkammer“: öffnet die Seite der Kleiderkammer auf claude.ai, auf iPad und Telefon
   in Safari statt in der Claude-App (Adresse mit `x-safari-https`, ab iOS 17), und „Link
   kopieren“ für die Adressleiste von Safari (beides auch schon vor dem ersten Envoy). In
@@ -1348,7 +1363,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Mehr sammeln als tragbar | geht nicht: + stoppt an der Grenze und sagt warum (statt hinterher etwas liegen lassen zu müssen) |
 | Lagerfeuer | die erste Quest: 8 Stein, 2 Pilzholz, 2 Energie; macht Lagerstufe 1 |
 | Hygge | Summe der Einrichtungen und der Deko; ab Stufe 2 reichen die Einrichtungen allein nicht; als Zahl auf dem Bild, ohne Fortschrittsanzeige |
-| Test-Knöpfe | am Schild „Test“ oben links, schwebend über der Seite (verschiebt nichts): Energie auffüllen, +50 Energie (über die Leiste hinaus, zum Aufwerten), +25 Stein, +25 Pilzholz, +50 Bannsplitter, Plan finden (ab Lagerstufe 2), Expedition beenden, Kleiderkammer öffnen (in Safari) und ihren Link kopieren; nur in der Testfassung |
+| Test-Knöpfe | am Schild „Test“ oben links, schwebend über der Seite (verschiebt nichts): Energie auffüllen, +50 Energie (über die Leiste hinaus, zum Aufwerten), +25 Stein, +25 Pilzholz, +50 Bannsplitter, Plan finden (ab Lagerstufe 2), Expedition beenden, Hinweis: Tageswerk liegen geblieben, Kleiderkammer öffnen (in Safari) und ihren Link kopieren; nur in der Testfassung |
 | Bilder beim Neuzeichnen | schon geladene Bilder werden übernommen statt neu geladen, damit nichts aufblitzt (Kleidung des Envoy, Karte) |
 | Formen | Knöpfe und Anzeigen kreisrund oder rechteckig, nicht oval |
 | Lagerbild | nach Stufe und Tageszeit (Sonnenstand) |

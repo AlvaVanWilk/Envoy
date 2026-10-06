@@ -12,7 +12,7 @@ import {
   STAT_IDS, MALUS_AVERAGE_WINDOW, INTENSITY_UP_AFTER, INTENSITY_DOWN_AFTER, CHILD_UP_AFTER,
   INTENSITY_DOWN_AFTER_MISSED_DAYS, TOO_MUCH, rulesOf,
 } from './config.js';
-import { addXp, removeXp, malusFactor, average } from './formulas.js';
+import { addXp, removeXp, malusFactor, average, toPosition } from './formulas.js';
 import { dayRange, addDays, morningMs } from './days.js';
 import { compareEvents } from './events.js';
 import { initialWorld, applyWorldEvent, restFromTask, checkEquipment, advance, wakeUp } from './world/worldstate.js';
@@ -38,6 +38,14 @@ function initialIntensity(catalog) {
     for (const exercise of catalog.units?.[stat] || []) intensity[exercise.key] = { level: 1, good: 0, hard: 0, fresh: false };
   }
   return intensity;
+}
+
+// A day without the task of a stat: the Malus (nothing on the first day in a
+// row), never below the floor (see removeXp).
+function missedDay(before, gains) {
+  const missed = before.missed + 1;
+  const malus = Math.round(malusFactor(missed) * average(gains));
+  return { missed, malus, after: malus > 0 ? removeXp(before, malus) : before };
 }
 
 // Up after two good runs in a row, down after two too hard ones in a row;
@@ -94,6 +102,7 @@ export function replay(events, catalog, today, now = Date.now()) {
   let sick = false;
   let todayDone = {};
   let todayParts = {};              // stat -> { row id: { id, antwort } }: exercises done of a task not done yet
+  let atStake = {};                 // stat -> what it would lose by tomorrow if today's task stays undone
 
   const firstEvent = sorted.find((e) => e.d <= today);
   const firstDay = firstEvent ? firstEvent.d : today;
@@ -179,6 +188,14 @@ export function replay(events, catalog, today, now = Date.now()) {
     if (day === today) {
       todayDone = done;
       todayParts = Object.fromEntries(Object.entries(parts).filter(([stat]) => !done[stat]));
+      // Left undone today as well (a day after one without it), a task would
+      // cost its stat something: so much of a level.
+      for (const stat of STAT_IDS) {
+        if (done[stat]) continue;
+        const { after } = missedDay(stats[stat], recentGains[stat]);
+        const loss = toPosition(stats[stat].level, stats[stat].xp) - toPosition(after.level, after.xp);
+        if (loss > 0) atStake[stat] = loss;
+      }
       for (const stat of STAT_IDS) {
         if (done[stat]) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: stats[stat].level, levelXp: stats[stat].xp });
       }
@@ -194,9 +211,7 @@ export function replay(events, catalog, today, now = Date.now()) {
         stats[stat] = { ...before, missed: 0 };
         if (day >= historyFrom) history[stat].push({ day, kind: 'gain', xp: done[stat].gain, level: before.level, levelXp: before.xp });
       } else {
-        const missed = before.missed + 1;
-        const malus = Math.round(malusFactor(missed) * average(recentGains[stat]));
-        const after = malus > 0 ? removeXp(before, malus) : before;
+        const { missed, malus, after } = missedDay(before, recentGains[stat]);
         stats[stat] = { ...after, missed };
         if (day >= historyFrom) history[stat].push({ day, kind: 'missed', missed, xp: -malus, level: after.level, levelXp: after.xp });
         // A long break lowers the stage of every exercise of the area, so
@@ -227,6 +242,7 @@ export function replay(events, catalog, today, now = Date.now()) {
     age: ageOn(world.envoy, today),
     todayDone,
     todayParts,
+    atStake,
     history,
     log,
     totals,

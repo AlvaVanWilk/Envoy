@@ -42,7 +42,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
-  Pilzholz, Bannsplitter und Ruhm dazu, Plan finden, Kleidung finden, Expedition beenden, die Kleiderkammer in Safari
+  Pilzholz, Bannsplitter und Ruhm dazu, Plan finden, Kleidung finden, Expedition beenden, den Hinweis
+  nach einem Tag ohne Tageswerk zeigen, die Kleiderkammer in Safari
   öffnen oder ihren Link kopieren,
   `js/ui/testtools.js`);
   die echte Fassung nie.
@@ -133,6 +134,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   „Liebe Envoys!“, große Überschriften, ein, zwei Sätze); ein Envoy ohne Alter wird danach
   gefragt, das Fenster lässt sich nicht wegklicken
 - Berichte einer Expedition erscheinen nur einmal, auch über Geräte hinweg (Ereignis `gesehen`)
+- Hinweis am Tag nach einem ausgelassenen Tageswerk (so gewünscht, `js/ui/daynote.js`): einmal am
+  Tag, nur für die Werte, die es morgen etwas kosten würde, wenn die Aufgabe heute wieder liegen
+  bleibt; ruhig, ohne Zahl, „Ein Tag Pause kostet nichts.“
 
 Freischaltung: Karte und Quests von Anfang an. Lagerfeuer und Händler über Quests,
 Lagerausbau über Hygge.

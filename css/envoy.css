@@ -2666,6 +2666,11 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 .news-title { margin: 2px 0 4px; font-family: var(--font-display); font-size: 21px; font-weight: 700; line-height: 1.2; color: var(--ivory-bright); text-wrap: balance; }
 .news-text { margin: 0; font-size: 15px; line-height: 1.45; color: var(--text-2); }
 .news-go { width: 100%; }
+/* the note after a day without the Tageswerk (daynote.js) */
+.daynote-card { max-width: 440px; }
+.daynote-stats { display: flex; gap: 8px; margin-bottom: 14px; }
+.daynote-text { margin: 0 0 20px; font-size: 16px; line-height: 1.5; color: var(--text-2); }
+.daynote-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
 @media (prefers-reduced-motion: reduce) {
   .gate-layer, .gate-card { transition: none; }
 }
