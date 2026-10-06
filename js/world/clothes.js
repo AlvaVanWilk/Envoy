@@ -3,7 +3,7 @@
 //
 // A drawing fits one figure or both (column `figur`, here `passt`). A piece
 // that does not fit the Envoy is never found for it, cannot be put on, and
-// is not drawn on it.
+// is not drawn on it. A piece that is not drawn yet is never given at all.
 //
 // A piece that can be dyed (`faerbbar`) gets a colour of its own when it is
 // found or offered (DYES, or as drawn). The colour belongs to the thing that
@@ -27,6 +27,17 @@ export const figureOf = (world) => (FIGURES.find((f) => f.id === world?.envoy?.f
 export function fits(item, figure) {
   return !item.passt || item.passt.includes(figure);
 }
+
+// Whether a piece is drawn for the figure: a layer of its own, or the one of
+// the first figure. A piece without a drawing does not come into the game,
+// not at the trader, not as loot, not as the reward of a quest, until the user
+// has drawn it (so wished); whoever owns one already keeps it.
+export function drawn(item, figure) {
+  return Boolean(item?.figur || item?.figuren?.[figure]);
+}
+
+// A piece the Envoy can get: it fits him and it is drawn.
+export const obtainable = (item, figure) => Boolean(item) && fits(item, figure) && drawn(item, figure);
 
 export const dyeById = (id) => DYES.find((d) => d.id === id) || null;
 

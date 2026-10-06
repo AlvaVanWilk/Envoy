@@ -23,7 +23,7 @@ import { fight } from './combat.js';
 import { itemLevel, unmetRequirements } from './items.js';
 import { roomFor } from './inventory.js';
 import { rollPlans } from './plans.js';
-import { fits, figureOf, rollDye, rollClothes } from './clothes.js';
+import { obtainable, figureOf, rollDye, rollClothes } from './clothes.js';
 
 const LOOT_BAND = 3;
 const WEARABLE_SHARE = 0.75;
@@ -55,15 +55,16 @@ function scaled(rng, amount, factor) {
   return whole + (rng() < exact - whole ? 1 : 0);
 }
 
-// An equipment piece that fits the hero's strength and figure, from spirits
-// (origin `beute`) or found on the way (`fund`), maybe in a colour of its own.
+// An equipment piece that fits the hero's strength and figure and is drawn,
+// from spirits (origin `beute`) or found on the way (`fund`), maybe in a
+// colour of its own.
 // Found on the way, it is mostly one that can be put on right away
 // (WEARABLE_SHARE), the very first always.
 export function lootThing(ctx, rng, origin, dyeRng) {
   const power = heroPower(ctx.stats);
   const figure = figureOf(ctx.world);
   const items = ctx.catalog.equipment.filter((i) => i.herkunft.includes(origin)
-    && fits(i, figure) && Math.abs(itemLevel(i) - power) <= LOOT_BAND);
+    && obtainable(i, figure) && Math.abs(itemLevel(i) - power) <= LOOT_BAND);
   if (items.length === 0) return null;
   const now = items.filter((i) => unmetRequirements(i, ctx.stats).length === 0);
   const first = (ctx.world?.clothes?.found || 0) === 0;
@@ -117,7 +118,9 @@ function fixedReward(quest, ctx, rng, into) {
   into.splitter += scaled(rng, roll(rng, r.splitter), bonus.splitter);
   into.pilzholz += scaled(rng, roll(rng, r.pilzholz), bonus.pieces);
   into.stein += scaled(rng, roll(rng, r.stein), bonus.pieces);
-  for (const id of r.items) into.things.push({ kind: 'item', id });
+  // a piece of clothing only once it is drawn (see obtainable)
+  const figure = figureOf(ctx.world);
+  for (const id of r.items) if (obtainable(ctx.catalog.itemById.get(id), figure)) into.things.push({ kind: 'item', id });
   for (const id of r.plans || []) into.plans.push(id);
   into.unlocks.push(...r.unlocks);
   into.rest = into.rest || r.rest;

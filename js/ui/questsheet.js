@@ -18,6 +18,7 @@ import { besideTheCamp } from '../world/map.js';
 import { roomFor, LIMITED_MATERIALS } from '../world/inventory.js';
 import { rewardRange, gatherEstimate } from '../world/run.js';
 import { facilityRow, facilityEffect, stageRow } from '../world/camp.js';
+import { obtainable, figureOf } from '../world/clothes.js';
 import { formatDayShort } from '../days.js';
 
 const range = ([a, b]) => (a === b ? String(a) : `${a}–${b}`);
@@ -44,7 +45,8 @@ function rewardParts(quest, c, monsters) {
   const r = rewardRange(quest, c);
   if (r) for (const key of MATERIAL_KEYS) if (r[key][1] > 0) parts.push(resource(key, range(r[key])));
   const names = [
-    ...(quest.reward?.items || []).map((id) => c.catalog.itemById.get(id)?.name),
+    ...(quest.reward?.items || []).map((id) => c.catalog.itemById.get(id))
+      .filter((item) => obtainable(item, figureOf(c.world))).map((item) => item.name),
     ...(quest.reward?.plans || []).map((id) => c.catalog.dekoById.get(id)?.name).filter(Boolean).map((name) => `Plan: ${name}`),
   ].filter(Boolean);
   for (const name of names) parts.push(h('span', { class: 'pill' }, name));

@@ -288,8 +288,10 @@ wie die Frau etwas obenherum: ein Unterhemd (`assets/figur/zweite/unterhemd.png`
 Nutzerin), direkt über der Basisfigur und unter der Hose, ohne Slot und nicht abzulegen;
 in den Einstellungen lässt es sich abschalten (Feld `unterhemd` im Ereignis `envoy`,
 `undershirt` in `FIGURES`). Figur und Ausrüstung zeichnet die Nutzerin; keine eigenen
-Platzhalter erzeugen. Teile ohne Bild werden nicht gezeichnet, als Icon dient das
-Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`), ebenso
+Platzhalter erzeugen. Teile ohne Bild kommen nicht ins Spiel (so gewünscht): kein
+Händler, keine Beute, kein Fundstück, keine Quest-Belohnung, bis die Nutzerin sie zeichnet
+(`obtainable` in `js/world/clothes.js`); wer eins schon hat, behält es, es wird dann nicht
+gezeichnet, als Icon dient das Slot-Symbol. Haut- und Haarfarbe färbt die App im Browser um (`js/ui/look.js`), ebenso
 die eigene Farbe eines gefundenen Stücks (Ebene und Icon).
 
 Dateinamen: `slot_name_stufe.png`, Icons mit Präfix `icon_`.

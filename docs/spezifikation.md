@@ -286,7 +286,7 @@ und warum.
 Die meiste Kleidung bringt keine Fähigkeit, sondern Vielfalt: Die Teile der Kleiderkammer
 (bisher 55, Oberteile, Hosen, Sandalen, Armwickel) werden **unterwegs gefunden** (Herkunft
 `fund`), auch bei Geistern und beim Händler. Feste Questbelohnungen, die für alle gleich
-sind, bleiben wenige (Handwickel, Bastsandalen, Griffhandschuhe, Leichte Stiefel …).
+sind, bleiben wenige (Handwickel, Bastsandalen, Griffhandschuhe …).
 
 - **Fund unterwegs:** jede Quest außer Bauen ist eine Chance, 3 % je Energie Arbeit, höchstens
   30 % je Quest. Der erste Fund kommt spätestens nach 5 Energie Arbeit (am ersten Tag) und ist
@@ -1110,10 +1110,17 @@ Trümmerfeld, die Bastsandalen (Nr. 9, für beide Figuren dieselbe Zeichnung, si
 an beide Füße) die der Quest „Bast aus dem Pilzhain“, beide ohne Voraussetzung. Die
 Griffhandschuhe sind die Belohnung für die Brücke über die Schlucht.
 
-**Teile ohne Bild:** Fehlt die Ebene eines Teils noch, wird es getragen, aber nicht
-gezeichnet; fehlt sein Icon, zeigt die App das Symbol des Slots. Die Umwandlung listet
-fehlende Bilder als Hinweis, ohne abzubrechen. Sobald eine Datei mit dem Namen aus der
-Tabelle da ist, erscheint sie.
+**Teile ohne Bild kommen nicht ins Spiel** (so gewünscht): Ein Teil, das die Nutzerin
+noch nicht gezeichnet hat (keine Ebene für die Figur des Envoy), bietet der Händler nicht
+an, kein Geist lässt es fallen, es liegt nicht unterwegs, und eine Quest, die es als
+Belohnung nennt, gibt es nicht und zeigt es nicht (sie bleibt, mit dem Rest ihrer
+Belohnung). Das betrifft bisher die Echohöhle (Kampfhose), Durch den Spalt (Stirnband),
+Spiegel im Mondsee (Stillemaske), den Turm der Stufen (Leichte Stiefel) und den
+Aschenthron (Nebelwickel) sowie zehn Teile von Händler und Geistern (`obtainable` in
+`js/world/clothes.js`). Wer ein solches Teil schon hat, behält es; es wird getragen, aber
+nicht gezeichnet, als Icon dient das Symbol des Slots. Sobald die Zeichnung da und in der
+Tabelle eingetragen ist, kommt das Teil von selbst ins Spiel. Die Umwandlung listet
+fehlende Bilder als Hinweis, ohne abzubrechen.
 
 Icons sind 256 × 256 px, transparent. Sie werden aus den Zeichnungen der Ebenen
 freigestellt und mittig gesetzt (so gewünscht); ein eigenes Icon mit gleichem Namen

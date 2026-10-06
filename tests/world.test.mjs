@@ -184,12 +184,35 @@ test('a cave: the stronger the Envoy, the deeper she gets; the cave reward only 
   };
   assert.ok(depth(2) >= 1);
   assert.ok(depth(6) > depth(2));
-  const full = runQuest(quest, { ...base, stats: statsAt(15) }, 'x');
+  // the cave's own reward (here a piece of clothing, as if it were drawn) only when all are overcome
+  const drawnCatalog = { ...catalog, itemById: new Map([...catalog.itemById].map(([id, item]) => [id, id === 'beine_kampfhose_2' ? { ...item, figur: 'x.png' } : item])) };
+  const withDrawing = { ...base, catalog: drawnCatalog };
+  const full = runQuest(quest, { ...withDrawing, stats: statsAt(15) }, 'x');
   assert.equal(full.cleared, true);
   assert.equal(full.defeated, 5);
   assert.ok(full.reward.things.some((t) => t.id === 'beine_kampfhose_2'));
-  const partial = runQuest(quest, { ...base, stats: statsAt(2) }, 'x');
+  const partial = runQuest(quest, { ...withDrawing, stats: statsAt(2) }, 'x');
   if (!partial.cleared) assert.ok(!partial.reward.things.some((t) => t.id === 'beine_kampfhose_2'));
+});
+
+test('a piece that is not drawn yet is never given: not by a quest, not by the trader, not as loot', () => {
+  const s = replay([], catalog, DAY, T0);
+  const undrawn = new Set(catalog.equipment.filter((i) => !i.figur && !Object.keys(i.figuren || {}).length).map((i) => i.id));
+  assert.ok(undrawn.has('beine_kampfhose_2'));
+  const quest = catalog.questById.get('q-echohoehle');
+  const full = runQuest(quest, { ...ctxOf(s), stats: statsAt(15) }, 'x');
+  assert.equal(full.cleared, true);
+  assert.ok(full.reward.splitter >= 30);
+  for (const level of [1, 4, 8, 12]) {
+    const c = { ...ctxOf(s), stats: statsAt(level), statsAtDayStart: statsAt(level) };
+    for (let d = 0; d < 30; d += 1) {
+      for (const offer of offersFor(`2026-06-${String(d + 1).padStart(2, '0')}`, c)) assert.ok(!undrawn.has(offer.id), `trader ${offer.id}`);
+    }
+    for (let i = 0; i < 40; i += 1) {
+      const out = runQuest(quest, { ...c, stats: statsAt(level) }, `l${level}-${i}`);
+      for (const t of out.reward.things) assert.ok(!undrawn.has(t.id), `loot ${t.id}`);
+    }
+  }
 });
 
 // An expedition that only brings things, as a gift for the test.

@@ -14,6 +14,7 @@ import { resourceIcon, sectionTitle, MATERIAL_KEYS } from './parts.js';
 import { questsAt, placeUnlocked } from '../world/quests.js';
 import { rewardRange } from '../world/run.js';
 import { plansFindable } from '../world/plans.js';
+import { obtainable, figureOf } from '../world/clothes.js';
 import { formatDayShort } from '../days.js';
 
 const FILTERS = [
@@ -69,7 +70,7 @@ function rewardsOf(quest, c) {
   }
   for (const id of quest.reward?.items || []) {
     const item = c.catalog.itemById.get(id);
-    if (!item) continue;
+    if (!obtainable(item, figureOf(c.world))) continue;
     tags.add('kleidung');
     chips.push(h('span', { class: 'ql-chip is-thing' }, icon(SLOT_ICONS[item.slot] || SLOT_ICONS.torso), item.name));
   }
