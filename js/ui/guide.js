@@ -76,8 +76,8 @@ const CHAPTERS = [
     id: 'energie',
     title: 'Energie',
     text: [
-      'Alles, was dein Envoy tut, kostet Energie: eine Energie ist eine Minute. Wege, Sammeln, Bauen und Kämpfe zählen alle.',
-      'Je Level Ausdauer hat die Leiste zehn Energie. Sie füllt sich in etwa acht Stunden von selbst. Jede erledigte Aufgabe des Tageswerks gibt ein Achtel der Leiste dazu, auch über ihr Ende hinaus.',
+      'Alles, was dein Envoy tut, kostet Energie: Sammeln, Erkunden, Bauen und Kämpfe. Wege kosten keine Energie, nur ein wenig Zeit.',
+      'Je Level Ausdauer hat die Leiste zehn Energie. Sie füllt sich in etwa acht Stunden von selbst. Jede erledigte Aufgabe des Tageswerks gibt ein Viertel der Leiste dazu, auch über ihr Ende hinaus.',
     ],
   },
   {
@@ -93,7 +93,7 @@ const CHAPTERS = [
     title: 'Abenteuer',
     text: [
       'Unter Abenteuer liegt die Karte der Zwischenwelt. Jeder Ort hat seine Quests: sammeln, erkunden, bauen, kämpfen. Ein Tipp auf den Ort zeigt sie.',
-      'Eine Expedition dauert echte Zeit: Hinweg, vor Ort und Rückweg. Jede Energie ist eine Minute. Der Envoy ist immer nur auf einer Expedition zugleich.',
+      'Eine Expedition dauert echte Zeit: Hinweg, vor Ort und Rückweg. Jede Energie dauert zehn Sekunden. Der Envoy ist immer nur auf einer Expedition zugleich.',
     ],
   },
   {
@@ -101,7 +101,7 @@ const CHAPTERS = [
     title: 'In Reihe',
     when: (game) => game.state.world.journal.length > 0,
     text: [
-      'Solange der Envoy unterwegs ist, kannst du ihm mehr aufgeben: Der Knopf heißt dann „Anhängen“. Er geht von Ort zu Ort und erst am Ende zurück ins Lager. Das spart Wege.',
+      'Solange der Envoy unterwegs ist, kannst du ihm mehr aufgeben: Der Knopf heißt dann „Anhängen“. Er geht von Ort zu Ort und erst am Ende zurück ins Lager.',
       'Beim Sammeln rechnet die Reihe mit den besten Würfeln. Brauchen sie mehr, als die Energie hergibt, fällt das Letzte aus der Reihe.',
     ],
   },
@@ -123,7 +123,7 @@ const CHAPTERS = [
     id: 'ausruestung',
     title: 'Ausrüstung',
     text: [
-      'Ausrüstung macht den Envoy nie stärker. Sie gibt Fähigkeiten, etwa mehr Schaden oder weniger Energie für lange Wege. Dafür verlangt sie Mindestwerte.',
+      'Ausrüstung macht den Envoy nie stärker. Sie gibt Fähigkeiten, etwa mehr Schaden oder kürzere Wege. Dafür verlangt sie Mindestwerte.',
       'Sinkt ein Wert unter die Voraussetzung, legt der Envoy das Teil ab. Es liegt dann wieder im Rucksack.',
     ],
   },

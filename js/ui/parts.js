@@ -62,6 +62,12 @@ export function formatMinutes(minutes) {
   return rest ? `${hours} Std. ${rest} Min.` : `${hours} Std.`;
 }
 
+// A short time: seconds under a minute, else as formatMinutes.
+export function formatDuration(minutes) {
+  if (minutes < 1) return `${Math.max(1, Math.round(minutes * 60))} Sek.`;
+  return formatMinutes(minutes);
+}
+
 function overNote(over, rested) {
   return over <= (rested || 0) ? `Ausgeschlafen: ${over} extra` : `${over} über der Leiste`;
 }
@@ -92,16 +98,12 @@ export function staminaBar(st) {
 
 // The Energie bar before setting out: full, what stays for sure; striped,
 // what the dice of gathering may take or leave; at the end of the bar what it
-// takes, as one block, its way part tinted. Below, how much of it is way
-// („davon Weg 2“), and in a row, how much it would be on its own („statt 4“).
-// cost: { least, most, way, alone } (see game.plan)
+// takes, as one block. cost: { least, most } (see game.plan)
 export function energyPreview(st, cost) {
   const value = Math.floor(st.value);
   const total = Math.max(st.max, value);
   const least = Math.max(0, Math.ceil(cost.least));
   const most = Math.max(least, Math.ceil(cost.most));
-  const way = Math.min(least, Math.max(0, Math.round(cost.way || 0)));
-  const alone = Math.round(cost.alone || 0);
   const share = (n) => `${(100 * n) / total}%`;
   const step = st.max <= 30 ? 1 : st.max <= 60 ? 5 : st.max <= 120 ? 10 : 20;
   const amount = least === most ? String(least) : `${least}–${most}`;
@@ -115,11 +117,7 @@ export function energyPreview(st, cost) {
     h('div', { class: 'stamina-bar', style: { '--notches': String(total / step) } },
       h('span', { class: 'ep-keep', style: { width: share(start) } }),
       maybe > 0 ? h('span', { class: 'ep-maybe', style: { left: share(start), width: share(maybe) } }) : null,
-      block > 0 ? h('span', { class: 'ep-block', style: { left: share(start + maybe), width: share(block) } },
-        way > 0 ? h('span', { class: 'ep-way', style: { width: `${(100 * Math.min(way, block)) / block}%` } }) : null) : null),
-    way > 0 || alone > way ? h('p', { class: 'ep-legend' },
-      h('span', { class: 'ep-swatch' }),
-      `davon Weg ${way}${alone > way ? ` statt ${alone}` : ''}`) : null);
+      block > 0 ? h('span', { class: 'ep-block', style: { left: share(start + maybe), width: share(block) } }) : null));
 }
 
 // The picture of a thing, as drawn for the figure of this Envoy; in its

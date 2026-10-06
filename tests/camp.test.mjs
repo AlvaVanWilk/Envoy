@@ -10,7 +10,7 @@ import { planExpedition } from '../js/world/expedition.js';
 import { roomFor, storeCapacity, materialLimit, hasSpace, stow } from '../js/world/inventory.js';
 import { seededRandom } from '../js/world/rng.js';
 import { addDays, dayKey } from '../js/days.js';
-import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE, GATHER_BASE, GATHER_DICE, GATHER_FIND_CHANCE } from '../js/config.js';
+import { BACKPACK_SIZE, MATERIAL_WITHOUT_STORE, GATHER_BASE, GATHER_DICE, GATHER_FIND_CHANCE, RULES, RULES_NOW } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -35,17 +35,20 @@ function gift(reward, hoursAfter = 0, consumed = {}, day = DAY) {
     outcome: { kind: 'sammeln', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed,
       reward: { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: [], rest: false, ...reward } } }, hoursAfter, day);
 }
-// Starts an expedition like the app does.
+// Starts an expedition like the app does (with the rules since 5.12).
+// minutes: how long it takes, there and back.
+const minutes = new WeakMap();
 function expeditionEvent(events, questId, hoursAfter, options = {}) {
   const s = replay(events, catalog, DAY, T0 + hoursAfter * H);
   const c = ctxOf(s);
   const quest = questById(questId, c);
-  const e = ev('expedition', { q: quest.id, place: quest.place, title: quest.name }, hoursAfter);
+  const e = ev('expedition', { q: quest.id, place: quest.place, title: quest.name, regel: RULES }, hoursAfter);
   const energy = staminaAt(s.world, e.t, s.stats, c.fx);
   const plan = planExpedition(quest, c, e.id, { ...options, energy });
-  return Object.assign(e, { out: plan.out, act: plan.act, back: plan.back, cost: plan.cost, outcome: plan.outcome });
+  minutes.set(e, plan.out + plan.act + plan.back);
+  return Object.assign(e, { least: plan.outcome.stamina, outcome: plan.outcome });
 }
-const total = (e) => e.out + e.act + e.back;
+const total = (e) => minutes.get(e);
 
 // --- the Vorrat -----------------------------------------------------------------
 
@@ -103,7 +106,7 @@ test('gathering is offered on the Trümmerfeld beside the camp from the start an
   const plan = planExpedition(GATHER('stein'), ctxOf(s), 'x', { amount: 6, energy: 10 });
   assert.equal(plan.out, 0);
   assert.equal(plan.back, 0);
-  assert.equal(plan.act, plan.outcome.stamina);
+  assert.equal(plan.act, plan.outcome.stamina * RULES_NOW.pace);
   assert.equal(plan.cost, plan.outcome.stamina);
 });
 
@@ -142,7 +145,7 @@ test('to a set amount: exactly that many, never more', () => {
     const exact = runQuest(GATHER('stein'), ctxOf(s), `menge${i}`, { amount: 7, energy: 10 });
     assert.equal(exact.reward.stein, 7);
     assert.ok(exact.stamina >= 2 && exact.stamina <= 4, `energy ${exact.stamina}`);
-    assert.equal(exact.minutes, exact.stamina * 1);
+    assert.equal(exact.minutes, exact.stamina * RULES_NOW.pace);
   }
 });
 
@@ -214,7 +217,8 @@ test('the first shoes: a quest in the Pilzhain without conditions, a short way f
   assert.deepEqual(quest.reward.items, ['schuhe_bastsandalen_1']);
   assert.equal(quest.repeatable, false);
   const plan = planExpedition(quest, ctxOf(s), 'x', { energy: 10 });
-  assert.equal(plan.out + plan.act + plan.back, 4);   // one Energie each way, two there
+  assert.equal(plan.cost, 2);                                     // two Energie there, the ways cost none
+  assert.equal(plan.out + plan.act + plan.back, 4 * RULES_NOW.pace);   // a way of one each, 40 seconds in all
   const e = expeditionEvent([], 'q-bastsandalen', 0.1);
   const back = replay([e], catalog, DAY, T0 + 0.1 * H + total(e) * 60000 + 1000);
   const sandals = Object.values(back.world.items).find((i) => i.id === 'schuhe_bastsandalen_1');
@@ -367,7 +371,13 @@ test('the Schlafplatz gives its Energie in the morning (6 Uhr), also when it was
   assert.equal(Math.round(s.world.stamina.value), 10);
 });
 
-test('each task of the Tageswerk gives an eighth of the bar back, also beyond its end', () => {
+test('each task of the Tageswerk gives a quarter of the bar back, also beyond its end', () => {
+  const task = (stat, minutes) => ev('done', { stat, teile: [], xp: 14, regel: RULES }, minutes / 60);
+  const s = replay([ev('envoy', { name: 'Ida', figur: 'erste' }), task('kraft', 10), task('gelassenheit', 20)], catalog, DAY, T0 + H);
+  assert.equal(s.world.stamina.value, 10 + 2 * (10 / 4));
+});
+
+test('before version 5.12 each task of the Tageswerk gave an eighth of the bar back', () => {
   const task = (stat, minutes) => Object.assign(ev('done', { stat, teile: [], xp: 14 }, minutes / 60), {});
   const s = replay([ev('envoy', { name: 'Ida', figur: 'erste' }), task('kraft', 10), task('gelassenheit', 20)], catalog, DAY, T0 + H);
   assert.equal(s.world.stamina.value, 10 + 2 * (10 / 8));

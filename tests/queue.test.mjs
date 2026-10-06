@@ -10,6 +10,7 @@ import { questById, questState } from '../js/world/quests.js';
 import { runQuest, siteStamina, gatherEstimate } from '../js/world/run.js';
 import { projectedWorld } from '../js/world/worldstate.js';
 import { legStamina, progressAt, heroPosition, timesOf, reserve } from '../js/world/expedition.js';
+import { RULES, RULE_SETS, RULES_NOW } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -26,17 +27,24 @@ function ctxOf(state) {
 }
 const place = (id) => catalog.placeById.get(id);
 
-// An action like the app writes it: rolled against the world after the row.
-function action(events, questId, t, options = {}, seed = null) {
+// An action like the app wrote it before version 5.12 (old rules: every
+// Energie a minute, ways cost Energie): rolled against the world after the
+// row. With regel 2, as the app writes it since (see the tests at the end).
+function action(events, questId, t, options = {}, seed = null, regel = 1) {
   n += 1;
   const c = ctxOf(replay(events, catalog, DAY, t));
   const after = { ...c, world: projectedWorld(c.world, c) };
   const quest = questById(questId, after);
   const id = seed || `q-${n}`;
-  const outcome = runQuest(quest, after, id, options);
+  const rolled = runQuest(quest, after, id, options);
+  const outcome = regel === 1 ? { ...rolled, minutes: rolled.stamina * RULE_SETS[1].pace } : rolled;
   const least = quest.gather ? gatherEstimate(quest, after, options).energy.min : siteStamina(quest, c.stats);
-  return { id, t, d: DAY, dev: 't', type: 'expedition', q: quest.id, place: quest.place, title: quest.name, least: Math.min(least, outcome.stamina), outcome };
+  return {
+    id, t, d: DAY, dev: 't', type: 'expedition', q: quest.id, place: quest.place, title: quest.name,
+    ...(regel === 1 ? {} : { regel }), least: Math.min(least, outcome.stamina), outcome,
+  };
 }
+const now = (events, questId, t, options = {}, seed = null) => action(events, questId, t, options, seed, RULES);
 const energy = (events, t) => replay(events, catalog, DAY, t).world.stamina.value;
 
 test('ways: the Trümmerfeld counts as the camp, from a place there is the way home', () => {
@@ -72,7 +80,7 @@ test('added while he works: straight on to the next place, the way home before i
   const there = heroPosition(exp, times.actions[1].arrive + 1000, catalog);
   assert.deepEqual([there.x, there.y], [place('pilzhain').x, place('pilzhain').y]);
   // the Bannsplitter count once the work at the shore is done, before the Envoy is back
-  assert.equal(replay([a, b], catalog, DAY, times.actions[0].done + 1000).world.purse.splitter, 1);
+  assert.ok(replay([a, b], catalog, DAY, times.actions[0].done + 1000).world.purse.splitter >= 3);
   const back = replay([a, b], catalog, DAY, times.end + 1000);
   assert.equal(back.world.expedition, null);
   assert.ok(back.world.purse.pilzholz >= 7);
@@ -169,11 +177,14 @@ test('in the app: start, add while away, the Energie of a row, take out again', 
   const alone = game.plan('q-uferkies');
   assert.equal(alone.busy, false);
   assert.equal(alone.block, null);
-  assert.deepEqual([alone.cost.least, alone.cost.way, alone.cost.alone], [5, 2, 2]);
-  assert.ok(game.startExpedition('q-uferkies'));
+  assert.deepEqual([alone.cost.least, alone.cost.way], [3, 0]);   // the work only, ways cost no Energie
+  const started = game.startExpedition('q-uferkies');
+  assert.ok(started);
+  assert.equal(started.regel, RULES);
   const next = game.plan('q-pilzholz-klein');
   assert.equal(next.busy, true);
-  assert.equal(next.cost.way, 2);           // shore → Pilzhain 2, home 1, the way home from the shore given back
+  assert.equal(next.cost.way, 0);
+  assert.equal(next.cost.least, 1);
   assert.equal(next.block, null);
   // the Lagerfeuer opens once Stein and Pilzholz are in the row
   assert.equal(game.plan('q-lagerfeuer').block, 'closed');
@@ -188,4 +199,69 @@ test('in the app: start, add while away, the Energie of a row, take out again', 
   game.unqueue(q.action.id);
   assert.equal(game.state.world.expedition.actions.length, 2);
   assert.equal(game.plan('q-lagerfeuer').block, 'closed');
+});
+
+// --- since version 5.12: ways cost no Energie, every Energie takes 10 seconds ---
+
+test('the rules since 5.12: the work costs Energie, ways only time, every Energie 10 seconds', () => {
+  assert.equal(RULES_NOW.pace, 1 / 6);
+  assert.equal(RULES_NOW.wayEnergy, 0);
+  const a = now([], 'q-uferkies', T0);
+  const s = replay([a], catalog, DAY, T0);
+  const first = s.world.expedition.actions[0];
+  assert.equal(first.regel, RULES);
+  assert.equal(reserve(first), 3);                            // the work there, no way
+  assert.equal(Math.round(s.world.stamina.value), 10 - 3);
+  const c = ctxOf(s);
+  const way = legStamina(camp(catalog), place('stillesufer'), c);
+  assert.ok(way >= 1);
+  assert.equal(first.way, way * RULES_NOW.pace);              // 10 seconds for every Energie-length of way
+  assert.equal(first.work, 3 * RULES_NOW.pace);               // 30 seconds of work
+  const { end } = timesOf(s.world.expedition);
+  assert.equal(end - T0, (2 * way + 3) * 10000);
+  const back = replay([a], catalog, DAY, end + 1000);
+  assert.equal(back.world.expedition, null);
+  assert.ok(back.world.purse.splitter >= 1);
+});
+
+test('the rules since 5.12: added while he works, he goes straight on, nothing to give back', () => {
+  const a = now([], 'q-uferkies', T0);
+  const s1 = replay([a], catalog, DAY, T0);
+  const first = s1.world.expedition.actions[0];
+  const t = T0 + (first.way + first.work / 2) * MIN;
+  const b = now([a], 'q-pilzholz-klein', t);
+  const s = replay([a, b], catalog, DAY, t);
+  const second = s.world.expedition.actions[1];
+  assert.equal(second.credit, 0);
+  assert.equal(reserve(second), 1);
+  assert.equal(Math.round(s.world.stamina.value), 10 - 3 - 1);
+  assert.deepEqual(second.from, { x: place('stillesufer').x, y: place('stillesufer').y });
+  const times = timesOf(s.world.expedition);
+  assert.equal(times.actions[1].begin, times.actions[0].done);
+  const back = replay([a, b], catalog, DAY, times.end + 1000);
+  assert.deepEqual(back.world.reports.at(-1).stops.map((x) => x.q), ['q-uferkies', 'q-pilzholz-klein']);
+});
+
+test('an action under the new rules after one under the old: the old way home comes back, the new way costs nothing', () => {
+  const a = action([], 'q-uferkies', T0);                     // before the update
+  const s1 = replay([a], catalog, DAY, T0);
+  const first = s1.world.expedition.actions[0];
+  assert.equal(reserve(first), 3 + first.way + first.home);   // the old rules: ways cost Energie
+  const t = T0 + (first.way + first.work / 2) * MIN;
+  const b = now([a], 'q-pilzholz-klein', t);
+  const s = replay([a, b], catalog, DAY, t);
+  const second = s.world.expedition.actions[1];
+  assert.equal(second.credit, first.home);                    // the old way home he no longer walks
+  assert.equal(reserve(second), 1 - first.home);
+  assert.equal(second.way, legStamina(place('stillesufer'), place('pilzhain'), ctxOf(s)) * RULES_NOW.pace);
+});
+
+test('taken out again under the new rules: its Energie comes back', () => {
+  const a = now([], 'q-uferkies', T0);
+  const b = now([a], 'q-pilzholz-klein', T0 + 5000);
+  const before = energy([a], T0 + 6000);
+  const out = { id: 'u-3', t: T0 + 6000, d: DAY, dev: 't', type: 'unqueue', ref: b.id };
+  const s = replay([a, b, out], catalog, DAY, T0 + 6000);
+  assert.equal(s.world.expedition.actions.length, 1);
+  assert.ok(Math.abs(s.world.stamina.value - before) < 0.05);
 });

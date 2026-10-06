@@ -253,7 +253,7 @@ Ausgangsdokument beschrieben und wird in Phase 2 umgesetzt.
 | treffer | Trefferchance in Prozentpunkten |
 | ausweichen | Ausweichchance in Prozentpunkten |
 | beruhigen | Chance, einen Geist zu beruhigen |
-| reise | weniger Energie je Weg (mindestens 1), damit auch kürzer unterwegs |
+| reise | kürzere Wege (mindestens 1); bis 5.11 auch weniger Energie je Weg |
 | erholung | Energie füllt sich schneller |
 | glueck | mehr Bannsplitter und öfter ein Fundstück |
 
@@ -312,23 +312,29 @@ Quest beginnen kann, bringt immer etwas zurück.
 ### Expeditionen in Echtzeit
 
 Jede Unternehmung ist eine Expedition vom Lager aus: Hinweg, die Arbeit vor Ort,
-Rückweg. Alle drei Teile dauern echte Minuten; eine dreiteilige Leiste zeigt, wo der
+Rückweg. Alle drei Teile dauern echte Zeit; eine dreiteilige Leiste zeigt, wo der
 Envoy gerade ist und wann die Expedition endet. Auf der Karte wandert seine Marke den Weg
 entlang. Es läuft immer nur eine Expedition; solange sie läuft, lässt sich ihr aber mehr
 **anhängen** (siehe „In Reihe“ unten): dann geht der Envoy von Ort zu Ort und erst am
 Ende zurück ins Lager.
 
-**Zeit folgt Energie: Jede Energie ist eine Minute unterwegs.** Was lange dauert,
-kostet entsprechend viel Energie; was wenig kostet, geht schnell. Die Spanne reicht von
-drei Minuten (etwas auflesen gleich neben dem Lager) bis weit über eine Stunde (eine
+**Zeit folgt Energie: Jede Energie dauert zehn Sekunden.** Was viel Energie kostet,
+dauert entsprechend länger; was wenig kostet, ist in Sekunden erledigt. Die Spanne reicht
+von zehn Sekunden (etwas auflesen gleich neben dem Lager) bis gut eine Viertelstunde (eine
 Nacht am Mondsee, bis zum Horizont). Lange Quests brauchen eine lange Leiste und damit
 den Wert Ausdauer. Die Leiste begrenzt, wie viel an einem Stück geht; ist sie leer, ist
-Pause. (Der Begriff „Energie“ steht für das, was verbraucht wird; „Ausdauer“ bleibt der
-Wert. Im Code heißt die Energie weiter `stamina`.)
+Pause. **Wege kosten keine Energie, nur Zeit.** (Der Begriff „Energie“ steht für das, was
+verbraucht wird; „Ausdauer“ bleibt der Wert. Im Code heißt die Energie weiter `stamina`.)
 
-- **Weg** (je Richtung) = Entfernung ÷ 20 Energie, gerundet, mindestens 1. Mit jedem
-  Level Ausdauer 3 % kürzer, höchstens auf die Hälfte. Stiefel und Umhänge können ihn
-  billiger machen, ein überfüllter Rucksack verteuert jeden Weg um 1. Die Karte ist
+Bis Version 5.11 dauerte jede Energie eine Minute, und die Wege kosteten Energie wie die
+Arbeit. Die Nutzerin fand das in der Praxis langweilig: Alles dauerte Minuten, und mehr als
+zwei, drei Sachen am Tag gingen nicht. Seit 5.12 gelten die neuen Regeln; ein Ereignis trägt
+dafür `regel: 2` (`RULE_SETS` in `js/config.js`). Ältere Ereignisse behalten die alten Regeln,
+so dass ein Spielstand von vorher genau so bleibt, wie er war.
+
+- **Weg** (je Richtung) = Entfernung ÷ 20, gerundet, mindestens 1, je Punkt zehn Sekunden.
+  Mit jedem Level Ausdauer 3 % kürzer, höchstens auf die Hälfte. Stiefel und Umhänge können
+  ihn kürzer machen, ein überfüllter Rucksack verlängert jeden Weg um 1. Die Karte ist
   1,5-mal so breit wie hoch, das fließt in die Entfernung ein. Am Lager selbst und auf
   dem Trümmerfeld gleich daneben gibt es keinen Weg; ein Weg vom Trümmerfeld aus ist
   ein Weg vom Lager aus, ein Weg zum Trümmerfeld ist der Weg ins Lager.
@@ -336,7 +342,7 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
   Level der unter „Tempo“ genannten Stats die Arbeit 4 % kürzer und damit billiger,
   höchstens auf die Hälfte. Kämpfe dauern so lange, wie die Tabelle sagt, gleich wie
   viele Runden sie gehen.
-- **Energie** der Expedition = 2 × Weg + vor Ort, **Dauer** = ebenso viele Minuten.
+- **Energie** der Expedition = vor Ort, **Dauer** = (2 × Weg + vor Ort) × zehn Sekunden.
   Die Energie wird beim Aufbruch beiseitegelegt (beim Sammeln, was die besten Würfel
   brauchen; den Rest nimmt sich der Envoy, wenn er dort ankommt).
 - Das Ergebnis wird beim Aufbruch berechnet und als Ereignis gespeichert und zählt,
@@ -348,7 +354,7 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
   (Treffer und Gegentreffer steigen als Zahl auf, wer getroffen wird, wackelt; ein
   beruhigter Geist leuchtet auf und verblasst; die Zeile darunter sagt, was in der Runde
   geschah, am Ende „besiegt“, „beruhigt“ oder „Der Envoy zieht sich zurück“); beim Sammeln
-  ein Zähler, der jede Minute um den Wurf wächst; sonst die Suche (oder das Bauen) mit
+  ein Zähler, der mit jeder Energie um den Wurf wächst; sonst die Suche (oder das Bauen) mit
   einer Leiste; auf dem Rückweg, was er trägt. Unter der Leiste das **Tagebuch** der Reise
   mit Uhrzeit: Aufbruch, Ankunft, Geist taucht auf, wie der Kampf ausging, gesammelt,
   gefunden, Rückweg (die letzten vier Zeilen, die neueste hebt sich kurz hervor). Auf der
@@ -374,16 +380,17 @@ Wert. Im Code heißt die Energie weiter `stamina`.)
 **In Reihe.** Solange der Envoy unterwegs ist, lässt sich ihm alles anhängen, was er tun
 kann: Quests, Begegnungen, Sammeln auf dem Trümmerfeld, das Lagerfeuer und die
 Einrichtungen. Er geht dann vom letzten Ort direkt zum nächsten statt zwischendurch ins
-Lager; das spart Wege, und eine lange Reihe füllt eine lange Zeit ohne App.
+Lager; das spart Zeit, und eine lange Reihe füllt eine lange Zeit ohne App.
 
 - Der erste Schritt ist ein ganz normaler Aufbruch. Während der Envoy unterwegs ist,
   heißt derselbe Knopf in jedem Fenster „Anhängen“ (im Quest-Fenster, beim Sammeln und
   bei den Einrichtungen).
-- **Der Weg** zur angehängten Aktion beginnt am Ort der letzten; die Energie für den
-  Rückweg von dort, die er nun nicht mehr geht, kommt zurück. Ist er schon auf dem
+- **Der Weg** zur angehängten Aktion beginnt am Ort der letzten. Ist er schon auf dem
   Rückweg, kehrt er dort um, wo er gerade ist (für etwas am Lager geht er einfach weiter).
-- **Anhängen geht, solange die Energie jetzt dafür reicht, mit dem Rückweg vom neuen
-  letzten Ort.** Beim Sammeln zählt dabei, was die besten Würfel brauchen. Brauchen die
+  (Hängt etwas an einer Aktion nach den alten Regeln, kommt deren Energie für den Rückweg
+  zurück, den er nun nicht mehr geht.)
+- **Anhängen geht, solange die Energie jetzt für die Arbeit dort reicht.** Beim Sammeln
+  zählt dabei, was die besten Würfel brauchen. Brauchen die
   Würfel dort mehr, als die Leiste dann hergibt, fällt die letzte Aktion der Reihe heraus
   (ihre Energie kommt zurück), so dass eingeplantes Material sicher gesammelt wird; erst
   wenn nichts mehr herausfallen kann, sammelt der Envoy, solange die Energie reicht. Was
@@ -396,7 +403,8 @@ Lager; das spart Wege, und eine lange Reihe füllt eine lange Zeit ohne App.
   Stufe lässt sich anhängen. Fehlt beim Aufbruch zu einem Bau doch
   Material, fällt der Bau heraus und die Energie kommt zurück. Das Fenster zeigt die Welt,
   wie sie nach der Reihe sein wird („Nach der Reihe im Vorrat …“).
-- Unterwegs zeigt die Leiste einen Block je Aktion (Weg kupfern, Arbeit hell) und den
+- Unterwegs zeigt die Leiste einen Block je Aktion (Weg kupfern, Arbeit hell), jeden mit
+  seiner Dauer („10 Sek.“, „2 Min.“), und den
   Rückweg, darüber die gerade laufende Aktion und den Weg „Das Lager – Stilles Ufer –
   Pilzhain – Das Lager“, darunter die Reihe: erledigt (Haken), jetzt (kupfern), wartend.
   Die letzte wartende lässt sich mit × herausnehmen, ihre Energie kommt zurück. Auf der
@@ -437,12 +445,11 @@ ein Ort ohne offene Quest „Hier ist alles getan.“ oder „Heute ist es hier 
 Voraussetzung (erfüllt oder nicht; Material, das die Quest verbraucht, gehört dazu, etwa
 „8 Stein, 2 Pilzholz“ beim Lagerfeuer), den Geist, die Belohnung und die Energie als
 Leiste: was sicher bleibt (voll), was die Würfel vielleicht brauchen (gestreift) und was
-die Quest kostet als ein Block, darin ihr Weg kupfern getönt, dazu „kostet 5 von 10“
-und darunter „davon Weg 2“. In der Reihe steht dort, wie viel Weg es allein wäre („davon
-Weg 2 statt 4“), so dass das Verrechnen der Wege zu sehen ist. Passt die
+die Quest kostet als ein Block, dazu „kostet 3 von 10“. Wege kosten keine Energie und
+stehen dort nicht (bis 5.11 war der Weg im Block kupfern getönt, „davon Weg 2“). Passt die
 Belohnung nicht mehr ganz in den Vorrat, steht dort „In den Vorrat passen davon nur
 6 Stein.“ Keine Dauer, kein „etwa“ oder
-„höchstens“, keine Stats für Tempo oder Ertrag: Energie und Minuten sind dasselbe, und
+„höchstens“, keine Stats für Tempo oder Ertrag: Die Dauer folgt der Energie, und
 die Stats wirken auch ungesagt. Reicht die Energie gerade nicht, steht auf dem Knopf,
 wann sie reicht; ist die Leiste insgesamt zu kurz, steht dort, dass sie mit Ausdauer
 wächst. Der Knopf heißt „Aufbrechen“, beim Bauen am Lager „Errichten“, beim Sammeln
@@ -455,9 +462,10 @@ wächst. Der Knopf heißt „Aufbrechen“, beim Bauen am Lager „Errichten“,
   einer langen Leiste je 5, 10 oder 20.
 - Sie füllt sich in etwa 8 Stunden, schneller mit Gelassenheit (+3 % je Level) und
   Erholung aus der Ausrüstung.
-- Jede erledigte Aufgabe des Tageswerks gibt ein Achtel der Leiste dazu, auch über ihr
+- Jede erledigte Aufgabe des Tageswerks gibt ein Viertel der Leiste dazu, auch über ihr
   Ende hinaus: Wer sein Tageswerk morgens mit voller Leiste macht, verschenkt nichts.
-  Alle vier zusammen sind eine halbe Leiste.
+  Alle vier zusammen sind eine ganze Leiste. (Bis 5.11 ein Achtel; eine Aufgabe von
+  vorher behält ihr Achtel, siehe `regel` im Ereignis.)
 - Der **Schlafplatz** gibt dem Envoy jeden Morgen um 6 Uhr einmal
   Energie dazu, über das Ende der Leiste hinaus, je nach Stufe 20 bis 40 % der Leiste:
   beim Raspelnest und 10 Energie wären es 12 von 10. Der
@@ -498,12 +506,12 @@ Arbeit läuft in echter Zeit weiter, auch wenn die App zu ist, und die Marke des
 läuft solange auf dem Trümmerfeld umher. Was er mitbringt, wird gewürfelt, aber nie
 schlecht:
 
-- Je Energie (also je Minute) bringt er **2 Stück** und dazu bis zu **2 weitere**: zwei
+- Je Energie (also je zehn Sekunden) bringt er **2 Stück** und dazu bis zu **2 weitere**: zwei
   Würfel, jeder gelingt mit einer Chance und bringt dann 1 Stück mehr. Bei Level 1 ist
   die Chance 25 % (im Schnitt 2,5 Stück je Energie, selten 4), sie steigt mit jedem
   Level um 1,5 Punkte, höchstens auf 90 %. Weniger als 2 Stück je Energie gibt es nie,
   Fehlwürfe gibt es nicht. Fallen beide Würfel, heißt der Fund „Glücksgriff“.
-- **Zufallsfund:** In jeder Minute beim Sammeln liegt mit 5 % ein Bannsplitter dabei
+- **Zufallsfund:** Bei jeder Energie beim Sammeln liegt mit 5 % ein Bannsplitter dabei
   (eigene Würfel, das Material bleibt davon unberührt; zum Ausprobieren der Idee, auf
   Wunsch der Nutzerin). Er steigt als „Fund: 1 Bannsplitter“ auf, steht im Tagebuch und
   im Bericht.
@@ -521,37 +529,53 @@ schlecht:
   10 Energie des Starts immer zu schaffen: 8 Stein kosten höchstens 4 Energie (4 × 2
   Stück), 2 Pilzholz höchstens 1, dazu 2 zum Bauen. Das sind höchstens 7 von 10, auch bei
   schlechtesten Würfen. Die 2 Energie für die ersten Handwickel („Stoff zwischen den
-  Trümmern“) passen noch dazu. Die Bastsandalen („Bast aus dem Pilzhain“, 4 Energie mit
-  dem Weg) kommen je nach Würfeln nach etwas Erholung, noch am selben Tag (die Leiste
-  füllt sich in 8 Stunden).
+  Trümmern“) passen noch dazu. Die Bastsandalen („Bast aus dem Pilzhain“, 2 Energie, der
+  Weg kostet keine) kommen je nach Würfeln gleich danach oder nach etwas Erholung, noch am
+  selben Tag; mit dem Tageswerk reicht es fast immer sofort.
 
 **Weitere Sammelorte.** Am Pilzhain und im Steinbruch gibt es noch je drei Quests mit
-festem Ertrag und Weg (je 1 Energie hin und zurück). Sie folgen derselben Rechnung wie
-das Trümmerfeld, gut 2 bis 4 Stück je Energie, damit sich der Weg lohnt, wenn das Lager
-große Mengen aufnimmt:
+festem Ertrag und einem kurzen Weg (je zehn Sekunden hin und zurück, ohne Energie). Sie
+bringen mehr Stück je Energie als das Trümmerfeld (bis 5.11 kostete der Weg je 1 Energie
+hin und zurück, dann waren es gut 2 bis 4 Stück je Energie wie dort):
 
-| Quest | vor Ort | Ertrag | mit Weg |
-| --- | --- | --- | --- |
-| Pilzholz auflesen / Lose Steine auflesen | 1 | 7–9 | 3 Energie |
-| Pilzholz schlagen / Steine brechen | 4 | 16–20 | 6 Energie |
-| große Quest (Kraft 4 für Pilzholz, Kraft 5 für Stein) | 10 | 38–44 | 12 Energie |
+| Quest | Energie | Ertrag |
+| --- | --- | --- |
+| Pilzholz auflesen / Lose Steine auflesen | 1 | 7–9 |
+| Pilzholz schlagen / Steine brechen | 4 | 16–20 |
+| große Quest (Kraft 4 für Pilzholz, Kraft 5 für Stein) | 10 | 38–44 |
 
 Ohne Stein- und Pilzlager passt nur ein Teil davon in den Vorrat; das sagt das Fenster
-der Quest vorher („In den Vorrat passen davon nur 6 Stein.“). Wie die Orte weiterwachsen, plant die Nutzerin. Bannsplitter lassen sich im Uferkies am Stillen Ufer
-sammeln (1 Stück). Wiederholbare lange Quests (Wache an der Furt, Eine Nacht am
-Mondsee, Bis zum Horizont) bringen mehr Bannsplitter, dauern aber 40 bis 90 Minuten vor
-Ort und haben eine Abklingzeit.
+der Quest vorher („In den Vorrat passen davon nur 6 Stein.“). Wie die Orte weiterwachsen, plant die Nutzerin.
 
-**Tempo der Wirtschaft.** Die Erträge sind bewusst klein, damit schnelle Quests nicht
-alles in wenigen Tagen öffnen. Die Quests der Welt bleiben an die Werte und an echte
-Minuten Treppe gebunden. Der Start ist bewusst eng (10 Energie, 10 Stück
-tragbar); es ist leichter, später etwas zu vereinfachen, als es nachträglich
-schwerer zu machen.
+**Bannsplitter aus Quests.** Seit 5.12 bringt jede wiederholbare Quest etwa einen
+Bannsplitter je Energie, damit sich jede lohnt (vorher teils nur einen für fünf Energie):
+
+| Quest | Energie | Bannsplitter | wieder nach |
+| --- | --- | --- | --- |
+| Splitter im Uferkies (Stilles Ufer) | 3 | 3–4 (vorher 1) | sofort |
+| Die umgestürzte Säule (dazu 4–6 Stein) | 8 | 7–9 (vorher 4) | 1 Tag (vorher 3) |
+| Die stille Quelle (dazu die Leiste voll) | 10 | 10–12 (vorher 8) | 3 Tagen |
+| Wache an der Furt | 40 | 36–44 (vorher 9–12) | 1 Tag |
+| Eine Nacht am Mondsee | 60 | 55–65 (vorher 15–19) | 1 Tag (vorher 2) |
+| Bis zum Horizont | 90 | 85–100 (vorher 24–30) | 1 Tag (vorher 3) |
+
+Die stille Quelle bleibt bei drei Tagen, weil sie die Leiste ganz auffüllt.
+
+**Tempo der Wirtschaft.** Die Quests der Welt bleiben an die Werte und an echte Minuten
+Treppe gebunden; die schnelleren Aktionen öffnen sie nicht früher. Der Ausbau des Lagers
+soll nicht schneller gehen als vor 5.12 (so gewünscht, „das soll nicht so schnell zu
+maximieren sein“). Deshalb braucht das Aufwerten mehr Energie am Stück (30, 70, 115, 165
+statt 22, 45, 85, 130), ein Plan für Deko braucht anderthalbmal so viele Chancen (9, 18, 36
+statt 6, 12, 24), und die beiden Pläne beim Händler kosten dreimal so viel (Teppich 120,
+Pilzholztisch 180). Eine Rechnung, die ein eifriges Spielen Tag für Tag nachstellt (alle
+vier Aufgaben, ein- bis dreimal am Tag gespielt), kommt mit den neuen Regeln an keinem
+Tag früher auf eine Lagerstufe als mit den alten, meist am selben Tag, manchmal ein, zwei
+Tage später.
 
 **Begegnungen:** Jeden Tag erscheinen an wilden Orten Geister (je Ort 55 % Chance,
 mindestens eine an einem von Anfang an offenen Ort). Welcher Geist kommt, richtet sich
 nach der Stärke des Helden (Durchschnitt der Stats zu Tagesbeginn): meist gleich stark,
-manchmal eine Stufe darüber. Eine Begegnung kostet 3 Ausdauer vor Ort plus Wege. Das Lager listet die Geister des Tages.
+manchmal eine Stufe darüber. Eine Begegnung kostet 3 Energie vor Ort (der Weg nur Zeit). Das Lager listet die Geister des Tages.
 
 ### Kampf
 
@@ -615,7 +639,7 @@ nur für Dinge (Kleidung, Fundstücke). Getragenes zählt nicht mit. Das Startou
 Handschuhe und Schuhe hat er am Anfang keine, er geht barfuß. Die ersten Handwickel bringt
 die Quest „Stoff zwischen den Trümmern“ auf dem Trümmerfeld (ohne Voraussetzung,
 2 Energie, ohne Weg), die Bastsandalen die Quest „Bast aus dem Pilzhain“ (ohne
-Voraussetzung, 2 Energie und je 1 Energie Weg). Beides landet im Rucksack und wird von
+Voraussetzung, 2 Energie und ein kurzer Weg). Beides landet im Rucksack und wird von
 dort angelegt.
 
 **Pilzholz und Stein liegen im Vorrat**, nicht im Rucksack: was der Envoy sammelt oder
@@ -657,18 +681,21 @@ Aufwerten auf die nächste Stufe braucht:
 
 | Stufe | Name | Aufwerten auf die nächste: Hygge | Kosten |
 | --- | --- | --- | --- |
-| 1 | Provisorisches Lager | 5 | 20 Stein, 20 Pilzholz, 22 Energie |
-| 2 | Unterstand | 14 | 50 + 50, 45 Energie |
-| 3 | Wackelige Hütte | 36 | 80 + 80, 85 Energie |
-| 4 | Stabile Hütte | 90 | 100 + 100, 130 Energie |
+| 1 | Provisorisches Lager | 5 | 20 Stein, 20 Pilzholz, 30 Energie |
+| 2 | Unterstand | 14 | 50 + 50, 70 Energie |
+| 3 | Wackelige Hütte | 36 | 80 + 80, 115 Energie |
+| 4 | Stabile Hütte | 90 | 100 + 100, 165 Energie |
 | 5 | Steinhäuschen | – | – |
 
 Aufwerten ist kein Muss. Es kostet immer etwa eine volle Ladung der Lager der Stufe davor,
 und die **Energie wird am Stück** gebraucht: Die Leiste muss lang genug sein, und die
 wächst nur mit der echten Ausdauer-Aufgabe (der Schlafplatz hilft, weil er morgens über
-das Ende der Leiste füllt). Wer jeden Tag die Ausdauer-Aufgabe macht, kommt frühestens
-etwa an Tag 5, 12, 22 und 34 auf die Stufen 2 bis 5; wer Tage auslässt, später. Mehr
-Training verlangt das nicht, nur Regelmäßigkeit. Einrichtungen und Deko bleiben beim
+das Ende der Leiste füllt, und das Tageswerk). Wer jeden Tag alle vier Aufgaben macht und
+ganz aufs Lager hin spielt, kommt frühestens etwa an Tag 4, 8, 14 bis 18 und 25 bis 30 auf
+die Stufen 2 bis 5, je nachdem, wie oft am Tag er spielt; wer Tage auslässt, später. Mehr
+Training verlangt das nicht, nur Regelmäßigkeit. (Bis 5.11 kostete das Aufwerten 22, 45, 85
+und 130 Energie; seit 5.12 gibt es mehr Energie am Tag, der Ausbau soll aber nicht schneller
+gehen, siehe Tempo der Wirtschaft.) Einrichtungen und Deko bleiben beim
 Aufwerten stehen.
 
 **„Lager aufwerten“** (Knopf auf dem Bild) trägt ein Schloss, solange das Hygge nicht
@@ -733,11 +760,11 @@ muss der Envoy finden:
 | 3 | Wasserkrug (5) | Stilles Ufer, selten |
 | 3 | Kräuterbund (6) | Stille Quelle, selten |
 | 3 | Windspiel (6) | Geister, sehr selten |
-| 3 | Teppich (7) | Händler, selten (40 Bannsplitter) |
+| 3 | Teppich (7) | Händler, selten (120 Bannsplitter) |
 | 4 | Kamin (8) | gleich da |
 | 4 | Laterne (6) | Die lange Straße, sehr selten |
 | 4 | Leuchtmooskasten (6) | Pilzhain, sehr selten |
-| 4 | Pilzholztisch (7) | Händler, selten (60 Bannsplitter) |
+| 4 | Pilzholztisch (7) | Händler, selten (180 Bannsplitter) |
 | 4 | Steinregal (7) | Alter Steinbruch, sehr selten |
 | 4 | Wandbehang (7) | Wache an der Furt, sehr selten |
 | 4 | Nebelspiegel (8) | Mondsee, kostbar |
@@ -746,11 +773,11 @@ muss der Envoy finden:
 | 4 | Splitterschale (9) | Geister, kostbar |
 
 **Pläne finden** (`js/world/plans.js`): Gesucht wird erst, wenn das Lager die Stufe der
-Deko erreicht hat, und nur an ihrem Fundort. Dort ist jede Zeit eine Chance: je **10
-Minuten Arbeit** an dem Ort (die Minuten aus der Tabelle, nicht durch Werte verkürzt; als
+Deko erreicht hat, und nur an ihrem Fundort. Dort ist jede Arbeit eine Chance: je **10
+Energie Arbeit** an dem Ort (die Energie aus der Tabelle, nicht durch Werte verringert; als
 Fundort kann auch eine einzelne wiederholbare Quest stehen), bei `geister` **jeder
 Geist**, dem der Envoy begegnet, beim Händler **jeder Tag**. Ein seltener Plan braucht im
-Schnitt 6 Chancen, ein sehr seltener 12, ein kostbarer 24. Pech hält nicht an: Nach
+Schnitt 9 Chancen, ein sehr seltener 18, ein kostbarer 36 (bis 5.11: 6, 12, 24). Pech hält nicht an: Nach
 doppelt so vielen Chancen ist der Plan sicher da (das sieht man nicht). Gewürfelt wird mit
 dem Rest der Quest, wenn sie beginnt; gefunden ist der Plan, wenn die Arbeit getan ist.
 Der Bericht sagt „Plan gefunden: Windspiel“. Beim Händler liegt ein Plan an manchen Tagen
@@ -1103,7 +1130,7 @@ Blatt „Erklärung“ mit allen Spalten.
   haben einen typ: lager (genau einer), truemmerfeld (höchstens einer: gleich beim Lager,
   dort wird ohne Weg gesammelt), wild, sammeln, ort, hoehle. Das Blatt Quests hat: id, name, ort, art (sammeln, erkunden, bauen, kampf, hoehle), text
   (mehrere Absätze durch Zeilenumbruch), monster, voraussetzung (auch `lager>=1`),
-  tempo, ertrag, verbrauch, kosten (Energie vor Ort, zugleich Minuten), belohnung
+  tempo, ertrag, verbrauch, kosten (Energie vor Ort, je Energie zehn Sekunden), belohnung
   (auch `freischaltung:lagerfeuer`), wiederholbar, abklingzeit, aktiv (nein = vorerst
   nicht im Spiel); in der belohnung auch `plan:<id>` (ein Plan für Deko, sicher).
   Lagerstufen: stufe, name, hygge_bis_naechste, stein, pilzholz, energie (was das
@@ -1281,7 +1308,9 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Timer | je Übung; die nächste beginnt mit eigenem Tipp |
 | Erledigen | jede Übung einer Einheit für sich („Käfer erledigt“), die letzte erledigt die Aufgabe; Haken der Zeile: alles Offene |
 | Stufen | hoch nach zwei guten Durchgängen in Folge, runter nach zwei zu schweren in Folge; Durchgänge, nicht Kalendertage; Kinder: hoch nach drei Durchgängen |
-| Energie vom Tageswerk | jede erledigte Aufgabe ein Achtel der Leiste, auch über ihr Ende hinaus |
+| Energie vom Tageswerk | jede erledigte Aufgabe ein Viertel der Leiste, auch über ihr Ende hinaus (bis 5.11 ein Achtel) |
+| Zeit und Wege | eine Energie dauert zehn Sekunden (bis 5.11 eine Minute); Wege kosten keine Energie, nur Zeit; ältere Ereignisse behalten die alten Regeln (`regel`, `RULE_SETS`) |
+| Ausbau des Lagers | nicht schneller als vor 5.12: Aufwerten 30, 70, 115, 165 Energie am Stück, Pläne 9, 18, 36 Chancen, Händler-Pläne 120 und 180 Bannsplitter |
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
 | Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden; Stärke = Tage mit erledigter Aufgabe in den letzten 28 Tagen je Bereich (Fleiß, nicht Begabung); Ruhm als eigene Währung (Farben, Titel) |
 | Berichte | jeder nur einmal, auch über Geräte hinweg |
@@ -1311,10 +1340,10 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Lagerbild groß | Tipp aufs Bild zeigt es ganz und so groß wie möglich, hochkant seitlich verschiebbar; ein Tipp schließt |
 | Quests auf der Karte | Ort antippen fächert seine Quests auf (Siegel mit Namen), ein Tipp öffnet eine; der Fächer auch bei nur einer Quest |
 | Ortsbeschreibung | Kartusche am Kartenrand zusammen mit dem Fächer: Region, Name, Text, bei verschlossenen Orten, was sie öffnet |
-| Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste: die Kosten als ein Block, der Weg darin kupfern getönt, „davon Weg 2“ (in der Reihe „statt 4“); keine Dauer, keine Tempo- und Ertrag-Stats |
+| Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste: die Kosten als ein Block (ohne Weg, der kostet keine Energie); keine Dauer, keine Tempo- und Ertrag-Stats |
 | Einrichtungen-Kacheln | Hygge als kleine Medaille am Zeichen; was sich bauen lässt, steht vorn (nächste Stufe mit Pfeil, Kosten, „Jetzt: …“ klein) |
-| In Reihe | während der Envoy unterwegs ist, alles anhängen (Quests, Sammeln, Bauen); er geht direkt weiter, der Rückweg dazwischen wird verrechnet; nur solange die Energie mit dem Rückweg reicht; Sammeln plant mit den besten Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus |
-| Energie | Name für die Leiste, 10 je Level Ausdauer, 1 Energie = 1 Minute |
+| In Reihe | während der Envoy unterwegs ist, alles anhängen (Quests, Sammeln, Bauen); er geht direkt weiter; solange die Energie für die Arbeit reicht; Sammeln plant mit den besten Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus |
+| Energie | Name für die Leiste, 10 je Level Ausdauer, 1 Energie = 10 Sekunden (bis 5.11: 1 Minute) |
 | Sammeln | auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2; Menge wählen, beginnt bei 1 |
 | Mehr sammeln als tragbar | geht nicht: + stoppt an der Grenze und sagt warum (statt hinterher etwas liegen lassen zu müssen) |
 | Lagerfeuer | die erste Quest: 8 Stein, 2 Pilzholz, 2 Energie; macht Lagerstufe 1 |

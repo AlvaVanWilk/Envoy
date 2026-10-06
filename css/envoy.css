@@ -1857,17 +1857,14 @@ button.task-check:hover { color: var(--stat); }
 .gather-stock { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
 
 /* Energie before setting out: stays for sure (full), what the dice may take
-   (striped), what it takes as one block with its way part tinted */
+   (striped), what it takes as one block */
 .energy-preview .stamina-value strong { color: var(--copper-bright); }
 .ep-keep, .ep-maybe, .ep-block { position: absolute; top: 0; bottom: 0; left: 0; }
 .ep-keep { background: linear-gradient(180deg, #dcefee 0%, #7ea3a4 55%, #3f6c73 100%); box-shadow: inset 0 1px 0 rgba(244, 236, 222, 0.4); }
 .ep-maybe { background: repeating-linear-gradient(-45deg, rgba(126, 163, 164, 0.85) 0 4px, rgba(63, 108, 115, 0.35) 4px 8px); }
 .ep-block { overflow: hidden; background: rgba(126, 163, 164, 0.14); box-shadow: inset 0 0 0 1px rgba(220, 239, 238, 0.32); }
-.ep-way { position: absolute; top: 0; bottom: 0; left: 0; background: linear-gradient(180deg, rgba(246, 161, 82, 0.42), rgba(232, 121, 31, 0.26)); box-shadow: inset -1px 0 0 rgba(4, 7, 10, 0.55); }
 .energy-preview.short .ep-block { box-shadow: inset 0 0 0 1px var(--loss); }
 .energy-preview.short .stamina-value strong { color: var(--loss); }
-.ep-legend { display: flex; align-items: center; gap: 7px; margin: 0; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.ep-swatch { display: inline-block; width: 16px; height: 9px; border-radius: 2px; background: linear-gradient(180deg, rgba(246, 161, 82, 0.55), rgba(232, 121, 31, 0.35)); box-shadow: inset 0 0 0 1px rgba(246, 161, 82, 0.5); }
 
 /* the camp: first task */
 .camp-first { display: grid; gap: 10px; }

@@ -1,6 +1,7 @@
-// Distances on the map, and what a way costs in stamina. Every expedition
-// starts and ends at the camp; each point of stamina is also a minute on the
-// way (see MINUTES_PER_STAMINA).
+// Distances on the map, and how long a way is, counted in Energie. Every
+// expedition starts and ends at the camp; each point of a way is 10 seconds
+// on the way. Since version 5.12 ways cost no Energie, only this time (see
+// RULE_SETS in config.js).
 
 import {
   MAP_ASPECT, TRAVEL_UNITS_PER_STAMINA, TRAVEL_SPEEDUP_PER_AUSDAUER, OVERLOAD_TRAVEL_EXTRA, FASTEST_SHARE,
@@ -25,9 +26,9 @@ export function gatherPlace(catalog) {
 // The camp and the Trümmerfeld beside it are reached without a way.
 export const besideTheCamp = (place) => place.typ === 'lager' || place.typ === 'truemmerfeld';
 
-// Stamina for one way: further costs more. Every level of Ausdauer makes
-// the way 3 % shorter (at most half), boots and cloaks make it cheaper, an
-// over-full backpack dearer. At least 1, and nothing between the camp and
+// The length of one way, in Energie: further is longer. Every level of
+// Ausdauer makes the way 3 % shorter (at most half), boots and cloaks make it
+// shorter as well, an over-full backpack longer. At least 1, and nothing between the camp and
 // the Trümmerfeld beside it, or within one place.
 export function wayStamina(from, to, stats, fx, overloaded = false) {
   if (from.id === to.id || (besideTheCamp(from) && besideTheCamp(to))) return 0;

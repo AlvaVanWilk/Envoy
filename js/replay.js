@@ -10,7 +10,7 @@
 
 import {
   STAT_IDS, MALUS_AVERAGE_WINDOW, INTENSITY_UP_AFTER, INTENSITY_DOWN_AFTER, CHILD_UP_AFTER,
-  INTENSITY_DOWN_AFTER_MISSED_DAYS, TOO_MUCH,
+  INTENSITY_DOWN_AFTER_MISSED_DAYS, TOO_MUCH, rulesOf,
 } from './config.js';
 import { addXp, removeXp, malusFactor, average } from './formulas.js';
 import { dayRange, addDays, morningMs } from './days.js';
@@ -156,7 +156,7 @@ export function replay(events, catalog, today, now = Date.now()) {
             ? applyResult(entry, result, stagesOf.get(row.uebung), child ? CHILD_UP_AFTER : INTENSITY_UP_AFTER)
             : entry;
         }
-        restFromTask(world, e.t, ctx);
+        restFromTask(world, e.t, ctx, rulesOf(e).taskShare);
       }
     }
 

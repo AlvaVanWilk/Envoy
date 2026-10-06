@@ -10,7 +10,7 @@
 // camp is raised.
 // Hygge is what the facilities and the built Deko give together.
 // Everything here is built like a quest at the camp: material, Energie and
-// its minutes.
+// its time.
 //
 // world.camp = { stage, facilities: { steinlager: level, … }, deko: { id: true }, reached: { stage: day } }
 //   reached: the day each stage was reached (the trader's plans count from then)
@@ -62,7 +62,7 @@ export function facilityEffect(row) {
 }
 
 // Something built at the camp, as a quest: it costs material and Energie
-// (which is also its minutes) and unlocks `feature` (see worldstate.js).
+// (10 seconds for each) and unlocks `feature` (see worldstate.js).
 function buildQuest({ id, name, text, conditions, cost, energie, feature }) {
   const consumes = {};
   if (cost.pilzholz > 0) consumes.pilzholz = cost.pilzholz;

@@ -12,7 +12,7 @@ import { offersFor } from '../js/world/trader.js';
 import { itemLevel } from '../js/world/items.js';
 import { countIn, roomFor, stow } from '../js/world/inventory.js';
 import { campStatus, hygge, facilityQuests } from '../js/world/camp.js';
-import { MINUTES_PER_STAMINA, BACKPACK_SIZE, GATHER_BASE, GATHER_DICE } from '../js/config.js';
+import { RULES_NOW, BACKPACK_SIZE, GATHER_BASE, GATHER_DICE } from '../js/config.js';
 import { resolveLook, layerSrc, iconSrc } from '../js/ui/look.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
@@ -35,14 +35,18 @@ function ctxOf(state) {
 const statsAt = (level) => Object.fromEntries(['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit']
   .map((id) => [id, { level, xp: 0, maxLevel: level, missed: 0 }]));
 
-// Starts an expedition like the app does and returns the event.
+// An expedition as the app wrote it before actions could be added, and
+// before version 5.12: every Energie a minute, the ways cost Energie too.
 function expeditionEvent(events, questId, hoursAfter) {
   const s = replay(events, catalog, DAY, T0 + hoursAfter * H);
   const c = ctxOf(s);
   const quest = questById(questId, c);
   const e = ev('expedition', { q: quest.id, place: quest.place, title: quest.name }, hoursAfter);
   const plan = planExpedition(quest, c, e.id);
-  return Object.assign(e, { out: plan.out, act: plan.act, back: plan.back, cost: plan.cost, outcome: plan.outcome });
+  const out = plan.out / RULES_NOW.pace;
+  const back = plan.back / RULES_NOW.pace;
+  const outcome = { ...plan.outcome, minutes: plan.outcome.stamina };
+  return Object.assign(e, { out, act: outcome.minutes, back, cost: out + outcome.stamina + back, outcome });
 }
 const total = (e) => e.out + e.act + e.back;
 
@@ -76,21 +80,23 @@ test('ways: further costs more, Ausdauer makes them shorter, an over-full backpa
   assert.equal(wayStamina(home, home, statsAt(1), fx), 0);
 });
 
-test('time follows stamina: every point of stamina is one minute away', () => {
+test('time follows Energie: every point of work, and every point of way, is 10 seconds; only the work costs Energie', () => {
   const s = replay([], catalog, DAY, T0);
   for (const level of [1, 5, 12]) {
     const c = { ...ctxOf(s), stats: statsAt(level) };
     for (const quest of catalog.quests) {
       const plan = planExpedition(quest, c, 'x');
-      assert.equal(plan.out + plan.act + plan.back, plan.cost * MINUTES_PER_STAMINA, `${quest.id} at ${level}`);
+      assert.equal(plan.cost, plan.outcome.stamina, `${quest.id} at ${level}`);
+      assert.equal(plan.act, plan.outcome.stamina * RULES_NOW.pace);
       assert.equal(plan.out, plan.back);
     }
   }
   const c = ctxOf(s);
   const quick = planExpedition(catalog.questById.get('q-stein-klein'), c, 'x');
   const long = planExpedition(catalog.questById.get('q-horizont'), c, 'x');
-  assert.ok(quick.cost <= 3, `quick ${quick.cost}`);
+  assert.ok(quick.cost <= 1, `quick ${quick.cost}`);
   assert.ok(long.cost >= 60, `long ${long.cost}`);
+  assert.ok(long.out + long.act + long.back < 20, `long ${long.out + long.act + long.back} minutes`);
 });
 
 test('the Energie bar: 10 per level of Ausdauer', () => {
@@ -146,7 +152,7 @@ test('gathering never fails, yields more with Kraft and gets shorter with the te
   const weak = runQuest(quest, { ...base, stats: statsAt(1) }, 'x');
   const strong = runQuest(quest, { ...base, stats: statsAt(9) }, 'x');
   assert.ok(strong.stamina < weak.stamina);
-  assert.equal(strong.minutes, strong.stamina * MINUTES_PER_STAMINA);
+  assert.equal(strong.minutes, strong.stamina * RULES_NOW.pace);
   assert.equal(speedShare(statsAt(30), ['kraft']), 0.5);
 });
 

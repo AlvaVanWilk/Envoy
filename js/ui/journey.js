@@ -13,7 +13,7 @@ import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
 import { MATERIALS } from '../config.js';
 import { openSheet, closeSheet, isSheetOpen, toast } from './sheet.js';
-import { resource, itemIcon, dekoIcon, formatMinutes, MATERIAL_KEYS } from './parts.js';
+import { resource, itemIcon, dekoIcon, formatMinutes, formatDuration, MATERIAL_KEYS } from './parts.js';
 import { thingName } from '../world/clothes.js';
 import { progressAt, heroPosition, timeline, timesOf, nextStep } from '../world/expedition.js';
 import { materialKey } from '../world/worldstate.js';
@@ -99,7 +99,7 @@ function progressBar(exp) {
     return h('div', { class: 'journey-bar' }, parts.map((part, index) =>
       h('div', { class: 'journey-part', 'data-phase': part.kind, style: { 'flex-grow': String(part.minutes) } },
         track(part, index),
-        h('span', { class: 'journey-part-name' }, h('span', {}, partName(exp, part)), h('span', {}, formatMinutes(Math.round(part.minutes)))))));
+        h('span', { class: 'journey-part-name' }, h('span', {}, partName(exp, part)), h('span', {}, formatDuration(part.minutes))))));
   }
   const blocks = [];
   parts.forEach((part, index) => {

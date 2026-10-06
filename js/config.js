@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.11.1';
+export const APP_VERSION = '5.12.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -178,13 +178,24 @@ export const STAMINA_BASE = 0;
 export const STAMINA_PER_AUSDAUER = 10;
 export const STAMINA_REFILL_HOURS = 8;
 export const STAMINA_BONUS_PER_GELASSENHEIT = 0.03;   // +3 % speed per level
-export const STAMINA_PER_TASK = 1 / 8;                // each task of the Tageswerk: an eighth of the bar, also beyond its end
 export const SLEEP_BONUS_HOUR = 6;                    // the Schlafplatz gives its Energie in the morning, at this hour
 
-// Time follows stamina: every point of stamina an expedition costs is one
-// minute away from the camp. Short trips are quick; a long one costs as
-// much stamina as it takes time.
-export const MINUTES_PER_STAMINA = 1;
+// The rules of Energie. Since version 5.12 (rules 2) every Energie the Envoy
+// spends takes 10 seconds, ways take time but cost no Energie, and each task
+// of the Tageswerk gives a quarter of the bar (also beyond its end). Before,
+// an Energie took a minute, ways cost Energie, and a task gave an eighth.
+// Events written since carry `regel: 2`; older ones keep the old rules, so a
+// game played before stays exactly as it was.
+//   pace        minutes of real time per Energie
+//   wayEnergy   Energie per Energie-length of way (0: ways cost only time)
+//   taskShare   share of the bar a task of the Tageswerk gives
+export const RULES = 2;
+export const RULE_SETS = {
+  1: { pace: 1, wayEnergy: 1, taskShare: 1 / 8 },
+  2: { pace: 1 / 6, wayEnergy: 0, taskShare: 1 / 4 },
+};
+export const rulesOf = (event) => RULE_SETS[event?.regel] || RULE_SETS[1];
+export const RULES_NOW = RULE_SETS[RULES];
 
 // Expeditions start and end at the camp. Map coordinates are percent;
 // x counts 1.5 because the map is wider than high.
@@ -209,8 +220,8 @@ export const BACKPACK_SIZE = 5;
 // each while the camp has no Steinlager or Pilzlager, then what the store holds.
 export const MATERIAL_WITHOUT_STORE = 10;
 
-// Gathering on the Trümmerfeld (see world/run.js): every point of Energie is a
-// minute of work and brings GATHER_BASE pieces, plus one more for every one of
+// Gathering on the Trümmerfeld (see world/run.js): every point of Energie of
+// work brings GATHER_BASE pieces, plus one more for every one of
 // GATHER_DICE dice that succeeds. The chance of a die is GATHER_CHANCE at level 1
 // of the stat (Kraft for Stein, Beweglichkeit for Pilzholz) and rises with it.
 // Never less than GATHER_BASE per Energie: nothing fails.
@@ -220,7 +231,7 @@ export const GATHER_CHANCE = 0.25;
 export const GATHER_CHANCE_PER_LEVEL = 0.015;
 export const GATHER_CHANCE_MAX = 0.9;
 export const GATHER_STATS = { stein: 'kraft', pilzholz: 'beweglichkeit' };
-// Now and then something else turns up while gathering: each minute of work
+// Now and then something else turns up while gathering: each Energie of work
 // has this chance of one Bannsplitter (a test of the idea, see run.js).
 export const GATHER_FIND_CHANCE = 0.05;
 
@@ -286,11 +297,13 @@ export const ENCOUNTER_COST = 3;                        // stamina on site
 export const TRADER_OFFERS = 5;
 
 // Plans for Deko (see world/plans.js). A chance to find one: every 10
-// minutes the Envoy spends at the place where it lies, every spirit he meets,
+// Energie of work at the place where it lies, every spirit the Envoy meets,
 // or every day at the trader. On average a plan takes this many chances; it is
 // there for sure after PLAN_SURE_FACTOR times as many. Searching for a plan
-// begins once the camp has reached the stage of its Deko.
-export const PLAN_CHANCE_MINUTES = 10;
-export const PLAN_CHANCES = { selten: 6, 'sehr selten': 12, kostbar: 24 };
+// begins once the camp has reached the stage of its Deko. (Before version
+// 5.12 it was 6, 12 and 24: with more Energie a day the camp would otherwise
+// grow faster than before.)
+export const PLAN_CHANCE_ENERGY = 10;
+export const PLAN_CHANCES = { selten: 9, 'sehr selten': 18, kostbar: 36 };
 export const PLAN_SURE_FACTOR = 2;
 export const SELL_SHARE = 1 / 3;

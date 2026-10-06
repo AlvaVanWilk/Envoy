@@ -77,11 +77,11 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   fächert seine Quests auf; das Fenster einer Quest zeigt Text, Voraussetzung, Belohnung
   und die Energie als Leiste, keine Dauer; daneben alle Quests als Liste mit Belohnung,
   Filter und Reihenfolge, ein Tipp lässt den Ort aufleuchten), Energie (10 je Level
-  Ausdauer, eine Energie = eine Minute), Expeditionen in echter Zeit (Hinweg, vor Ort,
-  Rückweg; solange der Envoy unterwegs ist, lässt sich alles anhängen, er geht direkt
-  weiter, nur solange die Energie mit dem Rückweg reicht; Sammeln plant mit den besten
-  Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus; die Kosten als ein Block
-  mit Weg-Anteil in der Energie-Leiste),
+  Ausdauer, eine Energie = zehn Sekunden, Wege kosten nur Zeit), Expeditionen in echter
+  Zeit (Hinweg, vor Ort, Rückweg; solange der Envoy unterwegs ist, lässt sich alles
+  anhängen, er geht direkt weiter, solange die Energie für die Arbeit reicht; Sammeln
+  plant mit den besten Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus; die
+  Kosten als ein Block in der Energie-Leiste),
   Kämpfe und Höhlen ohne Scheitern, Beute, Währung Bannsplitter, dazu Pilzholz und Stein;
   eine Expedition lässt sich live mitverfolgen (Weg, Kampf Runde für Runde, Sammeln,
   Tagebuch, Wörter auf der Karte, `js/ui/scene.js`; auf jeder anderen Seite ein Schild über
@@ -91,7 +91,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)
 - Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); fünf Lagerstufen
   (Provisorisches Lager, Unterstand, Wackelige Hütte, Stabile Hütte, Steinhäuschen),
-  aufzuwerten mit genug Hygge (5, 14, 36, 90), Material und Energie am Stück, kein Muss;
+  aufzuwerten mit genug Hygge (5, 14, 36, 90), Material und Energie am Stück (30, 70, 115,
+  165), kein Muss; der Ausbau soll nicht schneller gehen als vor 5.12 (so gewünscht);
   vier Einrichtungen in Stufen mit eigenen Namen (Steinlager und Pilzlager bis Stufe 3,
   Aufbewahrung bis 4, Schlafplatz bis 5; jede Stufe ab der gleichen Lagerstufe), keine
   Quests und nicht auf der Karte, nur über „Lager einrichten“ (Kacheln, Hygge als kleine
@@ -226,8 +227,11 @@ eine Stufe runter. Der Timer begleitet je eine Übung; die nächste beginnt mit 
 Aufgabe 14 XP, keine Fragen, zählt nicht für die Stufen. Keine Pausenregel für den Malus.
 
 **Energie:** Größe der Leiste = 10 × Ausdauer. Alles, was der Envoy tut, kostet Energie,
-eine Energie ist eine Minute. Jede erledigte Aufgabe des Tageswerks gibt ein Achtel der
-Leiste dazu, auch über ihr Ende hinaus (so gewünscht). Der Schlafplatz gibt seine Energie um
+eine Energie dauert zehn Sekunden; Wege kosten keine Energie, nur Zeit (zehn Sekunden je
+20 Einheiten Entfernung). Jede erledigte Aufgabe des Tageswerks gibt ein Viertel der
+Leiste dazu, auch über ihr Ende hinaus (so gewünscht, seit 5.12; vorher eine Minute je
+Energie, Wege mit Energie, ein Achtel; ältere Ereignisse behalten diese Regeln, Feld
+`regel`, `RULE_SETS` in `js/config.js`). Der Schlafplatz gibt seine Energie um
 6 Uhr morgens; ein nachts gebauter zählt am selben Morgen. Das Lagerfeuer (8 Stein, 2 Pilzholz, 2 Energie) muss am
 ersten Tag mit den 10 Energie des Starts sicher zu schaffen sein, auch bei den schlechtesten
 Würfen und zusammen mit den ersten Handwickeln (2 Energie): 8 Stein höchstens 4 Energie,
@@ -235,7 +239,7 @@ Würfen und zusammen mit den ersten Handwickeln (2 Energie): 8 Stein höchstens 
 
 **Sammeln auf dem Trümmerfeld:** je Energie 2 Stück und bis zu 2 weitere (zwei Würfel,
 Chance 25 % bei Level 1, +1,5 Punkte je Level von Kraft für Stein, von Beweglichkeit für
-Pilzholz, höchstens 90 %). Nie weniger als 2 je Energie, keine Fehlwürfe. Dazu je Minute mit
+Pilzholz, höchstens 90 %). Nie weniger als 2 je Energie, keine Fehlwürfe. Dazu je Energie mit
 5 % ein Bannsplitter als Zufallsfund (eigene Würfel; Idee zum Ausprobieren).
 
 ## Daten

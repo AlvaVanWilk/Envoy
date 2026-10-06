@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-04T16:32:41Z",
+ "generated": "2026-10-06T01:16:47Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -917,8 +917,8 @@
    "cost": 3,
    "reward": {
     "splitter": [
-     1,
-     1
+     3,
+     4
     ],
     "pilzholz": [
      0,
@@ -961,8 +961,8 @@
    "cost": 8,
    "reward": {
     "splitter": [
-     4,
-     4
+     7,
+     9
     ],
     "pilzholz": [
      0,
@@ -978,7 +978,7 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 3,
+   "cooldown": 1,
    "active": true
   },
   {
@@ -1054,8 +1054,8 @@
    "cost": 40,
    "reward": {
     "splitter": [
-     9,
-     12
+     36,
+     44
     ],
     "pilzholz": [
      0,
@@ -1192,8 +1192,8 @@
    "cost": 10,
    "reward": {
     "splitter": [
-     8,
-     8
+     10,
+     12
     ],
     "pilzholz": [
      0,
@@ -1381,8 +1381,8 @@
    "cost": 60,
    "reward": {
     "splitter": [
-     15,
-     19
+     55,
+     65
     ],
     "pilzholz": [
      0,
@@ -1398,7 +1398,7 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 2,
+   "cooldown": 1,
    "active": true
   },
   {
@@ -1514,8 +1514,8 @@
    "cost": 90,
    "reward": {
     "splitter": [
-     24,
-     30
+     85,
+     100
     ],
     "pilzholz": [
      0,
@@ -1531,7 +1531,7 @@
     "rest": false
    },
    "repeatable": true,
-   "cooldown": 3,
+   "cooldown": 1,
    "active": true
   },
   {
@@ -1635,7 +1635,7 @@
       "pilzholz": 20,
       "stein": 20
      },
-     "energie": 22
+     "energie": 30
     },
     "text": "Ein Feuer in einem Kreis aus Steinen. Es wärmt und hält die Dunkelheit auf Abstand."
    },
@@ -1648,7 +1648,7 @@
       "pilzholz": 50,
       "stein": 50
      },
-     "energie": 45
+     "energie": 70
     },
     "text": "Ein schräges Dach aus Pilzholz und Pilzhut an einem Felsen, davor ein Windschutz aus Steinen."
    },
@@ -1661,7 +1661,7 @@
       "pilzholz": 80,
       "stein": 80
      },
-     "energie": 85
+     "energie": 115
     },
     "text": "Schiefe Wände aus Pilzholz, ein Dach aus Pilzhutstücken. Sie hält, meistens."
    },
@@ -1674,7 +1674,7 @@
       "pilzholz": 100,
       "stein": 100
      },
-     "energie": 130
+     "energie": 165
     },
     "text": "Dieselbe Hütte, jetzt auf einem gemauerten Sockel. Drinnen bleibt es trocken."
    },
@@ -2191,7 +2191,7 @@
    "hygge": 7,
    "fundort": "haendler",
    "seltenheit": "selten",
-   "preis": 40,
+   "preis": 120,
    "cost": {
     "pilzholz": 10,
     "stein": 0
@@ -2259,7 +2259,7 @@
    "hygge": 7,
    "fundort": "haendler",
    "seltenheit": "selten",
-   "preis": 60,
+   "preis": 180,
    "cost": {
     "pilzholz": 35,
     "stein": 5

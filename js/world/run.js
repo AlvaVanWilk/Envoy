@@ -7,13 +7,13 @@
 //   kampf     one spirit: calmed, defeated or, if it is too strong, driven off
 //   hoehle    several spirits one after the other, as far as the Envoy's life reaches
 // The work costs the stamina from the table (`kosten`), less with the
-// `tempo` stats, and takes as many minutes as it costs.
+// `tempo` stats, and takes 10 seconds for every point of it (RULES_NOW).
 // Plans for Deko are rolled with it (see plans.js), and whether a piece of
 // clothing turns up (see clothes.js).
 // The result is stored in the event as it is, so it never changes later.
 
 import {
-  SPEEDUP_PER_LEVEL, FASTEST_SHARE, YIELD_PER_LEVEL, MINUTES_PER_STAMINA,
+  SPEEDUP_PER_LEVEL, FASTEST_SHARE, YIELD_PER_LEVEL, RULES_NOW,
   DRIVEN_LOOT_SHARE, CAVE_RETREAT_SHARE,
   GATHER_BASE, GATHER_DICE, GATHER_CHANCE, GATHER_CHANCE_PER_LEVEL, GATHER_CHANCE_MAX, GATHER_FIND_CHANCE,
 } from '../config.js';
@@ -36,7 +36,7 @@ export function speedShare(stats, ids) {
   return Math.max(FASTEST_SHARE, 1 - SPEEDUP_PER_LEVEL * (average(stats, ids) - 1));
 }
 
-// Stamina for the work on site, and so also its minutes.
+// Stamina for the work on site, and so also its time.
 export function siteStamina(quest, stats) {
   return Math.max(1, Math.round(quest.cost * speedShare(stats, quest.speedStats || [])));
 }
@@ -124,7 +124,7 @@ function fixedReward(quest, ctx, rng, into) {
 }
 
 // --- gathering on the Trümmerfeld ------------------------------------------
-// Every point of Energie is a minute of work. It brings GATHER_BASE pieces
+// Every point of Energie of work brings GATHER_BASE pieces
 // and one more for each of GATHER_DICE dice that succeeds. The chance of a
 // die grows with the stat that belongs to the material, so a higher stat
 // means a better day, never a failure: there are at least GATHER_BASE pieces
@@ -169,7 +169,7 @@ function runGather(quest, ctx, rng, findRng, { amount = 1, energy = Infinity } =
   let units = 0;
   let got = 0;
   const rolls = [];
-  const finds = []; // the minutes (from 0) in which a Bannsplitter turned up
+  const finds = []; // the points of Energie (from 0) in which a Bannsplitter turned up
   while (got < wanted && units < budget) {
     units += 1;
     rolls.push(gatherRoll(rng, chance));
@@ -184,7 +184,7 @@ function runGather(quest, ctx, rng, findRng, { amount = 1, energy = Infinity } =
     total: 0,
     cleared: true,
     stamina: units,
-    minutes: units * MINUTES_PER_STAMINA,
+    minutes: units * RULES_NOW.pace,
     reward: { splitter: finds.length, pilzholz: material === 'pilzholz' ? got : 0, stein: material === 'stein' ? got : 0, things: [], plans: [], unlocks: [], rest: false },
     consumed: {},
     gather: { material, wanted, units, rolls, finds },
@@ -251,7 +251,7 @@ export function runQuest(quest, ctx, seed, options = {}) {
     total: quest.monsters.length,
     cleared,
     stamina,
-    minutes: stamina * MINUTES_PER_STAMINA,
+    minutes: stamina * RULES_NOW.pace,
     reward,
     consumed: { ...quest.consumes },
   }, quest, ctx, seed);

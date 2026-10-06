@@ -16,7 +16,7 @@ import { offersFor } from '../js/world/trader.js';
 import { campScene } from '../js/ui/camp.js';
 import { addDays } from '../js/days.js';
 import { projectedWorld } from '../js/world/worldstate.js';
-import { PLAN_CHANCES, PLAN_SURE_FACTOR } from '../js/config.js';
+import { PLAN_CHANCES, PLAN_SURE_FACTOR, RULES } from '../js/config.js';
 
 const read = (f) => JSON.parse(readFileSync(new URL(`../data/${f}`, import.meta.url)));
 const catalog = buildCatalog(read('uebungen.json'), read('ausruestung.json'), read('welt.json'));
@@ -46,7 +46,7 @@ function action(events, questId, hoursAfter) {
   const s = replay(events, catalog, DAY, T0 + hoursAfter * H);
   const c = ctxOf(s);
   const quest = questById(questId, c);
-  const e = ev('expedition', { q: quest.id, place: quest.place, title: quest.name }, hoursAfter);
+  const e = ev('expedition', { q: quest.id, place: quest.place, title: quest.name, regel: RULES }, hoursAfter);
   const outcome = runQuest(quest, c, e.id);
   return Object.assign(e, { least: siteStamina(quest, c.stats), outcome });
 }
@@ -68,7 +68,7 @@ test('the camp is raised once the Hygge is enough; it costs material and Energie
   const quest = nextUpgrade(s0.world, catalog);
   assert.equal(quest.id, 'bau:lager:2');
   assert.deepEqual(quest.consumes, { pilzholz: 20, stein: 20 });
-  assert.equal(quest.cost, 22);
+  assert.equal(quest.cost, 30);
   assert.deepEqual(questState(quest, ctxOf(s0)).missing, ['20 Pilzholz', '20 Stein']);
 
   // material, and Energie beyond the bar of a new Envoy (like a morning on the Schlafplatz)
@@ -85,8 +85,8 @@ test('the camp is raised once the Hygge is enough; it costs material and Energie
 
 test('while the camp is being raised, what the new stage opens can join the row', () => {
   const ready = [gift({ unlocks: ALL_LEVEL_1 }), gift({ stein: 20, pilzholz: 20 }, 0.2), ev('test', { mehrEnergie: 20 }, 0.3)];
-  const s = at([...ready, action(ready, 'bau:lager:2', 0.4)], 0.5);
-  assert.equal(s.world.camp.stage, 1);   // still building
+  const s = at([...ready, action(ready, 'bau:lager:2', 0.4)], 0.4 + 1 / 60);
+  assert.equal(s.world.camp.stage, 1);   // still building, a minute later
   const c = ctxOf(s);
   const ahead = projectedWorld(s.world, c);
   assert.equal(ahead.camp.stage, 2);
@@ -241,7 +241,7 @@ test('the trader has his plans on some days, for sure after twice the average of
   const s = at(events, 0.5);
   const sure = addDays(DAY, PLAN_CHANCES.selten * PLAN_SURE_FACTOR);
   const offer = traderPlans(sure, { ...ctxOf(s), day: sure }).find((o) => o.id === 'teppich');
-  assert.deepEqual(offer, { kind: 'plan', id: 'teppich', price: 40, offer: `${sure}:plan:teppich` });
+  assert.deepEqual(offer, { kind: 'plan', id: 'teppich', price: 120, offer: `${sure}:plan:teppich` });
   // before that only on some days
   let days = 0;
   for (let i = 0; i < 300; i += 1) {
@@ -253,10 +253,10 @@ test('the trader has his plans on some days, for sure after twice the average of
   assert.ok(days > 25 && days < 80, `${days} of 300 days`);
   assert.ok(offersFor(sure, { ...ctxOf(s), day: sure }).some((o) => o.kind === 'plan'));
 
-  const rich = [...events, gift({ splitter: 50 }, 0.2)];
-  const bought = at([...rich, ev('buy', { offer: offer.offer, kind: 'plan', thing: 'teppich', price: 40 }, 0.6)], 1);
+  const rich = [...events, gift({ splitter: 150 }, 0.2)];
+  const bought = at([...rich, ev('buy', { offer: offer.offer, kind: 'plan', thing: 'teppich', price: 120 }, 0.6)], 1);
   assert.equal(bought.world.plans.found.teppich, DAY);
-  assert.equal(bought.world.purse.splitter, 10);
+  assert.equal(bought.world.purse.splitter, 30);
   assert.equal(Object.keys(bought.world.items).filter((k) => !k.startsWith('start:')).length, 0);   // a plan is no thing
 });
 

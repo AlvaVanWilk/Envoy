@@ -10,11 +10,10 @@ import { store } from './store.js';
 import { effects, staminaAt, hoursUntilFull, maxStamina, staminaPerHour, sleepBonus } from './world/hero.js';
 import { hasSpace, atCamp, reachable } from './world/inventory.js';
 import { questById, questState } from './world/quests.js';
-import { addition, legStamina, progressAt } from './world/expedition.js';
-import { camp } from './world/map.js';
+import { addition, progressAt } from './world/expedition.js';
 import { runQuest, siteStamina, gatherEstimate } from './world/run.js';
 import { projectedWorld } from './world/worldstate.js';
-import { MINUTES_PER_STAMINA, DYE_PRICE } from './config.js';
+import { DYE_PRICE, RULES, RULES_NOW } from './config.js';
 import { titleById } from './world/arena.js';
 import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
@@ -111,7 +110,7 @@ export const game = {
     const task = this.todayTask(stat);
     if (!task || this.state.todayDone[stat]) return;
     const teile = task.parts.map((p) => p.row.id);
-    const fields = { stat, teile, xp: task.xp };
+    const fields = { stat, teile, xp: task.xp, regel: RULES };
     const earlier = Object.fromEntries(Object.entries(this.partsDone(stat)).filter(([, p]) => p.antwort).map(([id, p]) => [id, p.antwort]));
     const given = Object.fromEntries(Object.entries({ ...earlier, ...antworten }).filter(([id, a]) => teile.includes(id) && typeof a === 'string'));
     if (Object.keys(given).length > 0) fields.antworten = given;
@@ -198,10 +197,12 @@ export const game = {
   // the row of what he does, and he goes there straight from the last place.
   //   busy   it would join the row
   //   state  the quest as it will be once the row is done (see projectedWorld)
-  //   cost   Energie set aside now: { least, most, way, alone }
+  //   cost   Energie set aside now: { least, most, way, work }
   //          least/most: gathering takes as much as the dice want
-  //          way: the part of it that is way (in a row the way home before is given back)
-  //          alone: the way there and back for this quest on its own
+  //          way: nothing, ways cost only time (see RULE_SETS); less than
+  //               nothing in a row after an action under the old rules, whose
+  //               way home the Envoy no longer walks
+  //          work: { min, max } of the work there
   //   block  why not, or null: 'closed' (the quest is not open then),
   //          'energy' (not enough Energie now), 'never' (the bar is too short for it)
   // Something that begins right away must surely fit into the Energie; for
@@ -214,9 +215,8 @@ export const game = {
     const after = busy ? { ...c, world: projectedWorld(c.world, c) } : c;
     const state = questState(quest, after);
     const place = this.catalog.placeById.get(quest.place);
-    const home = camp(this.catalog);
     const add = addition(c.world, place, Date.now(), c);
-    const way = (add.way + add.home) / MINUTES_PER_STAMINA - add.credit;
+    const way = ((add.way + add.home) / RULES_NOW.pace) * RULES_NOW.wayEnergy - add.credit;
     const work = quest.gather
       ? gatherEstimate(quest, after, { amount: options.amount }).energy
       : { min: siteStamina(quest, c.stats), max: siteStamina(quest, c.stats) };
@@ -224,7 +224,6 @@ export const game = {
       least: way + work.min,
       most: way + work.max,
       way,
-      alone: legStamina(home, place, c) + legStamina(place, home, c),
       work,
     };
     const st = this.stamina();
@@ -265,7 +264,7 @@ export const game = {
     const plan = this.plan(questId, options);
     if (!plan || plan.block) return null;
     const { quest } = plan;
-    const event = this.event('expedition', { q: quest.id, place: quest.place, title: quest.name });
+    const event = this.event('expedition', { q: quest.id, place: quest.place, title: quest.name, regel: RULES });
     const outcome = runQuest(quest, plan.ctx, event.id, { amount: options.amount });
     if (quest.gather && outcome.stamina < 1) return null;
     Object.assign(event, { least: Math.min(plan.cost.work.min, outcome.stamina), outcome });

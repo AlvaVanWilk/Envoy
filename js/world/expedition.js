@@ -1,10 +1,14 @@
 // An expedition: the Envoy sets out from the camp to do something (a quest,
 // gathering, building) and can be given more to do while he is away. From
 // one place he goes straight on to the next; only after the last one he walks
-// home. Every part takes real time: as many minutes as it costs Energie.
+// home. Every part takes real time: 10 seconds for every Energie of work and
+// of way. Only the work costs Energie, the ways cost time (see RULE_SETS in
+// config.js; actions from before version 5.12 keep the old rules: a minute
+// for every Energie, and the ways cost Energie as well).
 //
 // expedition = { id, day, start, actions, rushed, dropped, leftBehind }
-// action = { id, q, place, title, day, notBefore, from, way, work, least, home, credit, outcome, stage }
+// action = { id, q, place, title, day, regel, notBefore, from, way, work, least, home, credit, outcome, stage }
+//   regel      the rules of Energie it follows (1 before version 5.12, 2 since)
 //   notBefore  when it was added: it starts once the one before is done, but not earlier
 //   from       where the Envoy sets out from for it, { x, y } on the map
 //   way        minutes of the way there
@@ -13,15 +17,21 @@
 //              (gathering: what the best dice would need; the rest is taken there)
 //   home       minutes of the way from the place back to the camp
 //   credit     Energie given back when it was added: the way home it replaced
+//              (only when that way cost Energie, under the old rules)
 //   stage      0 waiting, 1 on the way, 2 at work, 3 done
 // The Energie of an action is set aside when it is added (see reserve()).
 
-import { MINUTES_PER_STAMINA } from '../config.js';
+import { RULE_SETS, RULES_NOW } from '../config.js';
 import { camp, wayStamina, distance, besideTheCamp } from './map.js';
 import { runQuest } from './run.js';
 import { overloaded } from './inventory.js';
 
 const MINUTE = 60000;
+
+// The rules an action follows (see RULE_SETS in config.js).
+export const actionRules = (action) => RULE_SETS[action.regel] || RULE_SETS[1];
+// The Energie a way of so many minutes costs under these rules.
+const wayCost = (minutes, rules) => (minutes / rules.pace) * rules.wayEnergy;
 const at = (p) => ({ x: p.x, y: p.y });
 const lerp = (a, b, k) => ({ x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k });
 
@@ -41,21 +51,21 @@ export function legStamina(from, to, ctx) {
 export function planExpedition(quest, ctx, seed, options = {}) {
   const home = camp(ctx.catalog);
   const place = ctx.catalog.placeById.get(quest.place);
-  const out = legStamina(home, place, ctx);
-  const back = legStamina(place, home, ctx);
+  const out = legStamina(home, place, ctx) * RULES_NOW.pace;
+  const back = legStamina(place, home, ctx) * RULES_NOW.pace;
   const outcome = runQuest(quest, ctx, seed, options);
   return {
-    out: out * MINUTES_PER_STAMINA,
+    out,
     act: outcome.minutes,
-    back: back * MINUTES_PER_STAMINA,
-    cost: out + outcome.stamina + back,
+    back,
+    cost: wayCost(out + back, RULES_NOW) + outcome.stamina,
     outcome,
   };
 }
 
 // The Energie an action sets aside when it is added.
 export function reserve(action) {
-  return (action.way + action.home) / MINUTES_PER_STAMINA + action.least - action.credit;
+  return wayCost(action.way + action.home, actionRules(action)) + action.least - action.credit;
 }
 
 // When each action sets out, arrives and is done, and when the Envoy is
@@ -89,36 +99,40 @@ export function nextStep(exp) {
 
 // Where the Envoy sets out from at time t after the actions before `index`:
 // from the last place, or from where he is on his way home, or from the camp.
-// credit: the Energie of the way home he no longer walks.
+// rest: the minutes of the way home he no longer walks; credit: the Energie
+// of it (only under the old rules, where ways cost Energie).
 export function departure(exp, index, t, catalog) {
   const home = camp(catalog);
   const prev = exp?.actions[index - 1];
-  if (!prev) return { from: at(home), point: home, credit: 0 };
+  if (!prev) return { from: at(home), point: home, credit: 0, rest: 0 };
+  const rules = actionRules(prev);
   const prevPlace = catalog.placeById.get(prev.place) || home;
   const done = timesOf(exp).actions[index - 1].done;
-  if (t <= done) return { from: at(prevPlace), point: prevPlace, credit: prev.home / MINUTES_PER_STAMINA };
+  if (t <= done) return { from: at(prevPlace), point: prevPlace, credit: wayCost(prev.home, rules), rest: prev.home };
   const walked = (t - done) / MINUTE;
-  if (walked >= prev.home) return { from: at(home), point: home, credit: 0 };
+  if (walked >= prev.home) return { from: at(home), point: home, credit: 0, rest: 0 };
   const pos = lerp(prevPlace, home, walked / prev.home);
-  return { from: pos, point: { id: 'unterwegs', typ: 'weg', ...pos }, credit: (prev.home - walked) / MINUTES_PER_STAMINA };
+  const rest = prev.home - walked;
+  return { from: pos, point: { id: 'unterwegs', typ: 'weg', ...pos }, credit: wayCost(rest, rules), rest };
 }
 
 // The way to a place for the action at `index`, setting out at time t:
-// where from, the minutes there and home, and the Energie given back for
-// the way home the Envoy no longer walks.
-export function wayFrom(exp, index, place, t, ctx) {
+// where from, the minutes there and home (pace: minutes per Energie of way,
+// see RULE_SETS), and the Energie given back for the way home the Envoy no
+// longer walks.
+export function wayFrom(exp, index, place, t, ctx, pace = RULES_NOW.pace) {
   const d = departure(exp, index, t, ctx.catalog);
   // on his way home, for something beside the camp he simply walks on
   const way = d.point.typ === 'weg' && besideTheCamp(place)
-    ? d.credit * MINUTES_PER_STAMINA
-    : legStamina(d.point, place, ctx) * MINUTES_PER_STAMINA;
-  return { from: d.from, way, home: legStamina(place, camp(ctx.catalog), ctx) * MINUTES_PER_STAMINA, credit: d.credit };
+    ? d.rest
+    : legStamina(d.point, place, ctx) * pace;
+  return { from: d.from, way, home: legStamina(place, camp(ctx.catalog), ctx) * pace, credit: d.credit };
 }
 
 // What adding something at a place at time t means for the way (see wayFrom).
-export function addition(world, place, t, ctx) {
+export function addition(world, place, t, ctx, pace = RULES_NOW.pace) {
   const exp = world.expedition;
-  return { notBefore: t, ...wayFrom(exp, exp ? exp.actions.length : 0, place, t, ctx) };
+  return { notBefore: t, ...wayFrom(exp, exp ? exp.actions.length : 0, place, t, ctx, pace) };
 }
 
 // Where an expedition stands at time t:

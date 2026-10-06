@@ -3,7 +3,7 @@
 //   on the way   a small path from one place to the next, the Envoy walking along it
 //   a fight      the Envoy and the spirit with their life, round by round:
 //                hits, dodges, calming, and how it ends
-//   gathering    the pieces coming in, one handful a minute
+//   gathering    the pieces coming in, one handful for every Energie
 //   else         the search (or the building) at the place
 //   way back     what he carries home
 // Below it the diary of the trip: departure, arrival, spirits, finds, return.

@@ -101,7 +101,7 @@ export function renderInventory(game) {
     viewHead('Inventar', { rucksack: 'Rucksack', schrank: 'Aufbewahrung', body: 'Getragen' }[view.tab]),
     tabs,
     view.tab === 'schrank' && !game.atCamp() ? h('p', { class: 'capacity' }, 'Der Envoy ist unterwegs. Er erinnert sich nur, was in der Aufbewahrung liegt; erreichbar wird sie im Lager.') : null,
-    over ? h('p', { class: 'capacity over' }, 'Der Rucksack ist überfüllt. Jeder Weg kostet 1 Energie mehr.') : null,
+    over ? h('p', { class: 'capacity over' }, 'Der Rucksack ist überfüllt. Jeder Weg dauert etwas länger.') : null,
     h('div', { class: 'toolbar' }, h('div', { class: 'toolbar-row' }, search, sort), chips),
     h('div', { class: 'panel' }, grid));
 }

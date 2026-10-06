@@ -3,33 +3,25 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, SLOT_ICONS, STAT_ICONS, RESOURCE_ICONS, UI_ICONS, ENERGY_ICON, FACILITY_ICONS } from './icons.js';
+import { NAV_ICONS, RESOURCE_ICONS, UI_ICONS, ENERGY_ICON } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.11';
+export const NEWS_ID = '5.12';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Gerade erst das Lager aufgeschlagen, schon gibt es ein Update für euch. Es hat sich bereits viel getan in der Zwischenwelt.';
+const INTRO = 'In der Zwischenwelt geht jetzt vieles schneller. Euer Envoy schafft an einem Tag viel mehr als bisher.';
 
 const NEWS = [
-  { icon: NAV_ICONS.arena, title: 'Die Arena wurde eröffnet!',
-    text: 'Stellt euer Abbild in der Ruhmeshalle auf und fordert die anderen heraus. Wer fleißig übt, steht stark da, und Ruhm geht nie verloren.' },
-  { icon: SLOT_ICONS.torso, title: 'Kleider machen Envoys!',
-    text: 'Unterwegs liegt jetzt viel mehr Kleidung herum, oft in ganz eigenen Farben. Mit Ruhm aus der Arena lassen sich Lieblingsstücke umfärben.' },
-  { icon: STAT_ICONS.beweglichkeit, title: 'Übungen für jedes Alter',
-    text: 'Kinder und Jugendliche bekommen eigene Übungen, vom Bärengang bis zum Teddy-Atmen. Dafür fragt Envoy gleich einmal nach eurem Alter.' },
-  { icon: UI_ICONS.timer, title: 'Eine Übung nach der anderen',
-    text: 'Der Timer begleitet jede Übung einzeln, mit Zeit zum Lesen dazwischen. Die Frage danach kommt sofort, und Kinder werden gar nicht mehr gefragt.' },
-  { icon: ENERGY_ICON, title: 'Das Tageswerk gibt Energie',
-    text: 'Jede erledigte Aufgabe füllt ein Achtel eurer Energie auf, auch über die Leiste hinaus. Wer morgens übt, verschenkt nichts.' },
-  { icon: FACILITY_ICONS.schlafplatz, title: 'Gut geschlafen',
-    text: 'Der Schlafplatz schenkt seine Energie jetzt um 6 Uhr morgens. Wer nachts noch ein Bett baut, wacht schon am nächsten Morgen ausgeruht auf.' },
-  { icon: NAV_ICONS.abenteuer, title: 'Alle Quests auf einen Blick',
-    text: 'Neben der Karte steht jetzt eine Liste aller Quests, mit Filter und Reihenfolge. Ein Tipp, und der Ort leuchtet auf.' },
-  { icon: RESOURCE_ICONS.splitter, title: 'Kleine Überraschungen',
-    text: 'Wer sammelt, stößt ab und zu auf einen Bannsplitter zwischen Stein und Pilzholz.' },
-  { icon: NAV_ICONS.handbuch, title: 'Jeder Bericht nur einmal',
-    text: 'Berichte von Expeditionen erscheinen nur noch einmal, egal auf welchem Gerät ihr spielt.' },
+  { icon: UI_ICONS.timer, title: 'Zehn Sekunden statt einer Minute',
+    text: 'Jede Energie dauert jetzt nur noch zehn Sekunden. Kleine Aufgaben sind im Nu erledigt, lange Expeditionen in ein paar Minuten.' },
+  { icon: NAV_ICONS.abenteuer, title: 'Wege kosten keine Energie mehr',
+    text: 'Die ganze Energie geht in das, was euer Envoy unterwegs tut. Weit entfernte Orte brauchen nur etwas länger.' },
+  { icon: ENERGY_ICON, title: 'Das Tageswerk gibt doppelt so viel',
+    text: 'Jede erledigte Aufgabe füllt ein Viertel eurer Energie auf, auch über die Leiste hinaus. Alle vier zusammen sind eine ganze Leiste.' },
+  { icon: RESOURCE_ICONS.splitter, title: 'Mehr Bannsplitter!',
+    text: 'Wiederholbare Quests bringen jetzt viel mehr Bannsplitter, und viele lassen sich jeden Tag machen.' },
+  { icon: NAV_ICONS.lager, title: 'Das Lager bleibt ein großes Vorhaben',
+    text: 'Damit es nicht zu schnell fertig ist, braucht das Aufwerten mehr Energie am Stück. Pläne für Deko sind etwas seltener, beim Händler kosten sie mehr.' },
 ];
 
 export function openNews(onDone) {

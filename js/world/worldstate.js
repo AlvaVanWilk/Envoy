@@ -31,7 +31,7 @@
 //   dropped     equipment taken off because a stat fell below its requirement
 // }
 
-import { STAMINA_PER_TASK, NAME_MAX, OLD_SLOT_NAMES, MINUTES_PER_STAMINA } from '../config.js';
+import { NAME_MAX, OLD_SLOT_NAMES, RULE_SETS, rulesOf } from '../config.js';
 import { effects, maxStamina, staminaAt, sleepBonus } from './hero.js';
 import {
   stow, removeEntry, hasSpace, atCamp, reachable, roomFor, overloaded, entriesIn, LIMITED_MATERIALS,
@@ -44,7 +44,7 @@ import { lootThing } from './run.js';
 import { seededRandom } from './rng.js';
 import { unmetRequirements } from './items.js';
 import { camp } from './map.js';
-import { reserve, addition, wayFrom, legStamina, nextStep } from './expedition.js';
+import { reserve, addition, wayFrom, legStamina, nextStep, actionRules } from './expedition.js';
 
 const MATERIAL_KEYS = ['splitter', 'pilzholz', 'stein'];
 // Materials in events written under an older name.
@@ -196,7 +196,7 @@ function dropAction(world, exp, index, t, ctx, reason) {
   if (next) {
     refund += reserve(next);
     next.notBefore = Math.max(next.notBefore, t);
-    Object.assign(next, wayFrom(exp, index, ctx.catalog.placeById.get(next.place), next.notBefore, wayCtx(world, ctx)));
+    Object.assign(next, wayFrom(exp, index, ctx.catalog.placeById.get(next.place), next.notBefore, wayCtx(world, ctx), actionRules(next).pace));
     refund -= reserve(next);
   }
   if (reason) exp.dropped.push({ q: gone.q, title: gone.title, reason });
@@ -212,11 +212,12 @@ function cutGathering(world, action) {
   const units = action.least + more;
   spend(world, more);
   const got = Math.min(o.gather.wanted, rolls.slice(0, units).reduce((sum, n) => sum + n, 0));
+  const { pace } = actionRules(action);
   action.outcome = {
-    ...o, stamina: units, minutes: units * MINUTES_PER_STAMINA,
+    ...o, stamina: units, minutes: units * pace,
     reward: { ...o.reward, [o.gather.material]: got }, gather: { ...o.gather, units, cut: true },
   };
-  action.work = units * MINUTES_PER_STAMINA;
+  action.work = units * pace;
 }
 
 // Back at the camp: what the backpack cannot hold goes into the storage.
@@ -296,6 +297,7 @@ const newExpedition = (e) => ({ id: e.id, day: e.d, start: e.t, actions: [], rus
 
 // Events from before actions could be added: one quest with all its parts
 // (out, act, back), or a route with its stops; all of it paid at the start.
+// They follow the old rules of Energie (a minute each, ways cost Energie).
 function oldExpedition(world, e, ctx) {
   if (world.expedition) return;
   const stops = (Array.isArray(e.stops) ? e.stops : [e]).filter((s) => s && typeof s.q === 'string' && s.outcome?.reward);
@@ -307,11 +309,12 @@ function oldExpedition(world, e, ctx) {
     const place = ctx.catalog.placeById.get(s.place) || home;
     const prev = exp.actions[i - 1];
     const work = Number(s.act) || 0;
+    const { pace } = RULE_SETS[1];
     exp.actions.push({
-      id: i === 0 ? e.id : `${e.id}:${i}`, q: s.q, place: s.place, title: s.title, day: e.d, notBefore: e.t,
-      from: { x: from.x, y: from.y }, way: Number(s.out) || 0, work, least: work / MINUTES_PER_STAMINA,
-      home: i === stops.length - 1 ? Number(e.back) || 0 : legStamina(place, home, wayCtx(world, ctx)) * MINUTES_PER_STAMINA,
-      credit: prev ? prev.home / MINUTES_PER_STAMINA : 0, outcome: s.outcome, stage: 0,
+      id: i === 0 ? e.id : `${e.id}:${i}`, q: s.q, place: s.place, title: s.title, day: e.d, regel: 1, notBefore: e.t,
+      from: { x: from.x, y: from.y }, way: Number(s.out) || 0, work, least: work / pace,
+      home: i === stops.length - 1 ? Number(e.back) || 0 : legStamina(place, home, wayCtx(world, ctx)) * pace,
+      credit: prev ? prev.home / pace : 0, outcome: s.outcome, stage: 0,
     });
     from = place;
   });
@@ -320,14 +323,16 @@ function oldExpedition(world, e, ctx) {
 }
 
 // An action for the Envoy: with nothing to do he sets out for it, else it
-// joins the row. Its Energie is set aside now.
+// joins the row. Its Energie is set aside now. It follows the rules of
+// Energie its event names (see RULE_SETS).
 function addAction(world, e, ctx) {
   if (Array.isArray(e.stops) || e.out !== undefined) { oldExpedition(world, e, ctx); return; }
   const place = ctx.catalog.placeById.get(e.place);
   if (!place || typeof e.q !== 'string' || !e.outcome?.reward) return;
+  const regel = RULE_SETS[e.regel] ? e.regel : 1;
   const action = {
-    id: e.id, q: e.q, place: e.place, title: e.title, day: e.d,
-    ...addition(world, place, e.t, wayCtx(world, ctx)),
+    id: e.id, q: e.q, place: e.place, title: e.title, day: e.d, regel,
+    ...addition(world, place, e.t, wayCtx(world, ctx), rulesOf(e).pace),
     work: Number(e.outcome.minutes) || 0,
     least: Number(e.least ?? e.outcome.stamina) || 0,
     outcome: e.outcome,
@@ -459,13 +464,13 @@ function testHelp(world, e, ctx) {
   }
 }
 
-// Each task of the Tageswerk done gives an eighth of the bar back, also
-// beyond its end (whoever does the Tageswerk in the morning with a full bar
-// keeps it).
-export function restFromTask(world, t, ctx) {
+// Each task of the Tageswerk done gives a share of the bar back (a quarter;
+// an eighth before version 5.12, see RULE_SETS), also beyond its end
+// (whoever does the Tageswerk in the morning with a full bar keeps it).
+export function restFromTask(world, t, ctx, share) {
   advance(world, t, ctx);
   settle(world, t, ctx);
-  world.stamina.value += maxStamina(ctx.stats) * STAMINA_PER_TASK;
+  world.stamina.value += maxStamina(ctx.stats) * share;
 }
 
 // The morning (SLEEP_BONUS_HOUR): with a Schlafplatz the Envoy wakes up with

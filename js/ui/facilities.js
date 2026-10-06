@@ -7,7 +7,7 @@
 // tile shows the level that stands (lit, with a tick).
 // A tap opens its details and the button to build it (or, while the Envoy is
 // away, to add it to the row of what he does). Building works like a quest
-// at the camp: material, Energie and its minutes (see world/camp.js).
+// at the camp: material, Energie and its time (see world/camp.js).
 // Facilities are not on the map, only here.
 
 import { h, icon } from './dom.js';

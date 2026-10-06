@@ -1,8 +1,8 @@
 // Plans for Deko. One plan of each stage is there as soon as the camp reaches
 // the stage (fundort `start`); the others have to be found, with some luck.
 // Where a plan lies says the table (sheet Deko, column fundort):
-//   a place     every 10 minutes of work there is a chance (the minutes the
-//               table gives the quest, not shortened by the stats)
+//   a place     every 10 Energie of work there is a chance (the Energie the
+//               table gives the quest, not lessened by the stats)
 //   a quest     the same, only for this quest
 //   geister     every spirit the Envoy meets is a chance, wherever it is
 //   haendler    every day is a chance that the trader has it on offer
@@ -14,7 +14,7 @@
 //
 // world.plans = { found: { id: day }, search: { id: chances } }
 
-import { PLAN_CHANCE_MINUTES, PLAN_CHANCES, PLAN_SURE_FACTOR } from '../config.js';
+import { PLAN_CHANCE_ENERGY, PLAN_CHANCES, PLAN_SURE_FACTOR } from '../config.js';
 import { seededRandom } from './rng.js';
 import { daysBetween } from '../days.js';
 
@@ -45,8 +45,8 @@ export function plansFindable(quest, world, catalog) {
 function chancesFor(row, quest, outcome) {
   if (row.fundort === 'geister') return outcome.fights.length;
   if (row.fundort !== quest.id && row.fundort !== quest.place) return 0;
-  const minutes = quest.gather ? outcome.stamina : quest.cost;
-  return minutes / PLAN_CHANCE_MINUTES;
+  const energy = quest.gather ? outcome.stamina : quest.cost;
+  return energy / PLAN_CHANCE_ENERGY;
 }
 
 const average = (row) => PLAN_CHANCES[row.seltenheit] || PLAN_CHANCES.selten;
