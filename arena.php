@@ -12,7 +12,7 @@
 // own list of events. Every task counts the same, at any stage, for children
 // as for adults: who finds the exercises easy rises to higher stages and more
 // XP, but not to more strength in the arena. The more diligent Abbild wins.
-// Equally diligent (since 5.20): they really fight, and the bonuses of the
+// Equally diligent (since 5.20): the fight itself decides, and the bonuses of the
 // clothes act in the fight (more damage, hitting, dodging). A draw only when
 // both strike the last blow at the same time.
 //

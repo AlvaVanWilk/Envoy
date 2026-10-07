@@ -963,7 +963,8 @@ aber nicht zu mehr Stärke in der Arena. Die Werte (Level) spielen in der Arena 
 
 **Fleiß entscheidet immer** (seit 5.17, so gewünscht): Der **Fleiß** eines Abbilds sind die
 Tage mit erledigter Aufgabe in allen vier Bereichen zusammen (0 bis 112). Das fleißigere
-Abbild gewinnt jeden Kampf. Bei genau gleichem Fleiß wird **wirklich gekämpft** (seit 5.20,
+Abbild gewinnt jeden Kampf; gezeigt wird ein Kampf, der so ausgeht. Bei genau gleichem Fleiß
+entscheidet der **Kampf selbst** (seit 5.20,
 so gewünscht), und die Boni der Kleidung wirken darin mit: **Schaden** trifft härter,
 **Treffer** trifft öfter, **Ausweichen** weicht öfter aus (aus festen Fähigkeiten und Boni der
 getragenen Stücke; Energie, Glück, Wege und Beruhigen wirken dort nicht; `ARENA_FIGHT_BONUSES`).

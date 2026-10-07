@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.20.0';
+export const APP_VERSION = '5.20.1';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -369,7 +369,7 @@ export const ARENA_ENERGY_BEFORE = 5;  // what a challenge cost before, for figh
 export const ARENA_REACH = 3;          // places above or below that may be challenged (as on the server)
 // Fleiß decides every fight (since 5.17, so gewünscht): on how many of the
 // last ARENA_WINDOW_DAYS days the task of each area was done, all four
-// together. Equally diligent, they really fight (since 5.20), and these
+// together. Equally diligent, the fight itself decides (since 5.20), and these
 // bonuses of the clothes act in it (the same as ARENA_FIGHT_BONUSES in
 // arena.php). The Haltung is gone.
 export const ARENA_WINDOW_DAYS = 28;

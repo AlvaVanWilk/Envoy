@@ -135,8 +135,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Tag, ohne Energie; Sieg gegen weiter oben nimmt den Platz), Kämpfe entscheidet der Server (`arena.php`)
   aus dem Fleiß, nicht der Begabung (so gewünscht): Fleiß = Tage mit erledigter Aufgabe in den
   letzten 28 Tagen, alle vier Bereiche zusammen, jede Aufgabe zählt gleich, egal welche Stufe;
-  der Fleißigere gewinnt immer; bei gleichem Fleiß wird wirklich gekämpft, Schaden, Treffer
-  und Ausweichen der Kleidung wirken mit (so gewünscht), beide schlagen je Runde zugleich,
+  der Fleißigere gewinnt immer (der Kampf wird passend dazu gezeigt); bei gleichem Fleiß
+  entscheidet der Kampf selbst, Schaden, Treffer und Ausweichen der Kleidung wirken mit (so gewünscht), beide schlagen je Runde zugleich,
   fallen beide in derselben Runde, ist es unentschieden; Werte zählen dort nicht, eine Haltung
   gibt es nicht mehr; der Kampf wird Runde für Runde gezeigt;
   Ruhm als eigene Währung nur der Arena, geht nie verloren (Kleidung mit Boni, jeden Tag drei

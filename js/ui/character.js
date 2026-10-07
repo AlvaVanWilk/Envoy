@@ -105,7 +105,7 @@ function arenaPanel(game) {
       h('span', { class: 'effort-label' }, 'Fleiß', h('span', { class: 'muted' }, 'Tage mit Tageswerk in den letzten vier Wochen'))),
     h('ul', { class: 'effort-areas' }, STAT_IDS.map((id) => h('li', {}, statEmblem(id, 'small'), h('span', {}, String(effort[id]))))),
     bonuses.length > 0 ? h('dl', { class: 'facts' }, bonuses.map((k) => h('div', { 'data-tip': FIGHT_TIPS[k] }, h('dt', {}, 'Kleidung'), h('dd', {}, h('span', { class: 'gear-part' }, effectText(k, fx[k])))))) : null,
-    h('p', { class: 'muted gear-note' }, 'In der Arena gewinnt, wer fleißiger ist. Bei gleichem Fleiß wird gekämpft; Schaden, Treffer und Ausweichen der Kleidung wirken mit.'));
+    h('p', { class: 'muted gear-note' }, 'In der Arena gewinnt, wer fleißiger ist. Bei gleichem Fleiß entscheidet der Kampf; Schaden, Treffer und Ausweichen der Kleidung wirken mit.'));
 }
 
 // Items that fell off because a stat dropped below their requirement.
