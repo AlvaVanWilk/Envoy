@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.18.0';
+export const APP_VERSION = '5.19.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -280,7 +280,7 @@ export const QUALITIES = [
   { id: 'praechtig', name: 'Prächtig', bonuses: 3 },
 ];
 export const QUALITY_CHANCES = {
-  fund: [55, 30, 12, 3],
+  fund: [35, 40, 19, 6],           // found on the way (since 5.19 as from spirits; before 55/30/12/3)
   beute: [35, 40, 19, 6],
   haendler: [25, 45, 24, 6],
   tiefe: [0, 55, 33, 12],          // a Wächter of the Tiefen: never a plain piece

@@ -446,7 +446,11 @@ test('pieces found, dropped or offered get a Güte and bonuses; worn, the bonuse
       for (const key of Object.keys(r.bonus)) assert.ok(!['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit'].includes(key));
     }
   }
-  assert.ok(counts.schlicht > counts.gut && counts.gut > counts.selten && counts.selten > counts.praechtig, JSON.stringify(counts));
+  // the shares of QUALITY_CHANCES.fund, give or take a little
+  const { QUALITY_CHANCES } = await import('../js/config.js');
+  ['schlicht', 'gut', 'selten', 'praechtig'].forEach((id, i) => {
+    assert.ok(Math.abs(counts[id] / 2000 - QUALITY_CHANCES.fund[i] / 100) < 0.04, JSON.stringify(counts));
+  });
   assert.deepEqual(cleanBonuses({ guete: 'gut', bonus: { kraft: 5 } }), {});
   // a bought piece with a bonus, worn: its bonus counts in the effects
   const gift = ev('expedition', { q: 'q-pilzholz', place: 'pilzhain', title: 'x', out: 0, act: 1, back: 0, cost: 0,

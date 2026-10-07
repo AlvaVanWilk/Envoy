@@ -68,7 +68,7 @@ test('the camp is raised once the Hygge is enough; it costs material and Energie
   const quest = nextUpgrade(s0.world, catalog);
   assert.equal(quest.id, 'bau:lager:2');
   assert.deepEqual(quest.consumes, { pilzholz: 20, stein: 20 });
-  assert.equal(quest.cost, 30);
+  assert.equal(quest.cost, 15);   // the first raise is easy (since 5.19; before 30)
   assert.deepEqual(questState(quest, ctxOf(s0)).missing, ['20 Pilzholz', '20 Stein']);
 
   // material, and Energie beyond the bar of a new Envoy (like a morning on the Schlafplatz)

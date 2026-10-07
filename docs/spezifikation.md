@@ -289,7 +289,9 @@ optisches Extra (so gewünscht, 5.13):
 Jedes Stück Kleidung, das unterwegs gefunden wird, ein Geist fallen lässt oder der Händler
 anbietet, bekommt eine **Güte**: schlicht (keine Boni), gut (1), selten (2), prächtig (3).
 Wie wahrscheinlich welche Güte ist, hängt an der Herkunft (`QUALITY_CHANCES` in
-`js/config.js`): unterwegs 55/30/12/3 %, bei Geistern 35/40/19/6 %, beim Händler 25/45/24/6 %.
+`js/config.js`): unterwegs 35/40/19/6 % (seit 5.19 wie bei Geistern, vorher 55/30/12/3 %: was
+Energie kostet, soll nicht schlechter sein als der Aushang ohne Energie), bei Geistern
+35/40/19/6 %, beim Händler 25/45/24/6 %.
 Die Boni werden aus den Effekten oben gezogen, jeder höchstens einmal je Stück (`BONUSES`):
 
 | Bonus | bei Stärke 1 | je Level mehr |
@@ -608,30 +610,42 @@ hin und zurück, dann waren es gut 2 bis 4 Stück je Energie wie dort):
 Ohne Stein- und Pilzlager passt nur ein Teil davon in den Vorrat; das sagt das Fenster
 der Quest vorher („In den Vorrat passen davon nur 6 Stein.“). Wie die Orte weiterwachsen, plant die Nutzerin.
 
-**Bannsplitter aus Quests.** Seit 5.12 bringt jede wiederholbare Quest etwa einen
-Bannsplitter je Energie, damit sich jede lohnt (vorher teils nur einen für fünf Energie):
+**Bannsplitter aus Quests.** Seit 5.19 bringen die Erkunden-Quests (und die Brücke) etwa
+zwei Bannsplitter je Energie (5.12 bis 5.18 einen, davor teils nur einen für fünf Energie).
+Warum (so entschieden, die Nutzerin hat es Claude überlassen): Mit Aushang und Tiefen kamen
+Bannsplitter ohne Energie dazu, und ein Bannsplitter je Energie war genau, was Energie beim
+Händler kostet (Pilztee: 12 für 10); Energie in diese Quests zu stecken lohnte sich kaum. Die
+Quests bleiben die einzige Quelle für Stein, Pilzholz, Pläne und neue Orte; Sammeln ändert
+sich nicht. Einmalige Quests: Durch den Spalt 30, Über den Dornengrat 40, Die Brücke 60,
+Der Turm der Stufen 120, Die lange Straße 80 (vorher die Hälfte). Kampf- und Höhlenquests
+blieben, wie sie waren (5 bis 12 je Energie).
 
 | Quest | Energie | Bannsplitter | wieder nach |
 | --- | --- | --- | --- |
-| Splitter im Uferkies (Stilles Ufer) | 3 | 3–4 (vorher 1) | sofort |
-| Die umgestürzte Säule (dazu 4–6 Stein) | 8 | 7–9 (vorher 4) | 1 Tag (vorher 3) |
-| Die stille Quelle (dazu die Leiste voll) | 10 | 10–12 (vorher 8) | 3 Tagen |
-| Wache an der Furt | 40 | 36–44 (vorher 9–12) | 1 Tag |
-| Eine Nacht am Mondsee | 60 | 55–65 (vorher 15–19) | 1 Tag (vorher 2) |
-| Bis zum Horizont | 90 | 85–100 (vorher 24–30) | 1 Tag (vorher 3) |
+| Splitter im Uferkies (Stilles Ufer) | 3 | 6–8 (5.12: 3–4) | sofort |
+| Die umgestürzte Säule (dazu 4–6 Stein) | 8 | 14–18 (5.12: 7–9) | 1 Tag |
+| Die stille Quelle (dazu die Leiste voll) | 10 | 20–24 (5.12: 10–12) | 3 Tagen |
+| Wache an der Furt | 40 | 72–88 (5.12: 36–44) | 1 Tag |
+| Eine Nacht am Mondsee | 60 | 110–130 (5.12: 55–65) | 1 Tag |
+| Bis zum Horizont | 90 | 170–200 (5.12: 85–100) | 1 Tag |
 
 Die stille Quelle bleibt bei drei Tagen, weil sie die Leiste ganz auffüllt.
 
 **Tempo der Wirtschaft.** Die Quests der Welt bleiben an die Werte und an echte Minuten
 Treppe gebunden; die schnelleren Aktionen öffnen sie nicht früher. Der Ausbau des Lagers
-soll nicht schneller gehen als vor 5.12 (so gewünscht, „das soll nicht so schnell zu
-maximieren sein“). Deshalb braucht das Aufwerten mehr Energie am Stück (30, 70, 115, 165
-statt 22, 45, 85, 130), ein Plan für Deko braucht anderthalbmal so viele Chancen (9, 18, 36
-statt 6, 12, 24), und die beiden Pläne beim Händler kosten dreimal so viel (Teppich 120,
-Pilzholztisch 180). Eine Rechnung, die ein eifriges Spielen Tag für Tag nachstellt (alle
-vier Aufgaben, ein- bis dreimal am Tag gespielt, ganz aufs Lager hin), kommt mit den neuen
-Regeln meist am selben Tag auf eine Lagerstufe wie mit den alten (18 von 28 Fällen), in
-einigen zwei bis fünf Tage später, in wenigen einen Tag früher.
+sollte mit 5.12 nicht schneller gehen als vorher (so gewünscht, „das soll nicht so schnell zu
+maximieren sein“). Deshalb brauchte das Aufwerten mehr Energie am Stück (30, 70, 115, 165
+statt 22, 45, 85, 130). **Seit 5.19** (so gewünscht: am Lager fehlte nur die Energie, nach drei
+Tagen Spielen sollte die erste Aufwertung gehen, die ersten dürfen leichter sein als die
+späteren) kostet es 15, 40, 85 und 140 Energie am Stück: die erste passt in eine volle Leiste
+mit Ausdauer 2, die zweite in eine mit Ausdauer 4 (oder mit Ausdauer 3 und dem Tageswerk über die
+Leiste), die späteren brauchen etwas Ansparen. Seit 5.12 braucht außerdem ein Plan für Deko
+anderthalbmal so viele Chancen (9, 18, 36 statt 6, 12, 24), und die beiden Pläne beim Händler
+kosten dreimal so viel (Teppich 120, Pilzholztisch 180). Eine Rechnung zu 5.12, die ein eifriges
+Spielen Tag für Tag nachstellt (alle vier Aufgaben, ein- bis dreimal am Tag gespielt, ganz aufs
+Lager hin), kam mit den damaligen Regeln meist am selben Tag auf eine Lagerstufe wie mit den
+älteren (18 von 28 Fällen), in einigen zwei bis fünf Tage später, in wenigen einen Tag früher;
+seit 5.19 gehen die ersten Stufen schneller.
 
 **Begegnungen:** Jeden Tag erscheinen an wilden Orten Geister (je Ort 55 % Chance,
 mindestens eine an einem von Anfang an offenen Ort). Welcher Geist kommt, richtet sich
@@ -1465,7 +1479,8 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Stufen | hoch nach zwei guten Durchgängen in Folge, runter nach zwei zu schweren in Folge; Durchgänge, nicht Kalendertage; Kinder: hoch nach drei Durchgängen |
 | Energie vom Tageswerk | jede erledigte Aufgabe ein Viertel der Leiste, auch über ihr Ende hinaus (bis 5.11 ein Achtel) |
 | Zeit und Wege | eine Energie dauert zehn Sekunden (bis 5.11 eine Minute); Wege kosten keine Energie, nur Zeit; ältere Ereignisse behalten die alten Regeln (`regel`, `RULE_SETS`) |
-| Ausbau des Lagers | nicht schneller als vor 5.12: Aufwerten 30, 70, 115, 165 Energie am Stück, Pläne 9, 18, 36 Chancen, Händler-Pläne 120 und 180 Bannsplitter |
+| Ausbau des Lagers | Aufwerten 15, 40, 85, 140 Energie am Stück (seit 5.19; die ersten leichter), Pläne 9, 18, 36 Chancen, Händler-Pläne 120 und 180 Bannsplitter |
+| Bannsplitter aus Quests | Erkunden etwa zwei je Energie (seit 5.19), Kleidung von unterwegs mit der Güte wie bei Geistern |
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
 | Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy |
 | Tränke | Pilztee (+10) und Quellsud (+25) beim Händler, je zwei am Tag, nie über die Leiste |

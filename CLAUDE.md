@@ -94,8 +94,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Weg, Menge wählbar, mit Würfeln (2 bis 4 Stück je Energie, nie weniger als 2)
 - Lager: die erste Quest ist das Lagerfeuer (Lagerstufe 1); fünf Lagerstufen
   (Provisorisches Lager, Unterstand, Wackelige Hütte, Stabile Hütte, Steinhäuschen),
-  aufzuwerten mit genug Hygge (5, 14, 36, 90), Material und Energie am Stück (30, 70, 115,
-  165), kein Muss; der Ausbau soll nicht schneller gehen als vor 5.12 (so gewünscht);
+  aufzuwerten mit genug Hygge (5, 14, 36, 90), Material und Energie am Stück (15, 40, 85,
+  140, seit 5.19: die ersten leichter, so gewünscht), kein Muss;
   vier Einrichtungen in Stufen mit eigenen Namen (Steinlager und Pilzlager bis Stufe 3,
   Aufbewahrung bis 4, Schlafplatz bis 5; jede Stufe ab der gleichen Lagerstufe), keine
   Quests und nicht auf der Karte, nur über „Lager einrichten“ (Kacheln, Hygge als kleine
