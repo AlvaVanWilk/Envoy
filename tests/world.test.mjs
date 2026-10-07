@@ -434,6 +434,25 @@ test('a potion from the trader fills the Energie, never beyond the end of the ba
   assert.equal(replay([gift, tea, again], catalog, DAY, T0 + 0.08 * H).world.purse.splitter, 48);   // the same one only once
 });
 
+test('the higher the requirement of a piece, the bigger its bonuses', async () => {
+  const { rollBonuses } = await import('../js/world/bonuses.js');
+  const { seededRandom } = await import('../js/world/rng.js');
+  let low = 0;
+  let high = 0;
+  for (let i = 0; i < 500; i += 1) {
+    // the same dice: the same Güte and the same bonuses, only their size differs
+    const a = rollBonuses('arena', 5, seededRandom(`r${i}`), 0);
+    const b = rollBonuses('arena', 5, seededRandom(`r${i}`), 8);
+    assert.deepEqual(Object.keys(a.bonus), Object.keys(b.bonus));
+    for (const key of Object.keys(a.bonus)) {
+      assert.ok(b.bonus[key] >= a.bonus[key]);
+      low += a.bonus[key];
+      high += b.bonus[key];
+    }
+  }
+  assert.ok(high > 1.3 * low, `${low} ${high}`);
+});
+
 test('pieces found, dropped or offered get a Güte and bonuses; worn, the bonuses count', async () => {
   const { rollBonuses, cleanBonuses } = await import('../js/world/bonuses.js');
   const { seededRandom } = await import('../js/world/rng.js');
@@ -577,6 +596,17 @@ test('Einweben: the strength of one piece goes into another of the same slot, wh
   assert.equal(replay([fire, fav, strong, other, wear, weave, wrong], catalog, DAY, T0 + 0.1 * H).world.items[other.id].guete, 'selten');
   const plain = ev('weben', { ziel: strong.id, quelle: 'start:torso_leinenhemd_1' }, 0.085);
   assert.ok(replay([fire, fav, strong, plain], catalog, DAY, T0 + 0.1 * H).world.items['start:torso_leinenhemd_1']);
+  // since 5.20.4 only from a piece the Envoy can wear now; earlier weavings keep counting
+  const demanding = catalog.equipment.find((i) => i.herkunft.includes('fund') && i.slot === 'torso' && i.passt?.includes('erste') && (i.req?.kraft || 0) >= 3);
+  const high = ev('buy', { offer: `${DAY}:d`, kind: 'item', thing: demanding.id, price: 1, guete: 'praechtig', bonus: { schaden: 5, treffer: 9, glueck: 12 } }, 0.065);
+  const newWeave = ev('weben', { ziel: fav.id, quelle: high.id, tragbar: true }, 0.09);
+  const refused = replay([fire, fav, high, newWeave], catalog, DAY, T0 + 0.1 * H);
+  assert.equal(refused.world.items[fav.id].guete, 'gut');      // Kraft 1 is not enough to wear it
+  assert.ok(refused.world.items[high.id]);
+  const { weaveSources } = await import('../js/world/weave.js');
+  assert.ok(!weaveSources(refused.world, catalog, refused.world.items[fav.id], refused.stats).some((e) => e.inst === high.id));
+  const oldWeave = ev('weben', { ziel: fav.id, quelle: high.id }, 0.09);
+  assert.equal(replay([fire, fav, high, oldWeave], catalog, DAY, T0 + 0.1 * H).world.items[fav.id].guete, 'praechtig');
   // only at the Lagerfeuer, not while away
   assert.equal(weaveBlock({ camp: { stage: 0 }, expedition: null }), 'fire');
   assert.equal(weaveBlock({ camp: { stage: 1 }, expedition: { actions: [] } }), 'away');

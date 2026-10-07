@@ -85,7 +85,7 @@ export function openEntry(inst, game) {
   if (reachable(world, entry) && (entry.where === 'rucksack' || entry.where === 'schrank')) {
     actions.push(h('button', { class: 'btn text danger-text', onclick: () => confirmDrop(entry, thing, game) }, 'Liegen lassen'));
   }
-  const sources = entry.kind === 'item' && reachable(world, entry) ? weaveSources(world, game.catalog, entry) : [];
+  const sources = entry.kind === 'item' && reachable(world, entry) ? weaveSources(world, game.catalog, entry, stats) : [];
   const weaveWhy = WEAVE_WHY[weaveBlock(world)];
 
   openSheet({
@@ -118,7 +118,7 @@ function openWeave(target, thing, game) {
 
   const showList = () => {
     const { world } = game.state;
-    const rows = weaveSources(world, game.catalog, world.items[target.inst] || target).map((source) => {
+    const rows = weaveSources(world, game.catalog, world.items[target.inst] || target, game.state.stats).map((source) => {
       const item = game.catalog.itemById.get(source.id);
       return h('button', { class: 'item-row weave-row', onclick: () => showChoice(source) },
         h('span', { class: `item-frame${qualityClass(source)}` }, itemIcon(item, game, 'item-icon', source.farbe)),

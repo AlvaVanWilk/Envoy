@@ -350,7 +350,9 @@ export const game = {
 
   // The strength of one piece woven into another of the same slot; the first one is gone (see world/weave.js).
   weave(targetInst, sourceInst) {
-    if (canWeave(this.state.world, this.catalog, targetInst, sourceInst)) this.add([this.event('weben', { ziel: targetInst, quelle: sourceInst })]);
+    if (canWeave(this.state.world, this.catalog, targetInst, sourceInst, this.state.stats)) {
+      this.add([this.event('weben', { ziel: targetInst, quelle: sourceInst, tragbar: true })]);
+    }
   },
 
   // --- der Aushang (see world/jobs.js) ----------------------------------------

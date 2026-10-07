@@ -69,7 +69,7 @@ export function arenaOffersFor(day, ctx) {
     && obtainable(i, figure) && Math.abs(itemLevel(i) - power) <= BAND);
   return shuffle(rng, items).slice(0, ARENA_OFFERS).map((item, n) => {
     const farbe = rollDye(item, seededRandom(`${day}:arena:farbe:${n}`));
-    const extra = rollBonuses('arena', power, seededRandom(`${day}:arena:guete:${n}`));
+    const extra = rollBonuses('arena', power, seededRandom(`${day}:arena:guete:${n}`), itemLevel(item));
     return { offer: `${day}:arena:${n}`, id: item.id, price: ARENA_PRICES[extra.guete] || ARENA_PRICES.selten, ...(farbe ? { farbe } : {}), ...extra };
   });
 }

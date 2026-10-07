@@ -119,10 +119,12 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   in `js/ui/look.js`, Haut bleibt); nur, was der Figur passt (Spalte `figur`: Frau, Mann, beide);
   feste Questbelohnungen bleiben wenige; jedes gefundene, erbeutete oder angebotene Stück hat
   eine Güte (schlicht, gut, selten, prächtig) mit 0 bis 3 gewürfelten Boni (Schaden, Treffer,
-  Ausweichen, Beruhigen, Erholung der Energie, Glück; größer bei stärkerem Envoy,
-  `js/world/bonuses.js`), so gewünscht: Ausrüstung hebt nie einen Stat, soll aber wichtig sein;
+  Ausweichen, Beruhigen, Erholung der Energie, Glück; größer bei stärkerem Envoy und, so gewünscht,
+  bei höherer Anforderung des Stücks, je zur Hälfte, `js/world/bonuses.js`), so gewünscht:
+  Ausrüstung hebt nie einen Stat, soll aber wichtig sein;
   Einweben am Lagerfeuer (so gewünscht, `js/world/weave.js`): Güte und Boni eines Stücks gehen
-  in ein anderes für denselben Platz, das sein Aussehen behält; das gebende zerfällt, kostet sonst nichts
+  in ein anderes für denselben Platz, das sein Aussehen behält; das gebende zerfällt, kostet sonst
+  nichts, und der Envoy muss es tragen können (so gewünscht)
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
   (gesammeltes ist sofort dort, ohne Erklärung); Händler (Quest ohne Voraussetzung, am ersten

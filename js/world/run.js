@@ -74,7 +74,7 @@ export function lootThing(ctx, rng, origin, dyeRng, quality = origin) {
   const item = pick(rng, wearableFirst ? now : items);
   const farbe = rollDye(item, dyeRng);
   // its Güte and bonuses, with the dice of the colour (see bonuses.js)
-  const extra = dyeRng ? rollBonuses(quality, power, dyeRng) : {};
+  const extra = dyeRng ? rollBonuses(quality, power, dyeRng, itemLevel(item)) : {};
   return { kind: 'item', id: item.id, ...(farbe ? { farbe } : {}), ...extra };
 }
 

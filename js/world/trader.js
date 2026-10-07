@@ -29,7 +29,7 @@ export function offersFor(day, ctx) {
   const chosen = shuffle(rng, band).slice(0, TRADER_OFFERS).map((i) => {
     const farbe = rollDye(i, dyeRng);
     // Güte and bonuses, with dice of their own; each bonus makes it dearer
-    const extra = rollBonuses('haendler', power, seededRandom(`${day}:haendler:guete:${i.id}`));
+    const extra = rollBonuses('haendler', power, seededRandom(`${day}:haendler:guete:${i.id}`), itemLevel(i));
     const price = Math.round(itemPrice(i) * (1 + BONUS_PRICE * bonusCount(extra)));
     return { kind: 'item', id: i.id, price, ...(farbe ? { farbe } : {}), ...extra };
   });

@@ -3,19 +3,19 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, UI_ICONS } from './icons.js';
+import { NAV_ICONS, SLOT_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.20';
+export const NEWS_ID = '5.20.4';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'In der Arena zählt eure Kleidung jetzt im Kampf.';
+const INTRO = 'Zwei Dinge zur Kleidung.';
 
 const NEWS = [
-  { icon: NAV_ICONS.arena, title: 'Kleidung zählt im Kampf',
-    text: 'In den Kämpfen der Arena wirken jetzt Schaden, Treffer und Ausweichen eurer Kleidung mit.' },
-  { icon: UI_ICONS.hero, title: 'Was eure Kleidung dafür hat',
-    text: 'Beim Envoy steht unter Arena, welche dieser Boni eure Kleidung gerade mitbringt.' },
+  { icon: SLOT_ICONS.torso, title: 'Höhere Anforderung, größere Boni',
+    text: 'Kleidung, die mehr Kraft, Ausdauer, Beweglichkeit oder Gelassenheit verlangt, bringt jetzt größere Boni mit.' },
+  { icon: NAV_ICONS.lager, title: 'Einweben',
+    text: 'Tippt euer Lieblingsstück an, dort steht „Kraft einweben“. Einweben geht nur mit Stücken, die euer Envoy schon tragen kann.' },
 ];
 
 export function openNews(onDone) {

@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.20.3';
+export const APP_VERSION = '5.20.4';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -272,7 +272,8 @@ export const DYES = [
 // has. QUALITY_CHANCES: the shares of the four for each origin. A bonus never
 // raises a stat; it helps in the world (see hero.js: fighter, staminaPerHour,
 // and the luck in run.js). Its size: base at strength 1, + perLevel for each
-// level of strength (average of the stats) when the piece turns up.
+// level of strength; strength = half the Envoy's (average of the stats) when
+// the piece turns up, half the requirement of the piece (since 5.20.4).
 export const QUALITIES = [
   { id: 'schlicht', name: 'Schlicht', bonuses: 0 },
   { id: 'gut', name: 'Gut', bonuses: 1 },

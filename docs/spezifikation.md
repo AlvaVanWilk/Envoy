@@ -303,8 +303,11 @@ Die Boni werden aus den Effekten oben gezogen, jeder höchstens einmal je Stück
 | erholung | 8 % | 1,2 |
 | glueck | 5 % | 1 |
 
-Stärke = Durchschnitt der vier Level, wenn das Stück auftaucht; die Größe schwankt um ±20 %,
-mindestens 1. Güte und Boni gehören dem Stück (`guete`, `bonus` am Ding, im Ereignis
+Stärke = halb die des Envoy (Durchschnitt der vier Level, wenn das Stück auftaucht), halb die
+Anforderung des Stücks (sein höchster verlangter Wert, ohne Anforderung 0); seit 5.20.4, so
+gewünscht: je höher die Anforderung, desto größer die Boni (vorher zählte nur der Envoy). Ein
+Envoy mit Stärke 5 findet also ein Stück ohne Anforderung mit Boni wie bei Stärke 2,5, eins
+mit Kraft 8 wie bei Stärke 6,5. Die Größe schwankt um ±20 %, mindestens 1. Güte und Boni gehören dem Stück (`guete`, `bonus` am Ding, im Ereignis
 gespeichert, `js/world/bonuses.js`) und zählen, solange es getragen wird, zusammen mit den
 festen Effekten des Teils. Der Rahmen zeigt die Güte in Farbe (gut grün, selten blau,
 prächtig gold), der Name steht klein beim Teil („Torso · Stufe 1 · Selten“). Jeder Bonus
@@ -315,10 +318,13 @@ macht das Stück beim Händler 40 % teurer, beim Verkauf ebenso mehr wert (`BONU
 verzichten): Am Lagerfeuer (Lagerstufe 1, nicht unterwegs) webt der Envoy die Kraft eines
 Stücks in ein anderes für denselben Platz. Das behaltene Stück bleibt, wie es ist (Aussehen,
 Farbe, Name, Voraussetzung) und übernimmt Güte und Boni des anderen; seine eigenen Boni gehen.
-Das gebende Stück zerfällt zu Fäden und ist weg, auch wenn es getragen wurde. Es braucht Boni;
+Das gebende Stück zerfällt zu Fäden und ist weg, auch wenn es getragen wurde. Es braucht Boni,
+und der Envoy muss es jetzt tragen können (Voraussetzung erfüllt, passt zur Figur; seit 5.20.4,
+so gewünscht: sonst ginge die Kraft eines Stücks, das er noch nicht tragen kann, in eins, das er
+trägt; frühere Ereignisse ohne Feld `tragbar` zählen weiter);
 eine feste Fähigkeit aus der Tabelle bleibt bei ihrem Stück und geht mit ihm. Es kostet nichts
 weiter. Im Fenster eines Stücks: „Kraft einweben“, dann das gebende Stück wählen, vorher und
-danach nebeneinander sehen, „Einweben“. Ereignis `weben` (`ziel`, `quelle`, `js/world/weave.js`).
+danach nebeneinander sehen, „Einweben“. Ereignis `weben` (`ziel`, `quelle`, `tragbar`, `js/world/weave.js`).
 
 **Sechs Slots:** Kopf, Torso, Handwickel, Accessoire, Beinkleidung, Schuhe. Kein
 Waffen-Slot, kein Gürtel, keine Schulterstücke. Die **Handwickel** sind das Gegenstück
@@ -1506,7 +1512,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Ausbau des Lagers | Aufwerten 15, 40, 85, 140 Energie am Stück (seit 5.19; die ersten leichter), Pläne 9, 18, 36 Chancen, Händler-Pläne 120 und 180 Bannsplitter |
 | Bannsplitter aus Quests | Erkunden etwa zwei je Energie (seit 5.19), Kleidung von unterwegs mit der Güte wie bei Geistern |
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
-| Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy |
+| Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy und höherer Anforderung |
 | Tränke | Pilztee (+10) und Quellsud (+25) beim Händler, je zwei am Tag, nie über die Leiste |
 | Aushang | drei Aufträge am Tag am Lager, ohne Energie, nur Zeit; der Lohn (Bannsplitter, oft Kleidung mit Güte) steht darauf; jeder einmal |
 | Ruhm | kauft Kleidung mit Boni (mindestens selten) und Farben; Titel kommen mit den Rängen aus allem verdienten Ruhm |

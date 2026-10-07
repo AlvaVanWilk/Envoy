@@ -4,7 +4,9 @@
 // Beweglichkeit, Gelassenheit stay the work of the real exercises); it helps
 // in the world: more damage, hitting and dodging, calming spirits, Energie
 // refilling faster, more luck with Bannsplitter and finds. The bigger the
-// Envoy's stats when the piece turns up, the bigger its bonuses.
+// Envoy's stats when the piece turns up, and the higher the requirement of
+// the piece, the bigger its bonuses (since 5.20.4, so gewünscht: half from
+// each; before only the stats counted).
 //
 // An owned piece keeps its Güte and bonuses: entry.guete, entry.bonus = { schaden: 2, … }
 
@@ -21,8 +23,9 @@ function bonusSize(bonus, power, rng) {
 }
 
 // Güte and bonuses for a piece from `origin` (fund, beute, haendler, …):
-// {} for a plain one, else { guete, bonus }.
-export function rollBonuses(origin, power, rng) {
+// {} for a plain one, else { guete, bonus }. power: the Envoy's strength,
+// level: the requirement of the piece (see itemLevel in items.js).
+export function rollBonuses(origin, power, rng, level = power) {
   const chances = QUALITY_CHANCES[origin] || QUALITY_CHANCES.fund;
   const total = chances.reduce((sum, n) => sum + n, 0);
   let pick = rng() * total;
@@ -34,7 +37,7 @@ export function rollBonuses(origin, power, rng) {
   const bonus = {};
   for (let n = 0; n < quality.bonuses && left.length > 0; n += 1) {
     const [chosen] = left.splice(Math.floor(rng() * left.length), 1);
-    bonus[chosen.id] = bonusSize(chosen, power, rng);
+    bonus[chosen.id] = bonusSize(chosen, (power + level) / 2, rng);
   }
   return { guete: quality.id, bonus };
 }

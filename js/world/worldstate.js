@@ -440,8 +440,9 @@ export function applyWorldEvent(world, e, ctx) {
       descendInto(world, e, ctx);
       break;
     case 'weben':
-      // the strength of `quelle` goes into `ziel`; `quelle` falls to threads (see weave.js)
-      if (canWeave(world, ctx.catalog, e.ziel, e.quelle)) {
+      // the strength of `quelle` goes into `ziel`; `quelle` falls to threads (see weave.js);
+      // since 5.20.4 (field `tragbar`) only from a piece the Envoy can wear
+      if (canWeave(world, ctx.catalog, e.ziel, e.quelle, e.tragbar ? ctx.stats : null)) {
         const target = world.items[e.ziel];
         delete target.guete;
         delete target.bonus;
