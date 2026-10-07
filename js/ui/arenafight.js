@@ -1,6 +1,7 @@
 // Challenging another Abbild: the server decides the fight (see arena.php):
-// the more diligent one wins; equally diligent, the clothes; equal in both, a
-// draw, in which both strike the last blow at the same time. Here it plays
+// the more diligent one wins; equally diligent, they really fight, and the
+// bonuses of the clothes act in it (since 5.20). In each round both strike at
+// the same time; if both fall in the same round, it is a draw. Here it plays
 // round by round. At the end both bow; a defeat costs nothing. A challenge
 // costs no Energie.
 
@@ -14,13 +15,15 @@ import { abbildPortrait, titleText, ruhmAmount } from './arenaparts.js';
 const ROUND_MS = 1000;
 const SECOND_BLOW_MS = 450;
 const RESULT = { sieg: 'Sieg', remis: 'Unentschieden', niederlage: 'Unterlegen' };
-// The result, and below it why (fights before 5.17 could also end on points).
+// The result, and below it why (fights before 5.17 could also end on points,
+// from 5.17 to 5.19 a sum of the clothes decided at equal Fleiß).
 function resultText(fight) {
   if (fight.entscheid === 'punkte' && fight.ergebnis !== 'remis') return `${RESULT[fight.ergebnis]} nach Punkten`;
   return RESULT[fight.ergebnis];
 }
 const REASON = {
   fleiss: { sieg: 'Mehr Fleiß auf deiner Seite.', niederlage: 'Mehr Fleiß auf der anderen Seite.' },
+  kampf: { sieg: 'Gleich fleißig. Der Kampf hat entschieden.', niederlage: 'Gleich fleißig. Der Kampf hat entschieden.', remis: 'Gleich fleißig, gleich stark im Kampf.' },
   kleidung: { sieg: 'Gleich fleißig. Deine Kleidung gab den Ausschlag.', niederlage: 'Gleich fleißig. Die Kleidung der anderen Seite gab den Ausschlag.' },
   gleich: { remis: 'Gleich fleißig, gleich gut gekleidet. Beide treffen zugleich.' },
 };
@@ -102,12 +105,15 @@ export function fightPlay(fight, x, game) {
       return;
     }
     if (r.gleichzeitig) {
-      // a draw: both strike the last blow at the same time
-      line.textContent = `Runde ${r.n}: Beide treffen zugleich`;
+      // the last round: both blows land at once; if both fall, a draw
+      const both = r.la === 0 && r.lb === 0;
+      line.textContent = both ? `Runde ${r.n}: Beide treffen zugleich`
+        : `Runde ${r.n}: ${[first, second].map((s) => blowText(r[s], names[s], names[s === 'a' ? 'b' : 'a'])).join(', ')}`;
       blow(first, r[first], animate);
       blow(second, r[second], animate);
       return;
     }
+    // older fights: the second blow did not come when the first one ended it (null)
     const parts = [first, second].filter((s) => r[s] !== null).map((s) => blowText(r[s], names[s], names[s === 'a' ? 'b' : 'a']));
     line.textContent = `Runde ${r.n}: ${parts.join(', ')}`;
     blow(first, r[first], animate);

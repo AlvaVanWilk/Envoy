@@ -16,7 +16,7 @@
 //   titles   { id: true } the Titel bought before 5.15 (they stay)
 //   fights   the latest fights, newest last: { id, t, rolle, gegner, ergebnis, ruhm, platz }
 
-import { ARENA_ENERGY_BEFORE, TITLES, DYES, RANKS, ARENA_OFFERS, ARENA_PRICES, ARENA_WINDOW_DAYS, GEAR_WEIGHTS, STAT_IDS } from '../config.js';
+import { ARENA_ENERGY_BEFORE, TITLES, DYES, RANKS, ARENA_OFFERS, ARENA_PRICES, ARENA_WINDOW_DAYS, STAT_IDS } from '../config.js';
 import { addDays } from '../days.js';
 import { stow } from './inventory.js';
 import { cleanBonuses, rollBonuses } from './bonuses.js';
@@ -42,10 +42,6 @@ export function effortOf(state) {
   }
   return { ...days, total: STAT_IDS.reduce((sum, id) => sum + days[id], 0) };
 }
-
-// What the worn clothes count for in a fight in the arena (when both are
-// equally diligent), from their abilities and bonuses (see hero.js: effects).
-export const gearScore = (fx) => Object.entries(GEAR_WEIGHTS).reduce((sum, [key, weight]) => sum + weight * (fx[key] || 0), 0);
 
 export const titleById = (id) => TITLES.find((t) => t.id === id) || null;
 

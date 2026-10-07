@@ -12,8 +12,9 @@
 // own list of events. Every task counts the same, at any stage, for children
 // as for adults: who finds the exercises easy rises to higher stages and more
 // XP, but not to more strength in the arena. The more diligent Abbild wins.
-// Equally diligent: the one whose clothes have more for the fight (ARENA_GEAR).
-// Equal in that as well: a draw, both strike the last blow at once.
+// Equally diligent (since 5.20): they really fight, and the bonuses of the
+// clothes act in the fight (more damage, hitting, dodging). A draw only when
+// both strike the last blow at the same time.
 //
 // The list runs all the time (a challenge list as in a sports club):
 // - Who sets up an Abbild starts at the end.
@@ -49,12 +50,11 @@ const ARENA_FILE = DATA_DIR . '/arena.json';
 const ARENA_REACH = 3;
 const ARENA_REST_DAYS = 14;
 const ARENA_KEEP_DAYS = 90;
-const ARENA_ROUNDS = 24;          // at most, in the bout as it is shown
-const ARENA_TRIES = 400;          // bouts tried until one ends as decided
-// What the clothes count for in the arena, when both are equally diligent:
-// their bonuses (and abilities) for the fight, a point of damage as much as
-// three of hitting, dodging or calming (the same as GEAR_WEIGHTS in js/config.js).
-const ARENA_GEAR = ['schaden' => 3, 'treffer' => 1, 'ausweichen' => 1, 'beruhigen' => 1];
+const ARENA_ROUNDS = 30;          // at most; then the one with more life left wins
+const ARENA_TRIES = 400;          // bouts tried until one ends as decided by the Fleiß
+// The bonuses of the clothes that act in a fight: more damage with each hit,
+// percent points to hit and to dodge (as in the world, see js/world/hero.js).
+const ARENA_FIGHT_BONUSES = ['schaden', 'treffer', 'ausweichen'];
 const ARENA_WINDOW_DAYS = 28;     // the strength: tasks done in this many days, up to today
 const ARENA_NAME_MAX = 24;
 const ARENA_STATS = ['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit'];
@@ -64,15 +64,16 @@ const RUHM_CHALLENGED = ['sieg' => 2, 'remis' => 1, 'niederlage' => 1];
 const ARENA_OTHER_VIEW = ['sieg' => 'niederlage', 'remis' => 'remis', 'niederlage' => 'sieg'];
 
 // --- the fight ----------------------------------------------------------------
-// First the result: the more diligent Abbild wins; equally diligent, the one
-// whose clothes count for more (gearOf); equal in that too, a draw. Then the
-// bout to show it, round by round: both sides are measured against each
-// other, area by area, as before (twice as many days of Kraft hit about a
-// fifth harder, of Ausdauer last about a fifth longer, of Beweglichkeit hit
-// and dodge more often). Bouts are rolled until one ends as decided: the
-// winner strikes the last blow; in a draw both are worn down and strike the
-// last blow at the same time. (Before 5.17 the bout itself decided, with the
-// Haltung and a bow of the one behind, which ended it as a draw.)
+// The more diligent Abbild wins (so gewünscht). Both are measured against each
+// other, area by area (twice as many days of Kraft hit about a fifth harder,
+// of Ausdauer last about a fifth longer, of Beweglichkeit hit and dodge more
+// often), and the bonuses of the clothes act on top: damage on each hit,
+// hitting and dodging. In a round both strike at the same time; who falls,
+// falls; if both fall in the same round, it is a draw.
+// - Different Fleiß: bouts are rolled until one ends as decided, so the bout
+//   shown fits (the more diligent strikes the last blow).
+// - The same Fleiß: one bout, and it decides (since 5.20; in 5.17 to 5.19 a
+//   sum of the clothes' bonuses decided, before that the bout with a Haltung).
 
 function clampTo(float $v, float $lo, float $hi): float
 {
@@ -84,77 +85,69 @@ function chance(): float
     return random_int(0, 999999) / 1000000;
 }
 
+// One side in the fight: from the strength of both and its own bonuses. Life
+// and damage are about those of an Envoy around level 10 in the world, so a
+// point of Schaden on the clothes counts about as much here as there.
 function fightSide(array $self, array $other): array
 {
     $x = fn(string $stat) => log($self['strength'][$stat] / $other['strength'][$stat]);
-    $damage = 5 * exp(0.25 * $x('kraft'));
+    $fx = $self['bonus'] ?? [];
     return [
-        'life' => (int)round(30 * exp(0.25 * $x('ausdauer'))),
-        'damage' => $damage,
-        'most' => max(1, (int)round($damage * 1.8)),
-        'hit' => clampTo(0.7 + 0.12 * $x('beweglichkeit'), 0.35, 0.95),
-        'dodge' => clampTo(0.1 + 0.06 * $x('beweglichkeit'), 0, 0.4),
+        'life' => (int)round(40 * exp(0.25 * $x('ausdauer'))),
+        'damage' => 7 * exp(0.25 * $x('kraft')) + ($fx['schaden'] ?? 0),
+        'hit' => clampTo(0.7 + 0.12 * $x('beweglichkeit') + ($fx['treffer'] ?? 0) / 100, 0.35, 0.95),
+        'dodge' => clampTo(0.1 + 0.06 * $x('beweglichkeit') + ($fx['ausweichen'] ?? 0) / 100, 0, 0.5),
     ];
 }
 
-// What the clothes of an Abbild count for in the fight: the bonuses of each
-// piece worn and the abilities from the table.
-function gearOf(array $abbild): int
+// The bonuses of an Abbild for the fight: the abilities of the pieces worn
+// (from the table) and the bonuses of each piece.
+function bonusesOf(array $abbild): array
 {
     $items = equipmentById();
-    $sum = 0;
+    $sum = array_fill_keys(ARENA_FIGHT_BONUSES, 0);
     foreach ($abbild['worn'] ?? [] as $w) {
         $effects = $items[$w['id']]['effekt'] ?? [];
-        foreach (ARENA_GEAR as $key => $weight) {
-            $sum += $weight * ((int)($effects[$key] ?? 0) + (int)($w['bonus'][$key] ?? 0));
+        foreach (ARENA_FIGHT_BONUSES as $key) {
+            $sum[$key] += (int)($effects[$key] ?? 0) + (int)($w['bonus'][$key] ?? 0);
         }
     }
     return $sum;
 }
 
-// One bout as it could go, or null if it did not end as decided.
-// Rounds: [{ n, zuerst, a, b, la, lb, gleichzeitig? }] with a/b = what the blow of
-// that side did (damage, 'daneben', 'ausgewichen', or null when it did not come to it),
-// la/lb = life after the round.
-function boutFor(array $sa, array $sb, string $result): ?array
+// What one blow does: 'daneben', 'ausgewichen' or the damage.
+function blowOf(array $who, array $target)
+{
+    if (chance() >= $who['hit']) return 'daneben';
+    if (chance() < $target['dodge']) return 'ausgewichen';
+    return max(1, (int)round($who['damage'] * (0.2 + 1.6 * chance())));
+}
+
+// One bout: [result from a's view, rounds]. Rounds: [{ n, zuerst, a, b, la, lb,
+// gleichzeitig? }] with a/b = what the blow of that side did (damage, 'daneben'
+// or 'ausgewichen'), la/lb = life after the round; gleichzeitig: the last round,
+// whose blows land at once.
+function bout(array $sa, array $sb): array
 {
     $life = ['a' => $sa['life'], 'b' => $sb['life']];
-    $side = ['a' => $sa, 'b' => $sb];
     $rounds = [];
     for ($n = 1; $n <= ARENA_ROUNDS; $n++) {
-        $first = $n % 2 === 1 ? 'a' : 'b';
-        $round = ['n' => $n, 'zuerst' => $first, 'a' => null, 'b' => null];
-        if ($result === 'remis' && $n > 2 && $life['a'] <= $sb['most'] && $life['b'] <= $sa['most']) {
-            // both worn down: the last blow of both at the same time
-            $round['a'] = $life['b'];
-            $round['b'] = $life['a'];
-            $round['gleichzeitig'] = true;
-            $round['la'] = 0;
-            $round['lb'] = 0;
-            $rounds[] = $round;
-            return $rounds;
-        }
-        foreach ([$first, $first === 'a' ? 'b' : 'a'] as $who) {
-            $target = $who === 'a' ? 'b' : 'a';
-            if (chance() >= $side[$who]['hit']) {
-                $round[$who] = 'daneben';
-            } elseif (chance() < $side[$target]['dodge']) {
-                $round[$who] = 'ausgewichen';
-            } else {
-                $damage = max(1, (int)round($side[$who]['damage'] * (0.2 + 1.6 * chance())));
-                $round[$who] = $damage;
-                $life[$target] = max(0, $life[$target] - $damage);
-                if ($life[$target] === 0) break;
-            }
-        }
+        $round = ['n' => $n, 'zuerst' => $n % 2 === 1 ? 'a' : 'b', 'a' => blowOf($sa, $sb), 'b' => blowOf($sb, $sa)];
+        if (is_int($round['a'])) $life['b'] = max(0, $life['b'] - $round['a']);
+        if (is_int($round['b'])) $life['a'] = max(0, $life['a'] - $round['b']);
         $round['la'] = $life['a'];
         $round['lb'] = $life['b'];
+        $over = $life['a'] === 0 || $life['b'] === 0;
+        if ($over) $round['gleichzeitig'] = true;
         $rounds[] = $round;
-        if ($life['a'] === 0 || $life['b'] === 0) {
-            return ($life['b'] === 0 ? 'sieg' : 'niederlage') === $result ? $rounds : null;
+        if ($over) {
+            if ($life['a'] === 0 && $life['b'] === 0) return ['remis', $rounds];
+            return [$life['b'] === 0 ? 'sieg' : 'niederlage', $rounds];
         }
     }
-    return null;
+    // nobody fell: the one with more of the life left
+    $lead = $life['a'] / $sa['life'] - $life['b'] / $sb['life'];
+    return [$lead > 0 ? 'sieg' : ($lead < 0 ? 'niederlage' : 'remis'), $rounds];
 }
 
 // If no bout rolled ends as decided (hardly ever): the winner strikes, the other misses.
@@ -164,51 +157,47 @@ function plainBout(array $sa, array $sb, string $result): array
     $rounds = [];
     for ($n = 1; $life['a'] > 0 && $life['b'] > 0; $n++) {
         $round = ['n' => $n, 'zuerst' => 'a', 'a' => 'daneben', 'b' => 'daneben'];
-        if ($result === 'remis' || $result === 'sieg') {
+        if ($result === 'sieg') {
             $round['a'] = min($life['b'], max(1, (int)round($sa['damage'])));
             $life['b'] -= $round['a'];
-        }
-        if ($result === 'remis' || $result === 'niederlage') {
+        } else {
             $round['b'] = min($life['a'], max(1, (int)round($sb['damage'])));
             $life['a'] -= $round['b'];
         }
-        if ($result === 'remis' && ($life['a'] === 0 || $life['b'] === 0)) {
-            $round['gleichzeitig'] = true;
-            $life = ['a' => 0, 'b' => 0];
-        }
         $round['la'] = $life['a'];
         $round['lb'] = $life['b'];
+        if ($life['a'] === 0 || $life['b'] === 0) $round['gleichzeitig'] = true;
         $rounds[] = $round;
     }
     return $rounds;
 }
 
-// a challenges b: { strength (per area), gear } each. Returns the result from
-// a's view, how it was decided ('fleiss', 'kleidung' or 'gleich'), the life of
-// both and the rounds of the bout.
+// a challenges b: { strength (per area), bonus (of the clothes) } each. Returns
+// the result from a's view, how it was decided ('fleiss' or 'kampf'), the life
+// of both and the rounds of the bout.
 function fightOut(array $a, array $b): array
 {
-    $days = array_sum($a['strength']) - array_sum($b['strength']);
-    $gear = $a['gear'] - $b['gear'];
-    if ($days != 0) {
-        $result = $days > 0 ? 'sieg' : 'niederlage';
-        $how = 'fleiss';
-    } elseif ($gear != 0) {
-        $result = $gear > 0 ? 'sieg' : 'niederlage';
-        $how = 'kleidung';
-    } else {
-        $result = 'remis';
-        $how = 'gleich';
-    }
     $sa = fightSide($a, $b);
     $sb = fightSide($b, $a);
-    $rounds = null;
-    for ($try = 0; $try < ARENA_TRIES && $rounds === null; $try++) $rounds = boutFor($sa, $sb, $result);
+    $days = array_sum($a['strength']) - array_sum($b['strength']);
+    if ($days == 0) {
+        [$result, $rounds] = bout($sa, $sb);
+        $how = 'kampf';
+    } else {
+        $result = $days > 0 ? 'sieg' : 'niederlage';
+        $how = 'fleiss';
+        $rounds = null;
+        for ($try = 0; $try < ARENA_TRIES && $rounds === null; $try++) {
+            [$came, $tried] = bout($sa, $sb);
+            if ($came === $result && end($tried)[$result === 'sieg' ? 'lb' : 'la'] === 0) $rounds = $tried;
+        }
+        $rounds = $rounds ?? plainBout($sa, $sb, $result);
+    }
     return [
         'ergebnis' => $result,
         'entscheid' => $how,
         'leben' => ['a' => $sa['life'], 'b' => $sb['life']],
-        'runden' => $rounds ?? plainBout($sa, $sb, $result),
+        'runden' => $rounds,
     ];
 }
 
@@ -278,7 +267,7 @@ function cleanAbbild($raw): ?array
         if ($item === null || isset($worn[$item['slot']])) continue;
         if (!empty($item['passt']) && !in_array($figur, $item['passt'], true)) continue;
         $bonus = [];
-        foreach (ARENA_GEAR as $key => $weight) {
+        foreach (ARENA_FIGHT_BONUSES as $key) {
             $value = $w['bonus'][$key] ?? 0;
             if (is_int($value) && $value > 0) $bonus[$key] = min($value, ARENA_BONUS_MAX);
         }
@@ -479,7 +468,7 @@ function challenge(array &$arena, ?string $me, array $request): array
     $b = $arena['fighters'][$other]['abbild'];
     $strengthA = effortOf($arena['fighters'][$me]['account']);
     $strengthB = effortOf($arena['fighters'][$other]['account']);
-    $fight = fightOut(['strength' => $strengthA, 'gear' => gearOf($a)], ['strength' => $strengthB, 'gear' => gearOf($b)]);
+    $fight = fightOut(['strength' => $strengthA, 'bonus' => bonusesOf($a)], ['strength' => $strengthB, 'bonus' => bonusesOf($b)]);
     $result = $fight['ergebnis'];
 
     // A win against someone above: that place is taken, the others move down one.

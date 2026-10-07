@@ -963,14 +963,16 @@ aber nicht zu mehr Stärke in der Arena. Die Werte (Level) spielen in der Arena 
 
 **Fleiß entscheidet immer** (seit 5.17, so gewünscht): Der **Fleiß** eines Abbilds sind die
 Tage mit erledigter Aufgabe in allen vier Bereichen zusammen (0 bis 112). Das fleißigere
-Abbild gewinnt jeden Kampf. Bei genau gleichem Fleiß entscheidet die **Kleidung**: was die
-getragenen Stücke für den Kampf haben, aus festen Fähigkeiten und Boni, ein Punkt Schaden so
-viel wie drei Punkte Treffer, Ausweichen oder Beruhigen (Energie, Glück und Wege zählen nicht;
-`GEAR_WEIGHTS`, `ARENA_GEAR`). Sind beide auch darin gleich, ist es unentschieden: Beide
-treffen in der letzten Runde zugleich, beide fallen. Die **Haltung** gibt es nicht mehr; frühere
-Ereignisse mit Haltung bleiben gültig, sie zählt nur nicht mehr. (5.16: Haltung im Kampf
-wenig, knappe Kämpfe nach Fleiß; bis 5.15 entschied der Kampf selbst, gleich fleißige zur
-Hälfte unentschieden.)
+Abbild gewinnt jeden Kampf. Bei genau gleichem Fleiß wird **wirklich gekämpft** (seit 5.20,
+so gewünscht), und die Boni der Kleidung wirken darin mit: **Schaden** trifft härter,
+**Treffer** trifft öfter, **Ausweichen** weicht öfter aus (aus festen Fähigkeiten und Boni der
+getragenen Stücke; Energie, Glück, Wege und Beruhigen wirken dort nicht; `ARENA_FIGHT_BONUSES`).
+Fallen beide in derselben Runde, ist es unentschieden. Die **Haltung** gibt es nicht mehr;
+frühere Ereignisse mit Haltung bleiben gültig, sie zählt nur nicht mehr. (5.17 bis 5.19: bei
+gleichem Fleiß entschied eine Summe der Kampf-Boni, ein Punkt Schaden so viel wie drei
+Punkte der anderen, ohne dass sie im Kampf wirkten; 5.16: Haltung im Kampf wenig, knappe
+Kämpfe nach Fleiß; bis 5.15 entschied der Kampf selbst, gleich fleißige zur Hälfte
+unentschieden.)
 
 **Die Rangliste läuft ständig** (eine Forderungsrangliste wie im Sportverein):
 
@@ -986,13 +988,19 @@ Hälfte unentschieden.)
 **Der Kampf** zeigt, wie es ausgeht, Runde für Runde (Lebensleisten, Treffer, Ausweichen).
 Beide Seiten werden dabei aneinander gemessen, Bereich für Bereich (Stärke = 1 + Tage mit
 erledigter Aufgabe): doppelt so viel Kraft trifft etwa ein Fünftel härter, doppelt so viel
-Ausdauer hält etwa ein Fünftel länger, mehr Beweglichkeit trifft und weicht öfter aus. Der
-Server würfelt Kämpfe, bis einer so endet, wie es entschieden ist: Der Sieger setzt den
-letzten Schlag; im Unentschieden sind beide erschöpft und treffen zugleich. Niemand verbeugt
-sich mehr vorzeitig (bis 5.16 konnte ein Abbild, das zurücklag, sich verbeugen; dann endete der
-Kampf unentschieden, auch wenn nur eine Seite getroffen worden war). Am Ende steht kurz,
-warum: „Mehr Fleiß auf deiner Seite.“, „Gleich fleißig. Deine Kleidung gab den Ausschlag.“,
-„Gleich fleißig, gleich gut gekleidet. Beide treffen zugleich.“ Am Ende verbeugen sich beide.
+Ausdauer hält etwa ein Fünftel länger, mehr Beweglichkeit trifft und weicht öfter aus. Dazu
+die Boni der Kleidung: Schaden zählt auf jeden Treffer, Treffer und Ausweichen als
+Prozentpunkte, wie in der Welt. Leben (40) und Schaden (7) sind etwa die eines Envoy um Level
+10, damit ein Punkt Schaden hier so viel ausmacht wie draußen. In jeder Runde schlagen beide
+zugleich; wer fällt, fällt. Nach 30 Runden gewinnt, wer mehr Leben übrig hat (kommt kaum vor).
+Bei verschiedenem Fleiß würfelt der Server Kämpfe, bis einer so endet, wie es entschieden ist:
+Der Fleißigere setzt den letzten Schlag. Bei gleichem Fleiß entscheidet der eine Kampf.
+Gleich starke Seiten ohne Boni gewinnen je etwa zur Hälfte, etwa jeder zehnte Kampf endet
+unentschieden; bessere Kleidung gewinnt deutlich öfter (Schaden +3 etwa sieben von zehn).
+Niemand verbeugt sich vorzeitig (bis 5.16 konnte ein Abbild, das zurücklag, sich verbeugen;
+dann endete der Kampf unentschieden, auch wenn nur eine Seite getroffen worden war). Am Ende
+steht kurz, warum: „Mehr Fleiß auf deiner Seite.“, „Gleich fleißig. Der Kampf hat
+entschieden.“, „Gleich fleißig, gleich stark im Kampf.“ Am Ende verbeugen sich beide.
 
 **Ruhm** ist die Währung der Arena und nur dort: herausfordern bringt 3 für einen Sieg,
 2 für unentschieden, 1 fürs Antreten; das herausgeforderte Abbild bekommt 2, wenn es hält,

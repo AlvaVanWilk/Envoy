@@ -114,8 +114,8 @@ test('arena: a piece that can be dyed takes another colour for Ruhm, and the Abb
   assert.equal(replay(events, catalog, DAY, T0 + 10 * 60000).world.items[inst].farbe, undefined);
 });
 
-test('arena: the own Fleiß counts the days with a task done in the last 28 days; the clothes count their fight bonuses', async () => {
-  const { effortOf, gearScore } = await import('../js/world/arena.js');
+test('arena: the own Fleiß counts the days with a task done in the last 28 days', async () => {
+  const { effortOf } = await import('../js/world/arena.js');
   const days = ['2026-04-01', '2026-04-20', '2026-04-29', '2026-05-01'];
   const done = (stat, d, n) => ({ id: `f-${stat}-${d}`, t: Date.parse(`${d}T09:00:00`) + n, d, dev: 't', type: 'done', stat, teile: [], xp: 20, regel: 2 });
   const events = [...start(), ...days.flatMap((d, i) => [done('kraft', d, i), done('gelassenheit', d, i + 10)]), done('ausdauer', '2026-04-29', 30)];
@@ -123,5 +123,4 @@ test('arena: the own Fleiß counts the days with a task done in the last 28 days
   const s = replay([...events, undo], catalog, DAY, T0 + 60000);
   // 2026-04-01 lies more than 27 days before 2026-05-01; the Ausdauer was taken back
   assert.deepEqual(effortOf(s), { kraft: 3, ausdauer: 0, beweglichkeit: 0, gelassenheit: 3, total: 6 });
-  assert.equal(gearScore({ schaden: 2, treffer: 4, ausweichen: 3, beruhigen: 0, erholung: 9, glueck: 5, reise: 0 }), 13);
 });

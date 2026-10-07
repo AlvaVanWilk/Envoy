@@ -69,7 +69,7 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   (lange Listen teilen sich auf so viele Seiten, wie das Fenster fasst)
 - Charakterfenster mit Paperdoll-Darstellung, Ausrüstungsslots, Inventar-Box, dem
   Namen des Envoy, den Kampfwerten (was die Kleidung dazugibt, in Orange), den übrigen Boni
-  und für die Arena dem eigenen Fleiß und dem, was die Kleidung dort zählt; nach dem ersten Erstellen beginnt das Spiel dort mit einem kurzen,
+  und für die Arena dem eigenen Fleiß und den Kampf-Boni der Kleidung, die dort wirken; nach dem ersten Erstellen beginnt das Spiel dort mit einem kurzen,
   überspringbaren Rundgang (Overlay, fünf Schritte, der letzte zeigt auf das Tageswerk:
   „Durch das Tageswerk kannst du deinen Envoy stärken.“), jeder spätere Start ist im Lager
 - Konten (Anmelden, Konto erstellen, ohne Konto spielen) und Envoy-Erstellung: Figur,
@@ -135,9 +135,10 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Tag, ohne Energie; Sieg gegen weiter oben nimmt den Platz), Kämpfe entscheidet der Server (`arena.php`)
   aus dem Fleiß, nicht der Begabung (so gewünscht): Fleiß = Tage mit erledigter Aufgabe in den
   letzten 28 Tagen, alle vier Bereiche zusammen, jede Aufgabe zählt gleich, egal welche Stufe;
-  der Fleißigere gewinnt immer, bei gleichem Fleiß die Kleidung (ihre Kampf-Boni), sonst
-  unentschieden, beide treffen zugleich; Werte zählen dort nicht, eine Haltung gibt es nicht
-  mehr; der Kampf wird nur gezeigt, Runde für Runde, bis der Sieger den letzten Schlag setzt;
+  der Fleißigere gewinnt immer; bei gleichem Fleiß wird wirklich gekämpft, Schaden, Treffer
+  und Ausweichen der Kleidung wirken mit (so gewünscht), beide schlagen je Runde zugleich,
+  fallen beide in derselben Runde, ist es unentschieden; Werte zählen dort nicht, eine Haltung
+  gibt es nicht mehr; der Kampf wird Runde für Runde gezeigt;
   Ruhm als eigene Währung nur der Arena, geht nie verloren (Kleidung mit Boni, jeden Tag drei
   Stücke, mindestens selten, und Farben für färbbare Kleidung; Titel kommen mit den Rängen aus
   allem verdienten Ruhm, nicht zum Kaufen, so gewünscht); keine echten Übungsdaten sichtbar

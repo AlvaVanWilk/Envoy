@@ -4,7 +4,7 @@
 
 import { h, icon } from './dom.js';
 import { SLOT_ICONS } from './icons.js';
-import { STATS, SLOTS, STAT_IDS } from '../config.js';
+import { STATS, SLOTS, STAT_IDS, ARENA_FIGHT_BONUSES } from '../config.js';
 import { paperdoll } from './paperdoll.js';
 import { statRow, statInfo, statEmblem } from './stats.js';
 import { openStatDetail } from './statdetail.js';
@@ -14,7 +14,7 @@ import { viewHead, sectionTitle, itemIcon, staminaBar, effectText, qualityClass,
 import { openSlot, slotName } from './itemsheet.js';
 import { packBox } from './pack.js';
 import { fighter } from '../world/hero.js';
-import { effortOf, gearScore } from '../world/arena.js';
+import { effortOf } from '../world/arena.js';
 import { arena } from '../arena.js';
 
 const LEFT_SLOTS = ['kopf', 'torso', 'handschuhe'];
@@ -91,20 +91,21 @@ function fightPanel(game) {
     h('p', { class: 'muted gear-note' }, 'Gegen einen Geist der Stufe 1. ', h('span', { class: 'gear-part' }, '+'), ' kommt von der Kleidung.'));
 }
 
-// For the arena: the Fleiß (it decides every fight) and what the clothes
-// count for when both are equally diligent.
+// For the arena: the Fleiß (it decides every fight) and the bonuses of the
+// clothes that act in the fight when both are equally diligent.
 function arenaPanel(game) {
   if (!arena.open()) return null;
   const effort = effortOf(game.state);
+  const fx = game.ctx().fx;
+  const bonuses = ARENA_FIGHT_BONUSES.filter((k) => fx[k]);
   return h('section', { class: 'panel arena-values' },
     sectionTitle('Arena'),
     h('div', { class: 'effort' },
       h('span', { class: 'effort-total' }, String(effort.total)),
       h('span', { class: 'effort-label' }, 'Fleiß', h('span', { class: 'muted' }, 'Tage mit Tageswerk in den letzten vier Wochen'))),
     h('ul', { class: 'effort-areas' }, STAT_IDS.map((id) => h('li', {}, statEmblem(id, 'small'), h('span', {}, String(effort[id]))))),
-    h('dl', { class: 'facts' },
-      h('div', {}, h('dt', {}, 'Kleidung im Kampf'), h('dd', {}, String(gearScore(game.ctx().fx))))),
-    h('p', { class: 'muted gear-note' }, 'In der Arena gewinnt, wer fleißiger ist. Bei gleichem Fleiß entscheidet die Kleidung.'));
+    bonuses.length > 0 ? h('dl', { class: 'facts' }, bonuses.map((k) => h('div', { 'data-tip': FIGHT_TIPS[k] }, h('dt', {}, 'Kleidung'), h('dd', {}, h('span', { class: 'gear-part' }, effectText(k, fx[k])))))) : null,
+    h('p', { class: 'muted gear-note' }, 'In der Arena gewinnt, wer fleißiger ist. Bei gleichem Fleiß wird gekämpft; Schaden, Treffer und Ausweichen der Kleidung wirken mit.'));
 }
 
 // Items that fell off because a stat dropped below their requirement.
