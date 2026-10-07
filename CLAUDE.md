@@ -138,7 +138,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   der Fleißigere gewinnt immer (der Kampf wird passend dazu gezeigt); bei gleichem Fleiß
   entscheidet der Kampf selbst, Schaden, Treffer und Ausweichen der Kleidung wirken mit (so gewünscht), beide schlagen je Runde zugleich,
   fallen beide in derselben Runde, ist es unentschieden; Werte zählen dort nicht, eine Haltung
-  gibt es nicht mehr; der Kampf wird Runde für Runde gezeigt;
+  gibt es nicht mehr; der Kampf wird Runde für Runde gezeigt; die App sagt nur, dass der Fleiß
+  am meisten zählt, nicht wie viel, und nach dem Kampf nicht, warum (so gewünscht);
   Ruhm als eigene Währung nur der Arena, geht nie verloren (Kleidung mit Boni, jeden Tag drei
   Stücke, mindestens selten, und Farben für färbbare Kleidung; Titel kommen mit den Rängen aus
   allem verdienten Ruhm, nicht zum Kaufen, so gewünscht); keine echten Übungsdaten sichtbar

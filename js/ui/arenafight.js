@@ -15,19 +15,13 @@ import { abbildPortrait, titleText, ruhmAmount } from './arenaparts.js';
 const ROUND_MS = 1000;
 const SECOND_BLOW_MS = 450;
 const RESULT = { sieg: 'Sieg', remis: 'Unentschieden', niederlage: 'Unterlegen' };
-// The result, and below it why (fights before 5.17 could also end on points,
-// from 5.17 to 5.19 a sum of the clothes decided at equal Fleiß).
+// The result (fights before 5.17 could also end on points). Why it ended so
+// is not said (so gewünscht: the players know that the Fleiß counts most, but
+// not how much).
 function resultText(fight) {
   if (fight.entscheid === 'punkte' && fight.ergebnis !== 'remis') return `${RESULT[fight.ergebnis]} nach Punkten`;
   return RESULT[fight.ergebnis];
 }
-const REASON = {
-  fleiss: { sieg: 'Mehr Fleiß auf deiner Seite.', niederlage: 'Mehr Fleiß auf der anderen Seite.' },
-  kampf: { sieg: 'Gleich fleißig. Der Kampf hat entschieden.', niederlage: 'Gleich fleißig. Der Kampf hat entschieden.', remis: 'Gleich fleißig, gleich stark im Kampf.' },
-  kleidung: { sieg: 'Gleich fleißig. Deine Kleidung gab den Ausschlag.', niederlage: 'Gleich fleißig. Die Kleidung der anderen Seite gab den Ausschlag.' },
-  gleich: { remis: 'Gleich fleißig, gleich gut gekleidet. Beide treffen zugleich.' },
-};
-const reasonText = (fight) => REASON[fight.entscheid]?.[fight.ergebnis] || null;
 
 // Why the Envoy cannot go now, or null.
 function blocked(game) {
@@ -134,10 +128,8 @@ export function fightPlay(fight, x, game) {
     line.textContent = resultText(fight);
     skip.remove();
     const [before, after] = fight.platz || [];
-    const reason = reasonText(fight);
     replaceChildren(end,
       h('p', { class: 'arena-end-result' }, resultText(fight)),
-      reason ? h('p', { class: 'arena-end-reason' }, reason) : null,
       h('p', { class: 'muted' }, 'Beide verbeugen sich.'),
       h('div', { class: 'arena-end-gain' }, ruhmAmount(fight.ruhm, '+')),
       after && before && after < before ? h('p', { class: 'arena-end-place' }, `${names.a} steht jetzt auf Platz ${after}.`) : null);

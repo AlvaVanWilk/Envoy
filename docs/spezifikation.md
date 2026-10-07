@@ -1000,8 +1000,10 @@ Gleich starke Seiten ohne Boni gewinnen je etwa zur Hälfte, etwa jeder zehnte K
 unentschieden; bessere Kleidung gewinnt deutlich öfter (Schaden +3 etwa sieben von zehn).
 Niemand verbeugt sich vorzeitig (bis 5.16 konnte ein Abbild, das zurücklag, sich verbeugen;
 dann endete der Kampf unentschieden, auch wenn nur eine Seite getroffen worden war). Am Ende
-steht kurz, warum: „Mehr Fleiß auf deiner Seite.“, „Gleich fleißig. Der Kampf hat
-entschieden.“, „Gleich fleißig, gleich stark im Kampf.“ Am Ende verbeugen sich beide.
+verbeugen sich beide. Warum ein Kampf so ausging, steht nicht da (seit 5.20.2, so gewünscht):
+Die Spieler wissen, dass der Fleiß am meisten zählt, aber nicht, wie viel. Auch die Texte der
+App sagen nur „Im Kampf in der Arena zählt vor allem der Fleiß.“ (bis 5.20.1 stand am Ende
+etwa „Mehr Fleiß auf deiner Seite.“).
 
 **Ruhm** ist die Währung der Arena und nur dort: herausfordern bringt 3 für einen Sieg,
 2 für unentschieden, 1 fürs Antreten; das herausgeforderte Abbild bekommt 2, wenn es hält,

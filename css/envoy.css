@@ -2818,7 +2818,6 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 .weave-side p.muted { margin: 0; font-size: 13px; }
 .weave-arrow { font-size: 22px; color: var(--copper-bright); }
 .weave-warning { color: var(--warn); }
-.arena-end-reason { margin: 0; font-size: 14px; color: var(--text-2); }
 
 /* --- Envoy page: Kampfwerte and Arena (ui/character.js) --- */
 .fight-panel .gear-note, .arena-values .gear-note { margin: 10px 0 0; font-size: 13px; }

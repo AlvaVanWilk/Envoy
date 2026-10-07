@@ -13,7 +13,7 @@ const INTRO = 'In der Arena zählt eure Kleidung jetzt im Kampf.';
 
 const NEWS = [
   { icon: NAV_ICONS.arena, title: 'Kleidung zählt im Kampf',
-    text: 'Seid ihr gleich fleißig, entscheidet in der Arena der Kampf selbst. Schaden, Treffer und Ausweichen eurer Kleidung wirken dabei mit.' },
+    text: 'In den Kämpfen der Arena wirken jetzt Schaden, Treffer und Ausweichen eurer Kleidung mit.' },
   { icon: UI_ICONS.hero, title: 'Was eure Kleidung dafür hat',
     text: 'Beim Envoy steht unter Arena, welche dieser Boni eure Kleidung gerade mitbringt.' },
 ];
