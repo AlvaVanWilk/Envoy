@@ -86,7 +86,8 @@ test('colours: a piece that can be dyed comes in many colours, the start outfit 
     const o = runQuest(questById('gather:stein', ctxOf(s)), { ...ctxOf(s), world: { ...s.world, clothes: { since: 0, found: 0 } } },
       `farbe${i}`, { amount: 20, energy: 10 });
     for (const t of o.reward.things) {
-      assert.ok(catalog.itemById.get(t.id).faerbbar);
+      // a piece kept as drawn (the jerseys, the Steppenrock) never gets a colour
+      if (!catalog.itemById.get(t.id).faerbbar) { assert.equal(t.farbe, undefined); continue; }
       seen.add(t.farbe || 'wie gezeichnet');
     }
   }
@@ -140,7 +141,7 @@ test('the table: every piece found on the way has a drawing and an icon for each
   const found = catalog.equipment.filter((i) => i.herkunft.includes('fund'));
   assert.ok(found.length >= 50, String(found.length));
   // all come in colours of their own, except the football jerseys (always as drawn)
-  assert.deepEqual(found.filter((i) => !i.faerbbar).map((i) => i.id), ['torso_trikotmitderacht_2', 'torso_trikotmitdernull_2']);
+  assert.deepEqual(found.filter((i) => !i.faerbbar).map((i) => i.id), ['torso_trikotmitderacht_2', 'torso_trikotmitdernull_2', 'beine_steppenrock_1']);
   for (const item of found) {
     assert.deepEqual(item.effekt, {}, item.id);
     assert.equal(item.faehigkeit, null, item.id);

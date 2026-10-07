@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.20.5';
+export const APP_VERSION = '5.20.6';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -348,6 +348,10 @@ export const JOBS_FROM_STAGE = 1;
 export const JOBS_PER_DAY = 3;
 export const JOB_SPLITTER = { base: 6, perMinute: 2, perLevel: 0.08 };
 export const JOB_THING_CHANCE = 0.6;
+// A piece that hangs on the first note from its day on, until the Envoy has it
+// (if it fits his figure), at least selten: the Steppenrock, drawn by the
+// user's daughter (so gewünscht, since 5.20.6).
+export const JOB_FEATURED = [{ id: 'beine_steppenrock_1', from: '2026-10-08' }];
 export const JOBS = [
   { id: 'brief', name: 'Ein Brief ohne Absender', minutes: [4, 7], text: 'Am Lager liegt ein Brief. Er soll an den Ort, der darauf steht.' },
   { id: 'laterne', name: 'Die verlorene Laterne', minutes: [5, 9], text: 'Jemand hat unterwegs seine Laterne verloren. Sie liegt irgendwo dort.' },

@@ -1066,6 +1066,10 @@ für alle gleich ausgewählt, den ganzen Tag dieselben (mit den Werten vom Tages
   passend zur Figur und Stärke. Kein Material und keine Pläne, damit der Lagerausbau nicht
   schneller geht.
 - Jeder Auftrag einmal; erledigte bleiben durchgestrichen hängen. Am nächsten Tag hängen neue.
+- **Besondere Stücke** (`JOB_FEATURED`, seit 5.20.6): Ein Stück kann ab einem Tag auf dem ersten
+  Zettel hängen, mindestens selten, bis der Envoy es hat (wenn es zu seiner Figur passt). Bisher
+  der Steppenrock, gezeichnet von der Tochter der Nutzerin, ab dem 8. Oktober 2026 (so gewünscht).
+  Er bleibt danach auch als Fundstück im Spiel, immer wie gezeichnet.
 - Ereignis: `expedition` mit `q` = `aus:<Tag>:<Nummer>`, ohne Energie. Es zählt nur am eigenen
   Tag und nur einmal.
 

@@ -149,7 +149,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   allem verdienten Ruhm, nicht zum Kaufen, so gewünscht); keine echten Übungsdaten sichtbar
 - Aushang am Lager (so gewünscht, nicht endlos, `js/world/jobs.js`): jeden Tag drei Aufträge,
   ohne Energie, nur Zeit (der Envoy geht an einen Ort, als Aktion seiner Expedition); der Lohn
-  steht darauf (Bannsplitter, oft ein bestimmtes Kleidungsstück mit Güte), kein Material
+  steht darauf (Bannsplitter, oft ein bestimmtes Kleidungsstück mit Güte), kein Material; ein
+  besonderes Stück kann ab einem Tag auf dem ersten Zettel hängen, bis der Envoy es hat
+  (`JOB_FEATURED`, bisher der Steppenrock, gezeichnet von der Tochter der Nutzerin)
 - Die Tiefen (so gewünscht, `js/world/depths.js`): unter dem Trümmerfeld, ab dem Lagerfeuer,
   drei Tiefen mit je zehn Ebenen, auf jeder ein Wächter (ein Geist der Welt, so stark wie die
   Ebene); hinabsteigen kostet keine Energie, danach ruht der Envoy (60 Minuten, je Level

@@ -9,7 +9,11 @@
 // The notes of a day are the same all day (chosen with the stats at the start
 // of the day). Their id: aus:<day>:<n>. Done ones are kept in world.encountersDone.
 
-import { JOBS, JOBS_FROM_STAGE, JOBS_PER_DAY, JOB_SPLITTER, JOB_THING_CHANCE } from '../config.js';
+import { JOBS, JOBS_FROM_STAGE, JOBS_PER_DAY, JOB_SPLITTER, JOB_THING_CHANCE, JOB_FEATURED } from '../config.js';
+import { dayStartMs } from '../days.js';
+import { rollBonuses } from './bonuses.js';
+import { itemLevel } from './items.js';
+import { fits, figureOf } from './clothes.js';
 import { seededRandom, randomInt, shuffle } from './rng.js';
 import { heroPower } from './hero.js';
 import { placeUnlocked } from './quests.js';
@@ -24,19 +28,35 @@ function jobPlaces(ctx) {
   return ctx.catalog.places.filter((p) => p.typ !== 'lager' && placeUnlocked(p, ctx));
 }
 
+// A featured piece for the first note of this day (see JOB_FEATURED), or null:
+// from its day on, while the Envoy did not have it before the day began.
+function featuredThing(day, ctx, power) {
+  const start = dayStartMs(day);
+  for (const f of JOB_FEATURED) {
+    const item = ctx.catalog.itemById.get(f.id);
+    if (!item || day < f.from || !fits(item, figureOf(ctx.world))) continue;
+    const had = Object.values(ctx.world.items).some((e) => e.id === f.id && (e.got ?? 0) < start);
+    if (had) continue;
+    return { kind: 'item', id: item.id, ...rollBonuses('arena', power, seededRandom(`${day}:aushang:${f.id}`), itemLevel(item)) };
+  }
+  return null;
+}
+
 // The Aufträge of a day: { id, job, name, text, place, minutes, splitter, thing }.
 export function jobsFor(day, ctx) {
   const rng = seededRandom(`${day}:aushang`);
   const power = heroPower(ctx.statsAtDayStart);
   const places = shuffle(rng, jobPlaces(ctx));
   if (places.length === 0) return [];
+  const featured = featuredThing(day, ctx, power);
   return shuffle(rng, JOBS).slice(0, JOBS_PER_DAY).map((job, n) => {
     const minutes = randomInt(rng, job.minutes[0], job.minutes[1]);
     const splitter = Math.round((JOB_SPLITTER.base + JOB_SPLITTER.perMinute * minutes) * (1 + JOB_SPLITTER.perLevel * (power - 1)));
     const thingRng = seededRandom(`${day}:aushang:${n}:kleidung`);
-    const thing = thingRng() < JOB_THING_CHANCE
+    const drawn = thingRng() < JOB_THING_CHANCE
       ? lootThing({ ...ctx, stats: ctx.statsAtDayStart }, thingRng, 'beute', seededRandom(`${day}:aushang:${n}:farbe`), 'aushang')
       : null;
+    const thing = n === 0 && featured ? featured : drawn;
     return {
       id: `aus:${day}:${n}`,
       job: job.id,

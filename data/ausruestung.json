@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-05T11:26:37Z",
+ "generated": "2026-10-07T22:50:39Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -2121,6 +2121,30 @@
    "passt": [
     "erste",
     "zweite"
+   ],
+   "faerbbar": false
+  },
+  {
+   "id": "beine_steppenrock_1",
+   "slot": "beine",
+   "name": "Steppenrock",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/beine_steppenrock_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_beine_steppenrock_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste"
    ],
    "faerbbar": false
   }

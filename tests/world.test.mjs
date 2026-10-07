@@ -546,6 +546,23 @@ test('die Tiefen: one Ebene after another, a rest after each descent, nothing lo
   assert.ok(dressed > plain + 0.15, `${plain} → ${dressed}`);
 });
 
+test('der Aushang: the Steppenrock hangs on the first note from its day on, until the Envoy has it', async () => {
+  const { jobsFor } = await import('../js/world/jobs.js');
+  const fire = ev('expedition', { q: 'q-lagerfeuer', place: 'truemmerfeld', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'bauen', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { splitter: 0, pilzholz: 0, stein: 0, things: [], unlocks: ['lagerfeuer'], rest: false } } }, 0);
+  const c = ctxOf(replay([fire], catalog, DAY, T0 + 0.1 * H));
+  const rock = jobsFor('2026-10-08', c)[0].thing;
+  assert.equal(rock.id, 'beine_steppenrock_1');
+  assert.ok(['selten', 'praechtig'].includes(rock.guete));
+  assert.equal(rock.farbe, undefined);                         // always as drawn
+  assert.notEqual(jobsFor('2026-10-07', c)[0].thing?.id, 'beine_steppenrock_1');
+  const had = { ...c, world: { ...c.world, items: { ...c.world.items, r: { inst: 'r', kind: 'item', id: 'beine_steppenrock_1', got: 0 } } } };
+  assert.notEqual(jobsFor('2026-10-09', had)[0].thing?.id, 'beine_steppenrock_1');
+  const man = { ...c, world: { ...c.world, envoy: { ...c.world.envoy, figur: 'zweite' } } };
+  assert.notEqual(jobsFor('2026-10-08', man)[0].thing?.id, 'beine_steppenrock_1');
+});
+
 test('der Aushang: a few Aufträge a day, each once, without Energie, the reward from the note', async () => {
   const { jobsFor, jobOutcome, jobState } = await import('../js/world/jobs.js');
   const fire = ev('expedition', { q: 'q-lagerfeuer', place: 'truemmerfeld', title: 'x', out: 0, act: 1, back: 0, cost: 0,
