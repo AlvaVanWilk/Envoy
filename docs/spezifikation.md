@@ -961,19 +961,34 @@ nicht, eine Aufgabe je Bereich und Tag. Jede Aufgabe zählt gleich, auf jeder St
 wie für Erwachsene: Wem die Übungen leichter fallen, der kommt auf höhere Stufen und mehr XP,
 aber nicht zu mehr Stärke in der Arena. Die Werte (Level) spielen in der Arena keine Rolle.
 
-**Fleiß entscheidet immer** (seit 5.17, so gewünscht): Der **Fleiß** eines Abbilds sind die
-Tage mit erledigter Aufgabe in allen vier Bereichen zusammen (0 bis 112). Das fleißigere
-Abbild gewinnt jeden Kampf; gezeigt wird ein Kampf, der so ausgeht. Bei genau gleichem Fleiß
-entscheidet der **Kampf selbst** (seit 5.20,
-so gewünscht), und die Boni der Kleidung wirken darin mit: **Schaden** trifft härter,
-**Treffer** trifft öfter, **Ausweichen** weicht öfter aus (aus festen Fähigkeiten und Boni der
-getragenen Stücke; Energie, Glück, Wege und Beruhigen wirken dort nicht; `ARENA_FIGHT_BONUSES`).
-Fallen beide in derselben Runde, ist es unentschieden. Die **Haltung** gibt es nicht mehr;
-frühere Ereignisse mit Haltung bleiben gültig, sie zählt nur nicht mehr. (5.17 bis 5.19: bei
-gleichem Fleiß entschied eine Summe der Kampf-Boni, ein Punkt Schaden so viel wie drei
-Punkte der anderen, ohne dass sie im Kampf wirkten; 5.16: Haltung im Kampf wenig, knappe
-Kämpfe nach Fleiß; bis 5.15 entschied der Kampf selbst, gleich fleißige zur Hälfte
-unentschieden.)
+**Der Fleiß zählt am meisten** (so gewünscht): Der **Fleiß** eines Abbilds sind die Tage mit
+erledigter Aufgabe in allen vier Bereichen zusammen (0 bis 112). Es entscheidet immer ein
+einziger, echter Kampf; nichts steht vorher fest (seit 5.20.3, so gewünscht). Jeder Tag Fleiß
+mehr als die andere Seite gibt im Kampf 15 % mehr Leben und 15 % härtere Treffer
+(`ARENA_FLEISS_EDGE`): Ein großer Abstand ist nahezu, aber nie ganz aussichtslos, ein kleiner
+lässt sich mit Glück und guter Kleidung wettmachen. Die Boni der Kleidung wirken im Kampf
+mit: **Schaden** trifft härter, **Treffer** trifft öfter, **Ausweichen** weicht öfter aus (aus
+festen Fähigkeiten und Boni der getragenen Stücke; Energie, Glück, Wege und Beruhigen wirken
+dort nicht; `ARENA_FIGHT_BONUSES`). Fallen beide in derselben Runde, ist es unentschieden.
+
+Chancen der weniger fleißigen Seite (je 3000 Probekämpfe, sonst gleich stark; „etwas besser“
+= Schaden +2, Treffer +5; „sehr stark“ = Schaden +6, Treffer +10, Ausweichen +10):
+
+| Abstand | gleich gekleidet | etwas besser gekleidet | sehr stark gekleidet |
+| --- | --- | --- | --- |
+| 0 Tage | 46 % | 72 % | 94 % |
+| 1 Tag | 21 % | 45 % | 81 % |
+| 3 Tage | 2 % | 11 % | 47 % |
+| 5 Tage | 0,2 % | 3 % | 21 % |
+| 7 Tage | nie | 0,3 % | 8 % |
+| 10 Tage | nie | nie | 1,5 % |
+| 14 Tage | nie | nie | 0,1 % |
+
+Die **Haltung** gibt es nicht mehr; frühere Ereignisse mit Haltung bleiben gültig, sie zählt nur
+nicht mehr. (5.17 bis 5.20.2: Der Fleißigere gewann immer, der gezeigte Kampf wurde passend
+ausgesucht; bei gleichem Fleiß entschied bis 5.19 eine Summe der Kampf-Boni, ohne dass sie im
+Kampf wirkten, ab 5.20 der Kampf. 5.16: Haltung im Kampf wenig, knappe Kämpfe nach Fleiß; bis
+5.15 entschied der Kampf selbst, gleich fleißige zur Hälfte unentschieden.)
 
 **Die Rangliste läuft ständig** (eine Forderungsrangliste wie im Sportverein):
 
@@ -994,10 +1009,8 @@ die Boni der Kleidung: Schaden zählt auf jeden Treffer, Treffer und Ausweichen 
 Prozentpunkte, wie in der Welt. Leben (40) und Schaden (7) sind etwa die eines Envoy um Level
 10, damit ein Punkt Schaden hier so viel ausmacht wie draußen. In jeder Runde schlagen beide
 zugleich; wer fällt, fällt. Nach 30 Runden gewinnt, wer mehr Leben übrig hat (kommt kaum vor).
-Bei verschiedenem Fleiß würfelt der Server Kämpfe, bis einer so endet, wie es entschieden ist:
-Der Fleißigere setzt den letzten Schlag. Bei gleichem Fleiß entscheidet der eine Kampf.
-Gleich starke Seiten ohne Boni gewinnen je etwa zur Hälfte, etwa jeder zehnte Kampf endet
-unentschieden; bessere Kleidung gewinnt deutlich öfter (Schaden +3 etwa sieben von zehn).
+Dazu der Vorsprung im Fleiß (siehe oben). Gleich starke Seiten ohne Boni gewinnen je etwa zur
+Hälfte, etwa jeder zehnte Kampf endet unentschieden.
 Niemand verbeugt sich vorzeitig (bis 5.16 konnte ein Abbild, das zurücklag, sich verbeugen;
 dann endete der Kampf unentschieden, auch wenn nur eine Seite getroffen worden war). Am Ende
 verbeugen sich beide. Warum ein Kampf so ausging, steht nicht da (seit 5.20.2, so gewünscht):

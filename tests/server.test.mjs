@@ -207,9 +207,10 @@ test('server: arena strength counts the days with the task done, not the stage',
   }
 });
 
-// Diligence decides every fight; equally diligent, they really fight, and the
-// bonuses of the clothes act in it. If both fall in the same round, a draw.
-test('server: arena fights: Fleiß decides, else the fight with the bonuses of the clothes', { skip: !hasPhp && 'PHP ist nicht installiert' }, () => {
+// One real fight decides. Each day of Fleiß more makes stronger in it, so a
+// big lead is nearly sure to win, a small one can be turned by luck and the
+// bonuses of the clothes. If both fall in the same round, a draw.
+test('server: arena fights: the Fleiß counts most, the bonuses of the clothes help', { skip: !hasPhp && 'PHP ist nicht installiert' }, () => {
   const php = `
     const DATA_DIR = '/nowhere';
     define('ENVOY_SYNC', true);
@@ -217,11 +218,13 @@ test('server: arena fights: Fleiß decides, else the fight with the bonuses of t
     function eventsFile($id) { return ''; }
     require ${JSON.stringify(fileURLToPath(new URL('../arena.php', import.meta.url)))};
     $all = fn($d) => ['kraft' => $d, 'ausdauer' => $d, 'beweglichkeit' => $d, 'gelassenheit' => $d];
-    $strong = ['schaden' => 4, 'treffer' => 10, 'ausweichen' => 10];
+    $strong = ['schaden' => 6, 'treffer' => 10, 'ausweichen' => 10];
     $runs = [];
     for ($i = 0; $i < 300; $i++) {
-      // a little more diligent in all four together wins, although the other is stronger in three areas and better dressed
-      $runs['fleiss'][] = fightOut(['strength' => $all(23), 'bonus' => []], ['strength' => ['kraft' => 29, 'ausdauer' => 29, 'beweglichkeit' => 29, 'gelassenheit' => 1], 'bonus' => $strong]);
+      // far more diligent in all four together: wins nearly always, although the other is stronger in three areas and very well dressed
+      $runs['weit'][] = fightOut(['strength' => $all(25), 'bonus' => []], ['strength' => ['kraft' => 29, 'ausdauer' => 29, 'beweglichkeit' => 29, 'gelassenheit' => 1], 'bonus' => $strong]);
+      // one day more: mostly, not always
+      $runs['knapp'][] = fightOut(['strength' => ['kraft' => 16, 'ausdauer' => 15, 'beweglichkeit' => 15, 'gelassenheit' => 15], 'bonus' => []], ['strength' => $all(15), 'bonus' => []]);
       $runs['kleidung'][] = fightOut(['strength' => $all(15), 'bonus' => $strong], ['strength' => $all(15), 'bonus' => []]);
       $runs['gleich'][] = fightOut(['strength' => $all(15), 'bonus' => []], ['strength' => $all(15), 'bonus' => []]);
     }
@@ -232,16 +235,19 @@ test('server: arena fights: Fleiß decides, else the fight with the bonuses of t
   const { runs, bonus } = JSON.parse(out.stdout);
   // the Handwickel's own damage and the bonuses; Energie does not act in a fight
   assert.deepEqual(bonus, { schaden: 1 + 2, treffer: 4, ausweichen: 0 });
-  assert.ok(runs.fleiss.every((f) => f.ergebnis === 'sieg' && f.entscheid === 'fleiss' && f.runden.at(-1).lb === 0 && f.runden.at(-1).la > 0));
   const share = (list, result) => list.filter((f) => f.ergebnis === result).length / list.length;
-  assert.ok(runs.kleidung.every((f) => f.entscheid === 'kampf'));
-  assert.ok(share(runs.kleidung, 'sieg') > 0.75, 'good clothes win most fights');
+  const all = Object.values(runs).flat();
+  assert.ok(all.every((f) => f.entscheid === 'kampf'));
+  assert.ok(share(runs.weit, 'sieg') > 0.9, 'a big lead in Fleiß nearly always wins');
+  assert.ok(share(runs.knapp, 'sieg') > 0.5 && share(runs.knapp, 'niederlage') > 0.05, 'a small lead can be turned');
+  assert.ok(share(runs.kleidung, 'sieg') > 0.75, 'equally diligent, good clothes win most fights');
   assert.ok(share(runs.gleich, 'sieg') > 0.3 && share(runs.gleich, 'niederlage') > 0.3, 'equal sides: either may win');
   assert.ok(share(runs.gleich, 'remis') < 0.2);
-  for (const f of [...runs.kleidung, ...runs.gleich]) {
+  for (const f of all) {
     const last = f.runden.at(-1);
     assert.ok(f.runden.slice(0, -1).every((r) => r.la > 0 && r.lb > 0 && !r.gleichzeitig));   // nobody falls before
-    if (f.ergebnis === 'remis' && f.runden.length < 30) assert.deepEqual([last.la, last.lb, last.gleichzeitig], [0, 0, true]);
-    if (f.ergebnis === 'sieg' && f.runden.length < 30) assert.ok(last.lb === 0 && last.la > 0);
+    if (f.runden.length === 30) continue;   // nobody fell: the one with more life left
+    assert.equal(last.gleichzeitig, true);
+    assert.deepEqual([last.la === 0, last.lb === 0], { sieg: [false, true], remis: [true, true], niederlage: [true, false] }[f.ergebnis]);
   }
 });

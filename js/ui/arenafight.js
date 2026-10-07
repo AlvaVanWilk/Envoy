@@ -1,7 +1,7 @@
-// Challenging another Abbild: the server decides the fight (see arena.php):
-// the more diligent one wins; equally diligent, the fight itself decides, and the
-// bonuses of the clothes act in it (since 5.20). In each round both strike at
-// the same time; if both fall in the same round, it is a draw. Here it plays
+// Challenging another Abbild: the server rolls the fight (see arena.php), and
+// it decides: each day of Fleiß more makes stronger in it, the bonuses of the
+// clothes act in it. In each round both strike at the same time; if both fall
+// in the same round, it is a draw. Here it plays
 // round by round. At the end both bow; a defeat costs nothing. A challenge
 // costs no Energie.
 
