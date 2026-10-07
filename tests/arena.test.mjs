@@ -44,11 +44,11 @@ test('arena: fights bring Ruhm; a challenge costs Energie, being challenged does
   assert.equal(twice.world.arena.ruhm, 3);
 });
 
-test('arena: Haltung and Titel of the Abbild; a Titel comes with its Rang, one bought before stays', () => {
+test('arena: the Titel of the Abbild comes with its Rang, one bought before stays; a Haltung no longer counts', () => {
   const title = TITLES.find((t) => t.rang === 1);
   const events = [...start(), fight(1, 'verteidigt', 'sieg', RANKS[1].at - 1, 1), ev('abbild', { haltung: 'angriff', titel: title.id }, 2)];
   let s = replay(events, catalog, DAY, T0 + 3 * 60000);
-  assert.equal(s.world.arena.haltung, 'angriff');
+  assert.equal(s.world.arena.haltung, undefined);
   assert.equal(s.world.arena.titel, '');            // the Rang is not reached yet
   assert.equal(rankOf(s.world.arena.earned).index, 0);
   events.push(fight(2, 'verteidigt', 'sieg', 1, 3), ev('abbild', { titel: title.id }, 4));
@@ -56,7 +56,7 @@ test('arena: Haltung and Titel of the Abbild; a Titel comes with its Rang, one b
   assert.equal(rankOf(s.world.arena.earned).index, 1);
   assert.equal(s.world.arena.titel, title.id);
   assert.equal(abbildOf(s).titel, title.id);
-  assert.equal(abbildOf(s).haltung, 'angriff');
+  assert.equal(abbildOf(s).haltung, undefined);
   // a Titel of a higher Rang is not the Abbild's yet, unless it was bought before 5.15
   const high = TITLES.find((t) => t.rang === 5);
   events.push(ev('abbild', { titel: high.id }, 5));
@@ -112,4 +112,16 @@ test('arena: a piece that can be dyed takes another colour for Ruhm, and the Abb
   // back to its own colour
   events.push(ev('ruhmkauf', { ware: 'farbe', inst, farbe: '', preis: DYE_PRICE }, 9));
   assert.equal(replay(events, catalog, DAY, T0 + 10 * 60000).world.items[inst].farbe, undefined);
+});
+
+test('arena: the own Fleiß counts the days with a task done in the last 28 days; the clothes count their fight bonuses', async () => {
+  const { effortOf, gearScore } = await import('../js/world/arena.js');
+  const days = ['2026-04-01', '2026-04-20', '2026-04-29', '2026-05-01'];
+  const done = (stat, d, n) => ({ id: `f-${stat}-${d}`, t: Date.parse(`${d}T09:00:00`) + n, d, dev: 't', type: 'done', stat, teile: [], xp: 20, regel: 2 });
+  const events = [...start(), ...days.flatMap((d, i) => [done('kraft', d, i), done('gelassenheit', d, i + 10)]), done('ausdauer', '2026-04-29', 30)];
+  const undo = { id: 'u-1', t: Date.parse('2026-04-29T10:00:00'), d: '2026-04-29', dev: 't', type: 'undo', ref: 'f-ausdauer-2026-04-29', stat: 'ausdauer' };
+  const s = replay([...events, undo], catalog, DAY, T0 + 60000);
+  // 2026-04-01 lies more than 27 days before 2026-05-01; the Ausdauer was taken back
+  assert.deepEqual(effortOf(s), { kraft: 3, ausdauer: 0, beweglichkeit: 0, gelassenheit: 3, total: 6 });
+  assert.equal(gearScore({ schaden: 2, treffer: 4, ausweichen: 3, beruhigen: 0, erholung: 9, glueck: 5, reise: 0 }), 13);
 });

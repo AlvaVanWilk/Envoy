@@ -4,7 +4,6 @@ import { h, icon } from './dom.js';
 import { NAV_ICONS } from './icons.js';
 import { resolveLook, portraitSrc, showLayer } from './look.js';
 import { titleById } from '../world/arena.js';
-import { HALTUNGEN } from '../config.js';
 
 // The round picture of an Envoy: { name, figur, haut, haar }.
 export function abbildPortrait(look, className = 'arena-pic') {
@@ -25,16 +24,4 @@ export function nameLine(name, titel, className = 'arena-name') {
 // An amount of Ruhm with its laurel.
 export function ruhmAmount(amount, sign = '') {
   return h('span', { class: 'ruhm' }, icon(NAV_ICONS.arena, 'icon ruhm-icon'), h('span', { class: 'ruhm-amount' }, `${sign}${amount}`), h('span', { class: 'ruhm-name' }, 'Ruhm'));
-}
-
-// Three Haltungen; each one has the edge over another.
-export function haltungPicker(chosen, onPick, label) {
-  const edge = HALTUNGEN.find((x) => x.id === chosen);
-  return h('div', { class: 'arena-haltung' },
-    h('p', { class: 'arena-label' }, label),
-    h('div', { class: 'chips' }, HALTUNGEN.map((x) => h('button', {
-      class: `chip${x.id === chosen ? ' active' : ''}`, type: 'button', 'aria-pressed': String(x.id === chosen),
-      onclick: () => onPick(x.id),
-    }, x.name))),
-    edge ? h('p', { class: 'arena-edge' }, `${edge.name} ${edge.edge}.`) : null);
 }

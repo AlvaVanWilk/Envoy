@@ -19,7 +19,7 @@
 //   plans       { found, search }: plans for Deko found, and the search for the others; see plans.js
 //   clothes     { since, found }: Energie of work since the last piece of clothing found on
 //               the way, and how many were found; see clothes.js
-//   arena       { ruhm, haltung, titel, titles, fights }: the own Abbild in the arena; see arena.js
+//   arena       { ruhm, earned, titel, titles, fights }: the own Abbild in the arena; see arena.js
 //   tiefen      { cleared, rest, descents, last }: how far down the Envoy got; see depths.js
 //   quests      { questId: { done, runs, last } }   done = completed (a cave: all spirits overcome)
 //   encountersDone { encounterId: true }, also the Aufträge of the Aushang done (aus:…, see jobs.js)

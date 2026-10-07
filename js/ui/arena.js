@@ -1,6 +1,6 @@
 // The arena: the Ruhmeshalle. The running list of the Abbilder (a tap shows
 // one with its clothes, and challenges it when it is near enough), the own
-// Abbild (place, Haltung, Titel, set up or taken back), what Ruhm buys, and
+// Abbild (place, Rang, Fleiß, Titel, set up or taken back), what Ruhm buys, and
 // the latest fights. The list comes from the server (see arena.js).
 
 import { h } from './dom.js';
@@ -12,7 +12,7 @@ import { arena, arenaErrorText } from '../arena.js';
 import { store } from '../store.js';
 import { titleOwned, rankOf } from '../world/arena.js';
 import { ARENA_REACH, TITLES } from '../config.js';
-import { abbildPortrait, titleText, nameLine, ruhmAmount, haltungPicker } from './arenaparts.js';
+import { abbildPortrait, titleText, nameLine, ruhmAmount } from './arenaparts.js';
 import { challengePart } from './arenafight.js';
 import { shopPanel, ranksPanel } from './arenashop.js';
 
@@ -76,7 +76,6 @@ function ownPanel(game, hall) {
         nameLine(world.envoy.name, world.arena.titel),
         h('p', { class: `arena-place ${standing ? 'is-standing' : ''}` }, place),
         h('p', { class: 'arena-rank' }, `Rang: ${rankOf(world.arena.earned).rank.name}`),
-        haltungPicker(world.arena.haltung, (id) => game.setAbbild({ haltung: id }), 'Haltung deines Abbilds'),
         titlePicker(game),
         hall ? joinButton(standing) : null)));
 }

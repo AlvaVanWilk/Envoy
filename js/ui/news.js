@@ -3,19 +3,21 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, SLOT_ICONS } from './icons.js';
+import { NAV_ICONS, SLOT_ICONS, UI_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.16';
+export const NEWS_ID = '5.17';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Zwei kleine Neuerungen für eure Kleidung und für die Arena.';
+const INTRO = 'In der Arena zählt jetzt euer Fleiß, und beim Envoy seht ihr eure Werte für den Kampf.';
 
 const NEWS = [
+  { icon: NAV_ICONS.arena, title: 'Fleiß entscheidet',
+    text: 'In der Arena gewinnt, wer in den letzten vier Wochen öfter sein Tageswerk gemacht hat. Bei gleichem Fleiß entscheidet die Kleidung, sonst treffen beide zugleich.' },
+  { icon: UI_ICONS.hero, title: 'Eure Kampfwerte',
+    text: 'Beim Envoy seht ihr jetzt Leben, Schaden, Treffer und mehr, und was eure Kleidung dazugibt. Dort steht auch euer Fleiß für die Arena.' },
   { icon: SLOT_ICONS.torso, title: 'Kraft einweben',
     text: 'Ein Stück gefällt euch, ein anderes hat die besseren Boni? Am Lagerfeuer webt euer Envoy die Kraft des einen in das andere. Das gebende Stück zerfällt dabei.' },
-  { icon: NAV_ICONS.arena, title: 'Weniger Unentschieden in der Arena',
-    text: 'Ist ein Kampf knapp, gewinnt, wer in den letzten vier Wochen öfter sein Tageswerk gemacht hat. Ist auch das gleich, entscheidet die Haltung.' },
 ];
 
 export function openNews(onDone) {

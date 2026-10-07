@@ -88,8 +88,8 @@ export const arena = {
   },
 
   // Challenges the Abbild with the id `gegner`; returns the fight with its rounds.
-  async challenge(gegner, haltung) {
-    const hall = await this.request('arena_fight', { gegner, haltung });
+  async challenge(gegner) {
+    const hall = await this.request('arena_fight', { gegner });
     return hall.kampf;
   },
 
@@ -109,7 +109,7 @@ export const arena = {
         id, t: f.t, d: dayKey(new Date(f.t)), dev: game.deviceId, type: 'kampf',
         kampf: f.s, rolle: f.rolle, gegner: f.gegner, ergebnis: f.ergebnis, ruhm: f.ruhm, platz: f.platz,
         ...(f.rolle === 'fordert' ? { energie: ARENA_ENERGY } : {}),   // what it cost (nothing now)
-        ...(f.runden ? { haltung: f.haltung, gegnerHaltung: f.gegnerHaltung, entscheid: f.entscheid, leben: f.leben, runden: f.runden } : {}),
+        ...(f.runden ? { entscheid: f.entscheid, leben: f.leben, runden: f.runden } : {}),
       });
     }
     store.saveArena({ id: arenaId, since });

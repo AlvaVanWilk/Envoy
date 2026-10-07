@@ -394,11 +394,10 @@ export const game = {
 
   // --- the arena: the own Abbild and what Ruhm buys (the fights come from the server, see arena.js) ---
 
-  // Haltung and Titel of the own Abbild ('' = without Titel).
-  setAbbild({ haltung, titel } = {}) {
+  // The Titel of the own Abbild ('' = without Titel).
+  setAbbild({ titel } = {}) {
     const own = this.state.world.arena;
     const fields = {};
-    if (haltung && haltung !== own.haltung) fields.haltung = haltung;
     if (typeof titel === 'string' && titel !== own.titel) fields.titel = titel;
     if (Object.keys(fields).length > 0) this.add([this.event('abbild', fields)]);
   },

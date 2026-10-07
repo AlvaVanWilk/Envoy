@@ -1,27 +1,30 @@
-// Challenging another Abbild: the Haltung is chosen, the server decides the
-// fight (see arena.php), and here it plays round by round. At the end both
-// bow; a defeat costs nothing. A challenge costs no Energie.
+// Challenging another Abbild: the server decides the fight (see arena.php):
+// the more diligent one wins; equally diligent, the clothes; equal in both, a
+// draw, in which both strike the last blow at the same time. Here it plays
+// round by round. At the end both bow; a defeat costs nothing. A challenge
+// costs no Energie.
 
 import { h, replaceChildren } from './dom.js';
 import { toast } from './sheet.js';
 import { fighterCard, pop, shake } from './scene.js';
 import { arena, arenaErrorText } from '../arena.js';
 import { sync } from '../sync.js';
-import { abbildPortrait, haltungPicker, titleText, ruhmAmount } from './arenaparts.js';
+import { abbildPortrait, titleText, ruhmAmount } from './arenaparts.js';
 
-const ROUND_MS = 1300;
-const SECOND_BLOW_MS = 600;
+const ROUND_MS = 1000;
+const SECOND_BLOW_MS = 450;
 const RESULT = { sieg: 'Sieg', remis: 'Unentschieden', niederlage: 'Unterlegen' };
-// After the last round: decided on points, a close bout (decided by the
-// diligence of both, else by the Haltung), or a draw.
-const CLOSE = { sieg: 'Knapper Sieg', niederlage: 'Knapp unterlegen' };
+// The result, and below it why (fights before 5.17 could also end on points).
 function resultText(fight) {
-  if (fight.ergebnis === 'remis') return RESULT.remis;
-  if (fight.entscheid === 'punkte') return `${RESULT[fight.ergebnis]} nach Punkten`;
-  if (fight.entscheid === 'fleiss') return CLOSE[fight.ergebnis];
-  if (fight.entscheid === 'haltung') return `${CLOSE[fight.ergebnis]} durch die Haltung`;
+  if (fight.entscheid === 'punkte' && fight.ergebnis !== 'remis') return `${RESULT[fight.ergebnis]} nach Punkten`;
   return RESULT[fight.ergebnis];
 }
+const REASON = {
+  fleiss: { sieg: 'Mehr Fleiß auf deiner Seite.', niederlage: 'Mehr Fleiß auf der anderen Seite.' },
+  kleidung: { sieg: 'Gleich fleißig. Deine Kleidung gab den Ausschlag.', niederlage: 'Gleich fleißig. Die Kleidung der anderen Seite gab den Ausschlag.' },
+  gleich: { remis: 'Gleich fleißig, gleich gut gekleidet. Beide treffen zugleich.' },
+};
+const reasonText = (fight) => REASON[fight.entscheid]?.[fight.ergebnis] || null;
 
 // Why the Envoy cannot go now, or null.
 function blocked(game) {
@@ -29,14 +32,12 @@ function blocked(game) {
   return null;
 }
 
-// Below the Abbild in its window: Haltung, cost, and the button.
+// Below the Abbild in its window: the button.
 export function challengePart(x, game, panel) {
-  let haltung = game.state.world.arena.haltung;
   const part = h('div', { class: 'arena-challenge' });
   const draw = () => {
     const why = blocked(game);
     replaceChildren(part,
-      haltungPicker(haltung, (id) => { haltung = id; draw(); }, 'Deine Haltung'),
       why ? h('p', { class: 'arena-why' }, why) : null,
       h('button', { class: 'btn primary', disabled: Boolean(why), onclick: (e) => go(e.currentTarget) }, 'Herausfordern'));
   };
@@ -45,7 +46,7 @@ export function challengePart(x, game, panel) {
     button.textContent = 'Der Envoy geht in die Arena.';
     try {
       await sync.run();
-      const fight = await arena.challenge(x.id, haltung);
+      const fight = await arena.challenge(x.id);
       replaceChildren(panel.querySelector('.sheet-body'), fightPlay(fight, x, game));
     } catch (error) {
       toast(arenaErrorText(error));
@@ -63,8 +64,8 @@ function blowText(value, who, other) {
   return `${who} trifft`;
 }
 
-// The fight round by round, then the bow and what it brought.
-function fightPlay(fight, x, game) {
+// The fight round by round, then the bow and what it brought (exported for trying it out).
+export function fightPlay(fight, x, game) {
   const own = game.state.world.envoy;
   const names = { a: own.name, b: fight.gegner.name };
   const max = fight.leben;
@@ -100,6 +101,13 @@ function fightPlay(fight, x, game) {
       line.textContent = `Runde ${r.n}: ${names[r.ruhe]} verbeugt sich und lässt ab`;
       return;
     }
+    if (r.gleichzeitig) {
+      // a draw: both strike the last blow at the same time
+      line.textContent = `Runde ${r.n}: Beide treffen zugleich`;
+      blow(first, r[first], animate);
+      blow(second, r[second], animate);
+      return;
+    }
     const parts = [first, second].filter((s) => r[s] !== null).map((s) => blowText(r[s], names[s], names[s === 'a' ? 'b' : 'a']));
     line.textContent = `Runde ${r.n}: ${parts.join(', ')}`;
     blow(first, r[first], animate);
@@ -120,8 +128,10 @@ function fightPlay(fight, x, game) {
     line.textContent = resultText(fight);
     skip.remove();
     const [before, after] = fight.platz || [];
+    const reason = reasonText(fight);
     replaceChildren(end,
       h('p', { class: 'arena-end-result' }, resultText(fight)),
+      reason ? h('p', { class: 'arena-end-reason' }, reason) : null,
       h('p', { class: 'muted' }, 'Beide verbeugen sich.'),
       h('div', { class: 'arena-end-gain' }, ruhmAmount(fight.ruhm, '+')),
       after && before && after < before ? h('p', { class: 'arena-end-place' }, `${names.a} steht jetzt auf Platz ${after}.`) : null);

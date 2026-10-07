@@ -2,20 +2,22 @@
 // (arena.php); here only what follows from them for this Envoy:
 //   kampf     a fight of the own Abbild: Ruhm, and for a challenge the Energie
 //             it cost (nothing since version 5.13; the event says how much)
-//   abbild    Haltung and Titel of the own Abbild (the latest counts)
+//   abbild    the Titel of the own Abbild (the latest counts; a Haltung of
+//             events before 5.17 no longer counts)
 //   ruhmkauf  something bought with Ruhm: a colour for a piece of clothing, a
 //             piece of clothing with bonuses (since 5.15), or a Titel (before 5.15)
 // Ruhm is the currency of the arena only. It never makes the Envoy stronger.
 // All the Ruhm ever earned gives the Rang (RANKS), and each Rang its Titel;
 // spending Ruhm never lowers the Rang.
 //
-// world.arena = { ruhm, earned, haltung, titel, titles, fights }
+// world.arena = { ruhm, earned, titel, titles, fights }
 //   ruhm     what is left to spend
 //   earned   all the Ruhm ever earned
 //   titles   { id: true } the Titel bought before 5.15 (they stay)
 //   fights   the latest fights, newest last: { id, t, rolle, gegner, ergebnis, ruhm, platz }
 
-import { ARENA_ENERGY_BEFORE, HALTUNGEN, TITLES, DYES, RANKS, ARENA_OFFERS, ARENA_PRICES } from '../config.js';
+import { ARENA_ENERGY_BEFORE, TITLES, DYES, RANKS, ARENA_OFFERS, ARENA_PRICES, ARENA_WINDOW_DAYS, GEAR_WEIGHTS, STAT_IDS } from '../config.js';
+import { addDays } from '../days.js';
 import { stow } from './inventory.js';
 import { cleanBonuses, rollBonuses } from './bonuses.js';
 import { seededRandom, shuffle } from './rng.js';
@@ -26,7 +28,24 @@ import { obtainable, figureOf, rollDye } from './clothes.js';
 const KEEP_FIGHTS = 40;
 const RESULTS = ['sieg', 'remis', 'niederlage'];
 
-export const emptyArena = () => ({ ruhm: 0, earned: 0, haltung: 'abwehr', titel: '', titles: {}, fights: [] });
+export const emptyArena = () => ({ ruhm: 0, earned: 0, titel: '', titles: {}, fights: [] });
+
+// The Fleiß of the own Envoy, as the server counts it (see effortOf in
+// arena.php): on how many of the last 28 days, up to today, the task of each
+// area was done. { kraft: 12, …, total: 47 }
+export function effortOf(state) {
+  const from = addDays(state.today, -(ARENA_WINDOW_DAYS - 1));
+  const days = Object.fromEntries(STAT_IDS.map((id) => [id, 0]));
+  for (const entry of state.log) {
+    if (entry.day < from || entry.day > state.today) continue;
+    for (const id of STAT_IDS) if (entry.tasks[id]?.done) days[id] += 1;
+  }
+  return { ...days, total: STAT_IDS.reduce((sum, id) => sum + days[id], 0) };
+}
+
+// What the worn clothes count for in a fight in the arena (when both are
+// equally diligent), from their abilities and bonuses (see hero.js: effects).
+export const gearScore = (fx) => Object.entries(GEAR_WEIGHTS).reduce((sum, [key, weight]) => sum + weight * (fx[key] || 0), 0);
 
 export const titleById = (id) => TITLES.find((t) => t.id === id) || null;
 
@@ -109,20 +128,20 @@ export function applyArenaEvent(world, e, ctx) {
   if (e.type === 'kampf') fought(world, e);
   else if (e.type === 'ruhmkauf') bought(world, e, ctx.catalog);
   else if (e.type === 'abbild') {
-    if (HALTUNGEN.some((h) => h.id === e.haltung)) world.arena.haltung = e.haltung;
     if (e.titel === '' || titleOwned(world.arena, e.titel)) world.arena.titel = e.titel;
   }
 }
 
 // The Abbild as the server gets it: name and look, the clothes worn (with
-// their colour), Haltung and Titel. No stats: its strength in the arena is
-// how often the tasks were done lately, which the server counts itself
-// (see arena.php), so talent does not win, diligence does.
+// their colour and bonuses: equally diligent, the clothes decide) and the
+// Titel. No stats: its strength in the arena is how often the tasks were
+// done lately, which the server counts itself (see arena.php), so talent
+// does not win, diligence does.
 export function abbildOf(state) {
   const { world } = state;
   if (!world.envoy) return null;
   const worn = Object.values(world.equipped).map((inst) => world.items[inst]).filter(Boolean)
-    .map((entry) => ({ id: entry.id, ...(entry.farbe ? { farbe: entry.farbe } : {}) }));
+    .map((entry) => ({ id: entry.id, ...(entry.farbe ? { farbe: entry.farbe } : {}), ...(entry.bonus ? { bonus: entry.bonus } : {}) }));
   return {
     name: world.envoy.name,
     figur: world.envoy.figur,
@@ -130,7 +149,6 @@ export function abbildOf(state) {
     haar: world.envoy.haar,
     unterhemd: world.envoy.unterhemd,
     worn,
-    haltung: world.arena.haltung,
     titel: world.arena.titel,
   };
 }

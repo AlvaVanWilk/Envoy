@@ -43,13 +43,14 @@
 //                                             a piece of clothing; the running expedition back at once
 //
 // The arena (see world/arena.js; the fights are decided by the server, arena.php):
-//   kampf    { kampf, rolle, gegner, ergebnis, ruhm, platz, energie?, haltung?, gegnerHaltung?, entscheid?, leben?, runden? }
+//   kampf    { kampf, rolle, gegner, ergebnis, ruhm, platz, energie?, entscheid?, leben?, runden? }
+//            (before 5.17 also haltung?, gegnerHaltung?)
 //                                             a fight of the own Abbild: rolle 'fordert' (it challenged,
 //                                             costs `energie`) or 'verteidigt' (it was challenged);
 //                                             ergebnis 'sieg' | 'remis' | 'niederlage' from its view,
 //                                             ruhm = what it brought, platz = [before, after] in the list;
 //                                             its id comes from the server, the same on every device
-//   abbild   { haltung?, titel? }             Haltung and Titel of the own Abbild (the latest counts)
+//   abbild   { titel? }                       the Titel of the own Abbild (the latest counts; before 5.17 also haltung)
 //   ruhmkauf { ware, preis, inst?, farbe?, titel? }
 //                                             bought with Ruhm: ware 'farbe' (the piece `inst` in the colour
 //                                             `farbe`, '' = its own again) or 'titel'

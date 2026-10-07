@@ -103,7 +103,7 @@ test('server: a pause after five wrong passwords', { skip: !hasPhp && 'PHP ist n
 
 const abbild = (name, extra = {}) => ({
   name, figur: 'erste', haut: '', haar: '', unterhemd: true, worn: [],
-  stats: { kraft: 1, ausdauer: 1, beweglichkeit: 1, gelassenheit: 1 }, haltung: 'abwehr', titel: '', ...extra,
+  stats: { kraft: 1, ausdauer: 1, beweglichkeit: 1, gelassenheit: 1 }, titel: '', ...extra,
 });
 
 test('server: arena list, challenges, Ruhm and fights for the challenged', { skip: !hasPhp && 'PHP ist nicht installiert' }, async (t) => {
@@ -125,15 +125,17 @@ test('server: arena list, challenges, Ruhm and fights for the challenged', { ski
   assert.equal(hall.me.platz, 3);
   assert.ok(hall.list.every((x) => x.ich || x.erreichbar));
 
-  // Cleo challenges Anna: the server decides, the rounds come along.
+  // Cleo challenges Anna: the server decides, the rounds come along. Both are
+  // equally diligent (no tasks yet); Anna's Handwickel count for more in the fight.
   const anna = hall.list[0].id;
-  const fought = await call({ action: 'arena_fight', ...login.Cleo, abbild: abbild('Cleo'), gegner: anna, haltung: 'ruhe' });
+  const fought = await call({ action: 'arena_fight', ...login.Cleo, abbild: abbild('Cleo'), gegner: anna });
   const k = fought.kampf;
   assert.equal(k.rolle, 'fordert');
-  assert.ok(['sieg', 'remis', 'niederlage'].includes(k.ergebnis));
-  assert.equal(k.ruhm, { sieg: 3, remis: 2, niederlage: 1 }[k.ergebnis]);
-  assert.ok(k.runden.length >= 1 && k.runden.length <= 8);
-  assert.ok(['ko', 'punkte', 'fleiss', 'haltung', 'ruhe'].includes(k.entscheid));
+  assert.equal(k.ergebnis, 'niederlage');
+  assert.equal(k.entscheid, 'kleidung');
+  assert.equal(k.ruhm, 1);
+  assert.ok(k.runden.length >= 1 && k.runden.length <= 24);
+  assert.equal(k.runden.at(-1).la, 0);              // the winner strikes the last blow
   assert.equal(k.gegner.name, 'Anna');
   if (k.ergebnis === 'sieg') {
     assert.deepEqual(fought.list.map((x) => x.name), ['Cleo', 'Anna', 'Bodo']);
@@ -142,8 +144,8 @@ test('server: arena list, challenges, Ruhm and fights for the challenged', { ski
     assert.deepEqual(fought.list.map((x) => x.name), ['Anna', 'Bodo', 'Cleo']);
   }
   // once a day per Abbild, and only real ones
-  assert.equal((await call({ action: 'arena_fight', ...login.Cleo, gegner: anna, haltung: 'ruhe' })).error, 'today');
-  assert.equal((await call({ action: 'arena_fight', ...login.Cleo, gegner: 'p000', haltung: 'ruhe' })).error, 'out_of_reach');
+  assert.equal((await call({ action: 'arena_fight', ...login.Cleo, gegner: anna })).error, 'today');
+  assert.equal((await call({ action: 'arena_fight', ...login.Cleo, gegner: 'p000' })).error, 'out_of_reach');
 
   // Anna's app learns of it with the next sync, from her view, with Ruhm that is never taken away.
   const synced = await call({ action: 'sync', ...login.Anna, since: 0, events: [], abbild: abbild('Anna'), arenaId: null, arenaSince: 0 });
@@ -195,8 +197,42 @@ test('server: arena strength counts the days with the task done, not the stage',
     const result = JSON.parse(out.stdout);
     assert.deepEqual(result.strength, { kraft: 3, ausdauer: 1, beweglichkeit: 1, gelassenheit: 2 });
     assert.equal(result.abbild.stats, undefined);
-    assert.equal(result.abbild.haltung, 'abwehr');
+    assert.equal(result.abbild.haltung, undefined);
   } finally {
     rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+// Diligence decides every fight; equally diligent, the clothes; equal in both,
+// a draw in which both strike the last blow at once. The bout shows it.
+test('server: arena fights: Fleiß decides, then the clothes, else both fall at once', { skip: !hasPhp && 'PHP ist nicht installiert' }, () => {
+  const php = `
+    const DATA_DIR = '/nowhere';
+    define('ENVOY_SYNC', true);
+    function readJson($f) { return null; }
+    function eventsFile($id) { return ''; }
+    require ${JSON.stringify(fileURLToPath(new URL('../arena.php', import.meta.url)))};
+    $all = fn($d) => ['kraft' => $d, 'ausdauer' => $d, 'beweglichkeit' => $d, 'gelassenheit' => $d];
+    $runs = [];
+    for ($i = 0; $i < 200; $i++) {
+      // a little more diligent in all four together wins, although the other is stronger in three areas and better dressed
+      $runs['fleiss'][] = fightOut(['strength' => $all(23), 'gear' => 0], ['strength' => ['kraft' => 29, 'ausdauer' => 29, 'beweglichkeit' => 29, 'gelassenheit' => 1], 'gear' => 40]);
+      $runs['kleidung'][] = fightOut(['strength' => $all(15), 'gear' => 7], ['strength' => $all(15), 'gear' => 6]);
+      $runs['gleich'][] = fightOut(['strength' => $all(15), 'gear' => 3], ['strength' => $all(15), 'gear' => 3]);
+    }
+    $gear = gearOf(['worn' => [['id' => 'handschuhe_handwickel_1', 'bonus' => ['schaden' => 2, 'treffer' => 4, 'erholung' => 9]]]]);
+    echo json_encode(['runs' => $runs, 'gear' => $gear]);
+  `;
+  const out = spawnSync('php', ['-r', php], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  const { runs, gear } = JSON.parse(out.stdout);
+  assert.equal(gear, 3 * (1 + 2) + 4);   // the Handwickel's own damage and the bonuses; Energie does not count
+  assert.ok(runs.fleiss.every((f) => f.ergebnis === 'sieg' && f.entscheid === 'fleiss' && f.runden.at(-1).lb === 0 && f.runden.at(-1).la > 0));
+  assert.ok(runs.kleidung.every((f) => f.ergebnis === 'sieg' && f.entscheid === 'kleidung' && f.runden.at(-1).lb === 0 && f.runden.at(-1).la > 0));
+  for (const f of runs.gleich) {
+    const last = f.runden.at(-1);
+    assert.equal(f.ergebnis, 'remis');
+    assert.equal(f.entscheid, 'gleich');
+    assert.deepEqual([last.la, last.lb, last.gleichzeitig], [0, 0, true]);
+    assert.ok(f.runden.slice(0, -1).every((r) => r.la > 0 && r.lb > 0));   // nobody falls before
   }
 });

@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.16.0';
+export const APP_VERSION = '5.17.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -362,12 +362,13 @@ export const ARENA_FROM_STAGE = 1;
 export const ARENA_ENERGY = 0;         // a challenge costs no Energie (since 5.13)
 export const ARENA_ENERGY_BEFORE = 5;  // what a challenge cost before, for fights written without the field
 export const ARENA_REACH = 3;          // places above or below that may be challenged (as on the server)
-// The Haltung of an Abbild; each one has the edge over another.
-export const HALTUNGEN = [
-  { id: 'angriff', name: 'Angriff', edge: 'überrumpelt Ruhe' },
-  { id: 'abwehr', name: 'Abwehr', edge: 'fängt Angriff ab' },
-  { id: 'ruhe', name: 'Ruhe', edge: 'löst Abwehr auf' },
-];
+// Fleiß decides every fight (since 5.17, so gewünscht): on how many of the
+// last ARENA_WINDOW_DAYS days the task of each area was done, all four
+// together. Equally diligent, the clothes decide: what they have for the
+// fight, a point of damage as much as three of hitting, dodging or calming
+// (GEAR_WEIGHTS, the same as ARENA_GEAR in arena.php). The Haltung is gone.
+export const ARENA_WINDOW_DAYS = 28;
+export const GEAR_WEIGHTS = { schaden: 3, treffer: 1, ausweichen: 1, beruhigen: 1 };
 // For Ruhm: a piece of clothing in another colour, and every day a few
 // pieces of clothing with bonuses (ARENA_OFFERS, at least selten, price by
 // Güte). Titel for the Abbild (shown after its name, the same for every

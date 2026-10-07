@@ -923,9 +923,9 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 
 Ein Ort für alle Envoys auf dem eigenen Server (nur mit Konto, ab dem Lagerfeuer), erreichbar
 über „Arena“ oben auf der Abenteuer-Seite. Niemand kämpft gegen eine Person, sondern gegen
-ihr **Abbild**: Name, Aussehen, getragene Kleidung (mit Farbe, nur zum Ansehen), eine Haltung
-und ein Titel. Die App schickt das Abbild bei jedem Abgleich mit. Echte Übungen, Tageswerk,
-Werte oder Serien zeigt die Arena nie. Der Server (`arena.php`, Teil von `sync.php`)
+ihr **Abbild**: Name, Aussehen, getragene Kleidung (mit Farbe und den Boni jedes Stücks) und
+ein Titel. Die App schickt das Abbild bei jedem Abgleich mit. Echte Übungen, Tageswerk,
+Werte oder Serien der anderen zeigt die Arena nie; den eigenen Fleiß zeigt die Envoy-Seite. Der Server (`arena.php`, Teil von `sync.php`)
 entscheidet jeden Kampf selbst.
 
 **Stark macht Fleiß, nicht Begabung** (so gewünscht): Die Stärke eines Abbilds in jedem der
@@ -933,8 +933,18 @@ vier Bereiche ist, an wie vielen der letzten 28 Tage die Aufgabe dieses Bereichs
 wurde. Der Server zählt das in der Ereignisliste des Kontos; zurückgenommene Aufgaben zählen
 nicht, eine Aufgabe je Bereich und Tag. Jede Aufgabe zählt gleich, auf jeder Stufe, für Kinder
 wie für Erwachsene: Wem die Übungen leichter fallen, der kommt auf höhere Stufen und mehr XP,
-aber nicht zu mehr Stärke in der Arena. Die Werte (Level) und die Fähigkeiten der Kleidung
-spielen in der Arena keine Rolle.
+aber nicht zu mehr Stärke in der Arena. Die Werte (Level) spielen in der Arena keine Rolle.
+
+**Fleiß entscheidet immer** (seit 5.17, so gewünscht): Der **Fleiß** eines Abbilds sind die
+Tage mit erledigter Aufgabe in allen vier Bereichen zusammen (0 bis 112). Das fleißigere
+Abbild gewinnt jeden Kampf. Bei genau gleichem Fleiß entscheidet die **Kleidung**: was die
+getragenen Stücke für den Kampf haben, aus festen Fähigkeiten und Boni, ein Punkt Schaden so
+viel wie drei Punkte Treffer, Ausweichen oder Beruhigen (Energie, Glück und Wege zählen nicht;
+`GEAR_WEIGHTS`, `ARENA_GEAR`). Sind beide auch darin gleich, ist es unentschieden: Beide
+treffen in der letzten Runde zugleich, beide fallen. Die **Haltung** gibt es nicht mehr; frühere
+Ereignisse mit Haltung bleiben gültig, sie zählt nur nicht mehr. (5.16: Haltung im Kampf
+wenig, knappe Kämpfe nach Fleiß; bis 5.15 entschied der Kampf selbst, gleich fleißige zur
+Hälfte unentschieden.)
 
 **Die Rangliste läuft ständig** (eine Forderungsrangliste wie im Sportverein):
 
@@ -947,25 +957,16 @@ spielen in der Arena keine Rolle.
 - Wessen App 14 Tage nicht offen war, dessen Abbild ruht: Es verlässt die Liste und beginnt
   wieder am Ende, sobald die App zurück ist. Zurückziehen geht jederzeit.
 
-**Der Kampf**: ein Übungskampf über acht Runden, Runde für Runde zu sehen (Lebensleisten,
-Treffer, Ausweichen). Beide Seiten werden aneinander gemessen, Bereich für Bereich (Stärke =
-1 + Tage mit erledigter Aufgabe): doppelt so viel Kraft trifft etwa ein Fünftel härter,
-doppelt so viel Ausdauer hält etwa ein Fünftel länger, mehr Beweglichkeit trifft und weicht
-öfter aus, mehr Gelassenheit lässt ein Abbild, das zurückliegt, sich in Ehren verbeugen
-(unentschieden). Steht nach der letzten Runde noch jeder, gewinnt ein klarer Vorsprung
-(mehr als ein Fünftel des Lebens) nach Punkten. **Ein knapper Kampf** (seit 5.16, so gewünscht:
-das Tageswerk zählt am meisten, anderes darf ein Unentschieden abwenden) geht an die Seite mit
-mehr Tagen erledigter Aufgaben in allen vier Bereichen zusammen („Knapper Sieg“); haben beide
-genau gleich viele, an die mit dem Haltungsvorteil („Knapper Sieg durch die Haltung“); sonst
-ist er unentschieden. Gerechnet, die Haltung blind gewählt: gleich fleißig etwa 37 % Sieg,
-27 % unentschieden, 37 % unterlegen; ein Tag mehr in vier Wochen etwa zwei Drittel Sieg;
-28 gegen 24 Tage in allen Bereichen etwa 77 % Sieg, 11 % unentschieden, 12 % unterlegen;
-28 gegen 21 etwa 86 % Sieg; 28 gegen 14 etwa 96 %. (Bis 5.15 gingen gleich fleißige zur
-Hälfte unentschieden aus, und die Haltung war im Kampf etwa vier Tage Fleiß wert.) Die
-**Haltung** (Angriff, Abwehr, Ruhe) gibt im Kampf selbst nur wenig (+3 % Treffer, +1 %
-Ausweichen): Abwehr fängt Angriff ab, Ruhe löst Abwehr auf, Angriff überrumpelt Ruhe. Die eigene gilt, wenn das Abbild herausgefordert wird; wer
-herausfordert, wählt seine für diesen Kampf, ohne die des anderen zu kennen. Am Ende
-verbeugen sich beide.
+**Der Kampf** zeigt, wie es ausgeht, Runde für Runde (Lebensleisten, Treffer, Ausweichen).
+Beide Seiten werden dabei aneinander gemessen, Bereich für Bereich (Stärke = 1 + Tage mit
+erledigter Aufgabe): doppelt so viel Kraft trifft etwa ein Fünftel härter, doppelt so viel
+Ausdauer hält etwa ein Fünftel länger, mehr Beweglichkeit trifft und weicht öfter aus. Der
+Server würfelt Kämpfe, bis einer so endet, wie es entschieden ist: Der Sieger setzt den
+letzten Schlag; im Unentschieden sind beide erschöpft und treffen zugleich. Niemand verbeugt
+sich mehr vorzeitig (bis 5.16 konnte ein Abbild, das zurücklag, sich verbeugen; dann endete der
+Kampf unentschieden, auch wenn nur eine Seite getroffen worden war). Am Ende steht kurz,
+warum: „Mehr Fleiß auf deiner Seite.“, „Gleich fleißig. Deine Kleidung gab den Ausschlag.“,
+„Gleich fleißig, gleich gut gekleidet. Beide treffen zugleich.“ Am Ende verbeugen sich beide.
 
 **Ruhm** ist die Währung der Arena und nur dort: herausfordern bringt 3 für einen Sieg,
 2 für unentschieden, 1 fürs Antreten; das herausgeforderte Abbild bekommt 2, wenn es hält,
@@ -986,7 +987,7 @@ Ränge mit ihren Titeln.
 
 Jeder
 Kampf steht als Ereignis `kampf` in der Liste des eigenen Kontos (die Id kommt vom Server,
-so schreibt jedes Gerät denselben), Haltung und Titel als `abbild`, Käufe als `ruhmkauf`
+so schreibt jedes Gerät denselben), der Titel als `abbild`, Käufe als `ruhmkauf`
 (`ware`: `farbe`, `kleidung`, früher `titel`).
 Kämpfe, die das eigene Abbild erlebt hat, kommen mit dem nächsten Abgleich und stehen in der
 Halle als neu.
