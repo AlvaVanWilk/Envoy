@@ -34,7 +34,7 @@ export function statRow(id, stat, { onclick = null } = {}) {
   const fill = h('span', { class: 'stat-fill' });
 
   const row = h(onclick ? 'button' : 'div', {
-    class: 'stat-row', 'data-stat': id, onclick,
+    class: 'stat-row', 'data-stat': id, onclick, 'data-tip': info.wirkung,
     'aria-label': `${info.name} ${statText(stat)}`,
   },
   statEmblem(id),

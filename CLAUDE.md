@@ -184,12 +184,15 @@ solange nicht ausdrücklich danach gefragt wird.
 
 ## Die vier Stats
 
-| Stat | Tagesaufgabe | Kampfrolle (Phase 2) |
-| --- | --- | --- |
-| Kraft | Tiefenmuskulatur | Schadenshöhe |
-| Ausdauer | Treppe (Spazieren und Rad später über den Talentbaum) | max. Leben, Energieleiste |
-| Beweglichkeit | Stretching, Mobility | Treffer- und Ausweichchance |
-| Gelassenheit | Entspannung, Atemübung | verkürzt Ruhezeiten |
+| Stat | Tagesaufgabe | Hauptwirkung (so gewünscht, wichtig) | Dazu |
+| --- | --- | --- | --- |
+| Kraft | Tiefenmuskulatur | Schaden im Kampf | Stein beim Sammeln |
+| Ausdauer | Treppe (Spazieren und Rad später über den Talentbaum) | Größe der Energieleiste | Leben im Kampf |
+| Beweglichkeit | Stretching, Mobility | Ausweichen | Treffen, Pilzholz beim Sammeln |
+| Gelassenheit | Entspannung, Atemübung | Energie füllt sich schneller | Geister beruhigen, kürzere Rast in den Tiefen |
+
+Zeigt man auf einen Wert (Maus darüber, auf Telefon und iPad antippen), steht da, was er bewirkt
+(`wirkung` in `STATS`, `js/ui/tips.js`).
 
 Start bei 1, Obergrenze 100.
 

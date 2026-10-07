@@ -179,7 +179,7 @@ function portraitRings(game, current, badge) {
     clearTimeout(hideTimer);
     if (n < 0) { tip.classList.remove('on'); return; }
     const st = STATS[n];
-    tip.textContent = ringText(st, stats[st.id]);
+    tip.replaceChildren(h('span', { class: 'ring-tip-value' }, ringText(st, stats[st.id])), h('span', { class: 'ring-tip-text' }, st.wirkung));
     tip.dataset.stat = st.id;
     tip.classList.add('on');
   };

@@ -32,6 +32,7 @@ import { IS_TEST, APP_NAME } from './stage.js';
 import { mountTestTools } from './ui/testtools.js';
 import { updateTripSign } from './ui/tripsign.js';
 import { showGates, markNewsSeen, gateOpen } from './ui/gate.js';
+import { installTips } from './ui/tips.js';
 
 // The menu at the bottom, left to right. The camp in the middle is the
 // start. `feature` = unlocked in the game.
@@ -182,6 +183,7 @@ function showError(message) {
 }
 
 async function start() {
+  installTips();
   if (IS_TEST) {
     document.title = APP_NAME;
     document.body.classList.add('stage-test');

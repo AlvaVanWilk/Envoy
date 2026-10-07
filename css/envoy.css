@@ -737,6 +737,8 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
   transition: opacity 0.15s, transform 0.15s;
 }
 .ring-tip.on { opacity: 1; transform: none; }
+.ring-tip-value { display: block; }
+.ring-tip-text { display: block; max-width: min(260px, calc(100vw - 40px)); margin-top: 3px; white-space: normal; font-size: 12px; color: var(--text-2); }
 
 /* The Tageswerk: dark stone like the menu and the boxes. While tasks are
    open an orange glow pulses around it; once done it rests with the emblem. */
@@ -2826,3 +2828,17 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 .effort-label .muted { font-family: var(--font-body); font-size: 13px; font-weight: 400; }
 .effort-areas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 6px; padding: 0; list-style: none; }
 .effort-areas li { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 4px; border-radius: 6px; background: rgba(244, 236, 222, 0.03); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* --- Tips when pointing at a value (ui/tips.js) --- */
+.tip-box {
+  position: fixed; z-index: 120; max-width: min(280px, calc(100vw - 24px));
+  padding: 7px 10px; border-radius: 6px; border: 1px solid #05080a; border-left: 3px solid var(--copper);
+  background: #1b2c31; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+  font-size: 13px; line-height: 1.35; color: var(--ivory-bright);
+  opacity: 0; pointer-events: none; transition: opacity 0.15s;
+}
+.tip-box.on { opacity: 1; }
+[data-tip] { cursor: help; }
+button[data-tip], a[data-tip] { cursor: pointer; }
+.stat-wirkung { margin: 12px 0 4px; color: var(--text-2); }
+.stat-effects { margin-bottom: 12px; }

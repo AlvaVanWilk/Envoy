@@ -10,7 +10,7 @@ import { statRow, statInfo, statEmblem } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { store } from '../store.js';
 import { addDays, formatDayShort } from '../days.js';
-import { viewHead, sectionTitle, itemIcon, staminaBar, effectText, qualityClass } from './parts.js';
+import { viewHead, sectionTitle, itemIcon, staminaBar, effectText, qualityClass, FIGHT_TIPS } from './parts.js';
 import { openSlot, slotName } from './itemsheet.js';
 import { packBox } from './pack.js';
 import { fighter } from '../world/hero.js';
@@ -69,25 +69,26 @@ function worldPanel(game) {
 const NO_GEAR = { schaden: 0, treffer: 0, ausweichen: 0, beruhigen: 0, reise: 0, erholung: 0, glueck: 0 };
 const percent = (share) => `${Math.round(share * 100)} %`;
 
-// The values in a fight against a spirit as strong as the Envoy, and in
-// orange what the clothes add to them.
+// The values in a fight against a spirit of Stufe 1 (so what the stats do
+// shows), and in orange what the clothes add to them. Each row tells, when
+// pointed at, which stat makes it grow.
 function fightPanel(game) {
   const { stats } = game.state;
   const fx = game.ctx().fx;
-  const even = { gewandtheit: stats.beweglichkeit.level, stufe: stats.gelassenheit.level, calmable: true };
-  const now = fighter(stats, fx, even);
-  const bare = fighter(stats, NO_GEAR, even);
+  const weak = { gewandtheit: 1, stufe: 1, calmable: true };
+  const now = fighter(stats, fx, weak);
+  const bare = fighter(stats, NO_GEAR, weak);
   const extra = (a, b, show) => (a > b ? h('span', { class: 'gear-part' }, `+${show(a - b)}`) : null);
-  const row = (label, value, gear) => h('div', {}, h('dt', {}, label), h('dd', {}, value, gear));
+  const row = (label, value, gear, tip) => h('div', { 'data-tip': tip }, h('dt', {}, label), h('dd', {}, value, gear));
   return h('section', { class: 'panel fight-panel' },
     sectionTitle('Kampfwerte'),
     h('dl', { class: 'facts' },
-      row('Leben', String(now.life), null),
-      row('Schaden je Treffer', `${now.damage} bis ${now.damage + 2}`, extra(now.damage, bare.damage, String)),
-      row('Treffer', percent(now.hit), extra(now.hit, bare.hit, percent)),
-      row('Ausweichen', percent(now.dodge), extra(now.dodge, bare.dodge, percent)),
-      row('Beruhigen', percent(now.calm), extra(now.calm, bare.calm, percent))),
-    h('p', { class: 'muted gear-note' }, 'Gegen einen gleich starken Geist. ', h('span', { class: 'gear-part' }, '+'), ' kommt von der Kleidung.'));
+      row('Leben', String(now.life), null, FIGHT_TIPS.leben),
+      row('Schaden je Treffer', `${now.damage} bis ${now.damage + 2}`, extra(now.damage, bare.damage, String), FIGHT_TIPS.schaden),
+      row('Treffer', percent(now.hit), extra(now.hit, bare.hit, percent), FIGHT_TIPS.treffer),
+      row('Ausweichen', percent(now.dodge), extra(now.dodge, bare.dodge, percent), FIGHT_TIPS.ausweichen),
+      row('Beruhigen', percent(now.calm), extra(now.calm, bare.calm, percent), FIGHT_TIPS.beruhigen)),
+    h('p', { class: 'muted gear-note' }, 'Gegen einen Geist der Stufe 1. ', h('span', { class: 'gear-part' }, '+'), ' kommt von der Kleidung.'));
 }
 
 // For the arena: the Fleiß (it decides every fight) and what the clothes

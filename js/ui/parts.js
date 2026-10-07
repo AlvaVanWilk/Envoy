@@ -81,12 +81,24 @@ function refillText(hours) {
 // After a night at the Schlafplatz it holds more than its normal length: the
 // extra is shown as a copper end of the bar. Only what the Schlafplatz can
 // give is called „Ausgeschlafen“; more than that comes from the test menu.
+// Which stat makes a value in a fight grow, shown when pointing at it.
+export const FIGHT_TIPS = {
+  leben: 'Steigt mit Ausdauer.',
+  schaden: 'Steigt mit Kraft und mit Schaden auf der Kleidung.',
+  treffer: 'Steigt mit Beweglichkeit und mit Treffer auf der Kleidung.',
+  ausweichen: 'Steigt mit Beweglichkeit und mit Ausweichen auf der Kleidung.',
+  beruhigen: 'Steigt mit Gelassenheit und mit Beruhigen auf der Kleidung.',
+};
+
+// What makes the Energie bigger and quicker, shown when pointing at the bar.
+const ENERGY_TIP = 'Mit Ausdauer wird die Leiste größer, mit Gelassenheit füllt sie sich schneller.';
+
 export function staminaBar(st) {
   const value = Math.floor(st.value);
   const over = Math.max(0, value - st.max);
   const total = st.max + over;
   const step = st.max <= 30 ? 1 : st.max <= 60 ? 5 : st.max <= 120 ? 10 : 20;
-  return h('div', { class: 'stamina', 'aria-label': `Energie ${value} von ${st.max}` },
+  return h('div', { class: 'stamina', 'aria-label': `Energie ${value} von ${st.max}`, 'data-tip': ENERGY_TIP },
     h('div', { class: 'stamina-top' },
       h('span', { class: 'stamina-label' }, 'Energie'),
       h('span', { class: 'stamina-value' }, h('strong', {}, `${value}`), ` / ${st.max}`)),

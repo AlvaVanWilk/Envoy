@@ -1,18 +1,23 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.17.0';
+export const APP_VERSION = '5.18.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
 export const versioned = (path) => (path ? `${path}?v=${APP_VERSION}` : path);
 
 // The four stats, in display order. `area` is the real-life daily task.
+// wirkung: what the stat does in the game, in a few words (shown when pointing at it)
 export const STATS = [
-  { id: 'kraft',         name: 'Kraft',         area: 'Tiefenmuskulatur' },
-  { id: 'ausdauer',      name: 'Ausdauer',      area: 'Bewegung' },
-  { id: 'beweglichkeit', name: 'Beweglichkeit', area: 'Stretching und Mobility' },
-  { id: 'gelassenheit',  name: 'Gelassenheit',  area: 'Entspannung' },
+  { id: 'kraft',         name: 'Kraft',         area: 'Tiefenmuskulatur',
+    wirkung: 'Mehr Schaden im Kampf. Dazu mehr Stein beim Sammeln.' },
+  { id: 'ausdauer',      name: 'Ausdauer',      area: 'Bewegung',
+    wirkung: 'Eine größere Energie-Leiste, zehn je Level. Dazu mehr Leben im Kampf.' },
+  { id: 'beweglichkeit', name: 'Beweglichkeit', area: 'Stretching und Mobility',
+    wirkung: 'Besser ausweichen und treffen. Dazu mehr Pilzholz beim Sammeln.' },
+  { id: 'gelassenheit',  name: 'Gelassenheit',  area: 'Entspannung',
+    wirkung: 'Die Energie füllt sich schneller. Dazu Geister beruhigen und kürzere Rast in den Tiefen.' },
 ];
 
 export const STAT_IDS = STATS.map((s) => s.id);

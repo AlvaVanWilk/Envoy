@@ -6,7 +6,7 @@
 
 import { h, icon, replaceChildren } from './dom.js';
 import { PLACE_ICONS } from './icons.js';
-import { viewHead, sectionTitle, lockedView, itemIcon, resource } from './parts.js';
+import { viewHead, sectionTitle, lockedView, itemIcon, resource, FIGHT_TIPS } from './parts.js';
 import { openSheet } from './sheet.js';
 import { fighterCard, pop, shake } from './scene.js';
 import { resolveLook, portraitSrc, showLayer } from './look.js';
@@ -130,7 +130,7 @@ function valuesPanel(game, floor) {
   const now = fighter(c.stats, c.fx, g);
   const bare = fighter(c.stats, NO_GEAR, g);
   const extra = (a, b, show) => (a > b ? h('span', { class: 'gear-part' }, `+${show(a - b)}`) : null);
-  const row = (label, own, gear, other) => h('tr', {},
+  const row = (label, own, gear, other, tip) => h('tr', { 'data-tip': tip },
     h('th', { scope: 'row' }, label),
     h('td', {}, own, gear),
     h('td', {}, other));
@@ -139,11 +139,11 @@ function valuesPanel(game, floor) {
     h('table', { class: 'fight-table' },
       h('thead', {}, h('tr', {}, h('th', {}), h('th', { scope: 'col' }, game.state.world.envoy?.name || 'Envoy'), h('th', { scope: 'col' }, g.name))),
       h('tbody', {},
-        row('Leben', String(now.life), null, String(g.leben)),
-        row('Schaden', `${now.damage} bis ${now.damage + 2}`, extra(now.damage, bare.damage, String), `${g.kraft} bis ${g.kraft + 1}`),
-        row('Treffer', percent(now.hit), extra(now.hit, bare.hit, (d) => percent(d)), '75 %'),
-        row('Ausweichen', percent(now.dodge), extra(now.dodge, bare.dodge, (d) => percent(d)), '–'),
-        g.calmable ? row('Beruhigen', percent(now.calm), extra(now.calm, bare.calm, (d) => percent(d)), '–') : null)),
+        row('Leben', String(now.life), null, String(g.leben), FIGHT_TIPS.leben),
+        row('Schaden', `${now.damage} bis ${now.damage + 2}`, extra(now.damage, bare.damage, String), `${g.kraft} bis ${g.kraft + 1}`, FIGHT_TIPS.schaden),
+        row('Treffer', percent(now.hit), extra(now.hit, bare.hit, (d) => percent(d)), '75 %', FIGHT_TIPS.treffer),
+        row('Ausweichen', percent(now.dodge), extra(now.dodge, bare.dodge, (d) => percent(d)), '–', FIGHT_TIPS.ausweichen),
+        g.calmable ? row('Beruhigen', percent(now.calm), extra(now.calm, bare.calm, (d) => percent(d)), '–', FIGHT_TIPS.beruhigen) : null)),
     h('p', { class: 'muted gear-note' }, h('span', { class: 'gear-part' }, '+'), ' kommt von der Ausrüstung.'));
 }
 

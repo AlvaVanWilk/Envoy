@@ -41,7 +41,19 @@ Erfahrung: es gibt kein Helden-XP und kein Heldenlevel. XP existiert nur pro Sta
 | Kraft | Tiefenmuskulatur, Rumpf | Schaden je Treffer, Zugang, schnelleres Arbeiten und mehr Ertrag beim Sammeln |
 | Ausdauer | Treppe | Leben im Kampf (tiefer in Höhlen), Größe der Energieleiste (10 Energie je Level), kürzere Wege |
 | Beweglichkeit | Dehnen, Mobility | Treffer- und Ausweichchance, Zugang zu schwierigem Gelände |
-| Gelassenheit | Atemübungen, Entspannung | Füllgeschwindigkeit der Energie, Geister beruhigen, Zugang zu stillen Orten |
+| Gelassenheit | Atemübungen, Entspannung | Füllgeschwindigkeit der Energie, Geister beruhigen, kürzere Rast in den Tiefen, Zugang zu stillen Orten |
+
+Die Hauptwirkung jedes Werts (so gewünscht, wichtig): **Kraft** macht mehr Schaden, **Ausdauer**
+eine größere Energie-Leiste, **Beweglichkeit** besseres Ausweichen (und Treffen),
+**Gelassenheit** füllt die Energie schneller (+3 % je Level). Zeigt man auf einen Wert, steht da,
+was er bewirkt (seit 5.18, `wirkung` in `STATS`, `js/ui/tips.js`): mit der Maus beim
+Darüberfahren, auf Telefon und iPad beim Antippen. So bei den Ringen um das Portrait, den Werten
+auf der Envoy-Seite, den Kampfwerten (welcher Wert sie wachsen lässt), der Energie-Leiste und
+der Kampftabelle in den Tiefen. Das Fenster eines Werts zeigt dazu die Zahlen für das Level jetzt
+(ohne Kleidung): Kraft Schaden je Treffer und Steinwürfel, Ausdauer Energie-Leiste und Leben,
+Beweglichkeit Ausweichen, Treffer und Pilzholzwürfel, Gelassenheit wie viel schneller die
+Energie sich füllt, Beruhigen und Rast in den Tiefen. Die Kampfwerte auf der Envoy-Seite gelten
+gegen einen Geist der Stufe 1, damit das Wachsen der Werte sichtbar bleibt.
 
 ## Tagesaufgaben
 
