@@ -303,11 +303,14 @@ Die Boni werden aus den Effekten oben gezogen, jeder höchstens einmal je Stück
 | erholung | 8 % | 1,2 |
 | glueck | 5 % | 1 |
 
-Stärke = halb die des Envoy (Durchschnitt der vier Level, wenn das Stück auftaucht), halb die
-Anforderung des Stücks (sein höchster verlangter Wert, ohne Anforderung 0); seit 5.20.4, so
-gewünscht: je höher die Anforderung, desto größer die Boni (vorher zählte nur der Envoy). Ein
-Envoy mit Stärke 5 findet also ein Stück ohne Anforderung mit Boni wie bei Stärke 2,5, eins
-mit Kraft 8 wie bei Stärke 6,5. Die Größe schwankt um ±20 %, mindestens 1. Güte und Boni gehören dem Stück (`guete`, `bonus` am Ding, im Ereignis
+Stärke = die des Envoy (Durchschnitt der vier Level, wenn das Stück auftaucht) plus die
+Anforderung des Stücks (sein höchster verlangter Wert, ohne Anforderung 0). Seit 5.20.5, so
+gewünscht: Was etwas verlangt, bietet in besonderem Maß etwas; es tragen kann nur, wer die
+Werte durch das Tageswerk hat. Ein Stück mit Anforderung ist außerdem nie schlicht (der Anteil
+von schlicht geht an gut). Ein Envoy mit Stärke 5 findet also ein Stück ohne Anforderung mit
+Boni wie bei Stärke 5 (Treffer etwa +5 %, Glück +9 %), eins mit Kraft 8 wie bei Stärke 13
+(Treffer etwa +10 %, Glück +17 %). Die Größe schwankt um ±20 %, mindestens 1. (5.20.4 kurz im
+Testordner: halb Envoy, halb Anforderung.) Güte und Boni gehören dem Stück (`guete`, `bonus` am Ding, im Ereignis
 gespeichert, `js/world/bonuses.js`) und zählen, solange es getragen wird, zusammen mit den
 festen Effekten des Teils. Der Rahmen zeigt die Güte in Farbe (gut grün, selten blau,
 prächtig gold), der Name steht klein beim Teil („Torso · Stufe 1 · Selten“). Jeder Bonus
@@ -1512,7 +1515,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Ausbau des Lagers | Aufwerten 15, 40, 85, 140 Energie am Stück (seit 5.19; die ersten leichter), Pläne 9, 18, 36 Chancen, Händler-Pläne 120 und 180 Bannsplitter |
 | Bannsplitter aus Quests | Erkunden etwa zwei je Energie (seit 5.19), Kleidung von unterwegs mit der Güte wie bei Geistern |
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
-| Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy und höherer Anforderung |
+| Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy; ein Stück mit Anforderung hat deutlich größere Boni und ist nie schlicht |
 | Tränke | Pilztee (+10) und Quellsud (+25) beim Händler, je zwei am Tag, nie über die Leiste |
 | Aushang | drei Aufträge am Tag am Lager, ohne Energie, nur Zeit; der Lohn (Bannsplitter, oft Kleidung mit Güte) steht darauf; jeder einmal |
 | Ruhm | kauft Kleidung mit Boni (mindestens selten) und Farben; Titel kommen mit den Rängen aus allem verdienten Ruhm |

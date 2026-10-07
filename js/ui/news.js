@@ -13,7 +13,7 @@ const INTRO = 'Zwei Dinge zur Kleidung.';
 
 const NEWS = [
   { icon: SLOT_ICONS.torso, title: 'Höhere Anforderung, größere Boni',
-    text: 'Kleidung, die mehr Kraft, Ausdauer, Beweglichkeit oder Gelassenheit verlangt, bringt jetzt größere Boni mit.' },
+    text: 'Kleidung, die Kraft, Ausdauer, Beweglichkeit oder Gelassenheit verlangt, bringt jetzt deutlich größere Boni mit und ist nie schlicht. Je mehr sie verlangt, desto mehr bietet sie.' },
   { icon: NAV_ICONS.lager, title: 'Einweben',
     text: 'Tippt euer Lieblingsstück an, dort steht „Kraft einweben“. Einweben geht nur mit Stücken, die euer Envoy schon tragen kann.' },
 ];

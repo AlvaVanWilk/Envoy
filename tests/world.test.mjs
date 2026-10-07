@@ -434,23 +434,29 @@ test('a potion from the trader fills the Energie, never beyond the end of the ba
   assert.equal(replay([gift, tea, again], catalog, DAY, T0 + 0.08 * H).world.purse.splitter, 48);   // the same one only once
 });
 
-test('the higher the requirement of a piece, the bigger its bonuses', async () => {
+test('a piece with a requirement offers more: bigger bonuses, never plain', async () => {
   const { rollBonuses } = await import('../js/world/bonuses.js');
   const { seededRandom } = await import('../js/world/rng.js');
-  let low = 0;
-  let high = 0;
-  for (let i = 0; i < 500; i += 1) {
-    // the same dice: the same Güte and the same bonuses, only their size differs
-    const a = rollBonuses('arena', 5, seededRandom(`r${i}`), 0);
-    const b = rollBonuses('arena', 5, seededRandom(`r${i}`), 8);
-    assert.deepEqual(Object.keys(a.bonus), Object.keys(b.bonus));
-    for (const key of Object.keys(a.bonus)) {
-      assert.ok(b.bonus[key] >= a.bonus[key]);
-      low += a.bonus[key];
-      high += b.bonus[key];
+  const average = (level) => {
+    let sum = 0;
+    let count = 0;
+    let plain = 0;
+    for (let i = 0; i < 1000; i += 1) {
+      const r = rollBonuses('fund', 5, seededRandom(`r${i}`), level);
+      if (!r.guete) plain += 1;
+      for (const v of Object.values(r.bonus || {})) { sum += v; count += 1; }
     }
-  }
-  assert.ok(high > 1.3 * low, `${low} ${high}`);
+    return { size: sum / count, plain };
+  };
+  const none = average(0);
+  const some = average(3);
+  const much = average(8);
+  assert.ok(none.plain > 250);                      // without a requirement as before: about a third plain
+  assert.equal(some.plain, 0);
+  assert.equal(much.plain, 0);
+  assert.ok(some.size > 1.2 * none.size && much.size > 1.6 * none.size, `${none.size} ${some.size} ${much.size}`);
+  // without a requirement, the same as before 5.20.4
+  assert.deepEqual(rollBonuses('fund', 5, seededRandom('x'), 0), rollBonuses('fund', 5, seededRandom('x')));
 });
 
 test('pieces found, dropped or offered get a Güte and bonuses; worn, the bonuses count', async () => {

@@ -4,9 +4,11 @@
 // Beweglichkeit, Gelassenheit stay the work of the real exercises); it helps
 // in the world: more damage, hitting and dodging, calming spirits, Energie
 // refilling faster, more luck with Bannsplitter and finds. The bigger the
-// Envoy's stats when the piece turns up, and the higher the requirement of
-// the piece, the bigger its bonuses (since 5.20.4, so gewünscht: half from
-// each; before only the stats counted).
+// Envoy's stats when the piece turns up, the bigger its bonuses. A piece that
+// asks something of the Envoy offers something in return (since 5.20.5, so
+// gewünscht): its bonuses are as big as if he were stronger by its
+// requirement, and it is never plain. Wearing it takes the stats, and those
+// come only from the real exercises.
 //
 // An owned piece keeps its Güte and bonuses: entry.guete, entry.bonus = { schaden: 2, … }
 
@@ -24,9 +26,11 @@ function bonusSize(bonus, power, rng) {
 
 // Güte and bonuses for a piece from `origin` (fund, beute, haendler, …):
 // {} for a plain one, else { guete, bonus }. power: the Envoy's strength,
-// level: the requirement of the piece (see itemLevel in items.js).
-export function rollBonuses(origin, power, rng, level = power) {
-  const chances = QUALITY_CHANCES[origin] || QUALITY_CHANCES.fund;
+// level: the requirement of the piece (see itemLevel in items.js, 0 = none).
+export function rollBonuses(origin, power, rng, level = 0) {
+  const base = QUALITY_CHANCES[origin] || QUALITY_CHANCES.fund;
+  // with a requirement never plain: the share of schlicht goes to gut
+  const chances = level > 0 ? [0, base[0] + base[1], ...base.slice(2)] : base;
   const total = chances.reduce((sum, n) => sum + n, 0);
   let pick = rng() * total;
   let index = 0;
@@ -37,7 +41,7 @@ export function rollBonuses(origin, power, rng, level = power) {
   const bonus = {};
   for (let n = 0; n < quality.bonuses && left.length > 0; n += 1) {
     const [chosen] = left.splice(Math.floor(rng() * left.length), 1);
-    bonus[chosen.id] = bonusSize(chosen, (power + level) / 2, rng);
+    bonus[chosen.id] = bonusSize(chosen, power + level, rng);
   }
   return { guete: quality.id, bonus };
 }
