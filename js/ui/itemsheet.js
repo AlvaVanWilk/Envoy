@@ -1,16 +1,18 @@
 // Detail sheet for one owned thing (equipment), with the actions that make
-// sense where it is right now.
+// sense where it is right now, and the Einweben: the strength of another
+// piece of the same slot woven into this one (see world/weave.js).
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
 import { SLOTS } from '../config.js';
-import { openSheet, closeSheet } from './sheet.js';
+import { openSheet, closeSheet, toast } from './sheet.js';
 import { statEmblem, statInfo } from './stats.js';
 import { itemIcon, effectList, reqChips, effectsOf, qualityClass } from './parts.js';
 import { qualityById } from '../world/bonuses.js';
 import { unmetRequirements, lookup } from '../world/items.js';
 import { fits, figureOf, dyeById } from '../world/clothes.js';
 import { hasSpace, reachable, capacity } from '../world/inventory.js';
+import { weaveSources, weaveBlock, wovenBonuses } from '../world/weave.js';
 
 export const slotName = (id) => SLOTS.find((s) => s.id === id)?.name || id;
 export const WHERE = { rucksack: 'Rucksack', schrank: 'Aufbewahrung', body: 'Getragen' };
@@ -83,6 +85,8 @@ export function openEntry(inst, game) {
   if (reachable(world, entry) && (entry.where === 'rucksack' || entry.where === 'schrank')) {
     actions.push(h('button', { class: 'btn text danger-text', onclick: () => confirmDrop(entry, thing, game) }, 'Liegen lassen'));
   }
+  const sources = entry.kind === 'item' && reachable(world, entry) ? weaveSources(world, game.catalog, entry) : [];
+  const weaveWhy = WEAVE_WHY[weaveBlock(world)];
 
   openSheet({
     title: thing.name,
@@ -96,8 +100,67 @@ export function openEntry(inst, game) {
       effectList(effectsOf(thing, entry)),
       reachable(world, entry) ? null : h('p', { class: 'muted away-note' }, AWAY_NOTE),
       actions.length > 0 ? h('div', { class: 'sheet-actions' }, actions) : null,
+      sources.length > 0 ? h('div', { class: 'weave-entry' },
+        h('button', { class: 'btn ghost', disabled: Boolean(weaveWhy), onclick: () => openWeave(entry, thing, game) }, 'Kraft einweben'),
+        weaveWhy ? h('p', { class: 'muted' }, weaveWhy) : null) : null,
     ],
   });
+}
+
+// --- Einweben ---------------------------------------------------------------------
+
+const WEAVE_WHY = { fire: 'Einweben geht am Lagerfeuer.', away: 'Einweben geht im Lager, am Feuer. Der Envoy ist unterwegs.' };
+
+// First the piece that gives its strength, then what this one has afterwards.
+function openWeave(target, thing, game) {
+  const body = h('div', { class: 'weave-body' });
+  openSheet({ title: `Kraft einweben`, eyebrow: `In: ${thing.name}`, className: 'weave-sheet', content: body });
+
+  const showList = () => {
+    const { world } = game.state;
+    const rows = weaveSources(world, game.catalog, world.items[target.inst] || target).map((source) => {
+      const item = game.catalog.itemById.get(source.id);
+      return h('button', { class: 'item-row weave-row', onclick: () => showChoice(source) },
+        h('span', { class: `item-frame${qualityClass(source)}` }, itemIcon(item, game, 'item-icon', source.farbe)),
+        h('span', { class: 'item-row-main' },
+          h('span', { class: 'item-name' }, item.name),
+          h('span', { class: 'item-sub' }, `${thingSubtitle(source, item)} · ${WHERE[source.where]}`),
+          effectList(source.bonus)));
+    });
+    body.replaceChildren(
+      h('p', { class: 'muted' }, 'Welches Teil gibt seine Kraft? Es zerfällt dabei zu Fäden.'),
+      h('div', { class: 'item-list' }, rows));
+  };
+
+  const showChoice = (source) => {
+    const item = game.catalog.itemById.get(source.id);
+    const after = { ...target, guete: undefined, bonus: undefined, ...wovenBonuses(source) };
+    const keepsAbility = item.faehigkeit || Object.keys(item.effekt || {}).length > 0;
+    body.replaceChildren(
+      h('div', { class: 'weave-compare' },
+        h('div', { class: 'weave-side' },
+          h('p', { class: 'eyebrow' }, 'Jetzt'),
+          h('span', { class: `item-frame${qualityClass(target)}` }, itemIcon(thing, game, 'item-icon', target.farbe)),
+          effectList(effectsOf(thing, target)) || h('p', { class: 'muted' }, 'Keine Boni')),
+        h('span', { class: 'weave-arrow', 'aria-hidden': 'true' }, '→'),
+        h('div', { class: 'weave-side' },
+          h('p', { class: 'eyebrow' }, 'Danach'),
+          h('span', { class: `item-frame${qualityClass(after)}` }, itemIcon(thing, game, 'item-icon', target.farbe)),
+          effectList(effectsOf(thing, after)))),
+      h('p', { class: 'weave-warning' }, `${item.name} zerfällt dabei zu Fäden.${keepsAbility ? ' Seine eigene Fähigkeit geht mit ihm.' : ''}`),
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn ghost', onclick: showList }, 'Zurück'),
+        h('button', {
+          class: 'btn primary',
+          onclick: () => {
+            game.weave(target.inst, source.inst);
+            closeSheet();
+            toast(`${thing.name} trägt jetzt die Kraft von ${item.name}`);
+          },
+        }, 'Einweben')));
+  };
+
+  showList();
 }
 
 // All owned items for one slot, to choose from.

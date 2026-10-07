@@ -297,6 +297,15 @@ prächtig gold), der Name steht klein beim Teil („Torso · Stufe 1 · Selten�
 macht das Stück beim Händler 40 % teurer, beim Verkauf ebenso mehr wert (`BONUS_PRICE`).
 Ältere Stücke ohne Güte bleiben schlicht.
 
+**Einweben** (seit 5.16, so gewünscht: ein Lieblingsteil behalten, ohne auf bessere Boni zu
+verzichten): Am Lagerfeuer (Lagerstufe 1, nicht unterwegs) webt der Envoy die Kraft eines
+Stücks in ein anderes für denselben Platz. Das behaltene Stück bleibt, wie es ist (Aussehen,
+Farbe, Name, Voraussetzung) und übernimmt Güte und Boni des anderen; seine eigenen Boni gehen.
+Das gebende Stück zerfällt zu Fäden und ist weg, auch wenn es getragen wurde. Es braucht Boni;
+eine feste Fähigkeit aus der Tabelle bleibt bei ihrem Stück und geht mit ihm. Es kostet nichts
+weiter. Im Fenster eines Stücks: „Kraft einweben“, dann das gebende Stück wählen, vorher und
+danach nebeneinander sehen, „Einweben“. Ereignis `weben` (`ziel`, `quelle`, `js/world/weave.js`).
+
 **Sechs Slots:** Kopf, Torso, Handwickel, Accessoire, Beinkleidung, Schuhe. Kein
 Waffen-Slot, kein Gürtel, keine Schulterstücke. Die **Handwickel** sind das Gegenstück
 zur Waffe: Wickelbandagen der Kampfkunst, sie tragen den Schadensbonus. Das
@@ -943,13 +952,18 @@ Treffer, Ausweichen). Beide Seiten werden aneinander gemessen, Bereich für Bere
 1 + Tage mit erledigter Aufgabe): doppelt so viel Kraft trifft etwa ein Fünftel härter,
 doppelt so viel Ausdauer hält etwa ein Fünftel länger, mehr Beweglichkeit trifft und weicht
 öfter aus, mehr Gelassenheit lässt ein Abbild, das zurückliegt, sich in Ehren verbeugen
-(unentschieden). Steht nach der letzten Runde noch jeder, gewinnt nur ein klarer Vorsprung
-(mehr als ein Fünftel des Lebens) nach Punkten, sonst ist es unentschieden. Bei gleich
-fleißigen geht etwa die Hälfte unentschieden aus, je ein Viertel ist ein Sieg; 28 gegen 21
-Tage in allen Bereichen: etwa 56 % Sieg, 38 % unentschieden, 6 % unterlegen; 28 gegen 14:
-etwa 87 % Sieg, 12 % unentschieden. Die **Haltung** (Angriff,
-Abwehr, Ruhe) gibt einen kleinen Vorteil: Abwehr fängt Angriff ab, Ruhe löst Abwehr auf,
-Angriff überrumpelt Ruhe. Die eigene gilt, wenn das Abbild herausgefordert wird; wer
+(unentschieden). Steht nach der letzten Runde noch jeder, gewinnt ein klarer Vorsprung
+(mehr als ein Fünftel des Lebens) nach Punkten. **Ein knapper Kampf** (seit 5.16, so gewünscht:
+das Tageswerk zählt am meisten, anderes darf ein Unentschieden abwenden) geht an die Seite mit
+mehr Tagen erledigter Aufgaben in allen vier Bereichen zusammen („Knapper Sieg“); haben beide
+genau gleich viele, an die mit dem Haltungsvorteil („Knapper Sieg durch die Haltung“); sonst
+ist er unentschieden. Gerechnet, die Haltung blind gewählt: gleich fleißig etwa 37 % Sieg,
+27 % unentschieden, 37 % unterlegen; ein Tag mehr in vier Wochen etwa zwei Drittel Sieg;
+28 gegen 24 Tage in allen Bereichen etwa 77 % Sieg, 11 % unentschieden, 12 % unterlegen;
+28 gegen 21 etwa 86 % Sieg; 28 gegen 14 etwa 96 %. (Bis 5.15 gingen gleich fleißige zur
+Hälfte unentschieden aus, und die Haltung war im Kampf etwa vier Tage Fleiß wert.) Die
+**Haltung** (Angriff, Abwehr, Ruhe) gibt im Kampf selbst nur wenig (+3 % Treffer, +1 %
+Ausweichen): Abwehr fängt Angriff ab, Ruhe löst Abwehr auf, Angriff überrumpelt Ruhe. Die eigene gilt, wenn das Abbild herausgefordert wird; wer
 herausfordert, wählt seine für diesen Kampf, ohne die des anderen zu kennen. Am Ende
 verbeugen sich beide.
 

@@ -133,7 +133,7 @@ test('server: arena list, challenges, Ruhm and fights for the challenged', { ski
   assert.ok(['sieg', 'remis', 'niederlage'].includes(k.ergebnis));
   assert.equal(k.ruhm, { sieg: 3, remis: 2, niederlage: 1 }[k.ergebnis]);
   assert.ok(k.runden.length >= 1 && k.runden.length <= 8);
-  assert.ok(['ko', 'punkte', 'ruhe'].includes(k.entscheid));
+  assert.ok(['ko', 'punkte', 'fleiss', 'haltung', 'ruhe'].includes(k.entscheid));
   assert.equal(k.gegner.name, 'Anna');
   if (k.ergebnis === 'sieg') {
     assert.deepEqual(fought.list.map((x) => x.name), ['Cleo', 'Anna', 'Bodo']);

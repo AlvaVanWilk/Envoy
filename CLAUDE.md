@@ -119,7 +119,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   feste Questbelohnungen bleiben wenige; jedes gefundene, erbeutete oder angebotene Stück hat
   eine Güte (schlicht, gut, selten, prächtig) mit 0 bis 3 gewürfelten Boni (Schaden, Treffer,
   Ausweichen, Beruhigen, Erholung der Energie, Glück; größer bei stärkerem Envoy,
-  `js/world/bonuses.js`), so gewünscht: Ausrüstung hebt nie einen Stat, soll aber wichtig sein
+  `js/world/bonuses.js`), so gewünscht: Ausrüstung hebt nie einen Stat, soll aber wichtig sein;
+  Einweben am Lagerfeuer (so gewünscht, `js/world/weave.js`): Güte und Boni eines Stücks gehen
+  in ein anderes für denselben Platz, das sein Aussehen behält; das gebende zerfällt, kostet sonst nichts
 - Rucksack (von Anfang an, 5 Plätze, am Start leer, nur für Dinge); Pilzholz und Stein
   liegen im Vorrat, ohne Lager 10 je Art, mit Stein- bzw. Pilzlager so viel, wie es fasst
   (gesammeltes ist sofort dort, ohne Erklärung); Händler (Quest ohne Voraussetzung, am ersten
@@ -132,8 +134,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Tag, ohne Energie; Sieg gegen weiter oben nimmt den Platz), Kämpfe entscheidet der Server (`arena.php`)
   aus dem Fleiß, nicht der Begabung (so gewünscht): Stärke je Bereich = Tage mit erledigter
   Aufgabe in den letzten 28 Tagen, jede Aufgabe zählt gleich, egal welche Stufe; Werte und
-  Kleidung zählen dort nicht; dazu die Haltung; acht Runden, danach nach Punkten, gleich
-  fleißige etwa zur Hälfte unentschieden;
+  Kleidung zählen dort nicht; dazu die Haltung (im Kampf nur wenig); acht Runden, danach nach
+  Punkten; einen knappen Kampf gewinnt, wer in allen vier Bereichen zusammen mehr Tage hat,
+  bei genau gleich vielen die Haltung (so gewünscht: das Tageswerk zählt am meisten);
   Ruhm als eigene Währung nur der Arena, geht nie verloren (Kleidung mit Boni, jeden Tag drei
   Stücke, mindestens selten, und Farben für färbbare Kleidung; Titel kommen mit den Rängen aus
   allem verdienten Ruhm, nicht zum Kaufen, so gewünscht); keine echten Übungsdaten sichtbar

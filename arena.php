@@ -47,7 +47,9 @@ const ARENA_REACH = 3;
 const ARENA_REST_DAYS = 14;
 const ARENA_KEEP_DAYS = 90;
 const ARENA_ROUNDS = 8;
-const ARENA_MARGIN = 0.2;         // a lead smaller than a fifth of the life is a draw
+const ARENA_MARGIN = 0.2;         // a lead smaller than a fifth of the life is close
+const ARENA_EDGE_HIT = 0.03;      // the Haltung with the edge hits a little more often
+const ARENA_EDGE_DODGE = 0.01;    // and dodges a little more often (before 5.16: 0.1 and 0.05)
 const ARENA_WINDOW_DAYS = 28;     // the strength: tasks done in this many days, up to today
 const ARENA_NAME_MAX = 24;
 const ARENA_STATS = ['kraft', 'ausdauer', 'beweglichkeit', 'gelassenheit'];
@@ -64,11 +66,16 @@ const ARENA_OTHER_VIEW = ['sieg' => 'niederlage', 'remis' => 'remis', 'niederlag
 // area by area (the strength from diligence, see effortOf): twice as many
 // days of Kraft hit about a fifth harder, of Ausdauer last about a fifth
 // longer, of Beweglichkeit hit and dodge more often, of Gelassenheit let an
-// Abbild that is behind bow out in honour (a draw). Who still stands after the last round
-// wins on points only with a clear lead (more than a fifth of the life);
-// otherwise it is a draw. Equally strong: about half the bouts end in a
-// draw, a quarter each in a win; a fifth stronger: about 45 % win, 45 %
-// draw, 10 % defeat; twice as strong: about 90 % win.
+// Abbild that is behind bow out in honour (a draw). Who still stands after the
+// last round wins on points with a clear lead (more than a fifth of the life).
+// A close bout (since 5.16, so gewünscht: the Tageswerk weighs most, other
+// things may turn a draw) goes to the side with more days of tasks in all
+// four areas together; if both did exactly as much, to the one whose Haltung
+// has the edge; else it is a draw. In the bout itself the Haltung gives only
+// a little (ARENA_EDGE_HIT, ARENA_EDGE_DODGE). Equally diligent, the Haltung
+// picked blindly: about 37 % win, 27 % draw, 37 % defeat; one day more in four
+// weeks: about two thirds win; a fifth more diligent: about 77 % win, 11 %
+// draw, 12 % defeat; a quarter more: about 86 % win.
 
 function clampTo(float $v, float $lo, float $hi): float
 {
@@ -86,14 +93,14 @@ function fightSide(array $self, array $other, bool $edge): array
     return [
         'life' => (int)round(40 * exp(0.25 * $x('ausdauer'))),
         'damage' => 5 * exp(0.25 * $x('kraft')),
-        'hit' => clampTo(0.7 + 0.12 * $x('beweglichkeit') + ($edge ? 0.1 : 0), 0.35, 0.95),
-        'dodge' => clampTo(0.1 + 0.06 * $x('beweglichkeit') + ($edge ? 0.05 : 0), 0, 0.4),
+        'hit' => clampTo(0.7 + 0.12 * $x('beweglichkeit') + ($edge ? ARENA_EDGE_HIT : 0), 0.35, 0.95),
+        'dodge' => clampTo(0.1 + 0.06 * $x('beweglichkeit') + ($edge ? ARENA_EDGE_DODGE : 0), 0, 0.4),
         'calm' => clampTo(0.02 + 0.06 * $x('gelassenheit'), 0, 0.3),
     ];
 }
 
 // a challenges b. Returns the result from a's view, how it was decided
-// ('ko', 'punkte' or 'ruhe') and the rounds: [{ n, zuerst, a, b, la, lb, ruhe? }]
+// ('ko', 'punkte', 'fleiss' or 'haltung' for a close bout, or 'ruhe') and the rounds: [{ n, zuerst, a, b, la, lb, ruhe? }]
 // with a/b = what the blow of that side did (damage, 'daneben', 'ausgewichen',
 // or null when it did not come to it), la/lb = life after the round,
 // ruhe = the side that bowed out.
@@ -142,7 +149,23 @@ function fightOut(array $a, array $b, string $ha, string $hb): array
     }
     if ($result === null) {
         $lead = $life['a'] / $sa['life'] - $life['b'] / $sb['life'];
-        $result = abs($lead) <= ARENA_MARGIN ? 'remis' : ($lead > 0 ? 'sieg' : 'niederlage');
+        if (abs($lead) > ARENA_MARGIN) {
+            $result = $lead > 0 ? 'sieg' : 'niederlage';
+        } else {
+            // close: the more diligent side, then the Haltung, else a draw
+            $days = array_sum($a['strength']) - array_sum($b['strength']);
+            $edgeA = ARENA_EDGE[$ha] === $hb;
+            $edgeB = ARENA_EDGE[$hb] === $ha;
+            if ($days != 0) {
+                $result = $days > 0 ? 'sieg' : 'niederlage';
+                $how = 'fleiss';
+            } elseif ($edgeA !== $edgeB) {
+                $result = $edgeA ? 'sieg' : 'niederlage';
+                $how = 'haltung';
+            } else {
+                $result = 'remis';
+            }
+        }
     }
     return ['ergebnis' => $result, 'entscheid' => $how, 'leben' => ['a' => $sa['life'], 'b' => $sb['life']], 'runden' => $rounds];
 }

@@ -43,6 +43,7 @@ import { emptyClothes, countClothes, fits, figureOf } from './clothes.js';
 import { emptyArena, applyArenaEvent } from './arena.js';
 import { emptyDepths, nextFloor, blockedAt, restMinutes } from './depths.js';
 import { isJob, jobAllowed, jobsOpen } from './jobs.js';
+import { canWeave, wovenBonuses } from './weave.js';
 import { lootThing } from './run.js';
 import { cleanBonuses } from './bonuses.js';
 import { seededRandom } from './rng.js';
@@ -437,6 +438,16 @@ export function applyWorldEvent(world, e, ctx) {
       break;
     case 'tiefe':
       descendInto(world, e, ctx);
+      break;
+    case 'weben':
+      // the strength of `quelle` goes into `ziel`; `quelle` falls to threads (see weave.js)
+      if (canWeave(world, ctx.catalog, e.ziel, e.quelle)) {
+        const target = world.items[e.ziel];
+        delete target.guete;
+        delete target.bonus;
+        Object.assign(target, wovenBonuses(world.items[e.quelle]));
+        removeEntry(world, e.quelle);
+      }
       break;
     case 'unequip': {
       const slot = slotKey(e.slot);

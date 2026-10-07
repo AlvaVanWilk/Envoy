@@ -3,25 +3,19 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, SLOT_ICONS, PLACE_ICONS } from './icons.js';
+import { NAV_ICONS, SLOT_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.15';
+export const NEWS_ID = '5.16';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Euer Envoy hat jetzt viel mehr zu tun, und seine Kleidung zählt.';
+const INTRO = 'Zwei kleine Neuerungen für eure Kleidung und für die Arena.';
 
 const NEWS = [
-  { icon: PLACE_ICONS.hoehle, title: 'Die Tiefen',
-    text: 'Unter dem Trümmerfeld wartet auf jeder Ebene ein Wächter. Hinabsteigen kostet keine Energie. Wie weit euer Envoy kommt, entscheiden seine Werte und seine Kleidung.' },
-  { icon: PLACE_ICONS.ort, title: 'Der Aushang am Lager',
-    text: 'Jeden Tag hängen dort drei Aufträge, der Lohn steht gleich darauf. Sie kosten keine Energie, nur ein wenig Zeit.' },
-  { icon: SLOT_ICONS.torso, title: 'Kleidung mit Boni',
-    text: 'Gefundene Kleidung kann gut, selten oder prächtig sein. Dann bringt sie Boni mit: mehr Schaden, bessere Treffer, schnellere Energie, mehr Glück.' },
-  { icon: NAV_ICONS.haendler, title: 'Der Händler wartet gleich am Anfang',
-    text: 'Er steckt in der Nebelfurt fest. Helft ihm heraus, dann verkauft er euch jeden Tag auch Pilztee und Quellsud für Energie.' },
-  { icon: NAV_ICONS.arena, title: 'Neues in der Arena',
-    text: 'Herausfordern kostet keine Energie mehr. Für Ruhm gibt es jetzt Kleidung mit Boni, und Titel kommen mit euren Rängen.' },
+  { icon: SLOT_ICONS.torso, title: 'Kraft einweben',
+    text: 'Ein Stück gefällt euch, ein anderes hat die besseren Boni? Am Lagerfeuer webt euer Envoy die Kraft des einen in das andere. Das gebende Stück zerfällt dabei.' },
+  { icon: NAV_ICONS.arena, title: 'Weniger Unentschieden in der Arena',
+    text: 'Ist ein Kampf knapp, gewinnt, wer in den letzten vier Wochen öfter sein Tageswerk gemacht hat. Ist auch das gleich, entscheidet die Haltung.' },
 ];
 
 export function openNews(onDone) {

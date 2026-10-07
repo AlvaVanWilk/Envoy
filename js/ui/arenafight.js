@@ -12,8 +12,16 @@ import { abbildPortrait, haltungPicker, titleText, ruhmAmount } from './arenapar
 const ROUND_MS = 1300;
 const SECOND_BLOW_MS = 600;
 const RESULT = { sieg: 'Sieg', remis: 'Unentschieden', niederlage: 'Unterlegen' };
-// After the last round: decided on points, or a draw.
-const resultText = (fight) => (fight.entscheid === 'punkte' && fight.ergebnis !== 'remis' ? `${RESULT[fight.ergebnis]} nach Punkten` : RESULT[fight.ergebnis]);
+// After the last round: decided on points, a close bout (decided by the
+// diligence of both, else by the Haltung), or a draw.
+const CLOSE = { sieg: 'Knapper Sieg', niederlage: 'Knapp unterlegen' };
+function resultText(fight) {
+  if (fight.ergebnis === 'remis') return RESULT.remis;
+  if (fight.entscheid === 'punkte') return `${RESULT[fight.ergebnis]} nach Punkten`;
+  if (fight.entscheid === 'fleiss') return CLOSE[fight.ergebnis];
+  if (fight.entscheid === 'haltung') return `${CLOSE[fight.ergebnis]} durch die Haltung`;
+  return RESULT[fight.ergebnis];
+}
 
 // Why the Envoy cannot go now, or null.
 function blocked(game) {

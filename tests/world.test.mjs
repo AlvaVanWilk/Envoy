@@ -550,3 +550,31 @@ test('der Aushang: a few Aufträge a day, each once, without Energie, the reward
   // not before the Lagerfeuer
   assert.equal(replay([take(0)], catalog, DAY, T0 + 2 * H).world.purse.splitter, 0);
 });
+
+test('Einweben: the strength of one piece goes into another of the same slot, which keeps its look; the first is gone', async () => {
+  const { weaveBlock } = await import('../js/world/weave.js');
+  const fire = ev('expedition', { q: 'q-lagerfeuer', place: 'truemmerfeld', title: 'x', out: 0, act: 1, back: 0, cost: 0,
+    outcome: { kind: 'bauen', fights: [], defeated: 0, total: 0, cleared: true, minutes: 1, consumed: {},
+      reward: { splitter: 400, pilzholz: 0, stein: 0, things: [], unlocks: ['lagerfeuer', 'haendler'], rest: false } } }, 0);
+  const tops = catalog.equipment.filter((i) => i.herkunft.includes('fund') && i.slot === 'torso' && i.passt?.includes('erste') && !Object.keys(i.req || {}).length);
+  const shoes = catalog.equipment.find((i) => i.herkunft.includes('fund') && i.slot === 'schuhe' && i.passt?.includes('erste'));
+  const fav = ev('buy', { offer: `${DAY}:a`, kind: 'item', thing: tops[0].id, price: 1, farbe: 'petrol', guete: 'gut', bonus: { glueck: 5 } }, 0.05);
+  const strong = ev('buy', { offer: `${DAY}:b`, kind: 'item', thing: tops[1].id, price: 1, guete: 'praechtig', bonus: { schaden: 2, treffer: 4, erholung: 9 } }, 0.06);
+  const other = ev('buy', { offer: `${DAY}:c`, kind: 'item', thing: shoes.id, price: 1, guete: 'selten', bonus: { ausweichen: 3, glueck: 6 } }, 0.07);
+  const wear = ev('equip', { slot: 'torso', inst: strong.id }, 0.08);
+  const weave = ev('weben', { ziel: fav.id, quelle: strong.id }, 0.09);
+  const s = replay([fire, fav, strong, other, wear, weave], catalog, DAY, T0 + 0.1 * H);
+  const kept = s.world.items[fav.id];
+  assert.deepEqual([kept.id, kept.farbe, kept.guete, kept.bonus], [tops[0].id, 'petrol', 'praechtig', { schaden: 2, treffer: 4, erholung: 9 }]);
+  assert.equal(s.world.items[strong.id], undefined);          // fallen to threads
+  assert.equal(s.world.equipped.torso, undefined);           // it was worn, now gone
+  // another slot, or a piece without bonuses, does not weave
+  const wrong = ev('weben', { ziel: fav.id, quelle: other.id }, 0.095);
+  assert.equal(replay([fire, fav, strong, other, wear, weave, wrong], catalog, DAY, T0 + 0.1 * H).world.items[other.id].guete, 'selten');
+  const plain = ev('weben', { ziel: strong.id, quelle: 'start:torso_leinenhemd_1' }, 0.085);
+  assert.ok(replay([fire, fav, strong, plain], catalog, DAY, T0 + 0.1 * H).world.items['start:torso_leinenhemd_1']);
+  // only at the Lagerfeuer, not while away
+  assert.equal(weaveBlock({ camp: { stage: 0 }, expedition: null }), 'fire');
+  assert.equal(weaveBlock({ camp: { stage: 1 }, expedition: { actions: [] } }), 'away');
+  assert.equal(weaveBlock(s.world), null);
+});

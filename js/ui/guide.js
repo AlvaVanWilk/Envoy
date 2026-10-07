@@ -127,6 +127,7 @@ const CHAPTERS = [
     text: [
       'Ausrüstung hebt nie einen Wert. Sie hilft in der Welt: mehr Schaden, bessere Treffer, schnellere Energie, mehr Glück. Dafür verlangt sie Mindestwerte.',
       'Gefundene Kleidung hat eine Güte: schlicht, gut, selten oder prächtig. Je feiner, desto mehr Boni; je stärker der Envoy, desto größer sind sie.',
+      'Gefällt dir ein Stück, ein anderes hat aber die besseren Boni, webt der Envoy am Lagerfeuer die Kraft des einen in das andere. Das gebende Stück zerfällt dabei.',
       'Sinkt ein Wert unter die Voraussetzung, legt der Envoy das Teil ab. Es liegt dann wieder im Rucksack.',
     ],
   },

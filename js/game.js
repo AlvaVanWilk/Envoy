@@ -19,6 +19,7 @@ import { offersFor } from './world/trader.js';
 import { sellPrice } from './world/items.js';
 import { nextFloor, blockedAt, descend } from './world/depths.js';
 import { jobsFor, jobState, jobOutcome, jobsOpen } from './world/jobs.js';
+import { canWeave } from './world/weave.js';
 import { bonusOf, withBonus, runningBonuses } from './achievements.js';
 
 const REPORT_HOURS = 48;
@@ -345,6 +346,11 @@ export const game = {
 
   unequip(slot) {
     if (this.state.world.equipped[slot]) this.add([this.event('unequip', { slot })]);
+  },
+
+  // The strength of one piece woven into another of the same slot; the first one is gone (see world/weave.js).
+  weave(targetInst, sourceInst) {
+    if (canWeave(this.state.world, this.catalog, targetInst, sourceInst)) this.add([this.event('weben', { ziel: targetInst, quelle: sourceInst })]);
   },
 
   // --- der Aushang (see world/jobs.js) ----------------------------------------
