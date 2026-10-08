@@ -8,10 +8,11 @@
 import { h, icon } from './dom.js';
 import { UI_ICONS, FACILITY_ICONS } from './icons.js';
 import { dekoIcon, energyPreview } from './parts.js';
-import { openSheet } from './sheet.js';
 import { questAction, fact, requirements } from './questsheet.js';
 import { hyggeMedal, tileFoot, BADGES, openFacilities } from './facilities.js';
-import { dekoOfReachedStages, dekoQuest, dekoBuilt, CAMP_PLACE } from '../world/camp.js';
+import { dekoOfReachedStages, dekoQuest, dekoBuilt, dekoRefund, CAMP_PLACE } from '../world/camp.js';
+import { roomFor } from '../world/inventory.js';
+import { openSheet, closeSheet } from './sheet.js';
 import { planKnown } from '../world/plans.js';
 
 // How a Deko stands: known (its plan), its quest and plan for building it
@@ -100,7 +101,30 @@ export function openDeko(id, game) {
       h('div', { class: 'facility-head' }, h('span', { class: `ft-emblem ft-picture is-${v.state}` }, dekoIcon(row, 'deko-icon'), hyggeMedal(row.hygge)), h('p', { class: 'quest-text' }, row.text)),
       h('dl', { class: 'quest-facts' }, facts),
       v.plan && !queued ? energyPreview(game.stamina(), v.plan.cost) : null,
-      h('div', { class: 'quest-actions' }, back, act),
+      h('div', { class: 'quest-actions' }, back, act,
+        v.state === 'built' ? h('button', { class: 'btn text', type: 'button', onclick: () => confirmDismantle(row, game) }, 'Abbauen') : null),
+    ],
+  });
+}
+
+// Taking a Deko down: what comes back (half the material, as much as fits);
+// the plan stays.
+function confirmDismantle(row, game) {
+  const { world } = game.state;
+  const back = Object.entries(dekoRefund(row))
+    .map(([key, n]) => [key, Math.min(n, roomFor(world, game.catalog, key))])
+    .filter(([, n]) => n > 0)
+    .map(([key, n]) => `${n} ${key === 'stein' ? 'Stein' : 'Pilzholz'}`);
+  const away = Boolean(world.expedition);
+  openSheet({
+    title: `${row.name} abbauen`,
+    eyebrow: 'Deko',
+    content: [
+      h('p', {}, back.length > 0 ? `Zurück in den Vorrat: ${back.join(' und ')}. Der Plan bleibt.` : 'Der Plan bleibt.'),
+      away ? h('p', { class: 'muted' }, 'Abbauen geht im Lager. Der Envoy ist unterwegs.') : null,
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn ghost', type: 'button', onclick: () => openDeko(row.id, game) }, 'Stehen lassen'),
+        h('button', { class: 'btn primary', type: 'button', disabled: away, onclick: () => { game.dismantle(row.id); closeSheet(); } }, 'Abbauen')),
     ],
   });
 }

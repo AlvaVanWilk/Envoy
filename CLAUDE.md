@@ -104,7 +104,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Aufbewahrung, mindestens so viel wie das Bett der Stufe, bleibt beim Aufwerten): je
   Stufe ein Plan gleich da, die anderen werden gefunden (an ihrem Ort, bei Geistern oder
   beim Händler; selten, sehr selten, kostbar; nach doppelt so vielen Chancen wie im
-  Schnitt sicher), nicht gefundene grau und ohne Namen; Hygge als Summe von Einrichtungen
+  Schnitt sicher), nicht gefundene grau und ohne Namen; gebaute lassen sich abbauen (halbes Material
+  zurück, so gewünscht); die Lichterkette (Zeichnung der Nutzerin) ab 9. Oktober 2026 sicher beim Händler; Hygge als Summe von Einrichtungen
   und Deko, ab Stufe 2 reichen die Einrichtungen allein nicht; das Lagerbild aus Ebenen
   (Grundbild der Stufe, ab Stufe 2 das Gebäude, Einrichtungen, Deko, Vordergrund; ein Tipp
   zeigt es groß); Rundgänge durch Tageswerk und Abenteuer (je beim ersten Besuch)

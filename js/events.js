@@ -34,6 +34,8 @@
 //   move     { inst, to }                     between backpack and wardrobe
 //   equip    { slot, inst }                   item put on
 //   unequip  { slot }                         slot emptied by hand
+//   weben    { ziel, quelle, tragbar? }       the strength of `quelle` woven into `ziel` (see world/weave.js)
+//   abbau    { deko }                         a built Deko taken down, half its material back
 //   place, unplace, build                     from earlier versions (furniture, extending the home); ignored now
 //
 // Only from the test copy of the app (see stage.js), to try things out:
@@ -108,7 +110,7 @@ export const KNOWN_TYPES = new Set([
   'plan', 'done', 'teil', 'undo', 'mode',
   'expedition', 'unqueue', 'buy', 'sell', 'drop', 'move', 'equip', 'unequip', 'place', 'unplace', 'build',
   'envoy', 'travel', 'quest', 'test',
-  'kampf', 'abbild', 'ruhmkauf', 'gesehen', 'tiefe', 'weben',
+  'kampf', 'abbild', 'ruhmkauf', 'gesehen', 'tiefe', 'weben', 'abbau',
 ]);
 
 // Minimal shape check for events coming from outside (sync, backup file).

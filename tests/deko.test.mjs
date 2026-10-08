@@ -96,7 +96,7 @@ test('while the camp is being raised, what the new stage opens can join the row'
   assert.ok(!questState(next, { ...c, world: ahead }).missing.includes('Lager Stufe 2 (Unterstand)'));
 
   const deko = dekoOfReachedStages(s.world, catalog, ahead.camp.stage);
-  assert.deepEqual(deko.map((d) => d.id), ['pilzkappenschale']);
+  assert.deepEqual(deko.map((d) => d.id), ['pilzkappenschale', 'lichterkette']);
   assert.equal(planKnown(s.world, deko[0], ahead.camp.stage), true);
   assert.equal(planKnown(s.world, deko[0]), false);
 });
@@ -161,9 +161,10 @@ test('from stage 2 on the facilities alone are not enough: Deko has to be built,
   assert.ok(most(3, true) >= need(3));
   assert.ok(most(4, false) < need(4));
   assert.ok(most(4, true) >= need(4));
-  // one Deko from the start on stage 2, four or five to find on stage 3, around ten on stage 4
+  // one Deko from the start on stage 2 (and the Lichterkette at the trader), four or five to find on stage 3, around ten on stage 4
   const findable = (stage) => catalog.deko.filter((d) => d.lagerstufe === stage && d.fundort !== 'start').length;
-  assert.equal(catalog.deko.filter((d) => d.lagerstufe === 2).length, 1);
+  assert.equal(catalog.deko.filter((d) => d.lagerstufe === 2 && d.fundort === 'start').length, 1);
+  assert.equal(findable(2), 1);
   assert.ok(findable(3) >= 4 && findable(3) <= 5);
   assert.ok(findable(4) >= 8 && findable(4) <= 10);
 });
@@ -178,7 +179,7 @@ test('Deko gives at least as much Hygge as the Schlafplatz of its stage, more th
 
 test('Deko: one plan of a stage is there at once, the others have to be found; built Deko stays', () => {
   const s2 = at([gift({ unlocks: [...ALL_LEVEL_1, 'lager:2'] })], 0.5);
-  assert.deepEqual(dekoOfReachedStages(s2.world, catalog).map((d) => d.id), ['pilzkappenschale']);
+  assert.deepEqual(dekoOfReachedStages(s2.world, catalog).map((d) => d.id), ['pilzkappenschale', 'lichterkette']);
   assert.equal(planKnown(s2.world, catalog.dekoById.get('pilzkappenschale')), true);
   const bowl = questById('bau:deko:pilzkappenschale', ctxOf(s2));
   assert.deepEqual(questState(bowl, ctxOf(s2)).missing, ['6 Pilzholz', '2 Stein']);
@@ -312,4 +313,28 @@ test('the camp picture: the picture, then the layers in the order the user arran
   assert.deepEqual(rocks(5, {}), []);
   // before the fire: the bare picture, nothing on it
   assert.deepEqual(scene({ camp: { stage: 0, facilities: {}, deko: {}, reached: {} } }, catalog, 'tag'), [['assets/lager/stufe_0_tag.jpg', '']]);
+});
+
+test('a built Deko can be taken down at the camp: half its material back, the plan stays', () => {
+  const built = gift({ unlocks: [...ALL_LEVEL_1, 'lager:2', 'deko:pilzkappenschale'] });
+  const s = at([built], 0.5);
+  assert.equal(s.world.camp.deko.pilzkappenschale, true);
+  const before = { ...s.world.purse };
+  const down = at([built, ev('abbau', { deko: 'pilzkappenschale' }, 0.6)], 0.7);
+  assert.equal(down.world.camp.deko.pilzkappenschale, undefined);
+  assert.equal(down.world.purse.pilzholz - before.pilzholz, 3);      // half of 6
+  assert.equal(down.world.purse.stein - before.stein, 1);            // half of 2
+  assert.equal(hygge(down.world, catalog), hygge(s.world, catalog) - 4);
+  assert.equal(planKnown(down.world, catalog.dekoById.get('pilzkappenschale')), true);
+  // what is not built cannot be taken down
+  const twice = at([built, ev('abbau', { deko: 'pilzkappenschale' }, 0.6), ev('abbau', { deko: 'pilzkappenschale' }, 0.65)], 0.7);
+  assert.equal(twice.world.purse.pilzholz, down.world.purse.pilzholz);
+});
+
+test('the plan of the Lichterkette is at the trader every day from 9 October 2026 on', () => {
+  const s = at([gift({ unlocks: [...ALL_LEVEL_1, 'lager:2'] })], 0.5);
+  const c = ctxOf(s);
+  for (const day of ['2026-10-09', '2026-10-10', '2026-11-01']) {
+    assert.ok(traderPlans(day, c).some((p) => p.id === 'lichterkette'), day);
+  }
 });

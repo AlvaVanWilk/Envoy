@@ -349,6 +349,12 @@ export const game = {
   },
 
   // The strength of one piece woven into another of the same slot; the first one is gone (see world/weave.js).
+  // A built Deko taken down, at the camp: half its material back (see camp.js).
+  dismantle(id) {
+    const w = this.state.world;
+    if (w.camp.deko?.[id] && !w.expedition) this.add([this.event('abbau', { deko: id })]);
+  },
+
   weave(targetInst, sourceInst) {
     if (canWeave(this.state.world, this.catalog, targetInst, sourceInst, this.state.stats)) {
       this.add([this.event('weben', { ziel: targetInst, quelle: sourceInst, tragbar: true })]);

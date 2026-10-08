@@ -15,6 +15,8 @@
 // world.camp = { stage, facilities: { steinlager: level, … }, deko: { id: true }, reached: { stage: day } }
 //   reached: the day each stage was reached (the trader's plans count from then)
 
+import { DEKO_REFUND_SHARE } from '../config.js';
+
 // The place of the camp on the map (its quests need no way).
 export const CAMP_PLACE = 'lager';
 
@@ -26,6 +28,9 @@ export const facilityRow = (catalog, id, level) => catalog.camp.facilities.find(
 export const facilityLevel = (world, id) => world.camp.facilities[id] || 0;
 export const stageRow = (catalog, stage) => catalog.camp.stages.find((s) => s.stufe === stage) || null;
 export const dekoBuilt = (world, id) => Boolean(world.camp.deko?.[id]);
+
+// What taking a Deko down gives back: { pilzholz, stein } (see DEKO_REFUND_SHARE).
+export const dekoRefund = (row) => Object.fromEntries(Object.entries(row.cost).map(([k, v]) => [k, Math.floor(v * DEKO_REFUND_SHARE)]));
 
 // The row of the facility's level now, or null if it is not built.
 export function facilityNow(world, catalog, id) {

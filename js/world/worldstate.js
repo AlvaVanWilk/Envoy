@@ -37,7 +37,7 @@ import { effects, maxStamina, staminaAt, sleepBonus } from './hero.js';
 import {
   stow, removeEntry, hasSpace, atCamp, reachable, roomFor, overloaded, entriesIn, LIMITED_MATERIALS,
 } from './inventory.js';
-import { emptyCamp, FACILITY_IDS } from './camp.js';
+import { emptyCamp, FACILITY_IDS, dekoBuilt, dekoRefund } from './camp.js';
 import { emptyPlans } from './plans.js';
 import { emptyClothes, countClothes, fits, figureOf } from './clothes.js';
 import { emptyArena, applyArenaEvent } from './arena.js';
@@ -439,6 +439,17 @@ export function applyWorldEvent(world, e, ctx) {
     case 'tiefe':
       descendInto(world, e, ctx);
       break;
+    case 'abbau': {
+      // a Deko taken down (since 5.20.10): half its material back, as much as fits
+      const row = ctx.catalog.dekoById.get(e.deko);
+      if (row && dekoBuilt(world, row.id) && atCamp(world)) {
+        delete world.camp.deko[row.id];
+        for (const [key, amount] of Object.entries(dekoRefund(row))) {
+          if (amount > 0) world.purse[key] += Math.min(amount, roomFor(world, ctx.catalog, key));
+        }
+      }
+      break;
+    }
     case 'weben':
       // the strength of `quelle` goes into `ziel`; `quelle` falls to threads (see weave.js);
       // since 5.20.4 (field `tragbar`) only from a piece the Envoy can wear

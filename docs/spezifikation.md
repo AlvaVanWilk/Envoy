@@ -847,6 +847,7 @@ muss der Envoy finden:
 | Stufe | Deko (Hygge) | Plan |
 | --- | --- | --- |
 | 2 | Pilzkappenschale (4) | gleich da |
+| 2 | Lichterkette (4) | Händler, selten (40 Bannsplitter); ab 9. Oktober 2026 jeden Tag sicher (`TRADER_PLANS_FROM`) |
 | 3 | Steinbank (5) | gleich da |
 | 3 | Wasserkrug (5) | Stilles Ufer, selten |
 | 3 | Kräuterbund (6) | Stille Quelle, selten |
@@ -880,7 +881,11 @@ erreichten Stufen, in der Reihenfolge der Tabelle. Bekannte zeigen Bild (oder da
 Deko-Zeichen, solange es keins gibt), Name, Hygge-Medaille und Kosten, gebaute leuchten;
 solche ohne Plan sind grau, gestrichelt, mit Schloss, „?“ und „Plan fehlt“, ohne Namen und
 Bild. Ein Tipp auf eine bekannte öffnet sie mit Text, Hygge, Kosten, Energie-Leiste und
-„Bauen“.
+„Bauen“. Eine gebaute lässt sich dort **abbauen** (seit 5.20.10, so gewünscht; nur im Lager,
+nicht unterwegs): Die Hälfte ihres Materials kommt abgerundet in den Vorrat zurück, soweit
+Platz ist (`DEKO_REFUND_SHARE`), die Energie nicht; ihr Hygge geht, der Plan bleibt, sie
+lässt sich wieder bauen. Ereignis `abbau` (`deko`). Die Zeichnungen der Nutzerin
+(Pilzkappenschale, Lichterkette) passen in jedes Lager ab dem Unterstand.
 
 **Das Bild des Lagers** setzt sich aus Ebenen zusammen: das Grundbild der Stufe
 (`assets/lager/stufe_<n>_<zeit>.jpg`; fehlt es, das der Stufe davor, bisher also ab Stufe 1

@@ -3,19 +3,23 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { UI_ICONS } from './icons.js';
+import { NAV_ICONS, UI_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.20.9';
+export const NEWS_ID = '5.20.10';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Zwei Dinge zum Tageswerk.';
+const INTRO = 'Neues fürs Tageswerk und fürs Lager.';
 
 const NEWS = [
   { icon: UI_ICONS.timer, title: 'Erledigt nach der Übung',
     text: 'Eine Übung lässt sich abhaken, sobald ihre Zeit gelaufen ist, mit dem Timer oder ohne. Bis dahin zählt der Knopf herunter.' },
   { icon: UI_ICONS.undo, title: 'Zurücknehmen',
     text: 'Ein Tipp auf den Haken einer erledigten Aufgabe nimmt sie wieder zurück.' },
+  { icon: NAV_ICONS.lager, title: 'Deko abbauen',
+    text: 'Eine gebaute Deko lässt sich wieder abbauen. Die Hälfte des Materials bekommt ihr zurück, der Plan bleibt.' },
+  { icon: NAV_ICONS.haendler, title: 'Ein neuer Plan',
+    text: 'Ab dem 9. Oktober hat der Händler etwas Neues für euer Lager.' },
 ];
 
 export function openNews(onDone) {

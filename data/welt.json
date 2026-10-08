@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-07T12:38:19Z",
+ "generated": "2026-10-08T22:31:12Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -2102,8 +2102,25 @@
    },
    "energie": 4,
    "text": "Eine flache Schale aus einem Pilzhut. Darin liegt, was der Envoy unterwegs aufhebt.",
-   "icon": "",
-   "bild": null
+   "icon": "assets/icons/icon_einrichtung_pilzkappenschale.png",
+   "bild": "assets/lager/deko_pilzkappenschale.png"
+  },
+  {
+   "id": "lichterkette",
+   "name": "Lichterkette",
+   "lagerstufe": 2,
+   "hygge": 4,
+   "fundort": "haendler",
+   "seltenheit": "selten",
+   "preis": 40,
+   "cost": {
+    "pilzholz": 4,
+    "stein": 0
+   },
+   "energie": 5,
+   "text": "Kleine bunte Lichter, quer übers Lager gespannt.",
+   "icon": "assets/icons/icon_einrichtung_lichterkette.png",
+   "bild": "assets/lager/deko_lichterkette.png"
   },
   {
    "id": "steinbank",
