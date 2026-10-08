@@ -3,19 +3,19 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, SLOT_ICONS } from './icons.js';
+import { UI_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.20.4';
+export const NEWS_ID = '5.20.9';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Zwei Dinge zur Kleidung.';
+const INTRO = 'Zwei Dinge zum Tageswerk.';
 
 const NEWS = [
-  { icon: SLOT_ICONS.torso, title: 'Höhere Anforderung, größere Boni',
-    text: 'Kleidung, die Kraft, Ausdauer, Beweglichkeit oder Gelassenheit verlangt, bringt jetzt deutlich größere Boni mit und ist nie schlicht. Je mehr sie verlangt, desto mehr bietet sie.' },
-  { icon: NAV_ICONS.lager, title: 'Einweben',
-    text: 'Tippt euer Lieblingsstück an, dort steht „Kraft einweben“. Einweben geht nur mit Stücken, die euer Envoy schon tragen kann.' },
+  { icon: UI_ICONS.timer, title: 'Erledigt nach der Übung',
+    text: 'Eine Übung lässt sich abhaken, sobald ihre Zeit gelaufen ist, mit dem Timer oder ohne. Bis dahin zählt der Knopf herunter.' },
+  { icon: UI_ICONS.undo, title: 'Zurücknehmen',
+    text: 'Ein Tipp auf den Haken einer erledigten Aufgabe nimmt sie wieder zurück.' },
 ];
 
 export function openNews(onDone) {

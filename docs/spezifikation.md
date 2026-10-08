@@ -1187,8 +1187,11 @@ des Envoy):
   sich zu verziehen, bis sie über ihrer Zeile verblasst; die Zeile leuchtet kurz auf, und
   der neue Wert steigt dort auf („Kraft 1.375“). Die Zeile nennt die Übung oder die kurzen
   Namen aller („Käfer · Vogelhund · Seitstütz“), wofür sie zählt, die Zeit und, wenn schon ein Teil erledigt ist, wie
-  viel („2 von 3“). Der Haken an der Zeile erledigt, was von der Aufgabe noch offen ist, ohne
-  Karte; gibt es dazu Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
+  viel („2 von 3“). Erledigt wird nur in der Karte, Übung für Übung (seit 5.20.9, so gewünscht:
+  vorher erledigte ein Haken an der Zeile alles auf einmal). Abhaken lässt sich eine Übung erst,
+  wenn ihre Zeit gelaufen ist, gerechnet ab dem ersten Zeigen in der Karte oder mit dem Timer;
+  bis dahin zählt der Knopf herunter („Erledigt · 1:57“), auch „Das war heute zu viel“ kommt
+  erst dann. Schummeln dauert so lange wie Mitmachen; ohne Strafe, ohne Hinweis. Eine erledigte
   Aufgabe zeigt auf der Karte „Erledigt“, die Energie, die sie gebracht hat („+4 Energie“),
   und „Rückgängig“. Seit 5.20.8 nimmt auch ein Tipp auf den Haken einer erledigten Aufgabe sie
   zurück, nach einer Rückfrage („Zurücknehmen“ / „Behalten“). Mit

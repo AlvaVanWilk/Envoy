@@ -1,7 +1,7 @@
 // "Tageswerk": the four tasks of today, one per area (see tasks.js).
 // Each task is one short row. Tapping it turns it over into a card with the
 // Envoy doing the exercises, the steps, the guided timer and „Erledigt“ (see
-// taskcard.js); the tick on the row finishes it at once. A question mark
+// taskcard.js); a done task shows a tick, a tap on it takes the task back. A question mark
 // explains what the Tageswerk is for. Once all four are done, the page rests
 // and shows what tomorrow brings.
 
@@ -13,7 +13,7 @@ import { statRow, statEmblem, statInfo } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { viewHead, sectionTitle } from './parts.js';
 import { taskFor } from '../tasks.js';
-import { openTaskCard, finishTask, countsFor, taskTitle, formatSeconds } from './taskcard.js';
+import { openTaskCard, countsFor, taskTitle, formatSeconds } from './taskcard.js';
 import { openSheet, closeSheet } from './sheet.js';
 
 let helpOpen = false;
@@ -116,7 +116,7 @@ function taskRow(stat, game) {
 
   const quick = done
     ? h('button', { class: 'task-check done', 'aria-label': `${taskTitle(task)} zurücknehmen`, onclick: () => confirmUndo(stat, task, game) }, icon(UI_ICONS.check))
-    : h('button', { class: 'task-check', 'aria-label': `${taskTitle(task)} erledigt`, onclick: () => finishTask(stat, game) }, icon(UI_ICONS.check));
+    : null;   // no tick to finish it at once (since 5.20.9): it is done in the card, exercise by exercise
 
   return h('article', { class: `task-row ${done ? 'done' : ''}`, 'data-stat': stat },
     h('div', { class: 'task-line' }, summary, quick));

@@ -18,6 +18,11 @@
 // down). „Das war heute zu viel“ finishes the whole task and counts as
 // too hard for every exercise of the unit. Then the card turns back into its
 // row and the new value rises from there.
+//
+// An exercise can be ticked off only once its time has run (since 5.20.9, so
+// gewünscht, for everyone): from the moment the card first shows it, or with
+// the timer. Until then the button counts down. So skipping takes as long as
+// doing it. The moment is kept on the device (store, ui.exerciseStart).
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
@@ -28,6 +33,7 @@ import { openTimer } from './timer.js';
 import { resolveLook, showLayer } from './look.js';
 import { questionsOf, canBeTooMuch } from '../tasks.js';
 import { holdRing, releaseRing, celebrateStat, ringTarget } from './topbar.js';
+import { store } from '../store.js';
 
 const TURN_MS = 520;   // as long as the card takes to turn back (sheet.js)
 
@@ -56,14 +62,27 @@ const tooMuchLink = (task, questions) =>
 // The questions of the exercises not done yet today.
 const openQuestions = (task, game) => questionsOf(task).filter((q) => !game.partsDone(task.stat)[q.part.row.id]);
 
-// The tick on the row: what is still open of the task done at once, or the
-// card opens at the questions of those exercises.
-export function finishTask(stat, game) {
-  const task = game.todayTask(stat);
-  if (!task || game.state.todayDone[stat]) return;
-  if (openQuestions(task, game).length > 0) openTaskCard(stat, game, 'questions');
-  else commit(stat, {}, game, false);
+// When an exercise was first shown today (ms), kept on the device; the
+// moments of other days go.
+const startKey = (game, stat, part) => `${game.state.today}|${stat}|${part.row.id}`;
+function startedAt(game, stat, part) {
+  const ui = store.loadUi();
+  const key = startKey(game, stat, part);
+  const starts = Object.fromEntries(Object.entries(ui.exerciseStart || {}).filter(([k]) => k.startsWith(`${game.state.today}|`)));
+  if (!starts[key]) {
+    starts[key] = Date.now();
+    store.saveUi({ ...ui, exerciseStart: starts });
+  }
+  return starts[key];
 }
+// The timer has run through: the exercise counts as long enough.
+function markRun(game, stat, part) {
+  const ui = store.loadUi();
+  store.saveUi({ ...ui, exerciseStart: { ...(ui.exerciseStart || {}), [startKey(game, stat, part)]: 0 } });
+}
+// Seconds until the exercise may be ticked off (0: now).
+const secondsLeft = (game, stat, part) => Math.max(0, Math.ceil((startedAt(game, stat, part) + part.seconds * 1000 - Date.now()) / 1000));
+const clock = (seconds) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
 // Runs what finishes something of the task. Once the whole task is done,
 // the card turns back into its row and the new value rises there; a light
@@ -242,19 +261,27 @@ export function openTaskCard(stat, game, start = null) {
       const part = task.parts[shown];
       const timer = () => openTimer({
         title: part.row.name, segments: timerSegments(stat, part, game),
-        rhythm: part.row.atemtakt, onFinish: () => (several ? finishPart(part) : finish()),
+        rhythm: part.row.atemtakt, onFinish: () => { markRun(game, stat, part); several ? finishPart(part) : finish(); },
       });
+      const left = isDone(part) ? 0 : secondsLeft(game, stat, part);
+      const label = several ? `${part.row.kurz} erledigt` : 'Erledigt';
       fill(body);
       fill(actions,
         isDone(part)
           ? h('button', { class: 'btn text tc-too-much', type: 'button', onclick: () => { game.undoPart(stat, part.row.id); showPart(shown); show('steps'); } },
             icon(UI_ICONS.undo), 'Rückgängig')
-          : (canBeTooMuch(task) ? tooMuch() : null),
+          : (canBeTooMuch(task) && left === 0 ? tooMuch() : null),
         isDone(part) ? null : h('button', { class: 'btn ghost', type: 'button', onclick: timer }, icon(UI_ICONS.timer), 'Mit Timer'),
         isDone(part)
           ? h('span', { class: 'pill tc-part-done' }, icon(UI_ICONS.check), `${part.row.kurz} erledigt`)
-          : h('button', { class: 'btn primary', type: 'button', onclick: () => (several ? finishPart(part) : finish()) },
-            several ? `${part.row.kurz} erledigt` : 'Erledigt'));
+          : h('button', { class: 'btn primary', type: 'button', disabled: left > 0, onclick: () => (several ? finishPart(part) : finish()) },
+            left > 0 ? `${label} · ${clock(left)}` : label));
+      // while the time runs, the button counts down
+      if (left > 0) {
+        setTimeout(() => {
+          if (card.isConnected && card.dataset.view === 'steps' && task.parts[shown] === part) show('steps');
+        }, 1000);
+      }
     } else if (view === 'questions') {
       finish();
     } else {
