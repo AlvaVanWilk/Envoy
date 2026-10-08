@@ -847,7 +847,7 @@ muss der Envoy finden:
 | Stufe | Deko (Hygge) | Plan |
 | --- | --- | --- |
 | 2 | Pilzkappenschale (4) | gleich da |
-| 2 | Lichterkette (4) | Händler, selten (40 Bannsplitter); ab 9. Oktober 2026 jeden Tag sicher (`TRADER_PLANS_FROM`) |
+| 2 | Lichterkette (4) | Händler, selten (40 Bannsplitter); am 9. Oktober 2026 sicher, sonst mit Glück (`TRADER_PLANS_ON`) |
 | 3 | Steinbank (5) | gleich da |
 | 3 | Wasserkrug (5) | Stilles Ufer, selten |
 | 3 | Kräuterbund (6) | Stille Quelle, selten |

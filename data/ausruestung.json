@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-07T22:50:39Z",
+ "generated": "2026-10-08T22:36:15Z",
  "source": "ausruestung.xlsx",
  "equipment": [
   {
@@ -2123,6 +2123,31 @@
     "zweite"
    ],
    "faerbbar": false
+  },
+  {
+   "id": "kopf_fliegerbrille_1",
+   "slot": "kopf",
+   "name": "Fliegerbrille",
+   "stufe": 1,
+   "req": {},
+   "faehigkeit": null,
+   "effekt": {},
+   "herkunft": [
+    "fund",
+    "beute",
+    "haendler"
+   ],
+   "preis": null,
+   "figur": "assets/figur/kopf_fliegerbrille_1.png",
+   "figuren": {},
+   "icon": "assets/icons/icon_kopf_fliegerbrille_1.png",
+   "icons": {},
+   "ebene": null,
+   "passt": [
+    "erste",
+    "zweite"
+   ],
+   "faerbbar": true
   },
   {
    "id": "beine_steppenrock_1",

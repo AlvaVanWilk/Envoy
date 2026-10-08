@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.20.10';
+export const APP_VERSION = '5.20.11';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -441,7 +441,7 @@ export const PLAN_SURE_FACTOR = 2;
 // material comes back (rounded down, as much as the Vorrat has room for);
 // the Energie does not. The plan stays, it can be built again.
 export const DEKO_REFUND_SHARE = 0.5;
-// Plans the trader has for sure every day from a day on, until found (so
-// gewünscht: the Lichterkette, drawn by the user, from 9 October 2026).
-export const TRADER_PLANS_FROM = { lichterkette: '2026-10-09' };
+// Plans the trader has for sure on one day (so gewünscht: the Lichterkette,
+// drawn by the user, on 9 October 2026); on other days by chance, as any plan.
+export const TRADER_PLANS_ON = { lichterkette: '2026-10-09' };
 export const SELL_SHARE = 1 / 3;

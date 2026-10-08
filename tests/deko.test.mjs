@@ -331,10 +331,11 @@ test('a built Deko can be taken down at the camp: half its material back, the pl
   assert.equal(twice.world.purse.pilzholz, down.world.purse.pilzholz);
 });
 
-test('the plan of the Lichterkette is at the trader every day from 9 October 2026 on', () => {
+test('the plan of the Lichterkette is at the trader for sure on 9 October 2026, else by chance', () => {
   const s = at([gift({ unlocks: [...ALL_LEVEL_1, 'lager:2'] })], 0.5);
   const c = ctxOf(s);
-  for (const day of ['2026-10-09', '2026-10-10', '2026-11-01']) {
-    assert.ok(traderPlans(day, c).some((p) => p.id === 'lichterkette'), day);
-  }
+  assert.ok(traderPlans('2026-10-09', c).some((p) => p.id === 'lichterkette'));
+  const days = Array.from({ length: 12 }, (_, i) => addDays('2026-05-02', i));
+  const there = days.filter((day) => traderPlans(day, c).some((p) => p.id === 'lichterkette')).length;
+  assert.ok(there < days.length, 'not every day');
 });

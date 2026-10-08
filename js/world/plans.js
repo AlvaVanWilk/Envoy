@@ -14,7 +14,7 @@
 //
 // world.plans = { found: { id: day }, search: { id: chances } }
 
-import { PLAN_CHANCE_ENERGY, PLAN_CHANCES, PLAN_SURE_FACTOR, TRADER_PLANS_FROM } from '../config.js';
+import { PLAN_CHANCE_ENERGY, PLAN_CHANCES, PLAN_SURE_FACTOR, TRADER_PLANS_ON } from '../config.js';
 import { seededRandom } from './rng.js';
 import { daysBetween } from '../days.js';
 
@@ -80,8 +80,8 @@ export function traderPlans(day, ctx) {
       const avg = average(d);
       const since = world.camp.reached?.[d.lagerstufe];
       const sure = since && daysBetween(since, day) >= avg * PLAN_SURE_FACTOR;
-      // some plans are there for sure from a day on (TRADER_PLANS_FROM)
-      const featured = TRADER_PLANS_FROM[d.id] && day >= TRADER_PLANS_FROM[d.id];
+      // some plans are there for sure on one day (TRADER_PLANS_ON)
+      const featured = TRADER_PLANS_ON[d.id] === day;
       return sure || featured || seededRandom(`${day}:haendler:plan:${d.id}`)() < 1 / avg;
     })
     .map((d) => ({ kind: 'plan', id: d.id, price: d.preis, offer: `${day}:plan:${d.id}` }));

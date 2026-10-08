@@ -151,7 +151,7 @@ test('the table: every piece found on the way has a drawing and an icon for each
       assert.ok(iconSrc(item, look), `${item.id} ${figur} icon`);
     }
   }
-  // the second figure finds tops, trousers, shoes and gloves too
+  // the second figure finds tops, trousers, shoes, gloves and the Fliegerbrille too
   const second = new Set(found.filter((i) => fits(i, 'zweite')).map((i) => i.slot));
-  assert.deepEqual([...second].sort(), ['beine', 'handschuhe', 'schuhe', 'torso']);
+  assert.deepEqual([...second].sort(), ['beine', 'handschuhe', 'kopf', 'schuhe', 'torso']);
 });
