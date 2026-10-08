@@ -53,9 +53,14 @@ export function jobsFor(day, ctx) {
     const minutes = randomInt(rng, job.minutes[0], job.minutes[1]);
     const splitter = Math.round((JOB_SPLITTER.base + JOB_SPLITTER.perMinute * minutes) * (1 + JOB_SPLITTER.perLevel * (power - 1)));
     const thingRng = seededRandom(`${day}:aushang:${n}:kleidung`);
-    const drawn = thingRng() < JOB_THING_CHANCE
+    let drawn = thingRng() < JOB_THING_CHANCE
       ? lootThing({ ...ctx, stats: ctx.statsAtDayStart }, thingRng, 'beute', seededRandom(`${day}:aushang:${n}:farbe`), 'aushang')
       : null;
+    // the featured piece hangs only once: another note that drew it draws again
+    for (let again = 0; featured && drawn?.id === featured.id && again < 10; again += 1) {
+      drawn = lootThing({ ...ctx, stats: ctx.statsAtDayStart }, thingRng, 'beute', seededRandom(`${day}:aushang:${n}:farbe:${again}`), 'aushang');
+    }
+    if (featured && drawn?.id === featured.id) drawn = null;
     const thing = n === 0 && featured ? featured : drawn;
     return {
       id: `aus:${day}:${n}`,

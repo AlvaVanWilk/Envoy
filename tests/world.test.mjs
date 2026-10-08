@@ -556,6 +556,9 @@ test('der Aushang: the Steppenrock hangs on the first note from its day on, unti
   assert.equal(rock.id, 'beine_steppenrock_1');
   assert.ok(['selten', 'praechtig'].includes(rock.guete));
   assert.equal(rock.farbe, undefined);                         // always as drawn
+  for (const day of ['2026-10-08', '2026-10-09', '2026-10-10', '2026-10-11', '2026-10-12']) {
+    assert.equal(jobsFor(day, c).filter((j) => j.thing?.id === 'beine_steppenrock_1').length, 1);   // only once
+  }
   assert.notEqual(jobsFor('2026-10-07', c)[0].thing?.id, 'beine_steppenrock_1');
   const had = { ...c, world: { ...c.world, items: { ...c.world.items, r: { inst: 'r', kind: 'item', id: 'beine_steppenrock_1', got: 0 } } } };
   assert.notEqual(jobsFor('2026-10-09', had)[0].thing?.id, 'beine_steppenrock_1');
