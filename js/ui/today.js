@@ -14,6 +14,7 @@ import { openStatDetail } from './statdetail.js';
 import { viewHead, sectionTitle } from './parts.js';
 import { taskFor } from '../tasks.js';
 import { openTaskCard, finishTask, countsFor, taskTitle, formatSeconds } from './taskcard.js';
+import { openSheet, closeSheet } from './sheet.js';
 
 let helpOpen = false;
 
@@ -114,9 +115,23 @@ function taskRow(stat, game) {
     icon(UI_ICONS.chevron, 'icon task-chevron'));
 
   const quick = done
-    ? h('span', { class: 'task-check done', 'aria-label': 'Erledigt' }, icon(UI_ICONS.check))
+    ? h('button', { class: 'task-check done', 'aria-label': `${taskTitle(task)} zurücknehmen`, onclick: () => confirmUndo(stat, task, game) }, icon(UI_ICONS.check))
     : h('button', { class: 'task-check', 'aria-label': `${taskTitle(task)} erledigt`, onclick: () => finishTask(stat, game) }, icon(UI_ICONS.check));
 
   return h('article', { class: `task-row ${done ? 'done' : ''}`, 'data-stat': stat },
     h('div', { class: 'task-line' }, summary, quick));
+}
+
+// A tap on the tick of a done task: take it back (what it gave goes again).
+function confirmUndo(stat, task, game) {
+  openSheet({
+    title: taskTitle(task),
+    eyebrow: 'Tageswerk',
+    content: [
+      h('p', {}, 'Die Aufgabe ist als erledigt markiert. Zurücknehmen?'),
+      h('div', { class: 'sheet-actions' },
+        h('button', { class: 'btn ghost', type: 'button', onclick: closeSheet }, 'Behalten'),
+        h('button', { class: 'btn primary', type: 'button', onclick: () => { closeSheet(); game.undo(stat); } }, icon(UI_ICONS.undo), 'Zurücknehmen')),
+    ],
+  });
 }

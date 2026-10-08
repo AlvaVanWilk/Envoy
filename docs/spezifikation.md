@@ -1190,7 +1190,8 @@ des Envoy):
   viel („2 von 3“). Der Haken an der Zeile erledigt, was von der Aufgabe noch offen ist, ohne
   Karte; gibt es dazu Fragen, öffnet er die Karte bei den Fragen. Eine erledigte
   Aufgabe zeigt auf der Karte „Erledigt“, die Energie, die sie gebracht hat („+4 Energie“),
-  und „Rückgängig“. Mit
+  und „Rückgängig“. Seit 5.20.8 nimmt auch ein Tipp auf den Haken einer erledigten Aufgabe sie
+  zurück, nach einer Rückfrage („Zurücknehmen“ / „Behalten“). Mit
   reduzierter Bewegung erscheint die Karte ohne Drehen. Ein Fragezeichen klappt eine kurze Erklärung auf
   (wozu das Tageswerk da ist, dass Werte bei liegengebliebenen Aufgaben langsam sinken,
   aber nie ganz verloren gehen) mit Verweis ins Handbuch. Läuft ein befristeter Bonus,
