@@ -1209,7 +1209,7 @@ des Envoy):
   Farben des Envoy gezeigt, bei der Gelassenheit die Frau und der Mann im Schneidersitz;
   ohne beides das Zeichen des Werts), bei mehreren Übungen Reiter mit ihren kurzen
   Namen, dann Name, Stufe („Stufe 1 · Der Fußtipp“), Zeit, wofür sie gut ist und die
-  Schritte; unten „Mit Timer“ (für die gezeigte Übung) und bei
+  Schritte; unten „Starten“ (der Timer für die gezeigte Übung), und ist er durchgelaufen, bei
   mehreren Übungen ein Knopf mit dem Namen der gezeigten („Käfer erledigt“), bei einer
   „Erledigt“ (und „Das war heute zu viel“ für die ganze Aufgabe, siehe Rückfrage). Eine
   erledigte Übung bekommt einen Haken an ihrem Reiter, die Karte geht zur nächsten offenen;
@@ -1220,10 +1220,13 @@ des Envoy):
   der neue Wert steigt dort auf („Kraft 1.375“). Die Zeile nennt die Übung oder die kurzen
   Namen aller („Käfer · Vogelhund · Seitstütz“), wofür sie zählt, die Zeit und, wenn schon ein Teil erledigt ist, wie
   viel („2 von 3“). Erledigt wird nur in der Karte, Übung für Übung (seit 5.20.9, so gewünscht:
-  vorher erledigte ein Haken an der Zeile alles auf einmal). Abhaken lässt sich eine Übung erst,
-  wenn ihre Zeit gelaufen ist, gerechnet ab dem ersten Zeigen in der Karte oder mit dem Timer;
-  bis dahin zählt der Knopf herunter („Erledigt · 1:57“), auch „Das war heute zu viel“ kommt
-  erst dann. Schummeln dauert so lange wie Mitmachen; ohne Strafe, ohne Hinweis. Eine erledigte
+  vorher erledigte ein Haken an der Zeile alles auf einmal). Seit 5.21.1 (so gewünscht) gibt es
+  keinen Timer zur Wahl mehr: Eine Übung beginnt mit „Starten“, der Timer zeigt dabei auch ihre
+  Schritte, und abhaken lässt sie sich erst, wenn seine Zeit ganz gelaufen ist (im Timer
+  „Erledigt“, oder danach in der Karte). Wird er vorher geschlossen, beginnt er beim nächsten
+  „Starten“ von vorn. Auch „Das war heute zu viel“ kommt erst dann. Dass er gelaufen ist,
+  merkt sich das Gerät für den Tag (`exerciseRun`). (5.20.9 bis 5.21 zählte stattdessen der
+  Knopf ab dem ersten Zeigen herunter, „Mit Timer“ war freiwillig.) Schummeln dauert so lange wie Mitmachen; ohne Strafe, ohne Hinweis. Eine erledigte
   Aufgabe zeigt auf der Karte „Erledigt“, die Energie, die sie gebracht hat („+4 Energie“),
   und „Rückgängig“. Seit 5.20.8 nimmt auch ein Tipp auf den Haken einer erledigten Aufgabe sie
   zurück, nach einer Rückfrage („Zurücknehmen“ / „Behalten“). Mit
@@ -1254,8 +1257,7 @@ des Envoy):
   `js/ui/sound.js`), so kommen sie auch bei dunklem Bildschirm oder im Hintergrund; solange
   der Timer offen ist, spielt das Gerät wie Musik, auch im Stummmodus. In längeren Teilen
   klopft es alle 30 Sekunden leise (bei Atemübungen jede Minute), nicht kurz vor dem Ende
-  eines Teils. Ohne Timer klingt der Ton am Ende, sobald die Zeit der Übung auf der Karte
-  gelaufen ist.
+  eines Teils.
   Alles wird im Browser erzeugt, es gibt keine Tondateien.
 - **Abenteuer**: alles, was der Envoy draußen tun kann (seit 5.21, so gewünscht: vorher lagen
   Aufträge an der Karte, am Lager und in den Tiefen verstreut). Oben Reiter: Karte, Aushang

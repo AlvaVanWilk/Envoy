@@ -1299,6 +1299,20 @@ button.task-check:hover { color: var(--stat); }
   transition: opacity 0.25s;
 }
 .timer-overlay.open { opacity: 1; }
+.timer-overlay { overflow-y: auto; place-items: start center; }
+.timer-overlay .timer-inner { margin-block: auto; }
+.timer-steps { width: 100%; text-align: left; }
+.timer-steps li { font-size: 14px; }
+/* with the steps in view, the picture and the ring are smaller on a phone */
+@media (max-height: 940px) {
+  .timer-overlay.with-steps .timer-inner { gap: 10px; }
+  .timer-overlay.with-steps .timer-figure { width: min(220px, 52vw); }
+  .timer-overlay.with-steps .timer-figure:not([hidden]) ~ .timer-stage,
+  .timer-overlay.with-steps .timer-stage { width: min(160px, 40vw); margin: 0; }
+  .timer-overlay.with-steps .timer-time { font-size: 34px; }
+  .timer-overlay.with-steps .timer-title { font-size: 19px; }
+  .timer-overlay.with-steps .timer-actions .btn { min-height: 38px; padding: 0 12px; }
+}
 .timer-inner { display: grid; justify-items: center; gap: 14px; width: min(420px, 100%); text-align: center; }
 .timer-title { font-family: var(--font-display); font-size: 22px; }
 .timer-part { min-height: 16px; margin: 0 0 -8px; color: var(--copper-bright); }

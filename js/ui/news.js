@@ -6,7 +6,7 @@ import { h, icon } from './dom.js';
 import { NAV_ICONS, UI_ICONS, STAT_ICONS, SLOT_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.21.0';
+export const NEWS_ID = '5.21.1';
 
 const GREETING = 'Liebe Envoys!';
 const INTRO = 'Eure Notizen sind eingearbeitet.';
@@ -16,8 +16,8 @@ const NEWS = [
     text: 'An manchen Tagen gibt es stattdessen Laufen auf der Stelle, Knie heben oder Ausfallschritte im Wechsel. Die Stufe bleibt dieselbe.' },
   { icon: STAT_ICONS.beweglichkeit, title: 'Die Brücke',
     text: 'Sie ersetzt den knienden Ausfallschritt. Die Hampel-Runden haben jetzt kürzere Abschnitte mit Pausen dazwischen.' },
-  { icon: UI_ICONS.timer, title: 'Hören statt hinsehen',
-    text: 'Der Timer lässt Zeit zum Seitenwechsel, klopft zwischendurch leise und klingt am Ende, auch bei dunklem Bildschirm.' },
+  { icon: UI_ICONS.timer, title: 'Starten',
+    text: 'Jede Übung beginnt mit „Starten“. Der Timer zeigt, wie sie geht, lässt Zeit zum Seitenwechsel, klopft zwischendurch leise und klingt am Ende, auch bei dunklem Bildschirm. Erledigt ist sie, wenn die Zeit um ist.' },
   { icon: NAV_ICONS.abenteuer, title: 'Alles draußen unter Abenteuer',
     text: 'Karte, Aushang, Tiefen und Arena liegen jetzt zusammen. Das Lager zeigt nur noch, was draußen wartet.' },
   { icon: SLOT_ICONS.torso, title: 'Kleidung',

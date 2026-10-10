@@ -13,6 +13,10 @@
 // While it runs, a calm background sound plays; with a breathing rhythm its
 // waves follow the breath. Sound and voice can be switched off.
 //
+// The steps of the exercise stay in view below the ring (so gewünscht).
+// onTimeUp: the time has run through; onFinish: „Erledigt“ was tapped;
+// onClose: the timer is gone, either way.
+//
 // segments: [{ name, label, seconds, say, prompts: [{ at, text }], figure }]
 //   name    big, the exercise; label: small above it ("Andere Seite")
 //   say     said when the part begins; prompts: said at their second in it
@@ -39,7 +43,7 @@ function saveSoundWanted(on) {
 const pad = (n) => String(n).padStart(2, '0');
 const clock = (sec) => `${Math.floor(sec / 60)}:${pad(Math.floor(sec % 60))}`;
 
-export function openTimer({ title, segments, rhythm = null, onFinish }) {
+export function openTimer({ title, segments, steps = [], rhythm = null, onTimeUp = () => {}, onFinish, onClose = () => {} }) {
   let soundOn = soundWanted();
   let voiceOn = voiceWanted() && canSpeak();
   unlockSound({ withAmbience: soundOn });
@@ -104,7 +108,7 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
   const doneBtn = h('button', { class: 'btn primary', hidden: true, onclick: () => { close(); onFinish(); } }, 'Erledigt');
   const closeBtn = h('button', { class: 'btn text', onclick: close }, 'Schließen');
 
-  const overlay = h('div', { class: 'timer-overlay', role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
+  const overlay = h('div', { class: `timer-overlay${steps.length > 0 ? ' with-steps' : ''}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
     h('div', { class: 'timer-inner' },
       figureFrame,
       partLabel,
@@ -112,7 +116,8 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
       h('div', { class: `timer-stage ${rhythm ? 'with-breath' : ''}` }, ring, rhythm ? breath : null,
         h('span', { class: 'timer-center' }, phaseLabel, time)),
       segments.length > 1 ? rest : null,
-      h('div', { class: 'timer-actions' }, pauseBtn, soundBtn, voiceBtn, doneBtn, closeBtn)));
+      h('div', { class: 'timer-actions' }, pauseBtn, soundBtn, voiceBtn, doneBtn, closeBtn),
+      steps.length > 0 ? h('ol', { class: 'task-steps timer-steps' }, steps.map((step) => h('li', {}, step))) : null));
   // Browsers may silence the sound in the background; a tap brings it back.
   overlay.addEventListener('pointerdown', () => { if (soundOn) unlockSound({ withAmbience: true }); });
 
@@ -258,6 +263,7 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
     doneBtn.hidden = false;
     doneBtn.focus();
     releaseWakeLock();
+    onTimeUp();
   }
 
   function close() {
@@ -270,6 +276,7 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
     document.removeEventListener('visibilitychange', onVisible);
     overlay.classList.remove('open');
     setTimeout(() => overlay.remove(), 250);
+    onClose();
   }
 
   async function requestWakeLock() {

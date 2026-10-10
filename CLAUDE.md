@@ -56,9 +56,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 
 ## Was in Phase 1 gebaut wird
 
-- Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung (nur in der Karte, eine Übung erst,
-  wenn ihre Zeit gelaufen ist, dann klingt ein Ton, so gewünscht; ein Tipp auf den Haken nimmt
-  eine Aufgabe zurück), Krankheitsmodus
+- Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung (nur in der Karte; eine Übung beginnt
+  mit „Starten“, der Timer zeigt ihre Schritte, abhaken erst, wenn seine Zeit gelaufen ist, so
+  gewünscht; ein Tipp auf den Haken nimmt eine Aufgabe zurück), Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
 - Lager als Startansicht (Bild nach Lagerstufe und Tageszeit, darauf das Hygge als Zahl,
   ohne Fortschrittsanzeige, und die Knöpfe „Lager einrichten“ und „Lager aufwerten“;
