@@ -92,7 +92,7 @@ export const game = {
   todayTask(stat) {
     const done = this.state.todayDone[stat];
     const task = done ? taskOfDone(done, this.catalog) : null;
-    return task || taskFor(stat, this.state.intensityAtDayStart, this.state.sick, this.catalog, this.state.age);
+    return task || taskFor(stat, this.state.intensityAtDayStart, this.state.sick, this.catalog, this.state.age, this.state.today);
   },
 
   // What finishing the task brings now: its points with the bonus of the
@@ -206,6 +206,10 @@ export const game = {
   //               nothing in a row after an action under the old rules, whose
   //               way home the Envoy no longer walks
   //          work: { min, max } of the work there
+  //          ahead: what the dice of gatherings already in the row will still
+  //               take when the Envoy gets there (they were rolled when
+  //               added, see worldstate.js); it is kept free, so that
+  //               nothing added now drops out later
   //   block  why not, or null: 'closed' (the quest is not open then),
   //          'energy' (not enough Energie now), 'never' (the bar is too short for it)
   // Something that begins right away must surely fit into the Energie; for
@@ -223,19 +227,24 @@ export const game = {
     const work = quest.gather
       ? gatherEstimate(quest, after, { amount: options.amount }).energy
       : { min: siteStamina(quest, c.stats), max: siteStamina(quest, c.stats) };
+    const ahead = busy
+      ? c.world.expedition.actions.filter((a) => a.stage < 2)
+        .reduce((sum, a) => sum + Math.max(0, (Number(a.outcome.stamina) || 0) - a.least), 0)
+      : 0;
     const cost = {
       least: way + work.min,
       most: way + work.max,
       way,
       work,
+      ahead,
     };
     const st = this.stamina();
-    const needed = Math.ceil(busy ? cost.least : cost.most);
+    const needed = Math.ceil((busy ? cost.least : cost.most) + ahead);
     let block = null;
     if (state.status !== 'open') block = 'closed';
-    else if (needed > Math.max(st.max, Math.floor(st.value))) block = 'never';
+    else if (needed - ahead > Math.max(st.max, Math.floor(st.value))) block = 'never';
     else if (needed > Math.floor(st.value)) block = 'energy';
-    return { quest, busy, state, ctx: after, cost, block };
+    return { quest, busy, state, ctx: after, cost, needed, block };
   },
 
   // The stage of the camp once the row of the Envoy is done: while he raises

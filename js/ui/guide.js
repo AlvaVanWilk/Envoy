@@ -189,7 +189,7 @@ const CHAPTERS = [
     title: 'Der Aushang',
     when: (game) => jobsOpen(game.state.world),
     text: [
-      'Am Lager hängen jeden Tag drei Aufträge. Auf jedem steht, wohin er führt und was er bringt.',
+      'Am Lager hängen jeden Tag drei Aufträge, zu finden unter Abenteuer. Auf jedem steht, wohin er führt und was er bringt: ein Kleidungsstück oder Bannsplitter.',
       'Ein Auftrag kostet keine Energie, nur Zeit. Ist der Envoy schon unterwegs, hängt er ihn an. Am nächsten Tag hängen neue aus.',
     ],
   },
@@ -198,7 +198,7 @@ const CHAPTERS = [
     title: 'Die Tiefen',
     when: (game) => depthsOpen(game.state.world),
     text: [
-      'Unter dem Trümmerfeld führt ein alter Brunnen hinab. Auf jeder Ebene wartet ein Wächter. Der Weg hinein liegt oben auf der Abenteuer-Seite.',
+      'Unter dem Trümmerfeld führt ein alter Brunnen hinab. Auf jeder Ebene wartet ein Wächter. Zu finden unter Abenteuer.',
       'Hinabsteigen kostet keine Energie. Danach ruht der Envoy eine Stunde, mit mehr Gelassenheit etwas kürzer.',
       'Wie weit er kommt, hängt an seinen Werten und an seiner Kleidung. Ist ein Wächter noch zu stark, zieht er sich zurück und versucht es nach der Rast noch einmal.',
     ],

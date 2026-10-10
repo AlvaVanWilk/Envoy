@@ -4,7 +4,7 @@
 // long he still rests). The fight plays round by round in a window, then
 // what it brought. Below, all three Tiefen and how far the Envoy got.
 
-import { h, icon, replaceChildren } from './dom.js';
+import { h, replaceChildren } from './dom.js';
 import { PLACE_ICONS } from './icons.js';
 import { viewHead, sectionTitle, lockedView, itemIcon, resource, FIGHT_TIPS } from './parts.js';
 import { openSheet } from './sheet.js';
@@ -16,6 +16,7 @@ import {
   depthsOpen, depthOpen, depthById, clearedIn, nextFloor, guardian, floorSplitter, sureItem, prospect, restMinutes,
 } from '../world/depths.js';
 import { DEPTHS } from '../config.js';
+import { adventureTabs } from './adventuretabs.js';
 
 const ROUND_MS = 1100;
 const NO_GEAR = { schaden: 0, treffer: 0, ausweichen: 0, beruhigen: 0, reise: 0, erholung: 0, glueck: 0 };
@@ -23,19 +24,13 @@ const clock = (ms) => new Date(ms).toLocaleTimeString('de-DE', { hour: '2-digit'
 const percent = (share) => `${Math.round(share * 100)} %`;
 
 // The way in, from the Abenteuer page; it glows while the Envoy could go down.
-export function depthsLink(game) {
-  const { world } = game.state;
-  if (!depthsOpen(world)) return null;
-  const ready = !game.depthBlock();
-  return h('a', { class: `btn ghost depths-link${ready ? ' news' : ''}`, href: '#tiefen' }, icon(PLACE_ICONS.hoehle), 'Die Tiefen');
-}
-
 export function renderDepths(game) {
   const { world } = game.state;
   if (!depthsOpen(world)) return lockedView(PLACE_ICONS.hoehle, 'Die Tiefen', 'Öffnen sich mit dem Lagerfeuer.');
   const floor = nextFloor(world);
   return h('section', { class: 'view depths' },
     viewHead('Abenteuer', 'Die Tiefen'),
+    adventureTabs(game, 'tiefen'),
     h('div', { class: 'depths-grid' },
       floor ? floorPanel(game, floor) : h('section', { class: 'panel' }, sectionTitle('Ganz unten'), h('p', { class: 'muted' }, 'Tiefer geht es noch nicht.')),
       floor ? valuesPanel(game, floor) : null,

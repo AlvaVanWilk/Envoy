@@ -87,7 +87,7 @@ export const FIGHT_TIPS = {
   schaden: 'Steigt mit Kraft und mit Schaden auf der Kleidung.',
   treffer: 'Steigt mit Beweglichkeit und mit Treffer auf der Kleidung.',
   ausweichen: 'Steigt mit Beweglichkeit und mit Ausweichen auf der Kleidung.',
-  beruhigen: 'Steigt mit Gelassenheit und mit Beruhigen auf der Kleidung.',
+  beruhigen: 'Steigt mit Gelassenheit und mit Beruhigen auf der Kleidung. Ein beruhigter Geist löst sich auf und lässt mehr Bannsplitter da. Nicht in der Arena.',
 };
 
 // What makes the Energie bigger and quicker, shown when pointing at the bar.
@@ -110,9 +110,10 @@ export function staminaBar(st) {
 
 // The Energie bar before setting out: full, what stays for sure; striped,
 // what the dice of gathering may take or leave; at the end of the bar what it
-// takes, as one block. cost: { least, most } (see game.plan)
+// takes, as one block. cost: { least, most, ahead } (see game.plan); what
+// the row still needs (ahead) is not there for this.
 export function energyPreview(st, cost) {
-  const value = Math.floor(st.value);
+  const value = Math.max(0, Math.floor(st.value - (cost.ahead || 0)));
   const total = Math.max(st.max, value);
   const least = Math.max(0, Math.ceil(cost.least));
   const most = Math.max(least, Math.ceil(cost.most));
@@ -186,10 +187,20 @@ export function effectText(key, value) {
   return EFFECT_TEXT[key] ? EFFECT_TEXT[key](value) : `${key} ${value}`;
 }
 
+// What a bonus does, shown when pointing at it.
+const EFFECT_TIPS = {
+  schaden: 'Mehr Schaden mit jedem Treffer, bei Geistern, in den Tiefen und in der Arena.',
+  treffer: 'Trifft öfter, bei Geistern, in den Tiefen und in der Arena.',
+  ausweichen: 'Weicht öfter aus, bei Geistern, in den Tiefen und in der Arena.',
+  beruhigen: 'Mehr Chance, einen Geist zu beruhigen, der sich beruhigen lässt: Er löst sich auf und lässt mehr Bannsplitter da. Nicht in der Arena.',
+  erholung: 'Die Energie füllt sich schneller.',
+  glueck: 'Mehr Bannsplitter und mehr Funde.',
+};
+
 export function effectList(effects) {
   const entries = Object.entries(effects || {}).filter(([, v]) => v);
   if (entries.length === 0) return null;
-  return h('span', { class: 'item-effects' }, entries.map(([k, v]) => h('span', { class: 'effect' }, effectText(k, v))));
+  return h('span', { class: 'item-effects' }, entries.map(([k, v]) => h('span', { class: 'effect', 'data-tip': EFFECT_TIPS[k] || null }, effectText(k, v))));
 }
 
 export function lockedView(markup, title, text) {

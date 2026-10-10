@@ -24,6 +24,7 @@ import { renderCreate } from './ui/create.js';
 import { renderTalents, talentsOpen } from './ui/talents.js';
 import { renderArena, newFights } from './ui/arena.js';
 import { renderDepths } from './ui/depths.js';
+import { renderJobs } from './ui/jobboard.js';
 import { arena } from './arena.js';
 import { updateJourneys, showPendingReport } from './ui/journey.js';
 import { isSheetOpen } from './ui/sheet.js';
@@ -55,6 +56,7 @@ const VIEWS = Object.fromEntries([
   { id: 'einstellungen', label: 'Einstellungen', render: renderSettings },
   { id: 'arena', label: 'Arena', render: renderArena },
   { id: 'tiefen', label: 'Die Tiefen', render: renderDepths },
+  { id: 'aushang', label: 'Der Aushang', render: renderJobs },
   { id: 'aussehen', label: 'Aussehen', render: changeLook, keep: true, topbar: false },
 ].map((v) => [v.id, v]));
 // Names of views from earlier versions, so old links and bookmarks still work.
@@ -80,8 +82,8 @@ function badgeFor(id) {
 }
 
 function dockItem(item) {
-  // The arena and the Tiefen are reached from the Abenteuer page.
-  const active = currentView() === item.id || (item.id === 'abenteuer' && ['arena', 'tiefen'].includes(currentView()));
+  // The Aushang, the Tiefen and the arena are tabs of the Abenteuer page.
+  const active = currentView() === item.id || (item.id === 'abenteuer' && ['arena', 'tiefen', 'aushang'].includes(currentView()));
   const locked = (item.feature && !game.unlocked(item.feature)) || (item.id === 'talente' && !talentsOpen(game));
   const art = shield(NAV_ICONS[item.id], { locked });
   const attrs = {

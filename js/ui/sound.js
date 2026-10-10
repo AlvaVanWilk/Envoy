@@ -3,6 +3,10 @@
 //
 // - chime(): the soft tone when the time is up.
 // - ping(): one soft tone when the timer goes on to the next part.
+// - scheduleTones(): the tones of a whole timer set in advance on the
+//   clock of the sound, so they come on time also when the screen is off or
+//   the app is in the background (where the page itself stands still).
+//   Between them, now and then a very soft knock says the time still runs.
 // - startAmbience(): a calm background while the timer runs, so that it is
 //   audible with closed eyes that the time is still running. Three layers:
 //   waves (filtered noise that swells and ebbs, following the breath when
@@ -12,6 +16,7 @@
 let ctx = null;
 let playing = 0; // how many backgrounds are running
 let noise = null; // made once, then reused
+let holding = 0; // how many timers keep the sound on like music
 
 function context() {
   if (!ctx) {
@@ -30,18 +35,19 @@ function setSession(type) {
 
 // Browsers allow sound only after a tap, so this is called from one.
 export function unlockSound({ withAmbience = false } = {}) {
-  setSession(withAmbience ? 'playback' : 'auto');
+  setSession(withAmbience || holding > 0 ? 'playback' : 'auto');
   try {
     const c = context();
     if (c && c.state !== 'running') c.resume();
   } catch { /* no sound available */ }
 }
 
-export function chime() {
+export function chime(at = null) {
   const c = context();
-  if (!c) return;
+  if (!c) return [];
   try {
-    const now = c.currentTime;
+    const now = at ?? c.currentTime;
+    const made = [];
     for (const [freq, delay] of [[523.25, 0], [659.25, 0.18], [783.99, 0.36]]) {
       const osc = c.createOscillator();
       const gain = c.createGain();
@@ -53,26 +59,90 @@ export function chime() {
       osc.connect(gain).connect(c.destination);
       osc.start(now + delay);
       osc.stop(now + delay + 1.7);
+      made.push(osc);
     }
-  } catch { /* no sound available */ }
+    return made;
+  } catch { return []; /* no sound available */ }
 }
 
-export function ping() {
+export function ping(at = null) {
+  return tone(659.25, 0.14, 1.1, at);
+}
+
+// The soft knock between: low and short, so it does not sound like a new part.
+export function knock(at = null) {
+  return tone(392.0, 0.07, 0.6, at);
+}
+
+function tone(freq, level, length, at) {
   const c = context();
-  if (!c) return;
+  if (!c) return [];
   try {
-    const now = c.currentTime;
+    const now = at ?? c.currentTime;
     const osc = c.createOscillator();
     const gain = c.createGain();
     osc.type = 'sine';
-    osc.frequency.value = 659.25;
+    osc.frequency.value = freq;
     gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.14, now + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+    gain.gain.linearRampToValueAtTime(level, now + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + length);
     osc.connect(gain).connect(c.destination);
     osc.start(now);
-    osc.stop(now + 1.2);
-  } catch { /* no sound available */ }
+    osc.stop(now + length + 0.1);
+    return [osc];
+  } catch { return []; /* no sound available */ }
+}
+
+const TONES = { ping, knock, chime };
+
+// Sets the tones of a timer in advance: marks = [{ at, kind }], at in ms on
+// the clock of performance.now(), kind 'ping' | 'knock' | 'chime'. Marks
+// already past are left out. While the timer is open, the sound plays like
+// music (also with the device set to silent, see setSession), and a silent
+// tone keeps it awake. Returns a function that takes the tones back.
+export function scheduleTones(marks) {
+  const c = context();
+  if (!c) return () => {};
+  holding += 1;
+  setSession('playback');
+  let sources = [];
+  let cancelled = false;
+  const place = () => {
+    if (cancelled) return;
+    const now = performance.now();
+    const base = c.currentTime;
+    sources = marks.filter((m) => m.at >= now - 50).flatMap((m) => {
+      const at = base + Math.max(0, (m.at - now) / 1000);
+      return TONES[m.kind](at).map((node) => ({ node, at }));
+    });
+    sources.push(...silence(c).map((node) => ({ node, at: Infinity })));
+  };
+  if (c.state === 'running') place();
+  else c.resume().then(place, () => {});
+  return () => {
+    if (cancelled) return;
+    cancelled = true;
+    // a tone that has begun may ring out; the ones to come and the silence go
+    for (const s of sources) {
+      if (s.at > c.currentTime) { try { s.node.stop(); } catch { /* not started or already stopped */ } }
+    }
+    holding -= 1;
+    if (playing === 0 && holding === 0) setSession('auto');
+  };
+}
+
+// A tone too quiet to hear: while something plays, the device keeps the
+// sound running in the background.
+function silence(c) {
+  try {
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.frequency.value = 40;
+    gain.gain.value = 0.00001;
+    osc.connect(gain).connect(c.destination);
+    osc.start();
+    return [osc];
+  } catch { return []; }
 }
 
 // ---------------------------------------------------------------------------
@@ -157,7 +227,7 @@ function ambience(c, breathing) {
         for (const s of sources) { try { s.stop(); } catch { /* already stopped */ } }
         master.disconnect();
         playing -= 1;
-        if (playing === 0) setSession('auto');
+        if (playing === 0 && holding === 0) setSession('auto');
       }, 2500);
     },
   };

@@ -57,12 +57,14 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
 ## Was in Phase 1 gebaut wird
 
 - Die vier Tagesaufgaben, ihre Auswahl und ihre Erledigung (nur in der Karte, eine Übung erst,
-  wenn ihre Zeit gelaufen ist, so gewünscht; ein Tipp auf den Haken nimmt eine Aufgabe zurück), Krankheitsmodus
+  wenn ihre Zeit gelaufen ist, dann klingt ein Ton, so gewünscht; ein Tipp auf den Haken nimmt
+  eine Aufgabe zurück), Krankheitsmodus
 - Stats, XP, Levelkurve, Malus, Bodensatz
 - Lager als Startansicht (Bild nach Lagerstufe und Tageszeit, darauf das Hygge als Zahl,
   ohne Fortschrittsanzeige, und die Knöpfe „Lager einrichten“ und „Lager aufwerten“;
-  Vorrat, Expedition, gesichtete Geister)
-- Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch); oben auf
+  Vorrat, Expedition, „Draußen“: ein paar Zeilen zu gesichteten Geistern, Aushang und Tiefen)
+- Menü unten mit fünf Punkten (Abenteuer, Talentbaum, Lager, Händler, Handbuch; unter Abenteuer
+  alles Draußen als Reiter: Karte, Aushang, Tiefen, Arena, so gewünscht, `js/ui/adventuretabs.js`); oben auf
   jeder Seite eine Leiste mit großem Portrait (vier Werte-Ringe, auch auf der
   Envoy-Seite), Tageswerk-Knopf und Einstellungen
 - Handbuch als Buch: Anleitung (wächst mit dem Entdeckten), Tageswerk- und
@@ -122,6 +124,7 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   feste Questbelohnungen bleiben wenige; jedes gefundene, erbeutete oder angebotene Stück hat
   eine Güte (schlicht, gut, selten, prächtig) mit 0 bis 3 gewürfelten Boni (Schaden, Treffer,
   Ausweichen, Beruhigen, Erholung der Energie, Glück; größer bei stärkerem Envoy, `js/world/bonuses.js`;
+  innerhalb der Güte schwächer oder stärker, `spread` in `QUALITIES`, so gewünscht;
   so gewünscht: was Anforderungen stellt, bietet in besonderem Maß etwas: Boni so groß, als wäre der
   Envoy um die Anforderung stärker, und nie schlicht), so gewünscht:
   Ausrüstung hebt nie einen Stat, soll aber wichtig sein;
@@ -149,9 +152,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Ruhm als eigene Währung nur der Arena, geht nie verloren (Kleidung mit Boni, jeden Tag drei
   Stücke, mindestens selten, und Farben für färbbare Kleidung; Titel kommen mit den Rängen aus
   allem verdienten Ruhm, nicht zum Kaufen, so gewünscht); keine echten Übungsdaten sichtbar
-- Aushang am Lager (so gewünscht, nicht endlos, `js/world/jobs.js`): jeden Tag drei Aufträge,
+- Aushang (so gewünscht, nicht endlos, `js/world/jobs.js`, ein Reiter unter Abenteuer): jeden Tag drei Aufträge,
   ohne Energie, nur Zeit (der Envoy geht an einen Ort, als Aktion seiner Expedition); der Lohn
-  steht darauf (Bannsplitter, oft ein bestimmtes Kleidungsstück mit Güte), kein Material; ein
+  steht darauf (ein bestimmtes Kleidungsstück mit Güte oder Bannsplitter, eins von beiden), kein Material; ein
   besonderes Stück kann ab einem Tag auf dem ersten Zettel hängen, bis der Envoy es hat
   (`JOB_FEATURED`, bisher der Steppenrock, gezeichnet von der Tochter der Nutzerin)
 - Die Tiefen (so gewünscht, `js/world/depths.js`): unter dem Trümmerfeld, ab dem Lagerfeuer,
@@ -197,7 +200,7 @@ solange nicht ausdrücklich danach gefragt wird.
 | Stat | Tagesaufgabe | Hauptwirkung (so gewünscht, wichtig) | Dazu |
 | --- | --- | --- | --- |
 | Kraft | Tiefenmuskulatur | Schaden im Kampf | Stein beim Sammeln |
-| Ausdauer | Treppe (Spazieren und Rad später über den Talentbaum) | Größe der Energieleiste | Leben im Kampf |
+| Ausdauer | Treppe oder im Wechsel Laufen, Knie heben, Ausfallschritte (Spazieren und Rad später über den Talentbaum) | Größe der Energieleiste | Leben im Kampf |
 | Beweglichkeit | Stretching, Mobility | Ausweichen | Treffen, Pilzholz beim Sammeln |
 | Gelassenheit | Entspannung, Atemübung | Energie füllt sich schneller | Geister beruhigen, kürzere Rast in den Tiefen |
 
@@ -240,11 +243,13 @@ dort rückwärts weiter.
 
 **Tagesaufgaben:** Jeder Bereich ist eine Einheit: alle seine Übungen, jeden Tag, in
 derselben Reihenfolge (Kraft: Käfer, Vogelhund, Seitstütz; Ausdauer: Treppe;
-Beweglichkeit: Katze-Kuh, kniender Ausfallschritt, Brustöffner; Gelassenheit:
-Innehalten). Feste Zeit statt Menge, ein geführter Timer mit Stimme. Die App entscheidet
+Beweglichkeit: Katze-Kuh, Brücke, Brustöffner; Gelassenheit:
+Innehalten). Übungen einer `gruppe` wechseln sich ab, die App wählt jeden Tag eine, eine Stufe
+für alle (so gewünscht: Treppe, Laufen auf der Stelle, Knie heben, Ausfallschritte im Wechsel). Feste Zeit statt Menge, ein geführter Timer mit Stimme, Zeit zum Seitenwechsel, leisem
+Klopfen zwischendurch und Tönen, die auch bei dunklem Bildschirm kommen (so gewünscht). Die App entscheidet
 die Stufe jeder Übung. Jede Übung wird für sich abgehakt, die letzte erledigt die Aufgabe.
 Kinder und Jugendliche haben eigene Einheiten nach Alter (Spalte `alter`, leer =
-Erwachsene ab 16): bis 8 Bärengang, Flieger, Froschsprünge; Hampel-Runden; Baum, Hund,
+Erwachsene ab 16): bis 8 Bärengang, Flieger, Froschsprünge; Hampel-Runden (kurze Abschnitte mit Pausen); Baum, Hund,
 Kobra; Teddy-Atmen. 9 bis 12 Bärengang, Brett, Flieger; Hampel-Runden; Hund, Kobra,
 Schmetterling; Ballon-Atmen. 13 bis 15 Brett, Vogelhund, Seitstütz; Treppe; Hund, Kobra,
 Schmetterling; Innehalten. Das Alter kommt aus der Erstellung (Geburtsjahr im Ereignis

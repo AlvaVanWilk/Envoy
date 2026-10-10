@@ -130,7 +130,7 @@ export function questAction(quest, plan, game, place, options = {}, message = nu
   else if (status === 'cooldown') main = note(`Wieder ab ${formatDayShort(plan.state.again)}.`);
   else if (status !== 'open') main = h('button', { class: 'btn primary', disabled: true }, label);
   else if (plan.block === 'never') main = note('Die Energie reicht dafür noch nicht. Sie wächst mit dem Wert Ausdauer.');
-  else if (plan.block === 'energy') main = waitButton(Math.ceil(plan.busy ? plan.cost.least : plan.cost.most), st);
+  else if (plan.block === 'energy') main = waitButton(plan.needed, st);
   else {
     const text = message || (plan.busy ? `Angehängt: ${quest.name}`
       : building ? `Der Envoy macht sich an die Arbeit: ${quest.name}` : `Aufgebrochen: ${quest.name}`);

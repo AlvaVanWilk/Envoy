@@ -1027,25 +1027,6 @@ body.has-topbar .handbook { padding-top: calc(var(--ring-w) - var(--top-h) - 14p
 
 .sick-note { margin-bottom: 10px; font-size: 13px; color: var(--warn); }
 .dash-report { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.sightings { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.sighting {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 6px 10px 6px 6px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background: rgba(244, 236, 222, 0.02);
-  text-align: left;
-  cursor: pointer;
-}
-.sighting:hover { border-color: var(--line); }
-.sighting-text { display: grid; min-width: 0; }
-.sighting-name { font-family: var(--font-display); font-size: 14px; font-weight: 700; }
-.sighting-place { font-size: 12px; color: var(--muted); }
-.sighting-mark { width: 18px; height: 18px; color: var(--shard); filter: drop-shadow(0 0 4px rgba(166, 210, 213, 0.6)); }
 .notice-line { display: block; width: 100%; padding: 8px 0; border: 0; border-bottom: 1px solid var(--line); background: none; text-align: left; font-size: 14px; color: var(--text); cursor: pointer; }
 .notice-line:last-child { border-bottom: 0; }
 
@@ -2537,9 +2518,6 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 .ql-filters .chip small { margin-left: 6px; font-size: 12px; opacity: 0.7; }
 
 /* --- Arena: the Ruhmeshalle ---------------------------------------------------- */
-.arena-link { min-height: 40px; padding: 0 14px; }
-.arena-link .icon { color: var(--warn); }
-.arena-link.news { box-shadow: 0 0 0 2px rgba(246, 161, 82, 0.55), 0 0 14px rgba(246, 161, 82, 0.35); }
 .arena-grid { display: grid; gap: 14px; align-items: start; }
 .ruhm { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-display); font-weight: 700; color: var(--ivory-bright); white-space: nowrap; }
 .ruhm-icon { width: 18px; height: 18px; color: var(--warn); }
@@ -2640,9 +2618,6 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
   .arena-fight[data-result] .fighter-pic { animation: none; }
 }
 .view-head > div:first-child { min-width: 0; }
-@media (max-width: 480px) {
-  .arena-link { min-height: 36px; padding: 0 10px; font-size: 12px; }
-}
 
 /* --- Over the whole screen at the start: news of a version, the age (gate.js) --- */
 .gate-layer {
@@ -2682,9 +2657,6 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 }
 
 /* --- Die Tiefen (ui/depths.js) --- */
-.depths-link, .arena-link { min-height: 40px; padding: 0 14px; }
-.depths-link .icon { color: var(--teal); }
-.depths-link.news { box-shadow: 0 0 0 2px rgba(126, 163, 164, 0.6), 0 0 14px rgba(126, 163, 164, 0.4); }
 .depths-grid { display: grid; gap: 14px; align-items: start; }
 .depth-count { order: 2; font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--copper-bright); }
 .depth-text { margin: -2px 0 12px; font-size: 14px; }
@@ -2742,14 +2714,8 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
   .depth-overview { grid-column: auto; }
 }
 @media (max-width: 480px) {
-  .depths-link, .arena-link { min-height: 36px; padding: 0 10px; font-size: 12px; }
   .guardian { grid-template-columns: 76px 1fr; }
   .guardian-pic { width: 76px; height: 76px; }
-}
-/* On a phone the ways to the Tiefen and the arena go below the heading. */
-@media (max-width: 560px) {
-  .view.world .view-head { flex-wrap: wrap; }
-  .view.world .head-actions { width: 100%; justify-content: flex-end; }
 }
 
 /* --- Der Aushang (ui/jobboard.js) --- */
@@ -2841,3 +2807,35 @@ body.has-trip .main { padding-bottom: calc(var(--bar-h) + var(--shield-w) * 0.6 
 button[data-tip], a[data-tip] { cursor: pointer; }
 .stat-wirkung { margin: 12px 0 4px; color: var(--text-2); }
 .stat-effects { margin-bottom: 12px; }
+
+/* --- Abenteuer: tabs for Karte, Aushang, Tiefen, Arena (ui/adventuretabs.js) --- */
+.adv-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
+.adv-tab { position: relative; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px;
+  border: 1px solid var(--edge); border-radius: 999px; background: var(--panel-2); color: var(--text-2);
+  font-size: 14px; font-weight: 600; text-decoration: none; }
+.adv-tab .icon { width: 18px; height: 18px; }
+.adv-tab.is-current { color: #10181a; background: var(--ivory); border-color: var(--ivory); }
+.adv-tab.news { color: var(--ivory-bright); box-shadow: 0 0 0 2px rgba(246, 161, 82, 0.55), 0 0 12px rgba(246, 161, 82, 0.3); }
+.adv-count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: var(--copper); color: #10181a;
+  font-size: 12px; line-height: 20px; text-align: center; }
+.adv-tab.is-current .adv-count { background: var(--copper-dark); color: var(--ivory-bright); }
+@media (max-width: 560px) {
+  .adv-tabs { flex-wrap: nowrap; gap: 4px; }
+  .adv-tab { flex: 1 1 0; justify-content: center; min-width: 0; min-height: 38px; padding: 0 6px; gap: 4px; font-size: 13px; }
+  .adv-tab .icon { width: 15px; height: 15px; flex: none; }
+  .adv-count { min-width: 17px; height: 17px; padding: 0 4px; font-size: 11px; line-height: 17px; }
+}
+@media (max-width: 440px) {
+  .adv-tab .icon { display: none; }
+}
+.jobs-grid { display: grid; gap: 14px; max-width: 760px; }
+
+/* --- Lager: what waits out there (ui/camp.js) --- */
+.outside-lines { display: grid; gap: 6px; }
+.outside-line { display: grid; grid-template-columns: 24px 1fr 16px; align-items: center; gap: 10px; padding: 10px 8px;
+  border-radius: var(--radius); background: var(--panel-2); color: var(--text); text-decoration: none; }
+.outside-mark { width: 22px; height: 22px; color: var(--copper-bright); }
+.outside-text { display: grid; min-width: 0; }
+.outside-title { font-weight: 600; }
+.outside-sub { font-size: 13px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.outside-go { width: 16px; height: 16px; color: var(--muted); }

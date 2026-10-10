@@ -2,7 +2,8 @@
 // day) with its Hygge and the buttons to furnish
 // it („Lager einrichten“, see facilities.js) and to raise it to the next stage
 // („Lager aufwerten“, see upgrade.js; until the Hygge is enough it says why).
-// Below: where the Envoy is, the supplies and which spirits were seen today.
+// Below: where the Envoy is, the supplies, and what waits out there today
+// (a few lines leading to the pages under Abenteuer).
 // The picture belongs to the stage of the camp and to the time of day at
 // the camp (see daylight.js). A stage without a picture of its own shows the
 // one of the stage before; a time of day without one shows the day picture,
@@ -25,7 +26,8 @@ import { openFacilities, canBuildSomething } from './facilities.js';
 import { openUpgrade } from './upgrade.js';
 import { openPicture } from './sheet.js';
 import { unseenDropCount } from './character.js';
-import { jobBoard } from './jobboard.js';
+import { jobsOpen } from '../world/jobs.js';
+import { depthsOpen } from '../world/depths.js';
 import { store } from '../store.js';
 import { dayPhase } from '../daylight.js';
 import { campStatus, facilityLevel, nextUpgrade, dekoBuilt, FACILITY_IDS } from '../world/camp.js';
@@ -226,23 +228,33 @@ function expeditionPanel(game) {
         h('button', { class: 'btn primary small', onclick: () => openReport(report, game) }, 'Bericht')));
 }
 
-function sightingsPanel(game) {
+// What waits out there today, in a few lines, each leading to its page under
+// Abenteuer (since 5.21 the Aufträge and the spirits are there, not here):
+// the spirits seen today, the open notes of the Aushang, the Tiefen once the
+// rest is over.
+function outsidePanel(game) {
   const c = game.ctx();
-  const list = encountersFor(c.day, c).filter((q) => questState(q, c).status !== 'done');
-  if (list.length === 0) return null;
-  return h('section', { class: 'panel dash-sightings' },
-    sectionTitle('Heute gesichtet'),
-    h('ul', { class: 'sightings' }, list.map((q) => {
-      const monster = game.catalog.monsterById.get(q.monsters[0]);
-      const place = game.catalog.placeById.get(q.place);
-      return h('li', {},
-        h('button', { class: 'sighting', onclick: () => openQuest(q, game) },
-          h('span', { class: 'portrait small' }, h('img', { src: monster.bild, alt: '' })),
-          h('span', { class: 'sighting-text' },
-            h('span', { class: 'sighting-name' }, monster.name),
-            h('span', { class: 'sighting-place' }, `${place.name} · Stufe ${monster.stufe}`)),
-          icon(PLACE_ICONS.wild, 'icon sighting-mark')));
-    })));
+  const { world } = c;
+  const lines = [];
+  const spirits = encountersFor(c.day, c).filter((q) => questState(q, c).status !== 'done');
+  if (spirits.length > 0) {
+    const names = spirits.map((q) => game.catalog.monsterById.get(q.monsters[0])?.name).filter(Boolean);
+    lines.push(outsideLine('#abenteuer', PLACE_ICONS.wild, spirits.length === 1 ? 'Ein Geist gesichtet' : `${spirits.length} Geister gesichtet`, names.join(', ')));
+  }
+  if (jobsOpen(world)) {
+    const open = game.jobs().filter((j) => j.state === 'open').length;
+    if (open > 0) lines.push(outsideLine('#aushang', UI_ICONS.note, open === 1 ? 'Ein Auftrag am Aushang' : `${open} Aufträge am Aushang`, 'Ohne Energie, nur Zeit'));
+  }
+  if (depthsOpen(world) && !game.depthBlock()) lines.push(outsideLine('#tiefen', PLACE_ICONS.hoehle, 'Die Tiefen', 'Der Envoy kann hinabsteigen'));
+  if (lines.length === 0) return null;
+  return h('section', { class: 'panel dash-outside' }, sectionTitle('Draußen'), h('div', { class: 'outside-lines' }, lines));
+}
+
+function outsideLine(href, glyph, title, sub) {
+  return h('a', { class: 'outside-line', href },
+    icon(glyph, 'icon outside-mark'),
+    h('span', { class: 'outside-text' }, h('span', { class: 'outside-title' }, title), h('span', { class: 'outside-sub' }, sub)),
+    icon(UI_ICONS.chevron, 'icon outside-go'));
 }
 
 function suppliesPanel(game) {
@@ -284,7 +296,6 @@ export function renderCamp(game) {
         expeditionPanel(game),
         suppliesPanel(game)),
       h('div', { class: 'camp-col' },
-        jobBoard(game),
-        sightingsPanel(game),
+        outsidePanel(game),
         noticesPanel(game))));
 }

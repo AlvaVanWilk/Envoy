@@ -65,12 +65,25 @@ Stufe jede Übung gemacht wird.
 | Bereich | Stat | Einheit | Stufen |
 | --- | --- | --- | --- |
 | Tiefenmuskulatur | Kraft | Der halbe Käfer, Der Vogelhund, Der Seitstütz, je 1 Minute | je Übung 3 |
-| Treppe | Ausdauer | Treppensteigen: 3 Minuten, 5 Minuten, 5 Minuten mit Tempowechsel | 3 |
-| Stretching / Mobility | Beweglichkeit | Katze und Kuh 1 Minute, kniender Ausfallschritt und Brustöffner je Seite 1 Minute | keine |
+| Treppe | Ausdauer | Treppensteigen: 3 Minuten, 5 Minuten, 5 Minuten mit Tempowechsel; an manchen Tagen stattdessen Laufen auf der Stelle, Knie heben oder Ausfallschritte im Wechsel (siehe unten) | 3 |
+| Stretching / Mobility | Beweglichkeit | Katze und Kuh 1 Minute, Die Brücke 1 Minute (heben und senken, oben halten, ein Bein lang), Brustöffner je Seite 1 Minute | Brücke 3, sonst keine |
 | Entspannung | Gelassenheit | Innehalten: Ankommen 2 Minuten, Der Atem 3 Minuten, Durch den Körper 5 Minuten | 3 |
 
 Spazieren und Rad gibt es vorerst nicht im Tageswerk; sie können später über den
-Talentbaum dazukommen. Die Übungen stehen in `data/uebungen.xlsx`, eine Zeile je Übung
+Talentbaum dazukommen.
+
+**Abwechslung statt Treppe** (seit 5.21, so gewünscht): Übungen mit derselben `gruppe` in der
+Tabelle wechseln sich ab. Jeden Tag wählt die App eine davon, auf jedem Gerät dieselbe
+(`choiceFor` in `js/tasks.js`); die Person wählt nie. Die Gruppe `treppe`: Treppensteigen,
+Laufen auf der Stelle, Knie heben, Ausfallschritte im Wechsel. Sie zählen als eine Übung mit
+einer Stufe für alle. Die drei neuen gehen im Wechsel mit ruhigem Gehen auf der Stelle: Stufe 1
+dreimal 30 Sekunden Bewegung und 30 Gehen, Stufe 2 fünfmal, Stufe 3 fünfmal 40 und 20; XP wie
+die Treppe (14, 20, 24).
+
+**Die Brücke statt des knienden Ausfallschritts** (seit 5.21): Der Ausfallschritt war
+unbeliebt; die Nutzerin schlug vor, die Brücke anzubieten und danach zu fragen, was man lieber
+mag, oder ihn ganz zu ersetzen. Ersetzt, weil eine Wahl der Übung Punkt 1 widerspräche (die
+App entscheidet). Der Ausfallschritt bleibt mit `aktiv: nein` in der Tabelle. Die Übungen stehen in `data/uebungen.xlsx`, eine Zeile je Übung
 und Stufe (siehe Tabellen).
 
 ### Kinder und Jugendliche
@@ -86,16 +99,19 @@ in jedem Bereich eine Einheit von 14 bis 28 XP; der Konverter prüft das für je
 | --- | --- | --- | --- | --- |
 | bis 8 | Bärengang, Flieger, Froschsprünge | Hampel-Runden | Baum, Hund, Kobra | Teddy-Atmen |
 | 9 bis 12 | Bärengang, Brett, Flieger | Hampel-Runden | Hund, Kobra, Schmetterling | Ballon-Atmen |
-| 13 bis 15 | Brett, Vogelhund, Seitstütz | Treppe | Hund, Kobra, Schmetterling | Innehalten |
-| ab 16 | Käfer, Vogelhund, Seitstütz | Treppe | Katze-Kuh, Ausfallschritt, Brustöffner | Innehalten |
+| 13 bis 15 | Brett, Vogelhund, Seitstütz | Treppe (oder im Wechsel) | Hund, Kobra, Schmetterling | Innehalten |
+| ab 16 | Käfer, Vogelhund, Seitstütz | Treppe (oder im Wechsel, siehe oben) | Katze-Kuh, Brücke, Brustöffner | Innehalten |
 
 Die Kinderübungen sind bildhaft und ohne Becken-Anweisungen (Tiere, Springen, ein
 Kuscheltier auf dem Bauch); Jugendliche haben teils die Übungen der Erwachsenen, statt
-Käfer, Ausfallschritt und Brustöffner aber einfachere. XP gelten wie für alle. Kinder (bis
+Käfer, Brücke und Brustöffner aber einfachere. XP gelten wie für alle. Kinder (bis
 12) werden nach einer Übung nichts gefragt: Jeder Durchgang zählt als gut, nach drei
 Durchgängen auf einer Stufe kommt die nächste („Das war heute zu viel“ gibt es auch für
 sie). Jugendliche ab 13 werden gefragt wie Erwachsene. Die Hampel-Runden wechseln
-Hampelmann, Laufen und Knie hoch; jeder Abschnitt hat im Timer seine eigene Figur. Ein Envoy
+Hampelmann, Laufen und Knie hoch, jeder Abschnitt höchstens 30 Sekunden, dazwischen 10
+Sekunden Pause (seit 5.21, so gewünscht: vorher 30 bis 50 Sekunden am Stück, drei bis fünf
+Minuten ohne Pause); Stufe 1 vier Abschnitte zu 20 Sekunden, Stufe 2 sechs zu 20, Stufe 3 sechs
+zu 30. Jeder Abschnitt, auch die Pause, hat im Timer seine eigene Figur. Ein Envoy
 ohne Alter (aus der Zeit davor) wird beim ersten Start einmal gefragt: „Wie alt bist du?“.
 Das Fenster liegt über allem und lässt sich nicht wegklicken; mit der Antwort richtet sich
 das offene Tageswerk sofort nach dem Alter. Das Alter lässt sich in den Einstellungen
@@ -159,7 +175,7 @@ sobald die XP-Leiste voll ist.
 **XP pro Aufgabe: 14 bis 28, Schnitt 20.** Die Höhe hängt am Umfang, nicht am Bereich.
 Jede Übung trägt ihren Anteil bei (Spalte `xp`), die Aufgabe bringt die Summe ihrer
 Übungen, bei jeder Mischung der Stufen zwischen 14 und 28: Kraft 14 (alle auf Stufe 1)
-bis 26 (alle auf Stufe 3), Treppe 14, 20, 24, Beweglichkeit 20, Gelassenheit 14, 18, 24.
+bis 26 (alle auf Stufe 3), Treppe 14, 20, 24, Beweglichkeit 20 bis 22, Gelassenheit 14, 18, 24.
 
 ```latex
 \text{XP}(n \rightarrow n+1) = 45 \cdot n^{0{,}45} \cdot \left(1 + \left(\frac{\max(0,\; n-9)}{6}\right)^{2}\right)
@@ -309,7 +325,7 @@ gewünscht: Was etwas verlangt, bietet in besonderem Maß etwas; es tragen kann 
 Werte durch das Tageswerk hat. Ein Stück mit Anforderung ist außerdem nie schlicht (der Anteil
 von schlicht geht an gut). Ein Envoy mit Stärke 5 findet also ein Stück ohne Anforderung mit
 Boni wie bei Stärke 5 (Treffer etwa +5 %, Glück +9 %), eins mit Kraft 8 wie bei Stärke 13
-(Treffer etwa +10 %, Glück +17 %). Die Größe schwankt um ±20 %, mindestens 1. (5.20.4 kurz im
+(Treffer etwa +10 %, Glück +17 %). Innerhalb seiner Güte fällt ein Stück schwächer oder stärker aus (seit 5.21, so gewünscht; vorher ±20 %): Alle seine Boni sind so viel mal so groß, zufällig zwischen den Zahlen von `spread` in `QUALITIES` (gut 0,5 bis 1,4, selten 0,6 bis 1,5, prächtig 0,7 bis 1,6), jeder dazu ±10 %, mindestens 1. (5.20.4 kurz im
 Testordner: halb Envoy, halb Anforderung.) Güte und Boni gehören dem Stück (`guete`, `bonus` am Ding, im Ereignis
 gespeichert, `js/world/bonuses.js`) und zählen, solange es getragen wird, zusammen mit den
 festen Effekten des Teils. Der Rahmen zeigt die Güte in Farbe (gut grün, selten blau,
@@ -468,6 +484,11 @@ Lager; das spart Zeit, und eine lange Reihe füllt eine lange Zeit ohne App.
   wenn nichts mehr herausfallen kann, sammelt der Envoy, solange die Energie reicht. Was
   sofort beginnt (ein Aufbruch aus dem Lager), muss auch mit den schlechtesten Würfeln
   passen.
+  Seit 5.21 (so gewünscht: angehängtes fiel später heraus, weil das Material dafür nicht
+  zusammenkam) bleibt beim Anhängen frei, was die Würfel einer Sammelaktion in der Reihe dort
+  noch brauchen werden; sie sind beim Anhängen schon gefallen (`cost.ahead` in `game.plan`).
+  Was jetzt angehängt wird, fällt so später nicht mehr heraus, und das Material, mit dem es
+  rechnet, kommt sicher.
 - **Was die Reihe bringt, zählt für das Spätere schon mit**: Material, das sie sammelt,
   erfüllt die Voraussetzung einer späteren Quest (Stein, Pilzholz, dann das Lagerfeuer),
   und beim Platz im Vorrat zählt, was vorher hinzukommt. Ebenso eine Lagerstufe: Während das
@@ -607,14 +628,16 @@ schlecht:
 
 **Weitere Sammelorte.** Am Pilzhain und im Steinbruch gibt es noch je drei Quests mit
 festem Ertrag und einem kurzen Weg (je zehn Sekunden hin und zurück, ohne Energie). Sie
-bringen mehr Stück je Energie als das Trümmerfeld (bis 5.11 kostete der Weg je 1 Energie
-hin und zurück, dann waren es gut 2 bis 4 Stück je Energie wie dort):
+bringen etwas mehr Stück je Energie als das Trümmerfeld (dort 2,5 bis 3), kosten dafür den
+Weg; die größeren verlangen einen Wert, für Pilzholz Beweglichkeit, für Stein Kraft, wie beim
+Sammeln. Seit 5.21 (so gewünscht: die kleine Quest brachte 8 Stück für 1 Energie und machte
+das Trümmerfeld sinnlos; vorher 1 / 4 / 10 Energie für 7–9 / 16–20 / 38–44):
 
-| Quest | Energie | Ertrag |
-| --- | --- | --- |
-| Pilzholz auflesen / Lose Steine auflesen | 1 | 7–9 |
-| Pilzholz schlagen / Steine brechen | 4 | 16–20 |
-| große Quest (Kraft 4 für Pilzholz, Kraft 5 für Stein) | 10 | 38–44 |
+| Quest | Energie | Ertrag | je Energie |
+| --- | --- | --- | --- |
+| Pilzholz auflesen / Lose Steine auflesen | 2 | 6–8 | 3,5 |
+| Pilzholz schlagen / Steine brechen (Beweglichkeit 3 / Kraft 3) | 5 | 18–22 | 4 |
+| große Quest (Beweglichkeit 5 / Kraft 5) | 10 | 42–48 | 4,5 |
 
 Ohne Stein- und Pilzlager passt nur ein Teil davon in den Vorrat; das sagt das Fenster
 der Quest vorher („In den Vorrat passen davon nur 6 Stein.“). Wie die Orte weiterwachsen, plant die Nutzerin.
@@ -715,7 +738,7 @@ Ausrüstung ist zufällig, aber immer im Bereich der Stärke des Helden (Vorauss
 höchstens 3 Level darunter oder darüber) und passend zur Figur; färbbare Kleidung hat eine
 eigene Farbe, die beim Kauf bleibt, dazu eine Güte mit Boni (siehe Ausrüstung). Preis in Bannsplittern = 12 + 4 × n + n² + 8 × Stufe
 (n = höchste Voraussetzung), falls in der Tabelle nicht anders angegeben. Er kauft
-alles für ein Drittel des Preises zurück.
+alles für ein Sechstel des Preises zurück (seit 5.21, so gewünscht: Bannsplitter kamen zu leicht; vorher ein Drittel).
 
 **Tränke** (seit 5.13, `POTIONS`): jeden Tag zwei **Pilztee** (+10 Energie, 12 Bannsplitter)
 und zwei **Quellsud** (+25 Energie, 28 Bannsplitter). Ein Trank wird beim Kauf getrunken und
@@ -962,7 +985,7 @@ besiegt, beruhigt, vertrieben, zuerst gesehen), kompakt, damit sie ohne Scrollen
 ## Arena und Ruhmeshalle
 
 Ein Ort für alle Envoys auf dem eigenen Server (nur mit Konto, ab dem Lagerfeuer), erreichbar
-über „Arena“ oben auf der Abenteuer-Seite. Niemand kämpft gegen eine Person, sondern gegen
+über den Reiter „Arena“ unter Abenteuer. Niemand kämpft gegen eine Person, sondern gegen
 ihr **Abbild**: Name, Aussehen, getragene Kleidung (mit Farbe und den Boni jedes Stücks) und
 ein Titel. Die App schickt das Abbild bei jedem Abgleich mit. Echte Übungen, Tageswerk,
 Werte oder Serien der anderen zeigt die Arena nie; den eigenen Fleiß zeigt die Envoy-Seite. Der Server (`arena.php`, Teil von `sync.php`)
@@ -1066,9 +1089,11 @@ für alle gleich ausgewählt, den ganzen Tag dieselben (mit den Werten vom Tages
   14). Er **kostet keine Energie, nur Zeit**: Der Envoy geht hin, ist eine Weile beschäftigt
   und kommt zurück, als eine Aktion seiner Expedition. Ist er schon unterwegs, wird der
   Auftrag angehängt.
-- **Der Lohn steht auf dem Zettel**: Bannsplitter (6 + 2 je Minute, je Level Stärke 8 % mehr)
-  und mit 60 % ein bestimmtes Kleidungsstück, in seiner Farbe und mit seiner Güte (20/45/27/8 %),
-  passend zur Figur und Stärke. Kein Material und keine Pläne, damit der Lagerausbau nicht
+- **Der Lohn steht auf dem Zettel**: mit 50 % ein bestimmtes Kleidungsstück, in seiner Farbe
+  und mit seiner Güte (35/40/19/6 % wie bei Geistern), passend zur Figur und Stärke, sonst
+  Bannsplitter (4 + 1,5 je Minute, je Level Stärke 8 % mehr). Seit 5.21 eins von beiden (so
+  gewünscht: der Aushang gab ohne Energie zu viel; vorher beides, 6 + 2 je Minute, mit 60 % ein
+  Stück mit 20/45/27/8 %). Kein Material und keine Pläne, damit der Lagerausbau nicht
   schneller geht.
 - Jeder Auftrag einmal; erledigte bleiben durchgestrichen hängen. Am nächsten Tag hängen neue.
 - **Besondere Stücke** (`JOB_FEATURED`, seit 5.20.6): Ein Stück kann ab einem Tag auf dem ersten
@@ -1082,7 +1107,7 @@ für alle gleich ausgewählt, den ganzen Tag dieselben (mit den Werten vom Tages
 
 Seit 5.14 (so gewünscht: etwas, das immer zu tun ist und bei dem Werte **und** Ausrüstung
 zählen). Unter dem Trümmerfeld führt ein Schacht hinab, offen ab dem Lagerfeuer, erreichbar
-über „Die Tiefen“ oben auf der Abenteuer-Seite (`js/world/depths.js`, `js/ui/depths.js`,
+über den Reiter „Tiefen“ unter Abenteuer (`js/world/depths.js`, `js/ui/depths.js`,
 Zahlen in `DEPTHS` in `js/config.js`).
 
 - **Drei Tiefen** nacheinander, je zehn Ebenen: Der alte Brunnen, Die Wurzelhallen, Das
@@ -1111,7 +1136,7 @@ Zahlen in `DEPTHS` in `js/config.js`).
   Werte und Kleidung die Aussicht), die Werte beider im Kampf und, was davon die Kleidung
   dazugibt (in Orange), was die Ebene bringt, und den Knopf „Hinabsteigen“ oder bis wann der
   Envoy ruht. Der Kampf läuft Runde für Runde in einem Fenster, danach der Fund. Darunter alle
-  Tiefen mit ihren Ebenen. Der Knopf auf der Abenteuer-Seite leuchtet, solange der Envoy
+  Tiefen mit ihren Ebenen. Der Reiter „Tiefen“ leuchtet, solange der Envoy
   hinabsteigen könnte.
 - Ereignis `tiefe` (`tiefe`, `ebene`, `outcome` mit dem Kampf und der Belohnung, beim
   Hinabsteigen gewürfelt). Es zählt nur für die nächste Ebene, nach der Rast und nicht
@@ -1163,7 +1188,9 @@ des Envoy):
   1 · Provisorisches Lager“). Solange es kein Feuer gibt, steht oben „Als Erstes“: „Dein Envoy
   wird eine Weile hier bleiben. Am besten errichtest du ein Lagerfeuer.“ mit einem Knopf
   zur Quest. Dann laufende Expedition oder Bericht, Vorrat mit Energie und, auf dem iPad
-  daneben, heute gesichtete Geister und Hinweise. Auf dem Telefon ist das Bild 4:3, damit
+  daneben, „Draußen“ und Hinweise. „Draußen“ (seit 5.21) sagt in ein paar Zeilen, was heute
+  wartet, und führt dorthin: gesichtete Geister (zur Karte), offene Aufträge (zum Aushang), die
+  Tiefen nach der Rast. Die Aufträge selbst stehen nicht mehr hier, sondern unter Abenteuer. Auf dem Telefon ist das Bild 4:3, damit
   Hygge und Knöpfe Platz haben, auf dem iPad 8:3.
   **Tageszeit:** Das Bild folgt der Sonne am Ort des Lagers (Mitte Deutschlands, aus
   Datum und Uhrzeit berechnet, auf Minuten genau genug): Sonnenaufgang (von 40 Minuten
@@ -1208,7 +1235,8 @@ des Envoy):
   auf einer neuen Stufe sind.
 - **Timer**: führt durch eine Übung, Teil für Teil: kurz bereit machen (Kraft und
   Beweglichkeit 10 Sekunden, Treppe 5), dann ihre Abschnitte (eine Seite, die andere;
-  normal, zügig). Danach kommt ihre Frage, und die Karte zeigt die nächste Übung; deren
+  normal, zügig; vor „Andere Seite“ 8 Sekunden „Seite wechseln“, seit 5.21, `SIDE_SWITCH`).
+  Danach kommt ihre Frage, und die Karte zeigt die nächste Übung; deren
   Timer beginnt erst mit einem neuen Tipp. Groß stehen der Name der Übung und die
   Restzeit des Teils in einem Ring, darüber die Figur, die die Übung mitmacht, darunter
   „Insgesamt noch …“. Bei jedem neuen Teil klingt ein leiser Ton, und eine Stimme sagt an,
@@ -1221,9 +1249,19 @@ des Envoy):
   Wellen, ein tiefer Akkord, ab und zu eine Klangschale. Mit Atemtakt kommen und gehen
   die Wellen mit dem Atem. Am Ende verklingt der Hintergrund und ein Ton sagt, dass die
   Zeit um ist. Der Klang lässt sich im Timer abschalten; die Wahl bleibt gespeichert.
+  Seit 5.21 (so gewünscht: oft kam kein Ton, und die meisten hören eher hin als hinzusehen)
+  setzt der Timer alle Töne beim Start im Voraus auf die Uhr des Klangs (`scheduleTones` in
+  `js/ui/sound.js`), so kommen sie auch bei dunklem Bildschirm oder im Hintergrund; solange
+  der Timer offen ist, spielt das Gerät wie Musik, auch im Stummmodus. In längeren Teilen
+  klopft es alle 30 Sekunden leise (bei Atemübungen jede Minute), nicht kurz vor dem Ende
+  eines Teils. Ohne Timer klingt der Ton am Ende, sobald die Zeit der Übung auf der Karte
+  gelaufen ist.
   Alles wird im Browser erzeugt, es gibt keine Tondateien.
-- **Abenteuer**: gezeichnete Landkarte mit Tintensiegeln für die Orte, Legende, Vorrat
-  und Expedition. Keine unerklärten Zahlen auf der Karte. Ein Tipp auf einen Ort fächert
+- **Abenteuer**: alles, was der Envoy draußen tun kann (seit 5.21, so gewünscht: vorher lagen
+  Aufträge an der Karte, am Lager und in den Tiefen verstreut). Oben Reiter: Karte, Aushang
+  (mit der Zahl offener Aufträge), Tiefen, Arena, jeder sobald offen; ein Reiter leuchtet, wenn
+  dort etwas wartet (`js/ui/adventuretabs.js`). Die Karte: gezeichnete Landkarte mit
+  Tintensiegeln für die Orte, Legende, Vorrat und Expedition. Keine unerklärten Zahlen auf der Karte. Ein Tipp auf einen Ort fächert
   seine Quests auf (siehe Quests auf der Karte).
 - **Envoy**: das Charakterblatt (siehe unten), mit Rucksack und oberer Leiste. Nach dem
   ersten Erstellen eines Envoy beginnt das Spiel hier, nicht im Lager; dort läuft der
@@ -1517,7 +1555,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 
 | Punkt | Entscheidung |
 | --- | --- |
-| Tagesaufgaben | je Bereich eine Einheit, jeden Tag dieselben Übungen, Stufe je Übung; nur Treppe für Ausdauer |
+| Tagesaufgaben | je Bereich eine Einheit, jeden Tag dieselben Übungen, Stufe je Übung; für Ausdauer die Treppe oder, von der App gewählt, Laufen auf der Stelle, Knie heben, Ausfallschritte im Wechsel (eine Stufe für alle) |
 | Zeit statt Menge | feste Zeit je Übung, langsam und nur so viel wie sauber geht; geführter Timer mit Stimme |
 | Rückfrage | je Übung gleich nach ihr, solange es eine nächste Stufe gibt; nicht im Krankheitsmodus, nicht bei Kindern bis 12; „Wie war es?“ statt „richtig gemacht?“ |
 | Timer | je Übung; die nächste beginnt mit eigenem Tipp |
@@ -1530,7 +1568,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Schlafplatz | gibt seine Energie um 6 Uhr morgens; nachts gebaut zählt am selben Morgen |
 | Ausrüstung | hebt nie einen Stat, ist aber wichtig: Güte (schlicht, gut, selten, prächtig) mit gewürfelten Boni für Kampf, Energie und Glück, größer bei stärkerem Envoy; ein Stück mit Anforderung hat deutlich größere Boni und ist nie schlicht |
 | Tränke | Pilztee (+10) und Quellsud (+25) beim Händler, je zwei am Tag, nie über die Leiste |
-| Aushang | drei Aufträge am Tag am Lager, ohne Energie, nur Zeit; der Lohn (Bannsplitter, oft Kleidung mit Güte) steht darauf; jeder einmal |
+| Aushang | drei Aufträge am Tag, unter Abenteuer, ohne Energie, nur Zeit; der Lohn steht darauf: ein Kleidungsstück mit Güte oder Bannsplitter (seit 5.21 eins von beiden); jeder einmal |
 | Ruhm | kauft Kleidung mit Boni (mindestens selten) und Farben; Titel kommen mit den Rängen aus allem verdienten Ruhm |
 | Die Tiefen | drei Tiefen mit je zehn Wächtern, ohne Energie, danach Rast (60 Minuten, mit Gelassenheit kürzer); Werte und Kleidung entscheiden, wie weit der Envoy kommt; zu stark heißt zurückziehen, nie scheitern |
 | Arena | Forderungsrangliste mit Abbildern, Kämpfe vom Server entschieden, ohne Energie (seit 5.13); Stärke = Tage mit erledigter Aufgabe in den letzten 28 Tagen je Bereich (Fleiß, nicht Begabung); Ruhm als eigene Währung (Farben, Titel) |
@@ -1563,7 +1601,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Ortsbeschreibung | Kartusche am Kartenrand zusammen mit dem Fächer: Region, Name, Text, bei verschlossenen Orten, was sie öffnet |
 | Quest-Fenster | Text, Voraussetzung, Belohnung, Energie als Leiste: die Kosten als ein Block (ohne Weg, der kostet keine Energie); keine Dauer, keine Tempo- und Ertrag-Stats |
 | Einrichtungen-Kacheln | Hygge als kleine Medaille am Zeichen; was sich bauen lässt, steht vorn (nächste Stufe mit Pfeil, Kosten, „Jetzt: …“ klein) |
-| In Reihe | während der Envoy unterwegs ist, alles anhängen (Quests, Sammeln, Bauen); er geht direkt weiter; solange die Energie für die Arbeit reicht; Sammeln plant mit den besten Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus |
+| In Reihe | während der Envoy unterwegs ist, alles anhängen (Quests, Sammeln, Bauen); er geht direkt weiter; solange die Energie für die Arbeit reicht; Sammeln plant mit den besten Würfeln, brauchen sie mehr, fällt die letzte Aktion heraus; was die Würfel in der Reihe noch brauchen, bleibt beim Anhängen frei (seit 5.21) |
 | Energie | Name für die Leiste, 10 je Level Ausdauer, 1 Energie = 10 Sekunden (bis 5.11: 1 Minute) |
 | Sammeln | auf dem Trümmerfeld (eigener Ort gleich beim Lager) ohne Weg, 2 bis 4 Stück je Energie gewürfelt, nie weniger als 2; Menge wählen, beginnt bei 1 |
 | Mehr sammeln als tragbar | geht nicht: + stoppt an der Grenze und sagt warum (statt hinterher etwas liegen lassen zu müssen) |

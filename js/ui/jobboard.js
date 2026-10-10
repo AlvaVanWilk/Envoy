@@ -1,16 +1,28 @@
-// Der Aushang on the camp page: the Aufträge of today (see world/jobs.js),
+// Der Aushang, a page under Abenteuer: the Aufträge of today (see world/jobs.js),
 // each a note with where it leads, how long it takes and its reward. A tap
 // shows the note; the Envoy takes it on (without Energie, only time). Done
 // ones stay on the board, crossed out, until the next day.
 
 import { h } from './dom.js';
-import { sectionTitle, itemIcon, resource, effectList, effectsOf, qualityClass } from './parts.js';
+import { UI_ICONS } from './icons.js';
+import { viewHead, sectionTitle, itemIcon, resource, effectList, effectsOf, qualityClass, lockedView } from './parts.js';
+import { adventureTabs } from './adventuretabs.js';
+import { jobsOpen } from '../world/jobs.js';
 import { openSheet, closeSheet, toast } from './sheet.js';
 import { thingSubtitle } from './itemsheet.js';
 import { addition } from '../world/expedition.js';
 import { JOBS_PER_DAY } from '../config.js';
 
 const STATE_TEXT = { running: 'Der Envoy ist dabei', done: 'Erledigt' };
+
+// The page of the Aushang, under Abenteuer (since 5.21; before on the Lager page).
+export function renderJobs(game) {
+  if (!jobsOpen(game.state.world)) return lockedView(UI_ICONS.note, 'Der Aushang', 'Hängt am Lager, sobald das Lagerfeuer brennt.');
+  return h('section', { class: 'view jobs' },
+    viewHead('Abenteuer', 'Der Aushang'),
+    adventureTabs(game, 'aushang'),
+    h('div', { class: 'jobs-grid' }, jobBoard(game)));
+}
 
 export function jobBoard(game) {
   const jobs = game.jobs();
@@ -24,7 +36,7 @@ export function jobBoard(game) {
 function reward(job, game) {
   const item = job.thing && game.catalog.itemById.get(job.thing.id);
   return h('span', { class: 'job-reward' },
-    resource('splitter', job.splitter),
+    job.splitter > 0 ? resource('splitter', job.splitter) : null,
     item ? h('span', { class: `item-frame job-thing${qualityClass(job.thing)}` }, itemIcon(item, game, 'item-icon', job.thing.farbe)) : null);
 }
 
@@ -67,7 +79,7 @@ function openJob(job, game) {
         h('div', {}, h('dt', {}, 'Energie'), h('dd', {}, 'keine'))),
       h('p', { class: 'eyebrow job-pay-label' }, 'Lohn'),
       h('div', { class: 'job-pay' },
-        resource('splitter', job.splitter),
+        job.splitter > 0 ? resource('splitter', job.splitter) : null,
         item ? h('div', { class: 'job-pay-thing' },
           h('span', { class: `item-frame${qualityClass(job.thing)}` }, itemIcon(item, game, 'item-icon', job.thing.farbe)),
           h('span', { class: 'item-row-main' },

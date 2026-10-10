@@ -20,11 +20,19 @@
 // half its time. Answers given then do not count for the stages.
 
 import { XP_MIN, SICK_TIME_SHARE, ANSWERS, TOO_MUCH, CHILD_UNTIL } from './config.js';
+import { seededRandom } from './world/rng.js';
 
 const sum = (list, f) => list.reduce((total, x) => total + f(x), 0);
 
-function part(exercise, level, sick, fresh) {
-  const row = exercise.stages[level - 1];
+// The exercise of a group for a day (column `gruppe`, e.g. Treppe, Laufen
+// auf der Stelle, Knie heben): the app picks, the same on every device.
+export function choiceFor(exercise, level, day) {
+  const rows = exercise.choices?.[level - 1] || [exercise.stages[level - 1]];
+  if (rows.length === 1) return rows[0];
+  return rows[Math.floor(seededRandom(`${day}|${exercise.key}`)() * rows.length)];
+}
+
+function part(exercise, level, sick, fresh, row) {
   const share = sick && exercise.stages.length === 1 ? SICK_TIME_SHARE : 1;
   const phases = row.phasen.map((p) => ({ ...p, s: Math.round(p.s * share) }));
   return {
@@ -67,12 +75,12 @@ export function exercisesFor(stat, age, catalog) {
 
 // The task of an area with the given stages (state.intensityAtDayStart for
 // today: an answer given today changes the task of tomorrow) for a person
-// of this age (see ageOn).
-export function taskFor(stat, levels, sick, catalog, age = null) {
+// of this age (see ageOn), on this day (see choiceFor).
+export function taskFor(stat, levels, sick, catalog, age = null, day = '') {
   const parts = exercisesFor(stat, age, catalog).map((exercise) => {
     const entry = levels[exercise.key];
     const level = sick ? 1 : Math.min(Math.max(1, entry?.level || 1), exercise.stages.length);
-    return part(exercise, level, sick, !sick && entry?.fresh);
+    return part(exercise, level, sick, !sick && entry?.fresh, choiceFor(exercise, level, day));
   });
   return parts.length > 0 ? { ...taskOf(stat, parts, sick), child: isChild(age) } : null;
 }
@@ -88,7 +96,7 @@ export function taskOfDone(done, catalog) {
   for (const id of done.teile) {
     const row = catalog.exerciseById.get(id);
     const exercise = row && (catalog.units?.[row.stat] || []).find((x) => x.key === row.uebung);
-    if (exercise) parts.push(part(exercise, row.stufe, Boolean(done.sick), false));
+    if (exercise) parts.push(part(exercise, row.stufe, Boolean(done.sick), false, row));
   }
   return parts.length > 0 ? { ...taskOf(done.stat, parts, Boolean(done.sick)), xp: done.xp } : null;
 }

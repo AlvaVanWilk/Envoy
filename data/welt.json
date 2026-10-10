@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-08T22:31:12Z",
+ "generated": "2026-10-10T14:30:39Z",
  "source": "welt.xlsx",
  "places": [
   {
@@ -598,18 +598,18 @@
    "conditions": [],
    "speedStats": [],
    "yieldStats": [
-    "kraft"
+    "beweglichkeit"
    ],
    "consumes": {},
-   "cost": 1,
+   "cost": 2,
    "reward": {
     "splitter": [
      0,
      0
     ],
     "pilzholz": [
-     7,
-     9
+     6,
+     8
     ],
     "stein": [
      0,
@@ -631,24 +631,30 @@
    "kind": "sammeln",
    "text": "Einen Stiel fällen und in leichte, handliche Stücke teilen.",
    "monsters": [],
-   "conditions": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "beweglichkeit",
+     "min": 3
+    }
+   ],
    "speedStats": [
-    "kraft",
+    "beweglichkeit",
     "ausdauer"
    ],
    "yieldStats": [
-    "kraft"
+    "beweglichkeit"
    ],
    "consumes": {},
-   "cost": 4,
+   "cost": 5,
    "reward": {
     "splitter": [
      0,
      0
     ],
     "pilzholz": [
-     16,
-     20
+     18,
+     22
     ],
     "stein": [
      0,
@@ -673,16 +679,16 @@
    "conditions": [
     {
      "type": "stat",
-     "stat": "kraft",
-     "min": 4
+     "stat": "beweglichkeit",
+     "min": 5
     }
    ],
    "speedStats": [
-    "kraft",
+    "beweglichkeit",
     "ausdauer"
    ],
    "yieldStats": [
-    "kraft"
+    "beweglichkeit"
    ],
    "consumes": {},
    "cost": 10,
@@ -692,8 +698,8 @@
      0
     ],
     "pilzholz": [
-     38,
-     44
+     42,
+     48
     ],
     "stein": [
      0,
@@ -721,7 +727,7 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 1,
+   "cost": 2,
    "reward": {
     "splitter": [
      0,
@@ -732,8 +738,8 @@
      0
     ],
     "stein": [
-     7,
-     9
+     6,
+     8
     ],
     "items": [],
     "plans": [],
@@ -751,7 +757,13 @@
    "kind": "sammeln",
    "text": "Lose Blöcke lösen und handlich schlagen.",
    "monsters": [],
-   "conditions": [],
+   "conditions": [
+    {
+     "type": "stat",
+     "stat": "kraft",
+     "min": 3
+    }
+   ],
    "speedStats": [
     "kraft"
    ],
@@ -759,7 +771,7 @@
     "kraft"
    ],
    "consumes": {},
-   "cost": 4,
+   "cost": 5,
    "reward": {
     "splitter": [
      0,
@@ -770,8 +782,8 @@
      0
     ],
     "stein": [
-     16,
-     20
+     18,
+     22
     ],
     "items": [],
     "plans": [],
@@ -814,8 +826,8 @@
      0
     ],
     "stein": [
-     38,
-     44
+     42,
+     48
     ],
     "items": [],
     "plans": [],

@@ -179,7 +179,7 @@ export function replay(events, catalog, today, now = Date.now()) {
       if (done[stat]) {
         tasks[stat] = { teile: done[stat].teile || null, ex: done[stat].ex || null, done: true, gain: done[stat].gain };
       } else if (day === today) {
-        const open = taskFor(stat, intensityAtDayStart, sick, catalog, ageOn(world.envoy, day));
+        const open = taskFor(stat, intensityAtDayStart, sick, catalog, ageOn(world.envoy, day), day);
         if (open) tasks[stat] = { teile: open.parts.map((p) => p.row.id), ex: null, done: false, gain: 0 };
       }
     }

@@ -510,7 +510,10 @@ def timed_parts(report, row, cell, what):
 def convert_exercises(path):
     """One row per exercise and stage (sheet Übungen). Each area is one unit:
     all its exercises, in the order of `teil`, every day. The id is
-    <exercise>-<stage>; the part before the last dash names the exercise."""
+    <exercise>-<stage>; the part before the last dash names the exercise.
+    Exercises with the same `gruppe` take turns from day to day (the app
+    picks one, so gewünscht since 5.21): the group counts as one exercise of
+    the unit, with one stage for all of them."""
     report = Report(path.name)
     exercises = []
     seen = set()
@@ -529,7 +532,12 @@ def convert_exercises(path):
             report.error(row, f"unbekannter Bereich '{text(r.get('bereich', ''))}'")
 
         level = whole_number(r.get("stufe", ""))
-        key, suffix = ex_id.rsplit("-", 1)
+        own, suffix = ex_id.rsplit("-", 1)
+        group = text(r.get("gruppe", "")).lower()
+        if group and not re.fullmatch(r"[a-z0-9-]+", group):
+            report.error(row, f"gruppe '{group}': nur a–z, 0–9 und -")
+            group = ""
+        key = group or own
         if not isinstance(level, int) or level < 1:
             report.error(row, "stufe muss eine ganze Zahl ab 1 sein")
         elif int(suffix) != level:
@@ -567,7 +575,7 @@ def convert_exercises(path):
                 breath = [int(p) for p in rhythm.split("-")]
 
         for phase in phases:
-            sketch = phase_sketch(key, phase["label"])
+            sketch = phase_sketch(own, phase["label"])
             if sketch:
                 phase["skizze"] = sketch
 
@@ -589,7 +597,7 @@ def convert_exercises(path):
             "antwort": answers,
             "ansagen": timed_parts(report, row, r.get("ansagen", ""), "ansagen"),
             "atemtakt": breath,
-            "bilder": exercise_pictures(ex_id, key),
+            "bilder": exercise_pictures(ex_id, own),
             "skizze": exercise_sketch(ex_id),
         })
 
@@ -603,8 +611,15 @@ def convert_exercises(path):
         for x in own:
             by_key.setdefault(x["uebung"], []).append(x)
         for key, rows in by_key.items():
-            levels = sorted(x["stufe"] for x in rows if isinstance(x["stufe"], int))
-            if levels != list(range(1, len(levels) + 1)):
+            # each exercise of a group has the same stages
+            kinds = {}
+            for x in rows:
+                kinds.setdefault(x["id"].rsplit("-", 1)[0], []).append(x["stufe"])
+            stages = {tuple(sorted(v for v in levels if isinstance(v, int))) for levels in kinds.values()}
+            levels = sorted(stages.pop()) if len(stages) == 1 else None
+            if levels is None:
+                report.error("-", f"{key}: alle Übungen der Gruppe brauchen dieselben Stufen")
+            elif levels != list(range(1, len(levels) + 1)):
                 report.error("-", f"{key}: die Stufen müssen bei 1 beginnen und lückenlos sein ({levels})")
             if len({x["teil"] for x in rows}) > 1:
                 report.error("-", f"{key}: alle Stufen brauchen denselben teil")

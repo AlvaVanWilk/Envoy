@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-05T07:58:29Z",
+ "generated": "2026-10-10T14:28:12Z",
  "source": "uebungen.xlsx",
  "exercises": [
   {
@@ -438,6 +438,657 @@
    "skizze": "assets/uebungen/treppe-3.svg"
   },
   {
+   "id": "laufen-1",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 1,
+   "name": "Laufen auf der Stelle",
+   "kurz": "Laufen",
+   "stufenname": "Drei Minuten",
+   "xp": 14,
+   "phasen": [
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Locker auf der Stelle laufen oder leicht hüpfen, die Arme schwingen mit.",
+    "Im Wechsel: 30 Sekunden laufen, 30 Sekunden ruhig auf der Stelle gehen. Drei Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/laufen-1.svg"
+  },
+  {
+   "id": "laufen-2",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 2,
+   "name": "Laufen auf der Stelle",
+   "kurz": "Laufen",
+   "stufenname": "Fünf Minuten",
+   "xp": 20,
+   "phasen": [
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Locker auf der Stelle laufen oder leicht hüpfen, die Arme schwingen mit.",
+    "Im Wechsel: 30 Sekunden laufen, 30 Sekunden ruhig auf der Stelle gehen. Fünf Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/laufen-2.svg"
+  },
+  {
+   "id": "laufen-3",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 3,
+   "name": "Laufen auf der Stelle",
+   "kurz": "Laufen",
+   "stufenname": "Mehr Bewegung",
+   "xp": 24,
+   "phasen": [
+    {
+     "label": "Laufen",
+     "s": 40,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 40,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 40,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 40,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    },
+    {
+     "label": "Laufen",
+     "s": 40,
+     "skizze": "assets/uebungen/laufen-laufen.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/laufen-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Locker auf der Stelle laufen oder leicht hüpfen, die Arme schwingen mit.",
+    "Im Wechsel: 40 Sekunden laufen, 20 Sekunden ruhig auf der Stelle gehen. Fünf Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/laufen-3.svg"
+  },
+  {
+   "id": "kniehub-1",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 1,
+   "name": "Knie heben",
+   "kurz": "Knie heben",
+   "stufenname": "Drei Minuten",
+   "xp": 14,
+   "phasen": [
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Im Stehen abwechselnd ein Knie hochziehen, so hoch es angenehm ist. Wer mag, hüpft dabei leicht.",
+    "Im Wechsel: 30 Sekunden Knie hoch, 30 Sekunden ruhig auf der Stelle gehen. Drei Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/kniehub-1.svg"
+  },
+  {
+   "id": "kniehub-2",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 2,
+   "name": "Knie heben",
+   "kurz": "Knie heben",
+   "stufenname": "Fünf Minuten",
+   "xp": 20,
+   "phasen": [
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Im Stehen abwechselnd ein Knie hochziehen, so hoch es angenehm ist. Wer mag, hüpft dabei leicht.",
+    "Im Wechsel: 30 Sekunden Knie hoch, 30 Sekunden ruhig auf der Stelle gehen. Fünf Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/kniehub-2.svg"
+  },
+  {
+   "id": "kniehub-3",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 3,
+   "name": "Knie heben",
+   "kurz": "Knie heben",
+   "stufenname": "Mehr Bewegung",
+   "xp": 24,
+   "phasen": [
+    {
+     "label": "Knie hoch",
+     "s": 40,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 40,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 40,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 40,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    },
+    {
+     "label": "Knie hoch",
+     "s": 40,
+     "skizze": "assets/uebungen/kniehub-knie-hoch.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/kniehub-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Im Stehen abwechselnd ein Knie hochziehen, so hoch es angenehm ist. Wer mag, hüpft dabei leicht.",
+    "Im Wechsel: 40 Sekunden Knie hoch, 20 Sekunden ruhig auf der Stelle gehen. Fünf Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/kniehub-3.svg"
+  },
+  {
+   "id": "wechselschritt-1",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 1,
+   "name": "Ausfallschritte im Wechsel",
+   "kurz": "Ausfallschritte",
+   "stufenname": "Drei Minuten",
+   "xp": 14,
+   "phasen": [
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Einen großen Schritt nach hinten, das hintere Knie sinkt Richtung Boden, und wieder zurück. Dann das andere Bein. An einer Wand oder Stuhllehne festhalten, wann immer es gut tut.",
+    "Im Wechsel: 30 Sekunden ausfallschritte, 30 Sekunden ruhig auf der Stelle gehen. Drei Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/wechselschritt-1.svg"
+  },
+  {
+   "id": "wechselschritt-2",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 2,
+   "name": "Ausfallschritte im Wechsel",
+   "kurz": "Ausfallschritte",
+   "stufenname": "Fünf Minuten",
+   "xp": 20,
+   "phasen": [
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 30,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Einen großen Schritt nach hinten, das hintere Knie sinkt Richtung Boden, und wieder zurück. Dann das andere Bein. An einer Wand oder Stuhllehne festhalten, wann immer es gut tut.",
+    "Im Wechsel: 30 Sekunden ausfallschritte, 30 Sekunden ruhig auf der Stelle gehen. Fünf Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/wechselschritt-2.svg"
+  },
+  {
+   "id": "wechselschritt-3",
+   "uebung": "treppe",
+   "stat": "ausdauer",
+   "teil": 1,
+   "alter": [
+    13,
+    null
+   ],
+   "stufe": 3,
+   "name": "Ausfallschritte im Wechsel",
+   "kurz": "Ausfallschritte",
+   "stufenname": "Mehr Bewegung",
+   "xp": 24,
+   "phasen": [
+    {
+     "label": "Ausfallschritte",
+     "s": 40,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 40,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 40,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 40,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    },
+    {
+     "label": "Ausfallschritte",
+     "s": 40,
+     "skizze": "assets/uebungen/wechselschritt-ausfallschritte.svg"
+    },
+    {
+     "label": "Gehen",
+     "s": 20,
+     "skizze": "assets/uebungen/wechselschritt-gehen.svg"
+    }
+   ],
+   "steps": [
+    "Einen großen Schritt nach hinten, das hintere Knie sinkt Richtung Boden, und wieder zurück. Dann das andere Bein. An einer Wand oder Stuhllehne festhalten, wann immer es gut tut.",
+    "Im Wechsel: 40 Sekunden ausfallschritte, 20 Sekunden ruhig auf der Stelle gehen. Fünf Minuten lang, die Stimme sagt Bescheid.",
+    "Langsamer werden ist immer in Ordnung."
+   ],
+   "wofuer": "Ein paar Minuten in Bewegung, ganz ohne Weg.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/wechselschritt-3.svg"
+  },
+  {
    "id": "katze-kuh-1",
    "uebung": "katze-kuh",
    "stat": "beweglichkeit",
@@ -472,8 +1123,8 @@
    "skizze": "assets/uebungen/katze-kuh-1.svg"
   },
   {
-   "id": "ausfallschritt-1",
-   "uebung": "ausfallschritt",
+   "id": "bruecke-1",
+   "uebung": "bruecke",
    "stat": "beweglichkeit",
    "teil": 2,
    "alter": [
@@ -481,33 +1132,98 @@
     null
    ],
    "stufe": 1,
-   "name": "Der kniende Ausfallschritt",
-   "kurz": "Ausfallschritt",
-   "stufenname": null,
+   "name": "Die Brücke",
+   "kurz": "Brücke",
+   "stufenname": "Heben und senken",
    "xp": 7,
    "phasen": [
     {
-     "label": "Erste Seite",
-     "s": 60
-    },
-    {
-     "label": "Andere Seite",
+     "label": "",
      "s": 60
     }
    ],
    "steps": [
-    "Ein weiter Schritt nach vorn, das hintere Knie auf den Boden oder ein Kissen.",
-    "Der Oberkörper bleibt aufrecht.",
-    "Das Becken sanft nach vorn unten schieben, bis es vorn in der Leiste und am Oberschenkel des hinteren Beins zieht.",
-    "Halten und tief in den Bauch atmen."
+    "Auf den Rücken legen, die Knie angewinkelt, die Füße hüftbreit auf dem Boden, die Arme neben dem Körper.",
+    "Das Becken langsam heben, bis Oberschenkel und Oberkörper eine Linie bilden.",
+    "Langsam wieder ablegen. Ruhig weiteratmen."
    ],
-   "wofuer": "Dehnt die Vorderseite der Hüfte.",
-   "frage": null,
-   "antwort": null,
+   "wofuer": "Öffnet die Hüfte nach vorn und stärkt den Po.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
    "ansagen": [],
    "atemtakt": null,
    "bilder": {},
-   "skizze": "assets/uebungen/ausfallschritt-1.svg"
+   "skizze": "assets/uebungen/bruecke-1.svg"
+  },
+  {
+   "id": "bruecke-2",
+   "uebung": "bruecke",
+   "stat": "beweglichkeit",
+   "teil": 2,
+   "alter": [
+    16,
+    null
+   ],
+   "stufe": 2,
+   "name": "Die Brücke",
+   "kurz": "Brücke",
+   "stufenname": "Oben halten",
+   "xp": 8,
+   "phasen": [
+    {
+     "label": "",
+     "s": 60
+    }
+   ],
+   "steps": [
+    "Auf den Rücken legen, die Knie angewinkelt, die Füße hüftbreit auf dem Boden.",
+    "Das Becken heben und oben ein paar Atemzüge halten.",
+    "Langsam ablegen, kurz ausruhen, wieder heben."
+   ],
+   "wofuer": "Öffnet die Hüfte nach vorn und stärkt den Po.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/bruecke-2.svg"
+  },
+  {
+   "id": "bruecke-3",
+   "uebung": "bruecke",
+   "stat": "beweglichkeit",
+   "teil": 2,
+   "alter": [
+    16,
+    null
+   ],
+   "stufe": 3,
+   "name": "Die Brücke",
+   "kurz": "Brücke",
+   "stufenname": "Ein Bein lang",
+   "xp": 9,
+   "phasen": [
+    {
+     "label": "Erste Seite",
+     "s": 30
+    },
+    {
+     "label": "Andere Seite",
+     "s": 30
+    }
+   ],
+   "steps": [
+    "Das Becken heben wie bei der Brücke.",
+    "Oben ein Bein lang ausstrecken, das Becken bleibt gerade. Kurz halten, den Fuß wieder abstellen.",
+    "Ablegen und ausruhen ist jederzeit in Ordnung."
+   ],
+   "wofuer": "Öffnet die Hüfte nach vorn und stärkt den Po.",
+   "frage": "Wie war es?",
+   "antwort": "anstrengung",
+   "ansagen": [],
+   "atemtakt": null,
+   "bilder": {},
+   "skizze": "assets/uebungen/bruecke-3.svg"
   },
   {
    "id": "brustoeffner-1",
@@ -1182,47 +1898,53 @@
    "stufe": 1,
    "name": "Hampel-Runden",
    "kurz": "Hampeln",
-   "stufenname": "Drei Minuten",
+   "stufenname": "Kurze Runden",
    "xp": 14,
    "phasen": [
     {
      "label": "Hampelmann",
-     "s": 30,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Laufen",
-     "s": 30,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-laufen.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Knie hoch",
-     "s": 30,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
+    },
+    {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
     },
     {
      "label": "Hampelmann",
-     "s": 30,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
-    },
-    {
-     "label": "Laufen",
-     "s": 30,
-     "skizze": "assets/uebungen/hampelrunde-laufen.svg"
-    },
-    {
-     "label": "Knie hoch",
-     "s": 30,
-     "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
     }
    ],
    "steps": [
     "Hampelmann: beim Springen Arme und Beine auseinander, beim nächsten Sprung wieder zusammen.",
     "Laufen: locker auf der Stelle laufen.",
     "Knie hoch: auf der Stelle laufen und die Knie hochziehen.",
+    "Dazwischen eine kurze Pause zum Durchatmen.",
     "Die Stimme sagt, was als Nächstes kommt. Langsamer werden ist immer in Ordnung."
    ],
-   "wofuer": "Ein paar Minuten am Stück in Bewegung.",
+   "wofuer": "Ein paar Minuten in Bewegung, mit Pausen.",
    "frage": "Wie war es?",
    "antwort": "anstrengung",
    "ansagen": [],
@@ -1242,37 +1964,62 @@
    "stufe": 2,
    "name": "Hampel-Runden",
    "kurz": "Hampeln",
-   "stufenname": "Vier Minuten",
+   "stufenname": "Mehr Runden",
    "xp": 20,
    "phasen": [
     {
      "label": "Hampelmann",
-     "s": 40,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Laufen",
-     "s": 40,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-laufen.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Knie hoch",
-     "s": 40,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Hampelmann",
-     "s": 40,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Laufen",
-     "s": 40,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-laufen.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Knie hoch",
-     "s": 40,
+     "s": 20,
      "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
     }
    ],
@@ -1280,9 +2027,10 @@
     "Hampelmann: beim Springen Arme und Beine auseinander, beim nächsten Sprung wieder zusammen.",
     "Laufen: locker auf der Stelle laufen.",
     "Knie hoch: auf der Stelle laufen und die Knie hochziehen.",
+    "Dazwischen eine kurze Pause zum Durchatmen.",
     "Die Stimme sagt, was als Nächstes kommt. Langsamer werden ist immer in Ordnung."
    ],
-   "wofuer": "Ein paar Minuten am Stück in Bewegung.",
+   "wofuer": "Ein paar Minuten in Bewegung, mit Pausen.",
    "frage": "Wie war es?",
    "antwort": "anstrengung",
    "ansagen": [],
@@ -1302,37 +2050,62 @@
    "stufe": 3,
    "name": "Hampel-Runden",
    "kurz": "Hampeln",
-   "stufenname": "Fünf Minuten",
+   "stufenname": "Längere Runden",
    "xp": 24,
    "phasen": [
     {
      "label": "Hampelmann",
-     "s": 50,
+     "s": 30,
      "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Laufen",
-     "s": 50,
+     "s": 30,
      "skizze": "assets/uebungen/hampelrunde-laufen.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Knie hoch",
-     "s": 50,
+     "s": 30,
      "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Hampelmann",
-     "s": 50,
+     "s": 30,
      "skizze": "assets/uebungen/hampelrunde-hampelmann.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Laufen",
-     "s": 50,
+     "s": 30,
      "skizze": "assets/uebungen/hampelrunde-laufen.svg"
     },
     {
+     "label": "Pause",
+     "s": 10,
+     "skizze": "assets/uebungen/hampelrunde-pause.svg"
+    },
+    {
      "label": "Knie hoch",
-     "s": 50,
+     "s": 30,
      "skizze": "assets/uebungen/hampelrunde-knie-hoch.svg"
     }
    ],
@@ -1340,9 +2113,10 @@
     "Hampelmann: beim Springen Arme und Beine auseinander, beim nächsten Sprung wieder zusammen.",
     "Laufen: locker auf der Stelle laufen.",
     "Knie hoch: auf der Stelle laufen und die Knie hochziehen.",
+    "Dazwischen eine kurze Pause zum Durchatmen.",
     "Die Stimme sagt, was als Nächstes kommt. Langsamer werden ist immer in Ordnung."
    ],
-   "wofuer": "Ein paar Minuten am Stück in Bewegung.",
+   "wofuer": "Ein paar Minuten in Bewegung, mit Pausen.",
    "frage": "Wie war es?",
    "antwort": "anstrengung",
    "ansagen": [],

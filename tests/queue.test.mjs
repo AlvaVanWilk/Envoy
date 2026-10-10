@@ -149,7 +149,7 @@ test('gathering in the row plans with the best dice; if they need more, the last
   const events = [a, stone, wood];
   const exp = replay(events, catalog, DAY, t + 1000).world.expedition;
   assert.equal(exp.actions.length, 3);
-  assert.equal(Math.round(reserve(exp.actions[2])), 3);      // nothing left now
+  assert.equal(Math.round(reserve(exp.actions[2])), 4);      // nothing left now
   const back = replay(events, catalog, DAY, T0 + 60 * MIN);
   const report = back.world.reports.at(-1);
   assert.deepEqual(report.dropped.map((d) => [d.q, d.reason]), [['q-pilzholz-klein', 'energy']]);
@@ -184,7 +184,7 @@ test('in the app: start, add while away, the Energie of a row, take out again', 
   const next = game.plan('q-pilzholz-klein');
   assert.equal(next.busy, true);
   assert.equal(next.cost.way, 0);
-  assert.equal(next.cost.least, 1);
+  assert.equal(next.cost.least, 2);
   assert.equal(next.block, null);
   // the Lagerfeuer opens once Stein and Pilzholz are in the row
   assert.equal(game.plan('q-lagerfeuer').block, 'closed');
@@ -192,7 +192,12 @@ test('in the app: start, add while away, the Energie of a row, take out again', 
   assert.ok(game.startExpedition('gather:pilzholz', { amount: 2 }));
   const fire = game.plan('q-lagerfeuer');
   assert.equal(fire.state.status, 'open');
-  assert.equal(fire.block, null);
+  // what the dice of the gatherings in the row still take is kept free (since 5.21)
+  const ahead = game.state.world.expedition.actions.filter((a) => a.stage < 2)
+    .reduce((sum, a) => sum + Math.max(0, a.outcome.stamina - a.least), 0);
+  assert.equal(fire.cost.ahead, ahead);
+  assert.equal(fire.needed, Math.ceil(fire.cost.least + ahead));
+  assert.equal(fire.block, fire.needed > Math.floor(game.stamina().value) ? 'energy' : null);
   const q = game.queued('gather:pilzholz');
   assert.deepEqual([q.index, q.count, q.removable], [2, 3, true]);
   assert.equal(game.queued('q-uferkies').removable, false);
@@ -233,8 +238,8 @@ test('the rules since 5.12: added while he works, he goes straight on, nothing t
   const s = replay([a, b], catalog, DAY, t);
   const second = s.world.expedition.actions[1];
   assert.equal(second.credit, 0);
-  assert.equal(reserve(second), 1);
-  assert.equal(Math.round(s.world.stamina.value), 10 - 3 - 1);
+  assert.equal(reserve(second), 2);
+  assert.equal(Math.round(s.world.stamina.value), 10 - 3 - 2);
   assert.deepEqual(second.from, { x: place('stillesufer').x, y: place('stillesufer').y });
   const times = timesOf(s.world.expedition);
   assert.equal(times.actions[1].begin, times.actions[0].done);
@@ -252,7 +257,7 @@ test('an action under the new rules after one under the old: the old way home co
   const s = replay([a, b], catalog, DAY, t);
   const second = s.world.expedition.actions[1];
   assert.equal(second.credit, first.home);                    // the old way home he no longer walks
-  assert.equal(reserve(second), 1 - first.home);
+  assert.equal(reserve(second), 2 - first.home);
   assert.equal(second.way, legStamina(place('stillesufer'), place('pilzhain'), ctxOf(s)) * RULES_NOW.pace);
 });
 

@@ -240,7 +240,7 @@ test('children and young people have exercises of their own; without an age thos
   assert.deepEqual(keys('ausdauer', 13), ['treppe']);
   assert.deepEqual(keys('beweglichkeit', 6), ['baum', 'hund', 'kobra']);
   assert.deepEqual(keys('beweglichkeit', 13), ['hund', 'kobra', 'schmetterling']);
-  assert.deepEqual(keys('beweglichkeit', null), ['katze-kuh', 'ausfallschritt', 'brustoeffner']);
+  assert.deepEqual(keys('beweglichkeit', null), ['katze-kuh', 'bruecke', 'brustoeffner']);
   assert.deepEqual(keys('gelassenheit', 6), ['teddy']);
   assert.deepEqual(keys('gelassenheit', 10), ['ballon']);
   assert.deepEqual(keys('gelassenheit', 15), ['innehalten']);
@@ -270,10 +270,39 @@ test('the task of today follows the age of the Envoy; a child is not asked, ever
   assert.ok(questionsOf(taskFor('kraft', s.intensityAtDayStart, false, real, s.age)).length > 0);
 });
 
-test('the Hampel-Runden: each move with its own moving figure', () => {
+test('the Hampel-Runden: each move with its own moving figure, short pauses between', () => {
   const row = real.exerciseById.get('hampelrunde-1');
-  assert.deepEqual([...new Set(row.phasen.map((p) => p.label))], ['Hampelmann', 'Laufen', 'Knie hoch']);
-  for (const p of row.phasen) assert.match(p.skizze, /^assets\/uebungen\/hampelrunde-(hampelmann|laufen|knie-hoch)\.svg/);
+  assert.deepEqual([...new Set(row.phasen.map((p) => p.label))], ['Hampelmann', 'Pause', 'Laufen', 'Knie hoch']);
+  for (const p of row.phasen) assert.match(p.skizze, /^assets\/uebungen\/hampelrunde-(hampelmann|pause|laufen|knie-hoch)\.svg/);
+  for (const id of ['hampelrunde-1', 'hampelrunde-2', 'hampelrunde-3']) {
+    const moves = real.exerciseById.get(id).phasen.filter((p) => p.label !== 'Pause');
+    assert.ok(moves.every((p) => p.s <= 30), id);
+  }
+});
+
+test('the Treppe takes turns with moves on the spot: the app picks each day, one stage for all', () => {
+  const treppe = exercisesFor('ausdauer', null, real)[0];
+  assert.equal(treppe.key, 'treppe');
+  assert.equal(treppe.stages.length, 3);
+  assert.deepEqual(treppe.choices[0].map((r) => r.id), ['treppe-1', 'laufen-1', 'kniehub-1', 'wechselschritt-1']);
+  // the same choice on every device, and over a month each one comes
+  const seen = new Set();
+  for (let i = 0; i < 30; i += 1) {
+    const day = addDays(START, i);
+    const a = taskFor('ausdauer', {}, false, real, null, day).parts[0].row.id;
+    assert.equal(taskFor('ausdauer', {}, false, real, null, day).parts[0].row.id, a);
+    seen.add(a);
+  }
+  assert.deepEqual([...seen].sort(), ['kniehub-1', 'laufen-1', 'treppe-1', 'wechselschritt-1']);
+  // the stage counts for the group: two easy runs of different moves, then stage 2
+  const d0 = START;
+  const run = (d, id, n) => ({ id: `a${n}`, type: 'done', d, t: dayStartMs(d) + 7200000, stat: 'ausdauer', xp: 14,
+    teile: [id], antworten: { [id]: 'locker' } });
+  const s = replay([run(d0, 'laufen-1', 1), run(addDays(d0, 1), 'kniehub-1', 2)], real, addDays(d0, 2));
+  assert.equal(s.intensityAtDayStart.treppe.level, 2);
+  assert.match(taskFor('ausdauer', s.intensityAtDayStart, false, real, null, addDays(d0, 2)).parts[0].row.id, /-2$/);
+  // a task done is shown as it was done
+  assert.equal(taskOfDone(run(d0, 'kniehub-1', 3), real).parts[0].row.id, 'kniehub-1');
 });
 
 test('minutes of stairs add up for the quests that need them', () => {

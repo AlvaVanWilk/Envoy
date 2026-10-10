@@ -6,6 +6,10 @@
 // an exercise (column `ansagen`) are said at their second. With a breathing
 // rhythm (e.g. 4-6) a circle grows and shrinks to set the pace. Keeps the
 // screen awake where the browser allows it and plays a soft tone at the end.
+// The tones are set in advance (sound.js scheduleTones), so they come also
+// with the screen off; in a longer part a very soft knock every half minute
+// (a minute while breathing) says that the time still runs (so gewünscht:
+// most listen rather than look).
 // While it runs, a calm background sound plays; with a breathing rhythm its
 // waves follow the breath. Sound and voice can be switched off.
 //
@@ -17,11 +21,14 @@
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
 import { store } from '../store.js';
-import { unlockSound, chime, ping, startAmbience } from './sound.js';
+import { unlockSound, scheduleTones, startAmbience } from './sound.js';
 import { canSpeak, voiceWanted, saveVoiceWanted, say, hush, unlockVoice } from './voice.js';
 
 const PHASE_NAMES = { 2: ['Ein', 'Aus'], 3: ['Ein', 'Halten', 'Aus'], 4: ['Ein', 'Halten', 'Aus', 'Halten'] };
 const LATE = 2; // seconds: a sentence that is due longer ago is left out (after a pause in the background)
+const KNOCK_EVERY = 30;          // seconds between the soft knocks in a longer part
+const KNOCK_EVERY_BREATHING = 60;
+const KNOCK_CLEAR = 8;           // no knock this close before the end of a part
 
 // The background sound is on unless it was switched off once.
 const soundWanted = () => store.loadUi().timerSound !== false;
@@ -48,6 +55,25 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
   ]).sort((a, b) => a.at - b.at);
   let nextCue = 0;
   const cycle = rhythm ? rhythm.reduce((a, b) => a + b, 0) : 0;
+
+  // the tones, in seconds from the start: a new part, the knocks, the end
+  const every = rhythm ? KNOCK_EVERY_BREATHING : KNOCK_EVERY;
+  const tones = [
+    ...starts.slice(1).map((at) => ({ at, kind: 'ping' })),
+    ...segments.flatMap((seg, i) => {
+      const knocks = [];
+      for (let x = every; x <= seg.seconds - KNOCK_CLEAR; x += every) knocks.push({ at: starts[i] + x, kind: 'knock' });
+      return knocks;
+    }),
+    { at: total, kind: 'chime' },
+  ];
+  let unschedule = () => {};
+  // sets the tones from now on (again after a pause or the background)
+  function placeTones() {
+    unschedule();
+    const zero = startedAt + pausedTotal;
+    unschedule = scheduleTones(tones.map((x) => ({ at: zero + x.at * 1000, kind: x.kind })));
+  }
 
   let startedAt = performance.now();
   let pausedTotal = 0;
@@ -108,7 +134,6 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
   }
 
   function enter(i) {
-    if (current >= 0) ping();
     current = i;
     const seg = segments[i];
     partLabel.textContent = seg.label || '';
@@ -169,6 +194,8 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
       pauseBtn.replaceChildren(icon(UI_ICONS.play), 'Weiter');
       overlay.classList.add('paused');
       ambience?.pause();
+      unschedule();
+      unschedule = () => {};
       hush();
     } else {
       pausedTotal += performance.now() - pausedAt;
@@ -176,6 +203,7 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
       pauseBtn.replaceChildren(icon(UI_ICONS.pause), 'Pause');
       overlay.classList.remove('paused');
       ambience?.resume();
+      placeTones();
       breathKey = null;
     }
   }
@@ -220,7 +248,6 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
   function finish() {
     finished = true;
     stopSound();
-    chime();
     overlay.classList.add('finished');
     phaseLabel.textContent = '';
     time.textContent = 'Zeit um';
@@ -237,6 +264,7 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
     cancelAnimationFrame(frame);
     finished = true;
     stopSound();
+    unschedule();
     hush();
     releaseWakeLock();
     document.removeEventListener('visibilitychange', onVisible);
@@ -254,9 +282,11 @@ export function openTimer({ title, segments, rhythm = null, onFinish }) {
   function onVisible() {
     if (document.visibilityState !== 'visible' || finished) return;
     requestWakeLock();
-    if (soundOn) unlockSound({ withAmbience: true });
+    unlockSound({ withAmbience: soundOn });
+    if (pausedAt === null) placeTones();
   }
 
+  placeTones();
   frame = requestAnimationFrame(tick);
   pauseBtn.focus();
 }

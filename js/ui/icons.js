@@ -157,6 +157,8 @@ export const UI_ICONS = {
   voiceOn: line('<path d="M5 5h14a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 19 16h-8l-4.5 3.5V16H5a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 5 5Z"/><path d="M8 9.5h8M8 12.5h5"/>'),
   voiceOff: line('<path d="M5 5h14a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 19 16h-8l-4.5 3.5V16H5a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 5 5Z"/><path d="M4 3l16 18"/>'),
   book: line('<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/>'),
+  // a note pinned to the board: the Aushang
+  note: line('<path d="M6 4.5h12V19l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4Z"/><circle cx="12" cy="4.5" r="1.4"/><path d="M9 9h6M9 12h6M9 15h3.5"/>'),
   // an hourglass for the exercise timer
   timer: emblem(`<path d="M5.5 2h13v2.2h-1.2c0 3.6-2.4 5.4-3.8 7.8c1.4 2.4 3.8 4.2 3.8 7.8h1.2V22h-13v-2.2h1.2c0-3.6 2.4-5.4 3.8-7.8C9.1 9.6 6.7 7.8 6.7 4.2H5.5Z"/>${engFill('M9 5h6c-.4 2-1.8 3.4-3 5c-1.2-1.6-2.6-3-3-5Z')}${engFill('M8.8 19.6c.4-2 1.8-3.6 3.2-4.8c1.4 1.2 2.8 2.8 3.2 4.8Z')}`),
   lock: emblem('<path fill-rule="evenodd" d="M7.2 10V7.6a4.8 4.8 0 0 1 9.6 0V10h-2.4V7.6a2.4 2.4 0 0 0-4.8 0V10Z"/><path fill-rule="evenodd" d="M5 10h14v10.6a1.4 1.4 0 0 1-1.4 1.4H6.4A1.4 1.4 0 0 1 5 20.6ZM12 13.2a1.5 1.5 0 0 0-.8 2.8v2.4h1.6V16a1.5 1.5 0 0 0-.8-2.8Z"/>'),

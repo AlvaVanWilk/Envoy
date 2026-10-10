@@ -946,6 +946,96 @@ def hampelrunde():
     return hampelmann()
 
 
+# A pause in the Hampel-Runden: standing, from the front, breathing.
+def verschnaufen():
+    def frame(t):
+        breath = 1.5 * math.sin(2 * math.pi * t)
+        ankles = ((144, FLOOR - 6), (156, FLOOR - 6))
+        return front(150, STAND_HIP + breath * 0.3, (98.0 + breath, 82.0 - breath), ankles)
+    return 4.0, frame, mat(80, 220)
+
+
+# Walking on the spot, calmly, between the moves (Gehen), from the side.
+def gehen():
+    hip0 = (150, STAND_HIP)
+
+    def frame(t):
+        hip = (hip0[0], hip0[1] - 1.0 * abs(math.sin(2 * math.pi * t)))
+        shoulder = at(hip, -86, TORSO)
+        head = at(shoulder, -82, NECK)
+        legs, arms = {}, {}
+        for side, shift in (("near", 0.0), ("far", 0.5)):
+            s = (t + shift) % 1
+            lift = math.sin(math.pi * s / 0.5) if s < 0.5 else 0.0
+            knee = at(hip, lerp(88.0, 58.0, lift), THIGH)
+            ankle = at(knee, lerp(92.0, 100.0, lift), SHIN)
+            if ankle[1] > FLOOR - 6:
+                ankle = (ankle[0], FLOOR - 6)
+            legs[side] = [hip, knee, ankle, at(ankle, lerp(0.0, 25.0, lift), FOOT)]
+            swing = math.sin(2 * math.pi * s)
+            elbow = at(shoulder, 90 + 18 * swing, UPPER_ARM)
+            arms["far" if side == "near" else "near"] = [shoulder, elbow, at(elbow, 60 + 18 * swing, FOREARM)]
+        return figure(hip, shoulder, head, arms, legs)
+    return 1.3, frame, mat(80, 220)
+
+
+# Ausfallschritte im Wechsel, from the side, head to the right: a step back,
+# the hips sink until the back knee is just above the floor, back up; then
+# the other leg.
+def wechselschritt():
+    front_ankle = (162, FLOOR - 6)
+    sink = hold((0.05, 0.0), (0.2, 1.0), (0.3, 1.0), (0.45, 0.0))
+
+    def frame(t):
+        half = 0 if t < 0.5 else 1
+        s = track(sink, (t % 0.5) * 2)
+        hip = (150 - 6 * s, STAND_HIP + 30 * s)
+        shoulder = at(hip, -88, TORSO)
+        head = at(shoulder, -84, NECK)
+        back_ankle = (lerp(150.0, 92.0, s), FLOOR - 6 - 6 * s)
+        back = leg_to(hip, back_ankle, -1, lerp(0.0, -40.0, s))
+        front_leg = leg_to(hip, front_ankle, -1, 0)
+        legs = {"near": back, "far": front_leg} if half == 0 else {"near": front_leg, "far": back}
+        arms = {side: arm_dir(shoulder, 96 + d, 0.92, 1) for side, d in (("far", -6), ("near", 6))}
+        return figure(hip, shoulder, head, arms, legs)
+    return 4.0, frame, mat(60, 230)
+
+
+# Die Brücke: on the back, head to the left, the knees bent and the feet on
+# the floor; the hips rise until thighs and body are one line, and sink.
+# Stage 2 holds at the top; stage 3 holds and stretches one leg, then the other.
+BRIDGE_FEET = (SUPINE_HIP[0] + 46, FLOOR - 6)
+
+
+def bruecke(stage):
+    shoulder = (SUPINE_HIP[0] - TORSO, FLOOR - 9)
+    head = (shoulder[0] - NECK + 1, FLOOR - HEAD)
+    lift = {1: hold((0.1, 0.0), (0.4, 1.0), (0.55, 1.0), (0.85, 0.0)),
+            2: hold((0.05, 0.0), (0.2, 1.0), (0.8, 1.0), (0.95, 0.0)),
+            3: hold((0.03, 0.0), (0.12, 1.0), (0.88, 1.0), (0.97, 0.0))}[stage]
+    # stage 3: one leg long at a time, while the hips stay up
+    reach = {"near": hold((0.18, 0.0), (0.26, 1.0), (0.4, 1.0), (0.48, 0.0)),
+             "far": hold((0.55, 0.0), (0.63, 1.0), (0.77, 1.0), (0.85, 0.0))}
+
+    def frame(t):
+        up = track(lift, t)
+        top = math.sqrt(max(0.0, TORSO ** 2 - 4 ** 2))
+        hip = (shoulder[0] + lerp(TORSO, top * 0.93, up), lerp(SUPINE_HIP[1], FLOOR - 9 - 36, up))
+        legs = {}
+        for side in ("far", "near"):
+            out = track(reach[side], t) if stage == 3 else 0.0
+            if out > 0:
+                knee = at(hip, lerp(angle_of(hip, BRIDGE_FEET) - 30, angle_of(hip, BRIDGE_FEET) - 12, out), THIGH)
+                ankle = at(knee, lerp(70.0, -8.0, out), SHIN)
+                legs[side] = [hip, knee, ankle, at(ankle, lerp(0.0, -70.0, out), FOOT)]
+            else:
+                legs[side] = leg_to(hip, BRIDGE_FEET, -1, 0)
+        arms = {side: [shoulder, (shoulder[0] + UPPER_ARM, FLOOR - 7), (shoulder[0] + ARM - 2 + d, FLOOR - 6)]
+                for side, d in (("far", -2), ("near", 0))}
+        return figure(hip, shoulder, head, arms, legs)
+    return {1: 4.0, 2: 6.0, 3: 9.0}[stage], frame, mat(60, 262)
+
+
 # Der Baum, from the front: on the near leg, the other foot at its calf, the
 # knee out to the side, the arms up like branches; it sways a little.
 def turned(frame_, pivot, degrees):
@@ -1174,6 +1264,15 @@ EXERCISES = {
     "brett-1": lambda: brett(1), "brett-2": lambda: brett(2), "brett-3": lambda: brett(3), "brett-pause": brett_pause,
     "hampelrunde-1": hampelrunde, "hampelrunde-2": hampelrunde, "hampelrunde-3": hampelrunde,
     "hampelrunde-hampelmann": hampelmann, "hampelrunde-laufen": lambda: laufen(False), "hampelrunde-knie-hoch": lambda: laufen(True),
+    "hampelrunde-pause": verschnaufen,
+    # instead of the Treppe on some days (gruppe treppe): each move and the walking between
+    "laufen-1": lambda: laufen(False), "laufen-2": lambda: laufen(False), "laufen-3": lambda: laufen(False),
+    "laufen-laufen": lambda: laufen(False), "laufen-gehen": gehen,
+    "kniehub-1": lambda: laufen(True), "kniehub-2": lambda: laufen(True), "kniehub-3": lambda: laufen(True),
+    "kniehub-knie-hoch": lambda: laufen(True), "kniehub-gehen": gehen,
+    "wechselschritt-1": wechselschritt, "wechselschritt-2": wechselschritt, "wechselschritt-3": wechselschritt,
+    "wechselschritt-ausfallschritte": wechselschritt, "wechselschritt-gehen": gehen,
+    "bruecke-1": lambda: bruecke(1), "bruecke-2": lambda: bruecke(2), "bruecke-3": lambda: bruecke(3),
     "baum-1": baum, "hund-1": hund, "kobra-1": kobra, "schmetterling-1": schmetterling,
     "teddy-1": lambda: teddy(1), "teddy-2": lambda: teddy(2), "teddy-3": lambda: teddy(3),
     "ballon-1": lambda: ballon(1), "ballon-2": lambda: ballon(2), "ballon-3": lambda: ballon(3),
@@ -1201,7 +1300,8 @@ AREAS = {"kaefer": "kraft", "vogelhund": "kraft", "seitstuetz": "kraft", "treppe
          "katze-kuh": "beweglichkeit", "ausfallschritt": "beweglichkeit", "brustoeffner": "beweglichkeit",
          "innehalten": "gelassenheit",
          "baerengang": "kraft", "flieger": "kraft", "froschsprung": "kraft", "brett": "kraft",
-         "hampelrunde": "ausdauer",
+         "hampelrunde": "ausdauer", "laufen": "ausdauer", "kniehub": "ausdauer", "wechselschritt": "ausdauer",
+         "bruecke": "beweglichkeit",
          "baum": "beweglichkeit", "hund": "beweglichkeit", "kobra": "beweglichkeit", "schmetterling": "beweglichkeit",
          "teddy": "gelassenheit", "ballon": "gelassenheit"}
 

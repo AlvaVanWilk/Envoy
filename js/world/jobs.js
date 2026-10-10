@@ -1,6 +1,7 @@
 // Der Aushang am Lager: every day a few Aufträge (JOBS_PER_DAY), each with
-// its reward on the note: Bannsplitter and often a piece of clothing, in its
-// colour and with its Güte, so the Envoy knows what he works for. An Auftrag
+// its reward on the note: often a piece of clothing, in its colour and with
+// its Güte, else Bannsplitter (since 5.21 one or the other), so the Envoy
+// knows what he works for. An Auftrag
 // costs no Energie, only time: the Envoy goes to a place and is busy there
 // for some minutes, as one more action of his expedition (see worldstate.js).
 // Each Auftrag once; the next day new ones hang there. Not endless: only a
@@ -69,7 +70,7 @@ export function jobsFor(day, ctx) {
       text: job.text,
       place: places[n % places.length].id,
       minutes,
-      splitter,
+      splitter: thing ? 0 : splitter,
       thing,
     };
   });

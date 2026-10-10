@@ -20,17 +20,24 @@ function withVersions(list, fields) {
 
 // Each area is one unit: its exercises in the order of `teil`, each with its
 // stages (the rows of the table, by `stufe`) and for whom it is (`alter`:
-// [from, to], to null: no end; see exercisesFor in tasks.js).
-// -> { kraft: [{ key, teil, alter, stages: [row, …] }, …], … }
+// [from, to], to null: no end; see exercisesFor in tasks.js). Exercises of
+// one group (column `gruppe`) are one exercise here: each stage has all of
+// them as choices, and the app picks one each day (see tasks.js).
+// -> { kraft: [{ key, teil, alter, stages: [row, …], choices: [[row, …], …] }, …], … }
 function unitsOf(exercises) {
   const units = {};
   for (const stat of STAT_IDS) {
     const byKey = new Map();
     for (const row of exercises.filter((x) => x.stat === stat)) {
-      if (!byKey.has(row.uebung)) byKey.set(row.uebung, { key: row.uebung, teil: row.teil, alter: row.alter || null, stages: [] });
-      byKey.get(row.uebung).stages.push(row);
+      if (!byKey.has(row.uebung)) byKey.set(row.uebung, { key: row.uebung, teil: row.teil, alter: row.alter || null, stages: [], choices: [] });
+      const exercise = byKey.get(row.uebung);
+      if (!exercise.choices[row.stufe - 1]) exercise.choices[row.stufe - 1] = [];
+      exercise.choices[row.stufe - 1].push(row);
     }
-    for (const exercise of byKey.values()) exercise.stages.sort((a, b) => a.stufe - b.stufe);
+    for (const exercise of byKey.values()) {
+      exercise.choices = exercise.choices.filter(Boolean);
+      exercise.stages = exercise.choices.map((rows) => rows[0]);
+    }
     units[stat] = [...byKey.values()].sort((a, b) => a.teil - b.teil);
   }
   return units;

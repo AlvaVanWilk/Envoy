@@ -14,6 +14,7 @@ import { titleOwned, rankOf } from '../world/arena.js';
 import { ARENA_REACH, TITLES } from '../config.js';
 import { abbildPortrait, titleText, nameLine, ruhmAmount } from './arenaparts.js';
 import { challengePart } from './arenafight.js';
+import { adventureTabs } from './adventuretabs.js';
 import { shopPanel, ranksPanel } from './arenashop.js';
 
 const REFRESH_MS = 60 * 1000;
@@ -43,7 +44,8 @@ export function renderArena(game) {
     arena.load();
   }
   const view = h('section', { class: 'view arena' },
-    viewHead('Arena', 'Die Ruhmeshalle'),
+    viewHead('Abenteuer', 'Die Ruhmeshalle'),
+    adventureTabs(game, 'arena'),
     h('div', { class: 'arena-grid' },
       ownPanel(game, arena.hall),
       listPanel(game, arena.hall),

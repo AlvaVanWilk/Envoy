@@ -1,7 +1,7 @@
 // Fixed values of the game. Everything the rules depend on lives here,
 // so it can be checked in one place against docs/spezifikation.md.
 
-export const APP_VERSION = '5.20.11';
+export const APP_VERSION = '5.21.0';
 
 // Pictures are asked for with the version of the app, so after an update a
 // device fetches a new drawing instead of showing an old copy it kept.
@@ -157,6 +157,8 @@ export const TOO_MUCH = 'zuviel';
 // The guided timer: time to get ready before the first exercise, and to
 // change to the next one (seconds), per area.
 export const TIMER_PREP = { kraft: 10, ausdauer: 5, beweglichkeit: 10, gelassenheit: 0 };
+// Seconds the timer gives to change sides before „Andere Seite“ (so gewünscht).
+export const SIDE_SWITCH = 8;
 
 export const DATA_FILES = {
   exercises: 'data/uebungen.json',
@@ -275,11 +277,14 @@ export const DYES = [
 // level of strength; strength = the Envoy's (average of the stats) when the
 // piece turns up, + the requirement of the piece (since 5.20.5). A piece with
 // a requirement is never plain (the share of schlicht goes to gut).
+// Within its Güte a piece can turn out weak or strong (since 5.21, so
+// gewünscht): its bonuses are so many times the size, by chance anywhere
+// between the two numbers of `spread`, the same for all bonuses of the piece.
 export const QUALITIES = [
   { id: 'schlicht', name: 'Schlicht', bonuses: 0 },
-  { id: 'gut', name: 'Gut', bonuses: 1 },
-  { id: 'selten', name: 'Selten', bonuses: 2 },
-  { id: 'praechtig', name: 'Prächtig', bonuses: 3 },
+  { id: 'gut', name: 'Gut', bonuses: 1, spread: [0.5, 1.4] },
+  { id: 'selten', name: 'Selten', bonuses: 2, spread: [0.6, 1.5] },
+  { id: 'praechtig', name: 'Prächtig', bonuses: 3, spread: [0.7, 1.6] },
 ];
 export const QUALITY_CHANCES = {
   fund: [35, 40, 19, 6],           // found on the way (since 5.19 as from spirits; before 55/30/12/3)
@@ -287,7 +292,7 @@ export const QUALITY_CHANCES = {
   haendler: [25, 45, 24, 6],
   tiefe: [0, 55, 33, 12],          // a Wächter of the Tiefen: never a plain piece
   tiefenwaechter: [0, 0, 70, 30],  // the last Wächter of a Tiefe: at least selten
-  aushang: [20, 45, 27, 8],        // the reward of an Auftrag
+  aushang: [35, 40, 19, 6],        // the reward of an Auftrag (since 5.21 as from spirits; before 20/45/27/8)
   arena: [0, 0, 65, 35],           // for Ruhm: at least selten
 };
 export const BONUSES = [
@@ -341,13 +346,15 @@ export const DEPTH_SURE_ITEM = 5;               // on this Ebene a piece of clot
 // Der Aushang am Lager (see world/jobs.js): open with the Lagerfeuer, every
 // day JOBS_PER_DAY Aufträge, each once. An Auftrag costs no Energie, only
 // time: the Envoy goes to a place and is busy there for some minutes. Its
-// reward stands on the note: Bannsplitter (JOB_SPLITTER: base + per minute,
-// a little more with strength) and often (JOB_THING_CHANCE) a piece of
-// clothing, in its colour and with its Güte.
+// reward stands on the note: often (JOB_THING_CHANCE) a piece of clothing, in
+// its colour and with its Güte, else Bannsplitter (JOB_SPLITTER: base + per
+// minute, a little more with strength). Since 5.21 one or the other, not both
+// (so gewünscht: the Aushang gave too much for no Energie; before 5.21 both,
+// base 6, 2 per minute, a piece in 6 of 10).
 export const JOBS_FROM_STAGE = 1;
 export const JOBS_PER_DAY = 3;
-export const JOB_SPLITTER = { base: 6, perMinute: 2, perLevel: 0.08 };
-export const JOB_THING_CHANCE = 0.6;
+export const JOB_SPLITTER = { base: 4, perMinute: 1.5, perLevel: 0.08 };
+export const JOB_THING_CHANCE = 0.5;
 // A piece that hangs on the first note from its day on, until the Envoy has it
 // (if it fits his figure), at least selten: the Steppenrock, drawn by the
 // user's daughter (so gewünscht, since 5.20.6).
@@ -444,4 +451,6 @@ export const DEKO_REFUND_SHARE = 0.5;
 // Plans the trader has for sure on one day (so gewünscht: the Lichterkette,
 // drawn by the user, on 9 October 2026); on other days by chance, as any plan.
 export const TRADER_PLANS_ON = { lichterkette: '2026-10-09' };
-export const SELL_SHARE = 1 / 3;
+// What the trader pays for a piece: this share of its price (since 5.21, so
+// gewünscht: Bannsplitter came too easily; before 1/3).
+export const SELL_SHARE = 1 / 6;

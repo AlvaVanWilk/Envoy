@@ -8,7 +8,7 @@
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
 import { STATS } from '../config.js';
-import { formatDayLong } from '../days.js';
+import { formatDayLong, addDays } from '../days.js';
 import { statRow, statEmblem, statInfo } from './stats.js';
 import { openStatDetail } from './statdetail.js';
 import { viewHead, sectionTitle } from './parts.js';
@@ -53,7 +53,7 @@ function bonusNote(game) {
 function restPanel(game) {
   const { state, catalog } = game;
   const line = (stat) => {
-    const next = taskFor(stat, state.intensity, state.sick, catalog, state.age);
+    const next = taskFor(stat, state.intensity, state.sick, catalog, state.age, addDays(state.today, 1));
     if (!next) return null;
     const changed = next.parts.filter((p) => p.level !== (state.intensityAtDayStart[p.key]?.level || 1));
     return h('li', { 'data-stat': stat }, statEmblem(stat, 'tiny'),

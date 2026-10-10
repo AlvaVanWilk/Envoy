@@ -3,23 +3,25 @@
 // Big headings, one or two short sentences each, in the user's tone.
 
 import { h, icon } from './dom.js';
-import { NAV_ICONS, UI_ICONS } from './icons.js';
+import { NAV_ICONS, UI_ICONS, STAT_ICONS, SLOT_ICONS } from './icons.js';
 
 // A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.20.10';
+export const NEWS_ID = '5.21.0';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Neues fürs Tageswerk und fürs Lager.';
+const INTRO = 'Eure Notizen sind eingearbeitet.';
 
 const NEWS = [
-  { icon: UI_ICONS.timer, title: 'Erledigt nach der Übung',
-    text: 'Eine Übung lässt sich abhaken, sobald ihre Zeit gelaufen ist, mit dem Timer oder ohne. Bis dahin zählt der Knopf herunter.' },
-  { icon: UI_ICONS.undo, title: 'Zurücknehmen',
-    text: 'Ein Tipp auf den Haken einer erledigten Aufgabe nimmt sie wieder zurück.' },
-  { icon: NAV_ICONS.lager, title: 'Deko abbauen',
-    text: 'Eine gebaute Deko lässt sich wieder abbauen. Die Hälfte des Materials bekommt ihr zurück, der Plan bleibt.' },
-  { icon: NAV_ICONS.haendler, title: 'Ein neuer Plan',
-    text: 'Ab dem 9. Oktober hat der Händler etwas Neues für euer Lager.' },
+  { icon: STAT_ICONS.ausdauer, title: 'Nicht immer Treppe',
+    text: 'An manchen Tagen gibt es stattdessen Laufen auf der Stelle, Knie heben oder Ausfallschritte im Wechsel. Die Stufe bleibt dieselbe.' },
+  { icon: STAT_ICONS.beweglichkeit, title: 'Die Brücke',
+    text: 'Sie ersetzt den knienden Ausfallschritt. Die Hampel-Runden haben jetzt kürzere Abschnitte mit Pausen dazwischen.' },
+  { icon: UI_ICONS.timer, title: 'Hören statt hinsehen',
+    text: 'Der Timer lässt Zeit zum Seitenwechsel, klopft zwischendurch leise und klingt am Ende, auch bei dunklem Bildschirm.' },
+  { icon: NAV_ICONS.abenteuer, title: 'Alles draußen unter Abenteuer',
+    text: 'Karte, Aushang, Tiefen und Arena liegen jetzt zusammen. Das Lager zeigt nur noch, was draußen wartet.' },
+  { icon: SLOT_ICONS.torso, title: 'Kleidung',
+    text: 'Innerhalb einer Güte fällt ein Stück schwächer oder stärker aus. Ein Auftrag bringt ein Kleidungsstück oder Bannsplitter, und der Händler zahlt weniger.' },
 ];
 
 export function openNews(onDone) {

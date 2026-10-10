@@ -21,15 +21,16 @@
 //
 // An exercise can be ticked off only once its time has run (since 5.20.9, so
 // gewünscht, for everyone): from the moment the card first shows it, or with
-// the timer. Until then the button counts down. So skipping takes as long as
-// doing it. The moment is kept on the device (store, ui.exerciseStart).
+// the timer. Until then the button counts down, and a soft tone says when the
+// time is up. So skipping takes as long as doing it. The moment is kept on the device (store, ui.exerciseStart).
 
 import { h, icon } from './dom.js';
 import { UI_ICONS } from './icons.js';
-import { TIMER_PREP, TOO_MUCH, rulesOf } from '../config.js';
+import { TIMER_PREP, SIDE_SWITCH, TOO_MUCH, rulesOf } from '../config.js';
 import { statEmblem, statInfo, statNumber } from './stats.js';
 import { openCard, closeSheet, toast } from './sheet.js';
 import { openTimer } from './timer.js';
+import { unlockSound, chime } from './sound.js';
 import { resolveLook, showLayer } from './look.js';
 import { questionsOf, canBeTooMuch } from '../tasks.js';
 import { holdRing, releaseRing, celebrateStat, ringTarget } from './topbar.js';
@@ -153,7 +154,8 @@ function figure(part, game, className, phase = null) {
 }
 
 // The parts of the guided timer for one exercise: getting ready, then the
-// exercise (one side, the other side …); what the voice says. The timer
+// exercise (one side, a short time to change sides, the other side …); what
+// the voice says. The timer
 // runs one exercise at a time: after it comes its question, and the next
 // one begins only with a tap, so there is time to read how it goes.
 function timerSegments(stat, part, game) {
@@ -165,6 +167,9 @@ function timerSegments(stat, part, game) {
     const prompts = j === 0 ? part.row.ansagen : [];
     const spokenAtStart = prompts.some((p) => p.at === 0);
     const start = phase.label || (spokenAtStart || prep === 0 ? '' : 'Los.');
+    if (j > 0 && /^andere seite/i.test(phase.label || '')) {
+      segments.push({ name, label: 'Seite wechseln', seconds: SIDE_SWITCH, say: 'Seite wechseln.', figure: figure(part, game, 'timer-img', part.phases[j - 1]) });
+    }
     segments.push({ name, label: phase.label, seconds: phase.s, say: start, prompts, figure: figure(part, game, 'timer-img', phase) });
   });
   return segments;
@@ -172,6 +177,7 @@ function timerSegments(stat, part, game) {
 
 // start: 'questions' to open the card at the questions of what is open.
 export function openTaskCard(stat, game, start = null) {
+  unlockSound();   // opened with a tap: the tone at the end may sound
   const task = game.todayTask(stat);
   if (!task) return;
   const info = statInfo(stat);
@@ -279,7 +285,9 @@ export function openTaskCard(stat, game, start = null) {
       // while the time runs, the button counts down
       if (left > 0) {
         setTimeout(() => {
-          if (card.isConnected && card.dataset.view === 'steps' && task.parts[shown] === part) show('steps');
+          if (!card.isConnected || card.dataset.view !== 'steps' || task.parts[shown] !== part) return;
+          if (secondsLeft(game, stat, part) === 0) chime();   // the time is up, also without the timer
+          show('steps');
         }, 1000);
       }
     } else if (view === 'questions') {

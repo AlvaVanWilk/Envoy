@@ -4,7 +4,8 @@
 // Beweglichkeit, Gelassenheit stay the work of the real exercises); it helps
 // in the world: more damage, hitting and dodging, calming spirits, Energie
 // refilling faster, more luck with Bannsplitter and finds. The bigger the
-// Envoy's stats when the piece turns up, the bigger its bonuses. A piece that
+// Envoy's stats when the piece turns up, the bigger its bonuses; within its
+// Güte a piece can turn out weak or strong (since 5.21). A piece that
 // asks something of the Envoy offers something in return (since 5.20.5, so
 // gewünscht): its bonuses are as big as if he were stronger by its
 // requirement, and it is never plain. Wearing it takes the stats, and those
@@ -18,10 +19,11 @@ export const qualityById = (id) => QUALITIES.find((q) => q.id === id) || null;
 export const bonusById = (id) => BONUSES.find((b) => b.id === id) || null;
 
 // The size of a bonus for an Envoy of this strength (average of the stats):
-// from `base` at strength 1, growing by `perLevel`, a little up or down by chance.
-function bonusSize(bonus, power, rng) {
-  const exact = bonus.base + bonus.perLevel * Math.max(0, power - 1);
-  return Math.max(1, Math.round(exact * (0.8 + 0.4 * rng())));
+// from `base` at strength 1, growing by `perLevel`, times how well the piece
+// turned out (grade, see `spread` in QUALITIES), a little up or down by chance.
+function bonusSize(bonus, power, rng, grade = 1) {
+  const exact = (bonus.base + bonus.perLevel * Math.max(0, power - 1)) * grade;
+  return Math.max(1, Math.round(exact * (0.9 + 0.2 * rng())));
 }
 
 // Güte and bonuses for a piece from `origin` (fund, beute, haendler, …):
@@ -37,11 +39,13 @@ export function rollBonuses(origin, power, rng, level = 0) {
   while (index < chances.length - 1 && pick >= chances[index]) { pick -= chances[index]; index += 1; }
   const quality = QUALITIES[index];
   if (quality.bonuses === 0) return {};
+  const [low, high] = quality.spread || [1, 1];
+  const grade = low + (high - low) * rng();
   const left = [...BONUSES];
   const bonus = {};
   for (let n = 0; n < quality.bonuses && left.length > 0; n += 1) {
     const [chosen] = left.splice(Math.floor(rng() * left.length), 1);
-    bonus[chosen.id] = bonusSize(chosen, power + level, rng);
+    bonus[chosen.id] = bonusSize(chosen, power + level, rng, grade);
   }
   return { guete: quality.id, bonus };
 }

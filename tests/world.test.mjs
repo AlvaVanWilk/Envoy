@@ -94,7 +94,7 @@ test('time follows Energie: every point of work, and every point of way, is 10 s
   const c = ctxOf(s);
   const quick = planExpedition(catalog.questById.get('q-stein-klein'), c, 'x');
   const long = planExpedition(catalog.questById.get('q-horizont'), c, 'x');
-  assert.ok(quick.cost <= 1, `quick ${quick.cost}`);
+  assert.ok(quick.cost <= 2, `quick ${quick.cost}`);
   assert.ok(long.cost >= 60, `long ${long.cost}`);
   assert.ok(long.out + long.act + long.back < 20, `long ${long.out + long.act + long.back} minutes`);
 });
@@ -143,7 +143,7 @@ test('gathering never fails, yields more with Kraft and gets shorter with the te
   let strongSum = 0;
   for (let i = 0; i < 200; i += 1) {
     const weak = runQuest(quest, { ...base, stats: statsAt(1) }, `s${i}`);
-    assert.ok(weak.reward.stein >= 16 && weak.reward.stein <= 20 && weak.cleared);
+    assert.ok(weak.reward.stein >= 18 && weak.reward.stein <= 22 && weak.cleared);
     weakSum += weak.reward.stein;
     strongSum += runQuest(quest, { ...base, stats: statsAt(9) }, `s${i}`).reward.stein;
   }
@@ -459,6 +459,20 @@ test('a piece with a requirement offers more: bigger bonuses, never plain', asyn
   assert.deepEqual(rollBonuses('fund', 5, seededRandom('x'), 0), rollBonuses('fund', 5, seededRandom('x')));
 });
 
+test('within its Güte a piece turns out weak or strong (since 5.21)', async () => {
+  const { rollBonuses } = await import('../js/world/bonuses.js');
+  const { seededRandom } = await import('../js/world/rng.js');
+  const sizes = [];
+  for (let i = 0; i < 2000; i += 1) {
+    const r = rollBonuses('fund', 10, seededRandom(`g${i}`));
+    if (r.guete === 'gut' && r.bonus.glueck) sizes.push(r.bonus.glueck);
+  }
+  // glück at strength 10: 14 on average; a gut piece between about half and nearly one and a half times that
+  const low = Math.min(...sizes);
+  const high = Math.max(...sizes);
+  assert.ok(low <= 8 && high >= 19, `${low} ${high}`);
+});
+
 test('pieces found, dropped or offered get a Güte and bonuses; worn, the bonuses count', async () => {
   const { rollBonuses, cleanBonuses } = await import('../js/world/bonuses.js');
   const { seededRandom } = await import('../js/world/rng.js');
@@ -577,8 +591,10 @@ test('der Aushang: a few Aufträge a day, each once, without Energie, the reward
   assert.equal(jobs.length, 3);
   assert.deepEqual(jobsFor(DAY, c), jobs);                     // the same all day
   for (const j of jobs) {
-    assert.ok(j.minutes >= 4 && j.splitter > 0 && catalog.placeById.get(j.place));
-    if (j.thing) assert.ok(catalog.itemById.get(j.thing.id));
+    assert.ok(j.minutes >= 4 && catalog.placeById.get(j.place));
+    // a piece of clothing or Bannsplitter, one or the other (since 5.21)
+    if (j.thing) assert.ok(catalog.itemById.get(j.thing.id) && j.splitter === 0);
+    else assert.ok(j.splitter > 0);
   }
   const job = jobs[0];
   const take = (hoursAfter, fields = {}) => Object.assign(ev('expedition', { q: job.id, place: job.place, title: job.name, regel: 2, least: 0 }, hoursAfter), { outcome: jobOutcome(job) }, fields);
