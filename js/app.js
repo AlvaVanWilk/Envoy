@@ -195,6 +195,7 @@ async function start() {
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => { /* works without */ });
   }
+  if (location.protocol !== 'file:') watchForUpdates();
 
   let catalog;
   try {
@@ -226,7 +227,6 @@ async function start() {
   window.addEventListener('hashchange', render);
   render();
   sync.init();
-  if (location.protocol !== 'file:') watchForUpdates();
 
   // Every second: the expedition bar moves; once the Envoy is back, the
   // state is recalculated and the report appears.
