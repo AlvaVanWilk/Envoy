@@ -34,6 +34,7 @@ import { mountTestTools } from './ui/testtools.js';
 import { updateTripSign } from './ui/tripsign.js';
 import { showGates, markNewsSeen, gateOpen } from './ui/gate.js';
 import { installTips } from './ui/tips.js';
+import { watchForUpdates } from './ui/update.js';
 
 // The menu at the bottom, left to right. The camp in the middle is the
 // start. `feature` = unlocked in the game.
@@ -225,6 +226,7 @@ async function start() {
   window.addEventListener('hashchange', render);
   render();
   sync.init();
+  if (location.protocol !== 'file:') watchForUpdates();
 
   // Every second: the expedition bar moves; once the Envoy is back, the
   // state is recalculated and the report appears.

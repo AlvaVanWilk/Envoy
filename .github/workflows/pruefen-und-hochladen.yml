@@ -6,7 +6,8 @@
 #        zum Beispiel /envoy-test). Diese Fassung heißt „Envoy Test“, trägt ein
 #        kleines Test-Schild und speichert getrennt von der echten App;
 #      - der Zweig main in den echten Ordner. Auf main kommt nur, was die
-#        Nutzerin im Testordner angesehen und freigegeben hat.
+#        Nutzerin im Testordner angesehen und freigegeben hat, jeden Tag um
+#        3 Uhr (siehe taeglich-live.yml).
 #
 # Für Schritt 3 braucht es einmalig vier Geheimnisse unter
 # Settings → Secrets and variables → Actions (siehe README):
@@ -17,6 +18,8 @@ name: Prüfen und hochladen
 
 on:
   push:
+    # „freigegeben“ wartet nur auf 3 Uhr (siehe taeglich-live.yml) und wird nicht hochgeladen.
+    branches-ignore: [freigegeben]
   pull_request:
   workflow_dispatch:
 

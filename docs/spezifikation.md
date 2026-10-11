@@ -1556,7 +1556,18 @@ auf den IONOS-Webspace, in zwei Ordner:
   einem Fenster der App selbst geht es nicht: claude.ai lässt sich nicht einbetten. Die echte Fassung zeigt es nie, ohne dass jemand
   daran denken muss.
 - **Echter Ordner**: nur der Zweig `main`. Dorthin kommt eine Fassung erst, wenn die
-  Nutzerin sie im Testordner angesehen und freigegeben hat.
+  Nutzerin sie im Testordner angesehen und freigegeben hat, und dann zu einer festen Zeit
+  (seit 5.22.1, so gewünscht): Nach „freigeben“ kommt der geprüfte Stand unverändert auf den
+  Zweig `freigegeben` (der wird nicht hochgeladen). Jeden Tag um 3 Uhr Berliner Zeit bringt der
+  Ablauf „Täglich live“ (`.github/workflows/taeglich-live.yml`) ihn auf `main` und lädt ihn
+  hoch; ist nichts Neues freigegeben, passiert nichts. GitHub startet geplante Abläufe
+  manchmal etwas später.
+- **Offene Apps laden neu** (`js/ui/update.js`): Alle 15 Minuten und immer, wenn die App
+  wieder in den Vordergrund kommt, fragt sie, welche Fassung auf dem Server liegt. Ist es
+  eine andere, lädt sie neu, aber nur in einem ruhigen Moment: nie, während der Timer einer
+  Übung läuft oder ein Fenster offen ist (Kampf, Quest), sonst eine Minute später wieder.
+  Verloren geht dabei nichts, alles Getane ist sofort gespeichert. Danach zeigen die
+  Neuigkeiten, was neu ist.
 
 Die App fragt bei jedem Laden beim Server nach, ob sich eine Datei geändert hat, und
 Bilder werden mit der App-Version angefragt. Eine neue Zeichnung unter altem Namen
@@ -1593,7 +1604,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot; Accessoire statt Umhang |
 | Ebene je Teil | wählbar (Spalte `ebene`), sonst die Stelle des Slots; seit 5.22 je Stück nach vorn oder hinten (Ereignis `lage`) |
 | Inhaltsumfang | vorerst höchstens bis ins gute Midgame; Luft nach oben |
-| Veröffentlichung | erst Testordner, echter Ordner nur nach Freigabe (Zweig `main`) |
+| Veröffentlichung | erst Testordner, echter Ordner nur nach Freigabe (Zweig `main`), live jeden Tag um 3 Uhr (Zweig `freigegeben`); offene Apps laden dann von selbst neu |
 | Rucksack | 5 Plätze, am Start leer, nur für Dinge; die Aufbewahrung (Einrichtung des Lagers) unterwegs nur einsehbar |
 | Vorrat | Pilzholz und Stein nicht im Rucksack, sondern im Vorrat: ohne Lager 10 je Art, mit Stein- bzw. Pilzlager dessen Fassungsvermögen; gesammeltes ist sofort dort, ohne Erklärung |
 | Konten | Name und Passwort auf dem eigenen Server; ohne Konto nur auf einem Gerät |

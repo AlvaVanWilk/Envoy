@@ -1,0 +1,68 @@
+# Jeden Tag um 3 Uhr (Berliner Zeit) geht live, was die Nutzerin freigegeben hat.
+#
+# Ablauf: Sagt die Nutzerin „freigeben“, kommt der geprüfte Stand aus dem
+# Testordner unverändert auf den Zweig „freigegeben“. Nachts um 3 bringt dieser
+# Ablauf ihn auf main und startet „Prüfen und hochladen“ für main, also den
+# echten Ordner. Offene Apps laden danach von selbst neu (js/ui/update.js).
+# Ist nichts Neues freigegeben, passiert nichts.
+#
+# GitHub rechnet in UTC: 1 Uhr UTC ist im Sommer 3 Uhr in Berlin, 2 Uhr UTC im
+# Winter. Beide laufen; der zu frühe wartet. Geplante Abläufe startet GitHub
+# manchmal etwas später.
+
+name: Täglich live
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: envoy-taeglich-live
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ist es schon 3 Uhr in Berlin?
+        if: github.event_name == 'schedule'
+        run: |
+          stunde=$(TZ=Europe/Berlin date +%-H)
+          if [ "$stunde" -lt 3 ]; then
+            echo "Erst $stunde Uhr in Berlin, der nächste Lauf übernimmt."
+            echo "WARTEN=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Freigegebenen Stand live bringen
+        if: env.WARTEN != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! git fetch origin freigegeben main; then
+            echo "Nichts freigegeben."
+            exit 0
+          fi
+          frei=$(git rev-parse origin/freigegeben)
+          live=$(git rev-parse origin/main)
+          if [ "$frei" = "$live" ]; then
+            echo "Nichts Neues: main ist schon auf dem freigegebenen Stand."
+            exit 0
+          fi
+          if ! git merge-base --is-ancestor "$live" "$frei"; then
+            echo "Der freigegebene Stand baut nicht auf main auf. Nichts geändert."
+            exit 1
+          fi
+          git push origin "$frei:refs/heads/main"
+          # Ein Push mit diesem Schlüssel startet keinen Ablauf von selbst, darum ausdrücklich:
+          gh workflow run pruefen-und-hochladen.yml --ref main
+          echo "Freigegebener Stand $frei ist auf main und wird hochgeladen."

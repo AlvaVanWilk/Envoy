@@ -40,7 +40,9 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Icon mit orangem Hintergrund aus `assets/app/test/`), den Zweig
   `main` in den echten Ordner. Auf `main` kommt nur, was die Nutzerin im Testordner
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
-  unverändert auf `main` bringen. Nur die Testfassung zeigt Test-Knöpfe (am Schild
+  unverändert auf den Zweig `freigegeben` bringen (Fast-forward). Jeden Tag um 3 Uhr bringt
+  `.github/workflows/taeglich-live.yml` ihn auf `main` und lädt hoch (so gewünscht); offene Apps
+  laden dann in einem ruhigen Moment von selbst neu (`js/ui/update.js`). Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
   Pilzholz, Bannsplitter und Ruhm dazu, Plan finden, Kleidung finden, Expedition beenden, Rast in
   den Tiefen beenden, den Hinweis
