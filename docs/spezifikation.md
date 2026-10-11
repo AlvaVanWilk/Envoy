@@ -1305,6 +1305,15 @@ Ebenenreihenfolge (hinten nach vorn): 1 Accessoire, 2 Basisfigur (Körper, Kopf,
 Grundkleidung), 3 Beinkleidung, 4 Schuhe, 5 Torso, 6 Handwickel, 7 Frisur /
 Kopfbedeckung.
 
+**Selbst nach vorn oder hinten** (seit 5.22, so gewünscht): Liegt ein getragenes Stück in
+einer Zusammenstellung falsch, etwa die Handwickel über dem Hemd, zeigt sein Fenster klein
+„Ebene: Nach hinten · Nach vorn“ und, sobald es verschoben ist, „Wie gezeichnet“. Ein Schritt
+legt es gleich hinter oder vor die nächste Ebene der Figur in dieser Richtung (die Basisfigur
+und das Unterhemd zählen mit; `layerMoves` in `js/ui/paperdoll.js`). Die Wahl gehört dem
+Stück, gilt auf allen Geräten (Ereignis `lage` mit `inst` und `lage`, einer Zahl wie die
+Ebenen der Slots, `null` = wie gezeichnet) und fürs Abbild in der Arena. Erst wenn sich zeigt,
+dass ein Stück je nach Zusammenstellung anders liegen muss, wird daraus mehr.
+
 **Zwei Figuren** stehen bei der Erstellung zur Wahl, beide von der Nutzerin im
 Comicstil mit schwarzer Kontur gezeichnet: eine Frau mit blondem Haar im Dutt und ein
 Mann mit kurzem, aschblondem Haar, beide in grauer Unterwäsche als Grundkleidung. Jede
@@ -1582,7 +1591,7 @@ erscheint so beim nächsten Öffnen, statt dass ein Gerät eine alte Kopie weite
 | Bodensatz | Level mit Nachkommastelle |
 | Tagesgrenze | 3:00 Uhr |
 | Slots | 6, kein Gürtel, keine Schulterstücke, kein Waffen-Slot; Accessoire statt Umhang |
-| Ebene je Teil | wählbar (Spalte `ebene`), sonst die Stelle des Slots |
+| Ebene je Teil | wählbar (Spalte `ebene`), sonst die Stelle des Slots; seit 5.22 je Stück nach vorn oder hinten (Ereignis `lage`) |
 | Inhaltsumfang | vorerst höchstens bis ins gute Midgame; Luft nach oben |
 | Veröffentlichung | erst Testordner, echter Ordner nur nach Freigabe (Zweig `main`) |
 | Rucksack | 5 Plätze, am Start leer, nur für Dinge; die Aufbewahrung (Einrichtung des Lagers) unterwegs nur einsehbar |

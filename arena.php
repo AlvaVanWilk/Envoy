@@ -241,7 +241,10 @@ function cleanAbbild($raw): ?array
             $value = $w['bonus'][$key] ?? 0;
             if (is_int($value) && $value > 0) $bonus[$key] = min($value, ARENA_BONUS_MAX);
         }
-        $worn[$item['slot']] = ['id' => $item['id'], 'farbe' => word($w['farbe'] ?? '', 12)] + ($bonus ? ['bonus' => $bonus] : []);
+        // where the person put the piece among the layers (since 5.22), a number between 0 and 10
+        $lage = $w['lage'] ?? null;
+        $lage = (is_int($lage) || is_float($lage)) && $lage > 0 && $lage < 10 ? round((float) $lage, 4) : null;
+        $worn[$item['slot']] = ['id' => $item['id'], 'farbe' => word($w['farbe'] ?? '', 12)] + ($bonus ? ['bonus' => $bonus] : []) + ($lage !== null ? ['lage' => $lage] : []);
     }
 
     return [

@@ -143,7 +143,7 @@ function openAbbild(x, game) {
   for (const w of x.worn || []) {
     const item = game.catalog.itemById.get(w.id);
     if (!item) continue;
-    items[item.slot] = { inst: item.slot, kind: 'item', id: w.id, ...(w.farbe ? { farbe: w.farbe } : {}) };
+    items[item.slot] = { inst: item.slot, kind: 'item', id: w.id, ...(w.farbe ? { farbe: w.farbe } : {}), ...(Number.isFinite(w.lage) ? { lage: w.lage } : {}) };
     equipped[item.slot] = item.slot;
   }
   const figure = paperdoll(equipped, { items }, game.catalog, { className: 'arena-doll', envoy: x });

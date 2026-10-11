@@ -313,6 +313,8 @@ Ein Teil kann an anderer Stelle liegen als sein Slot (Spalte `ebene` in
 Hinter der Figur, Unter der Hose (eingestecktes Hemd), Über den Schuhen (weite Hose),
 Über jeder Hose (hohe Stiefel), Unter dem Oberteil, Über dem Oberteil, Ganz vorn.
 Das entscheidet die Nutzerin; aus dem Bild allein lässt es sich nicht sicher ablesen.
+Dazu kann jede Person ein getragenes Stück selbst eine Ebene nach vorn oder hinten legen
+(klein im Fenster des Stücks, Ereignis `lage`, gilt für dieses Stück, so gewünscht).
 
 Icons sind 256 × 256 und werden aus den Zeichnungen der Ebenen freigestellt (so gewünscht).
 

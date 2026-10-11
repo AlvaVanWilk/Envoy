@@ -137,7 +137,7 @@ export function abbildOf(state) {
   const { world } = state;
   if (!world.envoy) return null;
   const worn = Object.values(world.equipped).map((inst) => world.items[inst]).filter(Boolean)
-    .map((entry) => ({ id: entry.id, ...(entry.farbe ? { farbe: entry.farbe } : {}), ...(entry.bonus ? { bonus: entry.bonus } : {}) }));
+    .map((entry) => ({ id: entry.id, ...(entry.farbe ? { farbe: entry.farbe } : {}), ...(entry.bonus ? { bonus: entry.bonus } : {}), ...(entry.lage ? { lage: entry.lage } : {}) }));
   return {
     name: world.envoy.name,
     figur: world.envoy.figur,

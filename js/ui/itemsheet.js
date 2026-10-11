@@ -13,6 +13,7 @@ import { unmetRequirements, lookup } from '../world/items.js';
 import { fits, figureOf, dyeById } from '../world/clothes.js';
 import { hasSpace, reachable, capacity } from '../world/inventory.js';
 import { weaveSources, weaveBlock, wovenBonuses } from '../world/weave.js';
+import { layerMoves } from './paperdoll.js';
 
 export const slotName = (id) => SLOTS.find((s) => s.id === id)?.name || id;
 export const WHERE = { rucksack: 'Rucksack', schrank: 'Aufbewahrung', body: 'Getragen' };
@@ -100,6 +101,7 @@ export function openEntry(inst, game) {
       effectList(effectsOf(thing, entry)),
       reachable(world, entry) ? null : h('p', { class: 'muted away-note' }, AWAY_NOTE),
       actions.length > 0 ? h('div', { class: 'sheet-actions' }, actions) : null,
+      entry.where === 'body' ? layerRow(entry, game) : null,
       sources.length > 0 ? h('div', { class: 'weave-entry' },
         h('button', { class: 'btn ghost', disabled: Boolean(weaveWhy), onclick: () => openWeave(entry, thing, game) }, 'Kraft einweben'),
         weaveWhy ? h('p', { class: 'muted' }, weaveWhy) : null) : null,
@@ -199,4 +201,18 @@ export function openSlot(slotId, game) {
       ? h('p', { class: 'muted' }, 'Nichts für diesen Slot im Rucksack oder in der Aufbewahrung.')
       : h('div', { class: 'item-list' }, rows),
   });
+}
+
+// A worn piece: one step further to the front or to the back among the
+// layers of the figure, or back where it is drawn (since 5.22, so gewünscht:
+// the person decides, e.g. the gloves under the shirt). Small, at the side.
+function layerRow(entry, game) {
+  const moves = layerMoves(entry.inst, game.state.world, game.catalog);
+  if (moves.front === null && moves.back === null && entry.lage === undefined) return null;
+  const move = (lage) => { game.setLayer(entry.inst, lage); openEntry(entry.inst, game); };
+  return h('div', { class: 'layer-row' },
+    h('span', { class: 'layer-label' }, 'Ebene'),
+    h('button', { class: 'btn text small', type: 'button', disabled: moves.back === null, onclick: () => move(moves.back) }, 'Nach hinten'),
+    h('button', { class: 'btn text small', type: 'button', disabled: moves.front === null, onclick: () => move(moves.front) }, 'Nach vorn'),
+    entry.lage !== undefined ? h('button', { class: 'btn text small', type: 'button', onclick: () => move(null) }, 'Wie gezeichnet') : null);
 }

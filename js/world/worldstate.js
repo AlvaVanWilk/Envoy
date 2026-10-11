@@ -450,6 +450,16 @@ export function applyWorldEvent(world, e, ctx) {
       }
       break;
     }
+    case 'lage': {
+      // where the person wants a piece among the layers (since 5.22, so gewünscht);
+      // null puts it back where it is drawn
+      const piece = world.items[e.inst];
+      if (piece?.kind === 'item') {
+        if (e.lage === null) delete piece.lage;
+        else if (Number.isFinite(e.lage) && e.lage > 0 && e.lage < 10) piece.lage = e.lage;
+      }
+      break;
+    }
     case 'weben':
       // the strength of `quelle` goes into `ziel`; `quelle` falls to threads (see weave.js);
       // since 5.20.4 (field `tragbar`) only from a piece the Envoy can wear

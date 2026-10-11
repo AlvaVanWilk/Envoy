@@ -654,3 +654,17 @@ test('Einweben: the strength of one piece goes into another of the same slot, wh
   assert.equal(weaveBlock({ camp: { stage: 1 }, expedition: { actions: [] } }), 'away');
   assert.equal(weaveBlock(s.world), null);
 });
+
+test('a piece can lie further to the front or the back, as the person wants (since 5.22)', () => {
+  const s0 = replay([], catalog, DAY, T0 + 0.1 * H);
+  const inst = Object.values(s0.world.items).find((e) => e.kind === 'item').inst;
+  const set = (lage, h) => ev('lage', { inst, lage }, h);
+  let s = replay([set(4.95, 0.01)], catalog, DAY, T0 + 0.1 * H);
+  assert.equal(s.world.items[inst].lage, 4.95);
+  s = replay([set(4.95, 0.01), set(null, 0.02)], catalog, DAY, T0 + 0.1 * H);
+  assert.equal(s.world.items[inst].lage, undefined);
+  // nothing outside the figure, nothing for a piece that is not there
+  s = replay([set(40, 0.01), ev('lage', { inst: 'nichts', lage: 3 }, 0.02)], catalog, DAY, T0 + 0.1 * H);
+  assert.equal(s.world.items[inst].lage, undefined);
+  assert.equal(s.world.items.nichts, undefined);
+});

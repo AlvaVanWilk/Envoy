@@ -346,6 +346,13 @@ export const game = {
     return unmetRequirements(item, this.state.stats).length === 0;
   },
 
+  // Where a piece lies among the layers of the figure (see layerMoves in
+  // paperdoll.js); null: back where it is drawn.
+  setLayer(inst, lage) {
+    const entry = this.state.world.items[inst];
+    if (entry?.kind === 'item') this.add([this.event('lage', { inst, lage })]);
+  },
+
   equip(slot, inst) {
     const entry = this.state.world.items[inst];
     const item = entry && this.catalog.itemById.get(entry.id);
