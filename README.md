@@ -21,7 +21,7 @@ Es gibt zwei Fassungen auf dem Webspace:
 - **Echte App** im eigenen Ordner (zum Beispiel `envoy`). Sie ändert sich nur, wenn
   eine geprüfte Fassung freigegeben wird: dann kommt der Stand der Testfassung auf den
   Zweig `freigegeben`, und jede Nacht um 3 Uhr bringt der Ablauf „Täglich live“ ihn auf
-  `main` und lädt genau diesen hoch. Offene Apps laden danach von selbst neu, nie mitten
+  `main` und lädt genau diesen hoch. Offene Apps laden um 3:30 von selbst neu, nie mitten
   in einer Übung.
 
 Freigeben: Claude sagen „freigeben“. Mehr braucht es nicht. Live ist es dann ab 3 Uhr

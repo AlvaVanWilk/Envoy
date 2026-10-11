@@ -1565,12 +1565,12 @@ auf den IONOS-Webspace, in zwei Ordner:
   Ablauf „Täglich live“ (`.github/workflows/taeglich-live.yml`) ihn auf `main` und lädt ihn
   hoch; ist nichts Neues freigegeben, passiert nichts. GitHub startet geplante Abläufe
   manchmal etwas später.
-- **Offene Apps laden neu** (`js/ui/update.js`): Alle 15 Minuten und immer, wenn die App
-  wieder in den Vordergrund kommt, fragt sie, welche Fassung auf dem Server liegt. Ist es
-  eine andere, lädt sie neu, aber nur in einem ruhigen Moment: nie, während der Timer einer
-  Übung läuft oder ein Fenster offen ist (Kampf, Quest), sonst eine Minute später wieder.
-  Verloren geht dabei nichts, alles Getane ist sofort gespeichert. Danach zeigen die
-  Neuigkeiten, was neu ist.
+- **Offene Apps laden neu** (`js/ui/update.js`, seit 5.22.3 so gewünscht): jede Nacht um
+  3:30 nach der Uhr des Geräts, ohne beim Server nachzufragen. Ein Gerät, das um 3:30 schläft,
+  lädt neu, sobald die App wieder zu sehen ist. Nie, während der Timer einer Übung läuft oder
+  ein Fenster offen ist (Kampf, Quest), dann eine Minute später. Verloren geht dabei nichts,
+  alles Getane ist sofort gespeichert. Danach zeigen die Neuigkeiten, was neu ist. Kommt der
+  Ablauf um 3 Uhr ausnahmsweise erst nach 3:30 dran, ist das Neue in der Nacht darauf da.
 
 Die App fragt bei jedem Laden beim Server nach, ob sich eine Datei geändert hat, und
 Bilder werden mit der App-Version angefragt. Eine neue Zeichnung unter altem Namen
