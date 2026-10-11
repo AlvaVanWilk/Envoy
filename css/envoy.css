@@ -2861,3 +2861,4 @@ button[data-tip], a[data-tip] { cursor: pointer; }
 .layer-label { margin-right: 4px; letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px; }
 .layer-row .btn.text.small { min-height: 32px; padding: 0 8px; font-family: var(--font-body); font-size: 13px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--text-2); }
 .layer-row .btn.text.small:disabled { opacity: 0.35; }
+.item-row.is-openable { cursor: pointer; }

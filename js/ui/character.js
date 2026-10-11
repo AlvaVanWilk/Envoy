@@ -11,7 +11,7 @@ import { openStatDetail } from './statdetail.js';
 import { store } from '../store.js';
 import { addDays, formatDayShort } from '../days.js';
 import { viewHead, sectionTitle, itemIcon, staminaBar, effectText, qualityClass, FIGHT_TIPS } from './parts.js';
-import { openSlot, slotName } from './itemsheet.js';
+import { openSlot, openEntry, slotName } from './itemsheet.js';
 import { packBox } from './pack.js';
 import { fighter } from '../world/hero.js';
 import { effortOf } from '../world/arena.js';
@@ -49,7 +49,8 @@ function slotTile(slotId, game) {
     class: `slot ${item ? 'filled' : ''}`,
     'data-slot': slotId,
     'aria-label': item ? `${slotName(slotId)}: ${item.name}` : `${slotName(slotId)}: leer`,
-    onclick: () => openSlot(slotId, game),
+    // a worn piece opens itself (Ablegen, Ebene, Einweben, another one); an empty slot its list
+    onclick: () => (entry ? openEntry(entry.inst, game) : openSlot(slotId, game)),
   },
   h('span', { class: `slot-frame${qualityClass(entry)}` }, item ? itemIcon(item, game, 'item-icon', entry.farbe) : icon(SLOT_ICONS[slotId], 'slot-glyph')),
   h('span', { class: 'slot-label' }, SLOTS.find((x) => x.id === slotId).short));

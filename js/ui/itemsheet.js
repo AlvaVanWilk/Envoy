@@ -70,6 +70,7 @@ export function openEntry(inst, game) {
   } else if (entry.kind === 'item') {
     const canWear = unmetRequirements(thing, stats).length === 0 && fits(thing, figureOf(world));
     if (entry.where === 'body') {
+      actions.push(h('button', { class: 'btn ghost', onclick: () => openSlot(thing.slot, game) }, 'Andere wählen'));
       actions.push(h('button', { class: 'btn ghost', onclick: () => { game.unequip(thing.slot); closeSheet(); } }, 'Ablegen'));
     } else {
       actions.push(h('button', { class: 'btn primary', disabled: !canWear, onclick: () => { game.equip(thing.slot, inst); closeSheet(); } }, 'Anlegen'));
@@ -165,7 +166,8 @@ function openWeave(target, thing, game) {
   showList();
 }
 
-// All owned items for one slot, to choose from.
+// All owned items for one slot, to choose from. A tap on a row opens that
+// piece (to look at it, weave into it, move it among the layers).
 export function openSlot(slotId, game) {
   const { world, stats } = game.state;
   const entries = Object.values(world.items)
@@ -178,12 +180,14 @@ export function openSlot(slotId, game) {
     const unmet = unmetRequirements(item, stats);
     const other = !fits(item, figureOf(world));
     let action;
-    if (worn) action = h('button', { class: 'btn ghost small', onclick: () => { game.unequip(slotId); closeSheet(); } }, 'Ablegen');
+    const act = (fn) => (e) => { e.stopPropagation(); fn(); };
+    if (worn) action = h('button', { class: 'btn ghost small', onclick: act(() => { game.unequip(slotId); closeSheet(); }) }, 'Ablegen');
     else if (!reachable(world, entry)) action = h('span', { class: 'locked-label' }, 'In der Aufbewahrung');
     else if (other) action = h('span', { class: 'locked-label' }, 'Passt nicht');
-    else if (unmet.length === 0) action = h('button', { class: 'btn primary small', onclick: () => { game.equip(slotId, entry.inst); closeSheet(); } }, 'Anlegen');
+    else if (unmet.length === 0) action = h('button', { class: 'btn primary small', onclick: act(() => { game.equip(slotId, entry.inst); closeSheet(); }) }, 'Anlegen');
     else action = h('span', { class: 'locked-label' }, icon(UI_ICONS.lock), 'Gesperrt');
-    return h('div', { class: `item-row ${(unmet.length || other) && !worn ? 'locked' : ''} ${reachable(world, entry) ? '' : 'away'}` },
+    return h('div', { class: `item-row is-openable ${(unmet.length || other) && !worn ? 'locked' : ''} ${reachable(world, entry) ? '' : 'away'}`,
+      role: 'button', tabindex: '0', onclick: () => openEntry(entry.inst, game) },
       h('span', { class: `item-frame${qualityClass(entry)}` }, itemIcon(item, game, 'item-icon', entry.farbe)),
       h('span', { class: 'item-row-main' },
         h('span', { class: 'item-name' }, item.name),

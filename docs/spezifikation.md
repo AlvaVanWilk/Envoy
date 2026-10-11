@@ -1294,6 +1294,11 @@ des Envoy):
 
 ## Charakterfenster und Paperdoll
 
+Ein Tipp auf einen Platz mit einem getragenen Stück öffnet dieses Stück (Ablegen, „Andere
+wählen“, Ebene, Einweben); ein leerer Platz öffnet die Liste aller Stücke dafür. In der Liste
+öffnet ein Tipp auf eine Zeile das Stück (seit 5.22.5, vorher ließ sich ein getragenes Stück
+nicht öffnen).
+
 Die Figur wird aus übereinandergelegten transparenten Ebenen in identischem
 Bildausschnitt zusammengesetzt.
 
