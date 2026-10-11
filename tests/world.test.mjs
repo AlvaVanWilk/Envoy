@@ -668,3 +668,14 @@ test('a piece can lie further to the front or the back, as the person wants (sin
   assert.equal(s.world.items[inst].lage, undefined);
   assert.equal(s.world.items.nichts, undefined);
 });
+
+test('news since the version last seen, all together (since 5.22.2)', async () => {
+  const { newsSince, compareVersions, NEWS } = await import('../js/ui/news.js');
+  assert.equal(compareVersions('5.9', '5.22'), -1);
+  assert.equal(compareVersions('5.22.0', '5.22'), 0);
+  assert.equal(compareVersions('5.22.1', '5.22.0'), 1);
+  assert.deepEqual(newsSince('5.21.1').map((n) => n.seit), NEWS.filter((n) => compareVersions(n.seit, '5.21.1') > 0).map((n) => n.seit));
+  assert.ok(newsSince('5.21.1').length >= 2);
+  assert.deepEqual(newsSince('99.0'), []);
+  assert.deepEqual(newsSince(null), []);
+});

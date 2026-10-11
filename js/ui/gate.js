@@ -7,7 +7,8 @@
 
 import { h } from './dom.js';
 import { birthYearFor, ageOf } from './create.js';
-import { NEWS_ID, openNews } from './news.js';
+import { newsSince, openNews } from './news.js';
+import { APP_VERSION } from '../config.js';
 import { dayNoteDue, markDayNoteSeen, openDayNoteFor } from './daynote.js';
 import { store } from '../store.js';
 
@@ -20,17 +21,22 @@ const needsAge = (game) => {
   return Boolean(envoy) && !Number.isInteger(envoy.geburtsjahr);
 };
 
-export const newsSeen = () => store.loadUi().news === NEWS_ID;
+// The news this device has not seen yet: all since the version it saw last
+// (ui.news; before 5.22.2 the id of the news it saw, a version as well).
+const unseenNews = () => newsSince(store.loadUi().news);
 export function markNewsSeen() {
-  store.saveUi({ ...store.loadUi(), news: NEWS_ID });
+  store.saveUi({ ...store.loadUi(), news: APP_VERSION });
 }
 
 // Called after every drawing of the app; shows what is due, one after the other.
 export function showGates(game) {
   if (open || !game.state.world.envoy) return;
-  if (!newsSeen()) {
+  // a device that never saw any news (a new one) starts from this version
+  if (!store.loadUi().news) markNewsSeen();
+  const news = unseenNews();
+  if (news.length > 0) {
     open = true;
-    openNews(() => {
+    openNews(news, () => {
       markNewsSeen();
       open = false;
       if (needsAge(game) || dayNoteDue(game)) showGates(game);

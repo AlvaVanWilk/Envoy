@@ -1145,9 +1145,12 @@ Zahlen in `DEPTHS` in `js/config.js`).
 ## Neuigkeiten beim Start
 
 Beim ersten Start einer neuen Fassung erscheint einmal über allem, was neu ist: oben
-„Liebe Envoys!“ und ein kurzer Gruß, dann je Neuerung eine große Überschrift mit ein, zwei
-kurzen Sätzen (`js/ui/news.js`, je Fassung eine eigene Id). Ein neu erstellter Envoy bekommt
-sie nicht. Danach fragt die App, falls nötig, nach dem Alter (siehe Kinder und
+„Liebe Envoys!“, dann je Neuerung eine Überschrift mit Zeichen; ein Tipp auf die Überschrift
+klappt einen kurzen Satz auf (seit 5.22.2, so gewünscht: weniger Text). Jede Neuerung trägt
+die Fassung, mit der sie kam (`seit` in `NEWS`, `js/ui/news.js`); gezeigt wird alles seit der
+Fassung, die das Gerät zuletzt gesehen hat, in einem Fenster. Was über den Tag freigegeben
+wird und um 3 Uhr zusammen live geht, kommt so auch zusammen in ein Fenster. Ein neu
+erstellter Envoy und ein neues Gerät bekommen sie nicht. Danach fragt die App, falls nötig, nach dem Alter (siehe Kinder und
 Jugendliche). Rundgänge warten, bis diese Fenster zu sind.
 
 ## Menü und Ansichten

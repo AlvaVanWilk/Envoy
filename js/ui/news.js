@@ -1,22 +1,39 @@
-// What is new in this version: shown once over the whole screen, at the
-// first start after the update (see gate.js). A new Envoy does not need it.
-// Big headings, one or two short sentences each, in the user's tone.
+// What is new: shown once over the whole screen, at the first start after an
+// update (see gate.js). A new Envoy does not need it. Each piece of news
+// knows the version it came with (`seit`); the window shows everything since
+// the version this device last saw, all together (so gewünscht: what is
+// released during a day goes live at 3 o'clock at once, and so does its
+// news). Only the headings show; a tap on one opens its sentence.
+// In the user's tone: „Liebe Envoys!“, big headings, short.
 
 import { h, icon } from './dom.js';
-import { SLOT_ICONS } from './icons.js';
-
-// A new version with news gets a new id here (and new NEWS below).
-export const NEWS_ID = '5.22.0';
+import { SLOT_ICONS, UI_ICONS } from './icons.js';
 
 const GREETING = 'Liebe Envoys!';
-const INTRO = 'Eine Kleinigkeit für eure Kleidung.';
 
-const NEWS = [
-  { icon: SLOT_ICONS.handschuhe, title: 'Nach vorn oder nach hinten',
-    text: 'Liegt ein getragenes Stück falsch, etwa die Handwickel über dem Hemd statt darunter: Ein Tipp auf das Stück, dann „Nach hinten“ oder „Nach vorn“.' },
+// Newest first. Old entries can go once everyone has seen them.
+export const NEWS = [
+  { seit: '5.22.1', icon: UI_ICONS.sync, title: 'Neues kommt nachts',
+    text: 'Neues kommt gesammelt um 3 Uhr nachts. Die App lädt dann von selbst neu.' },
+  { seit: '5.22.0', icon: SLOT_ICONS.handschuhe, title: 'Kleidung nach vorn oder hinten',
+    text: 'Ein getragenes Stück antippen, dann „Nach vorn“ oder „Nach hinten“.' },
 ];
 
-export function openNews(onDone) {
+// -1, 0 or 1, like the versions 5.9 and 5.22 compare.
+export function compareVersions(a, b) {
+  const pa = String(a).split('.').map(Number);
+  const pb = String(b).split('.').map(Number);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i += 1) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d !== 0) return Math.sign(d);
+  }
+  return 0;
+}
+
+// The news since the version last seen (null: never seen any, then nothing).
+export const newsSince = (seen) => (seen ? NEWS.filter((n) => compareVersions(n.seit, seen) > 0) : []);
+
+export function openNews(items, onDone) {
   const layer = h('div', { class: 'gate-layer news-layer', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Neuigkeiten' });
   const close = () => {
     layer.classList.remove('open');
@@ -25,12 +42,11 @@ export function openNews(onDone) {
   };
   layer.append(h('div', { class: 'gate-card news-card' },
     h('h1', { class: 'news-greeting' }, GREETING),
-    h('p', { class: 'news-intro' }, INTRO),
-    h('div', { class: 'news-list' }, NEWS.map((n) => h('section', { class: 'news-item' },
-      icon(n.icon, 'icon news-icon'),
-      h('div', { class: 'news-body' },
-        h('h2', { class: 'news-title' }, n.title),
-        h('p', { class: 'news-text' }, n.text))))),
+    h('div', { class: 'news-list' }, items.map((n) => h('details', { class: 'news-item' },
+      h('summary', { class: 'news-head' },
+        icon(n.icon, 'icon news-icon'),
+        h('span', { class: 'news-title' }, n.title)),
+      h('p', { class: 'news-text' }, n.text)))),
     h('button', { class: 'btn primary news-go', type: 'button', onclick: close }, 'Auf in die Zwischenwelt')));
   document.body.append(layer);
   requestAnimationFrame(() => layer.classList.add('open'));

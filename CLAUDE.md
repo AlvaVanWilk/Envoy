@@ -166,7 +166,8 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   Wächter zu stark, zieht er sich mit etwas Bannsplittern zurück; je Ebene einmal Bannsplitter,
   oft Kleidung mit Güte (Ebene 5 und 10 sicher)
 - Neuigkeiten beim ersten Start einer neuen Fassung (`js/ui/news.js`, im Ton der Nutzerin:
-  „Liebe Envoys!“, große Überschriften, ein, zwei Sätze); ein Envoy ohne Alter wird danach
+  „Liebe Envoys!“, Überschriften, ein kurzer Satz zum Aufklappen, so gewünscht; jede Neuerung
+  mit ihrer Fassung `seit`, gezeigt wird alles seit der zuletzt gesehenen, in einem Fenster); ein Envoy ohne Alter wird danach
   gefragt, das Fenster lässt sich nicht wegklicken
 - Berichte einer Expedition erscheinen nur einmal, auch über Geräte hinweg (Ereignis `gesehen`)
 - Hinweis am Tag nach einem ausgelassenen Tageswerk (so gewünscht, `js/ui/daynote.js`): einmal am
