@@ -1566,11 +1566,11 @@ auf den IONOS-Webspace, in zwei Ordner:
   hoch; ist nichts Neues freigegeben, passiert nichts. GitHub startet geplante Abläufe
   manchmal etwas später.
 - **Offene Apps laden neu** (`js/ui/update.js`, seit 5.22.3 so gewünscht): jede Nacht um
-  3:30 nach der Uhr des Geräts, ohne beim Server nachzufragen. Ein Gerät, das um 3:30 schläft,
+  4 Uhr nach der Uhr des Geräts, eine Stunde nach dem Hochladen, ohne beim Server nachzufragen. Ein Gerät, das um 4 Uhr schläft,
   lädt neu, sobald die App wieder zu sehen ist. Nie, während der Timer einer Übung läuft oder
   ein Fenster offen ist (Kampf, Quest), dann eine Minute später. Verloren geht dabei nichts,
   alles Getane ist sofort gespeichert. Danach zeigen die Neuigkeiten, was neu ist. Kommt der
-  Ablauf um 3 Uhr ausnahmsweise erst nach 3:30 dran, ist das Neue in der Nacht darauf da.
+  Ablauf um 3 Uhr ausnahmsweise erst nach 4 Uhr dran, ist das Neue in der Nacht darauf da.
 
 Die App fragt bei jedem Laden beim Server nach, ob sich eine Datei geändert hat, und
 Bilder werden mit der App-Version angefragt. Eine neue Zeichnung unter altem Namen

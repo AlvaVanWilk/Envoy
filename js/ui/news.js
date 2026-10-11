@@ -14,7 +14,7 @@ const GREETING = 'Liebe Envoys!';
 // Newest first. Old entries can go once everyone has seen them.
 export const NEWS = [
   { seit: '5.22.1', icon: UI_ICONS.sync, title: 'Neues kommt nachts',
-    text: 'Neues kommt gesammelt nachts. Um halb vier lädt die App von selbst neu.' },
+    text: 'Neues kommt gesammelt nachts. Um 4 Uhr lädt die App von selbst neu.' },
   { seit: '5.22.0', icon: SLOT_ICONS.handschuhe, title: 'Kleidung nach vorn oder hinten',
     text: 'Ein getragenes Stück antippen, dann „Nach vorn“ oder „Nach hinten“.' },
 ];

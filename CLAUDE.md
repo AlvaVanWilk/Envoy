@@ -42,7 +42,7 @@ Diese Punkte sind das Konzept. Wenn eine Änderung einen davon verletzt, erst na
   angesehen und ausdrücklich freigegeben hat („freigeben“); dann den geprüften Stand
   unverändert auf den Zweig `freigegeben` bringen (Fast-forward). Jeden Tag um 3 Uhr bringt
   `.github/workflows/taeglich-live.yml` ihn auf `main` und lädt hoch (so gewünscht); offene Apps
-  laden um 3:30 in einem ruhigen Moment von selbst neu (`js/ui/update.js`). Nur die Testfassung zeigt Test-Knöpfe (am Schild
+  laden um 4 Uhr in einem ruhigen Moment von selbst neu (`js/ui/update.js`). Nur die Testfassung zeigt Test-Knöpfe (am Schild
   „Test“, schwebend über der Seite: Energie auffüllen oder über die Leiste hinaus, Stein,
   Pilzholz, Bannsplitter und Ruhm dazu, Plan finden, Kleidung finden, Expedition beenden, Rast in
   den Tiefen beenden, den Hinweis
